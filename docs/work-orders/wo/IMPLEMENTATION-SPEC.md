@@ -6,6 +6,8 @@ Canonical location: `docs/work-orders/wo/IMPLEMENTATION-SPEC.md`.
 
 This file locks the implementation decisions for Batch 01. Work Order agents may solve code-level issues, but they may not redesign the result.
 
+`docs/content.md` is authoritative for all visible copy, facts, links, navigation labels, and metadata. If this file or a Work Order conflicts with `docs/content.md`, use `docs/content.md`.
+
 The visual thesis is:
 
 **Precise software emerging from fluid computational depth.**
@@ -37,16 +39,15 @@ src/
       about-section.tsx
       contact-section.tsx
       hero-section.tsx
+      process-section.tsx
       project-showcase.tsx
       selected-work-section.tsx
-      technologies-section.tsx
     ui/
       liquid-metal-link.tsx
       logo-loop.tsx
   content/
     projects.ts
     site.ts
-    technologies.ts
   hooks/
     use-effect-activity.ts
     use-motion-preference.ts
@@ -67,9 +68,9 @@ Do not create `components/common`, `components/shared`, or alternate section dir
   <SiteHeader />
   <main id="main-content">
     <HeroSection />          // id="top"
-    <AboutSection />         // id="about"
-    <TechnologiesSection />  // id="technologies"
     <SelectedWorkSection />  // id="work"
+    <ProcessSection />       // id="process"
+    <AboutSection />         // id="about"
     <ContactSection />       // id="contact"
   </main>
   <SiteFooter />
@@ -80,96 +81,19 @@ Do not add, remove, rename, or reorder sections in Batch 01.
 
 ## 4. Fixed Content
 
-Put all strings in `src/content/site.ts` unless they are project or technology records.
+Put site strings and verified links in `src/content/site.ts`; put project records in `src/content/projects.ts`.
 
-Use these exact visible strings:
+The approved homepage implementation is the content contract committed in `ca6ccf0`. Preserve:
 
-```ts
-export const siteContent = {
-  wordmark: "PORTFOLIO / 2026",
-  heroEyebrow: "SOFTWARE ENGINEERING / APPLIED AI",
-  heroTitle: "I build precise software for complex systems.",
-  heroBody:
-    "From fraud intelligence and quantitative research to healthcare software and public-sector pipelines.",
-  heroCta: "Explore Selected Work",
-  aboutLabel: "01 / ABOUT",
-  aboutTitle: "Complexity should become legible.",
-  aboutBody:
-    "I design software that turns high-stakes workflows, noisy data, and operational constraints into clear tools people can trust.",
-  technologiesLabel: "02 / TECHNOLOGIES",
-  technologiesTitle: "Selected technologies",
-  workLabel: "03 / SELECTED WORK",
-  workTitle: "Systems built for consequential work.",
-  workBody:
-    "Four projects across risk, markets, public infrastructure, and clinical operations.",
-  contactLabel: "04 / CONTACT",
-  contactTitle: "Let’s build something exact.",
-  contactBody:
-    "Have a complex product, data, or systems problem? Let’s talk.",
-  contactEmail: null,
-  contactPending: "Contact details coming soon",
-} as const;
-```
+- Hero: approved identity, disciplines, support copy, `Explore my work` → `#work`, and verified GitHub action.
+- Page order: Hero → Work → Process → About → Contact.
+- Process sequence: `IDEA → ARCHITECTURE → AGENTS → IMPLEMENTATION → TESTING → DEPLOYMENT`.
+- About: both approved bio paragraphs, time-zone wording, availability, GitHub, and WakaTime.
+- Contact: approved manifesto, CTA, `Brazil`, availability, email, LinkedIn, and GitHub.
+- Footer: `© 2026 Guilherme.`
+- Homepage metadata from `docs/content.md`.
 
-Do not paraphrase this copy. It is draft prototype copy and can be revised after integrated review.
-
-Use these project records exactly:
-
-```ts
-export const projects = [
-  {
-    slug: "aegis",
-    index: "01",
-    name: "Aegis",
-    category: "Fraud intelligence",
-    summary: "Fraud intelligence and analysis for the iGaming industry.",
-    href: null,
-  },
-  {
-    slug: "q",
-    index: "02",
-    name: "Q",
-    category: "Quantitative systems",
-    summary: "Quantitative research and execution system.",
-    href: null,
-  },
-  {
-    slug: "gosigapp",
-    index: "03",
-    name: "gosigapp",
-    category: "Public-sector automation",
-    summary: "Go pipeline for file submission to SIGAP.",
-    href: null,
-  },
-  {
-    slug: "nexo-dental",
-    index: "04",
-    name: "Nexo Dental",
-    category: "Clinical software",
-    summary: "AI-first software for dental clinics.",
-    href: null,
-  },
-] as const;
-```
-
-Do not render fake project links. When `href` is `null`, render no anchor and no disabled “View project” control.
-
-Use these technology labels:
-
-```ts
-export const technologies = [
-  "TypeScript",
-  "React",
-  "Next.js",
-  "Tailwind CSS",
-  "Go",
-  "OGL",
-  "GSAP",
-  "Three.js",
-] as const;
-```
-
-Use text wordmarks, not downloaded brand logos, in Batch 01.
+Do not render résumé or project actions until their URLs are verified. Do not put `[REQUIRED: …]` markers in rendered or bundled content.
 
 ## 5. Fixed Tokens
 
@@ -212,7 +136,7 @@ No Work Order may introduce another blue, green, purple, white, black, radius, e
 ## 6. Fixed Typography
 
 - Geist Sans: body, headings, navigation.
-- Geist Mono: eyebrow labels, project indices, technology wordmarks, CTA label.
+- Geist Mono: eyebrow labels, project indices, process stages, and CTA labels.
 - Hero title: `clamp(3rem, 8vw, 7.5rem)`, line-height `0.94`, weight `560`, letter-spacing `-0.055em`.
 - Section title: `clamp(2.25rem, 5vw, 4.75rem)`, line-height `1`, weight `540`, letter-spacing `-0.04em`.
 - Manifesto: `clamp(2rem, 4.5vw, 4rem)`, line-height `1.12`, weight `450`, letter-spacing `-0.035em`.
@@ -238,7 +162,7 @@ Do not use all-uppercase text outside eyebrow labels, wordmark, and compact tech
 
 - Position absolute over the hero, top `0`, width `100%`, z-index above effects.
 - Left: wordmark.
-- Right desktop links: `About`, `Technologies`, `Work`, `Contact`.
+- Right desktop links in order: `Work`, `Process`, `About`, `Contact`.
 - Right mobile links: `Work`, `Contact`.
 - No hamburger menu in Batch 01.
 - Add a skip link as the first focusable element. It targets `#main-content`.

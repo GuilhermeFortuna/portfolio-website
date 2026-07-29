@@ -2,7 +2,7 @@
 
 ## Status
 
-Ready after WO-004.
+See [`WO-STATUS.md`](WO-STATUS.md). Dispatch only when the WO-005 row is `READY`.
 
 ## Result to Produce
 
@@ -115,7 +115,7 @@ When reduced motion is requested:
 - use the same dimensions
 - do not apply transform on hover
 
-The label remains `Explore Selected Work`.
+The label remains `Explore my work`.
 
 ### 6. Finish the hero layout
 
@@ -130,8 +130,10 @@ section#top
   content wrapper
     eyebrow
     h1
+    disciplines
     body paragraph
     LiquidMetalLink
+    plain GitHub link
 ```
 
 Use these measurements:
@@ -158,7 +160,7 @@ Use the exact hero typography and copy from the implementation spec.
 
 ## Forbidden Changes
 
-- No second CTA
+- No second Liquid Metal CTA; the verified GitHub action remains a plain link
 - No social icons
 - No scroll indicator
 - No portrait or device mockup

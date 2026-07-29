@@ -2,7 +2,7 @@
 
 ## Status
 
-Ready only after WO-005 through WO-011 are complete.
+See [`WO-STATUS.md`](WO-STATUS.md). Dispatch only when the WO-012 row is `READY`.
 
 ## Result to Produce
 
@@ -95,7 +95,7 @@ Check:
 - exact section order and IDs
 - exact visible strings
 - exact four project records
-- exact eight technology labels
+- exact Process sequence and approved profile/contact actions
 - one `h1`
 - required `h2` and project `h3` outline
 - no invented link, metric, testimonial, date, or contact detail
@@ -206,7 +206,7 @@ Fix all reproducible errors.
 Using browser performance tools:
 
 1. record five seconds on the hero
-2. record scrolling through Technologies and Selected Work
+2. record scrolling through Process and Selected Work
 3. record five seconds on the outro
 4. confirm offscreen effect frames stop
 5. record the maximum observed DPR for each canvas

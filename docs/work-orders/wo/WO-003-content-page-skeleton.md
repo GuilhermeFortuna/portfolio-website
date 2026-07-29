@@ -2,11 +2,11 @@
 
 ## Status
 
-Ready after WO-002.
+See [`WO-STATUS.md`](WO-STATUS.md). Dispatch only when the WO-003 row is `READY`.
 
 ## Result to Produce
 
-A semantic, static homepage containing the exact draft copy, project data, technology data, navigation, section order, and simple placeholders that later Work Orders replace.
+A semantic, static homepage containing the approved `docs/content.md` copy, verified links, project data, navigation, section order, and simple placeholders that later Work Orders replace.
 
 ## Prerequisites
 
@@ -22,12 +22,11 @@ src/components/layout/site-footer.tsx
 src/components/sections/about-section.tsx
 src/components/sections/contact-section.tsx
 src/components/sections/hero-section.tsx
+src/components/sections/process-section.tsx
 src/components/sections/project-showcase.tsx
 src/components/sections/selected-work-section.tsx
-src/components/sections/technologies-section.tsx
 src/content/projects.ts
 src/content/site.ts
-src/content/technologies.ts
 src/types/content.ts
 ```
 
@@ -49,18 +48,15 @@ export type Project = {
   href: string | null;
 };
 
-export type Technology = {
-  name: string;
-};
 ```
 
 ### 2. Create content modules
 
-Copy the exact `siteContent`, project records, and technology labels from section 4 of `docs/work-orders/wo/IMPLEMENTATION-SPEC.md`.
+Implement the approved homepage copy and links from `docs/content.md`.
 
 - Type `projects` with `satisfies readonly Project[]`.
-- Convert each technology label to `{ name }` and type it with `satisfies readonly Technology[]`.
-- Do not add icons, descriptions, proficiency, dates, URLs, or tags.
+- Keep project `href` values null until verified.
+- Do not add metrics, dates, outcomes, screenshots, or repository links.
 
 ### 3. Create the header
 
@@ -72,9 +68,9 @@ Render:
 2. A `<header>` positioned according to section 8 of the implementation spec.
 3. Wordmark link to `#top`.
 4. Desktop navigation links:
-   - `About` → `#about`
-   - `Technologies` → `#technologies`
    - `Work` → `#work`
+   - `Process` → `#process`
+   - `About` → `#about`
    - `Contact` → `#contact`
 5. Mobile navigation links:
    - `Work` → `#work`
@@ -88,12 +84,12 @@ Each section must use the `SectionShell` created by WO-002.
 
 Use these exact responsibilities:
 
-- `HeroSection`: `id="top"`, eyebrow, `h1`, body, plain anchor CTA to `#work`.
-- `AboutSection`: `id="about"`, label, `h2`, body.
-- `TechnologiesSection`: `id="technologies"`, label, `h2`, unordered list of technology names.
-- `SelectedWorkSection`: `id="work"`, label, `h2`, body, then `<ProjectShowcase projects={projects} />`.
+- `HeroSection`: approved identity, disciplines, support copy, CTA to `#work`, and GitHub action.
+- `SelectedWorkSection`: `id="work"`, heading, then `<ProjectShowcase projects={projects} />`.
+- `ProcessSection`: `id="process"`, heading, exact sequence, and support copy.
+- `AboutSection`: approved title, both bio paragraphs, time zone, availability, GitHub, and WakaTime.
 - `ProjectShowcase`: plain unordered list; each item renders index, category, name, and summary.
-- `ContactSection`: `id="contact"`, label, `h2`, body, pending-contact text.
+- `ContactSection`: approved manifesto, CTA, country, availability, email, LinkedIn, and GitHub.
 
 Do not add animation, canvas, images, icons, gradients, hover transforms, or decorative diagrams.
 
@@ -102,7 +98,7 @@ Do not add animation, canvas, images, icons, gradients, hover transforms, or dec
 Render:
 
 - a semantic `<footer>`
-- text `© 2026 Portfolio.`
+- text `© 2026 Guilherme.`
 - link `Back to top` → `#top`
 
 WO-011 will finish its styling.
@@ -124,15 +120,15 @@ Copy the exact composition from section 3 of `docs/work-orders/wo/IMPLEMENTATION
 Required heading structure:
 
 ```text
-h1 I build precise software for complex systems.
-  h2 Complexity should become legible.
-  h2 Selected technologies
-  h2 Systems built for consequential work.
+h1 I build ambitious software systems.
+  h2 Work
     h3 Aegis
     h3 Q
     h3 gosigapp
     h3 Nexo Dental
-  h2 Let’s build something exact.
+  h2 From difficult idea to working system.
+  h2 Software Engineer · AI, Data & Product Systems
+  h2 Let’s build something difficult.
 ```
 
 ## Forbidden Changes
@@ -163,9 +159,9 @@ npm run build
 
 ## Acceptance Checklist
 
-- [ ] Exact draft copy is centralized in content files.
+- [ ] Approved `docs/content.md` copy is centralized in content files.
 - [ ] Exact four project records render.
-- [ ] Exact eight technology names render.
+- [ ] Verified profile and contact actions render; résumé and unverified project links do not.
 - [ ] Page order and IDs match the implementation spec.
 - [ ] Header desktop and mobile link sets match the specification.
 - [ ] There is one `h1`.

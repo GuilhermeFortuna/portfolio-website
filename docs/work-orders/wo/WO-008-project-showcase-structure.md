@@ -2,7 +2,7 @@
 
 ## Status
 
-Ready after WO-002 and WO-003.
+See [`WO-STATUS.md`](WO-STATUS.md). Dispatch only when the WO-008 row is `READY`.
 
 ## Result to Produce
 
@@ -142,8 +142,7 @@ Use `SectionShell`:
 Heading block:
 
 1. `h2#work-title`
-2. body paragraph with max-width `42rem` and top margin `1.5rem`
-3. a reserved accent slot:
+2. a reserved accent slot:
 
 ```tsx
 <div data-sparkles-slot aria-hidden="true" />

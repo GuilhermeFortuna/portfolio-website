@@ -2,7 +2,7 @@
 
 ## Status
 
-Ready after WO-002 and WO-003.
+See [`WO-STATUS.md`](WO-STATUS.md). Dispatch only when the WO-006 row is `READY`.
 
 ## Result to Produce
 
@@ -30,7 +30,7 @@ src/components/effects/scroll-reveal.tsx
 src/components/sections/about-section.tsx
 ```
 
-Do not modify hero or technology files.
+Do not modify Hero, Process, or Work files.
 
 ## Procedure
 
@@ -99,7 +99,7 @@ When it returns true:
   rotationEnd="bottom 70%"
   wordAnimationEnd="bottom 65%"
 >
-  {siteContent.aboutBody}
+  {siteContent.aboutBody[0]}
 </ScrollReveal>
 ```
 
@@ -118,7 +118,8 @@ Inside:
 ```text
 two-column desktop grid
   left: h2#about-title
-  right: ScrollReveal paragraph
+  right: ScrollReveal first bio paragraph, static second bio paragraph,
+         time zone, availability, GitHub, and WakaTime
 ```
 
 Measurements:

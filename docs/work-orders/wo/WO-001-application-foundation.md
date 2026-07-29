@@ -2,7 +2,7 @@
 
 ## Status
 
-Ready.
+See [`WO-STATUS.md`](WO-STATUS.md). Dispatch only when the WO-001 row is `READY`.
 
 ## Result to Produce
 

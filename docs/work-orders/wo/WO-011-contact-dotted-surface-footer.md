@@ -2,7 +2,7 @@
 
 ## Status
 
-Ready after WO-002 and WO-003.
+See [`WO-STATUS.md`](WO-STATUS.md). Dispatch only when the WO-011 row is `READY`.
 
 ## Result to Produce
 
@@ -106,23 +106,9 @@ Section measurements:
 - title-to-body gap `1.5rem`
 - body-to-contact-action gap `2.5rem`
 
-Use the exact fixed contact title and body.
+Preserve the approved manifesto, `Let’s build something difficult.`, `Brazil`, availability, and the verified Email, LinkedIn, and GitHub actions from `docs/content.md`.
 
-Contact behavior:
-
-```tsx
-siteContent.contactEmail
-  ? <a href={`mailto:${siteContent.contactEmail}`}>Start a conversation</a>
-  : <p>{siteContent.contactPending}</p>
-```
-
-When email is null:
-
-- render no anchor
-- render no disabled button
-- render the pending text in Geist Mono, `0.75rem`, muted color
-
-Do not fabricate an address.
+Omit the résumé action until a verified URL exists. Do not add a placeholder or disabled control.
 
 ### 5. Build the shallow horizon
 
@@ -194,7 +180,7 @@ npm run build
 
 ## Manual Checks
 
-- Confirm null email renders pending text and no contact anchor.
+- Confirm the three verified contact actions have the exact approved destinations.
 - Scroll the horizon offscreen and confirm frames stop.
 - Enable reduced motion and confirm static dots only.
 - Test mobile and confirm the surface height remains `20rem`.
@@ -207,7 +193,7 @@ npm run build
 - [ ] `next-themes` is not installed or imported.
 - [ ] Dotted Surface is a `20rem` shallow horizon.
 - [ ] Animation obeys shared activity policy.
-- [ ] Null contact data produces no fake or disabled link.
+- [ ] Email, LinkedIn, and GitHub actions match `docs/content.md`.
 - [ ] Footer content and layout match the recipe.
 - [ ] Reduced motion uses static CSS dots.
 - [ ] No unverified contact or social information appears.

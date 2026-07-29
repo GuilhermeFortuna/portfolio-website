@@ -15,9 +15,9 @@ The interface should feel technical, atmospheric, and cinematic without drifting
 | Order | Component | Source | Location | Role | Priority |
 | --- | --- | --- | --- | --- | --- |
 | 1 | [Line Waves](https://reactbits.dev/backgrounds/line-waves) | React Bits | Hero | Primary background and defining visual identity | Foundational |
-| 2 | [Liquid Metal Button](https://21st.dev/@johuniq/components/liquid-metal-button) | 21st.dev | Hero | Primary CTA: **Explore Selected Work** | Primary interaction |
+| 2 | [Liquid Metal Button](https://21st.dev/@johuniq/components/liquid-metal-button) | 21st.dev | Hero | Primary CTA: **Explore my work** | Primary interaction |
 | 3 | [Scroll Reveal](https://reactbits.dev/text-animations/scroll-reveal) | React Bits | About / manifesto | Narrative typography reveal | Primary motion |
-| 4 | [Logo Loop](https://reactbits.dev/animations/logo-loop) | React Bits | Technologies | Display languages, frameworks, packages, and tools | Functional content |
+| 4 | [Logo Loop](https://reactbits.dev/animations/logo-loop) | React Bits | Process | Display the approved engineering sequence | Functional content |
 | 5 | [Sparkles](https://21st.dev/@manuarora700/components/sparkles) | 21st.dev | Selected Work introduction | Localized transition and heading accent | Supporting effect |
 | 6 | [Shape Blur](https://reactbits.dev/animations/shape-blur) | React Bits | Selected Work | Interactive project accent or section transition | Supporting interaction |
 | 7 | [Dotted Surface](https://21st.dev/@sshahaider/components/dotted-surface) | 21st.dev | Contact / outro | Final atmospheric scene above the footer | Closing visual |
@@ -68,7 +68,7 @@ Adaptation:
 - Use restrained reveal timing and generous negative space.
 - Pair with large Geist Mono typography.
 
-### 3. Technologies
+### 3. Process
 
 Component:
 
@@ -76,14 +76,14 @@ Component:
 
 Purpose:
 
-- Display the languages, frameworks, packages, platforms, and tools used across the portfolio.
-- Convert a conventional technology list into a useful, continuous visual element.
+- Display the approved sequence: **IDEA → ARCHITECTURE → AGENTS → IMPLEMENTATION → TESTING → DEPLOYMENT**.
+- Turn the engineering process into a useful, continuous visual element without making unsupported technology claims.
 
 Adaptation:
 
-- Use monochrome or duotone icons normalized to a consistent visual weight.
+- Use restrained text wordmarks with small token-based accent markers.
 - Keep movement slow and legible.
-- Avoid oversized logos and brand-color noise.
+- Avoid brand logos and brand-color noise.
 - Pause or reduce movement during direct interaction.
 - Ensure the content remains accessible without animation.
 
@@ -95,7 +95,7 @@ Component:
 
 Purpose:
 
-- Transition from the technology section into the four featured projects.
+- Transition from the hero into the four featured projects.
 - Add emphasis beneath the **Selected Work** heading.
 
 Adaptation:
@@ -161,7 +161,7 @@ Adaptation:
 | --- | --- | --- |
 | Dominant | Line Waves | Defines the hero and overall atmosphere |
 | Primary | Scroll Reveal | Defines narrative text motion |
-| Functional | Logo Loop | Communicates technology experience |
+| Functional | Logo Loop | Communicates the engineering process |
 | Supporting | Sparkles | Marks a single section transition |
 | Supporting | Shape Blur | Responds to project interaction |
 | Closing | Dotted Surface | Provides a restrained final scene |
@@ -198,10 +198,10 @@ Do not include it in the initial prototype. It would introduce a second dominant
 Build one complete vertical homepage with real portfolio content:
 
 1. Hero — Line Waves + Liquid Metal Button
-2. About — Scroll Reveal
-3. Technologies — Logo Loop
-4. Selected Work introduction — Sparkles
-5. Selected Work — Shape Blur
+2. Selected Work introduction — Sparkles
+3. Selected Work — Shape Blur
+4. Process — Logo Loop
+5. About — Scroll Reveal
 6. Contact / outro — Dotted Surface
 
 During integration, lock:

@@ -10,8 +10,10 @@ Before starting any Work Order, read:
 
 1. `docs/FOUNDATIONAL-IDEA.txt`
 2. `docs/portfolio-component-blueprint.md`
-3. `docs/work-orders/wo/IMPLEMENTATION-SPEC.md`
-4. The assigned Work Order
+3. `docs/content.md`
+4. `docs/work-orders/wo/WO-STATUS.md`
+5. `docs/work-orders/wo/IMPLEMENTATION-SPEC.md`
+6. The assigned Work Order
 
 Do not start from `docs/component-links.txt` alone; it is only a link list.
 
@@ -55,7 +57,7 @@ Wave 4
 Wave 5
   WO-005 Hero and Liquid Metal CTA
   WO-006 About and Scroll Reveal
-  WO-007 Technologies and Logo Loop
+  WO-007 Process and Logo Loop
   WO-008 Project Showcase Structure
   WO-011 Contact, Dotted Surface, and Footer
 
@@ -79,7 +81,7 @@ Do not run Work Orders from the same wave in parallel unless their prerequisites
 | WO-004 | [Line Waves Effect](./WO-004-line-waves-effect.md) | WO-002, WO-003 | Adapted hero background |
 | WO-005 | [Hero and Liquid Metal CTA](./WO-005-hero-liquid-metal-cta.md) | WO-004 | Finished hero content and CTA |
 | WO-006 | [About and Scroll Reveal](./WO-006-about-scroll-reveal.md) | WO-002, WO-003 | Finished About section |
-| WO-007 | [Technologies and Logo Loop](./WO-007-technologies-logo-loop.md) | WO-002, WO-003 | Finished Technologies section |
+| WO-007 | [Process and Logo Loop](./WO-007-process-logo-loop.md) | WO-002, WO-003 | Finished Process section |
 | WO-008 | [Project Showcase Structure](./WO-008-project-showcase-structure.md) | WO-002, WO-003 | Fixed four-project presentation |
 | WO-009 | [Selected Work Sparkles Accent](./WO-009-selected-work-sparkles.md) | WO-008 | Localized heading transition |
 | WO-010 | [Shape Blur Project Interaction](./WO-010-shape-blur-interaction.md) | WO-008 | Single active-project effect |
@@ -92,13 +94,17 @@ Every agent must execute these steps:
 
 1. Run `git status --short` and record pre-existing changes.
 2. Read the mandatory documents.
-3. Confirm prerequisite output files exist.
-4. Touch only files listed under “Files to Create or Modify.”
-5. Follow the numbered implementation procedure in order.
-6. Run the Work Order’s automated checks.
-7. Perform its manual checks.
-8. Compare the result against every acceptance checkbox.
-9. Return the standard handoff.
+3. Confirm the assigned order is `READY` in `WO-STATUS.md`.
+4. Confirm prerequisite output files exist.
+5. Ensure the coordinator records the named owner and changes the order to `IMPLEMENTING`.
+6. Touch only files listed under “Files to Create or Modify.”
+7. Follow the numbered implementation procedure in order.
+8. Run the Work Order’s automated checks.
+9. Perform its manual checks.
+10. Compare the result against every acceptance checkbox.
+11. Return the standard handoff and move the order to `REVIEW`; only a reviewer may mark it `DONE`.
+
+`WO-STATUS.md` is exempt from individual Work Order file-ownership lists and may be updated only according to its Status Update Procedure.
 
 ## Standard Handoff Format
 
