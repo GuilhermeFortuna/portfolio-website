@@ -2,21 +2,26 @@
 "use client";
 
 import { Mesh, Program, Renderer, Triangle } from "ogl";
-import {
-  type ReactNode,
-  type RefObject,
-  useEffect,
-  useRef,
-  useSyncExternalStore,
-} from "react";
+import { useEffect, useRef } from "react";
 
-import { useEffectActivity } from "@/hooks/use-effect-activity";
-import { useMotionPreference } from "@/hooks/use-motion-preference";
+import { ManagedWebGLEffect } from "@/components/webgl/managed-webgl-effect";
+import {
+  resolveWebGlDpr,
+  type WebGLEffectConfig,
+} from "@/components/webgl/webgl-manager";
 import { cn } from "@/lib/cn";
 
 export type LineWavesProps = {
   className?: string;
   active: boolean;
+  /** Supplied by the WebGL manager so resolution policy stays centralized. */
+  dpr?: number;
+  /**
+   * Resolves the element that pointer movement is read from. Needed because the
+   * canvas and its managed wrapper are `pointer-events: none`, so events must be
+   * observed on an interactive ancestor instead of the document.
+   */
+  resolvePointerTarget?: () => HTMLElement | null;
   speed?: number;
   innerLineCount?: number;
   outerLineCount?: number;
@@ -39,22 +44,6 @@ function hexToVec3(hex: string): [number, number, number] {
     parseInt(h.slice(2, 4), 16) / 255,
     parseInt(h.slice(4, 6), 16) / 255,
   ];
-}
-
-function resolveDpr(): number {
-  const cap = window.innerWidth < 768 ? 1.25 : 1.5;
-  return Math.min(window.devicePixelRatio || 1, cap);
-}
-
-function canCreateWebGl(): boolean {
-  try {
-    const canvas = document.createElement("canvas");
-    return Boolean(
-      canvas.getContext("webgl") || canvas.getContext("experimental-webgl"),
-    );
-  } catch {
-    return false;
-  }
 }
 
 const vertexShader = `
@@ -179,6 +168,8 @@ void main() {
 export function LineWaves({
   className,
   active,
+  dpr,
+  resolvePointerTarget,
   speed = 0.3,
   innerLineCount = 32.0,
   outerLineCount = 36.0,
@@ -196,6 +187,9 @@ export function LineWaves({
   const containerRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef(active);
   const enableMouseRef = useRef(enableMouseInteraction);
+  const dprRef = useRef(dpr);
+  const resolvePointerTargetRef = useRef(resolvePointerTarget);
+  const resizeRef = useRef<(() => void) | null>(null);
   const propsRef = useRef({
     speed,
     innerLineCount,
@@ -219,6 +213,15 @@ export function LineWaves({
   useEffect(() => {
     enableMouseRef.current = enableMouseInteraction;
   }, [enableMouseInteraction]);
+
+  useEffect(() => {
+    resolvePointerTargetRef.current = resolvePointerTarget;
+  }, [resolvePointerTarget]);
+
+  useEffect(() => {
+    dprRef.current = dpr;
+    resizeRef.current?.();
+  }, [dpr]);
 
   useEffect(() => {
     propsRef.current = {
@@ -262,7 +265,7 @@ export function LineWaves({
       renderer = new Renderer({
         alpha: true,
         premultipliedAlpha: false,
-        dpr: resolveDpr(),
+        dpr: dprRef.current ?? resolveWebGlDpr(),
       });
     } catch {
       return;
@@ -324,7 +327,7 @@ export function LineWaves({
     });
 
     function resize() {
-      renderer.dpr = resolveDpr();
+      renderer.dpr = dprRef.current ?? resolveWebGlDpr();
       renderer.setSize(container.offsetWidth, container.offsetHeight);
       program.uniforms.uResolution.value = [
         gl.canvas.width,
@@ -333,15 +336,15 @@ export function LineWaves({
       ];
     }
 
+    resizeRef.current = resize;
     window.addEventListener("resize", resize);
 
     const mesh = new Mesh(gl, { geometry, program });
     container.appendChild(gl.canvas);
     resize();
 
-    // Prefer the mount node; fall back to its parent frame when the mount is
-    // pointer-events:none so content can still bubble movement (never document).
-    const pointerTarget = container.parentElement ?? container;
+    const pointerTarget =
+      resolvePointerTargetRef.current?.() ?? container.parentElement ?? container;
     pointerTarget.addEventListener("pointermove", handlePointerMove);
     pointerTarget.addEventListener("pointerleave", handlePointerLeave);
 
@@ -404,6 +407,7 @@ export function LineWaves({
 
     return () => {
       startLoopRef.current = null;
+      resizeRef.current = null;
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
@@ -432,58 +436,6 @@ export function LineWaves({
   );
 }
 
-const FINE_POINTER_QUERY = "(pointer: fine)";
-
-function subscribeFinePointer(onChange: () => void): () => void {
-  const mediaQuery = window.matchMedia(FINE_POINTER_QUERY);
-  mediaQuery.addEventListener("change", onChange);
-  return () => {
-    mediaQuery.removeEventListener("change", onChange);
-  };
-}
-
-function getFinePointerSnapshot(): boolean {
-  return window.matchMedia(FINE_POINTER_QUERY).matches;
-}
-
-function getFinePointerServerSnapshot(): boolean {
-  return false;
-}
-
-function subscribeMobile(onChange: () => void): () => void {
-  const mediaQuery = window.matchMedia("(max-width: 767px)");
-  mediaQuery.addEventListener("change", onChange);
-  return () => {
-    mediaQuery.removeEventListener("change", onChange);
-  };
-}
-
-function getMobileSnapshot(): boolean {
-  return window.matchMedia("(max-width: 767px)").matches;
-}
-
-function getMobileServerSnapshot(): boolean {
-  return false;
-}
-
-let webglSupportCache: boolean | null = null;
-
-function subscribeWebGl(onChange: () => void): () => void {
-  void onChange;
-  return () => {};
-}
-
-function getWebGlSnapshot(): boolean {
-  if (webglSupportCache === null) {
-    webglSupportCache = canCreateWebGl();
-  }
-  return webglSupportCache;
-}
-
-function getWebGlServerSnapshot(): boolean {
-  return false;
-}
-
 function LineWavesStaticFallback({ className }: { className?: string }) {
   return (
     <div
@@ -500,55 +452,55 @@ function LineWavesStaticFallback({ className }: { className?: string }) {
   );
 }
 
-type HeroLineWavesFrameProps = {
-  children: ReactNode;
+/**
+ * Hero background layers. Renders inside `section#top` as absolutely positioned
+ * siblings of the hero content, so the section itself owns the stacking context.
+ */
+const LINE_WAVES_CONFIG: WebGLEffectConfig = {
+  id: "line-waves",
+  priority: "hero",
+  estimatedCost: "high",
+  continuous: true,
+  allowMobile: true,
 };
 
-export function HeroLineWavesFrame({ children }: HeroLineWavesFrameProps) {
-  const frameRef = useRef<HTMLDivElement>(null);
-  const active = useEffectActivity(frameRef as RefObject<Element | null>);
-  const prefersReducedMotion = useMotionPreference();
-  const hasFinePointer = useSyncExternalStore(
-    subscribeFinePointer,
-    getFinePointerSnapshot,
-    getFinePointerServerSnapshot,
-  );
-  const isMobile = useSyncExternalStore(
-    subscribeMobile,
-    getMobileSnapshot,
-    getMobileServerSnapshot,
-  );
-  const webglAvailable = useSyncExternalStore(
-    subscribeWebGl,
-    getWebGlSnapshot,
-    getWebGlServerSnapshot,
-  );
-
-  const showAnimated = !prefersReducedMotion && webglAvailable;
+export function HeroLineWavesBackground() {
+  const layerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div ref={frameRef} className="relative min-h-svh overflow-x-clip">
-      {showAnimated ? (
-        <LineWaves
-          active={active}
-          speed={isMobile ? 0.1 : 0.16}
-          innerLineCount={isMobile ? 18 : 24}
-          outerLineCount={isMobile ? 22 : 30}
-          warpIntensity={isMobile ? 0.35 : 0.55}
-          rotation={-35}
-          edgeFadeWidth={0.15}
-          colorCycleSpeed={0.35}
-          brightness={0.16}
-          color1="#5366D8"
-          color2="#53BBAA"
-          color3="#8772D6"
-          enableMouseInteraction={!isMobile && hasFinePointer}
-          mouseInfluence={0.25}
-          className="pointer-events-none absolute inset-0 z-0 h-full w-full"
-        />
-      ) : (
-        <LineWavesStaticFallback />
-      )}
+    <>
+      <div
+        ref={layerRef}
+        className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+      >
+        <ManagedWebGLEffect
+          config={LINE_WAVES_CONFIG}
+          className="absolute inset-0 h-full w-full"
+          fallback={<LineWavesStaticFallback />}
+        >
+          {({ shouldAnimate, dpr, pointerEnabled, isMobile }) => (
+            <LineWaves
+              active={shouldAnimate}
+              dpr={dpr}
+              resolvePointerTarget={() => layerRef.current?.parentElement ?? null}
+              speed={isMobile ? 0.1 : 0.16}
+              innerLineCount={isMobile ? 18 : 24}
+              outerLineCount={isMobile ? 22 : 30}
+              warpIntensity={isMobile ? 0.35 : 0.55}
+              rotation={-35}
+              edgeFadeWidth={0.15}
+              colorCycleSpeed={0.35}
+              brightness={0.16}
+              color1="#5366D8"
+              color2="#53BBAA"
+              color3="#8772D6"
+              enableMouseInteraction={pointerEnabled}
+              mouseInfluence={0.25}
+              className="pointer-events-none absolute inset-0 h-full w-full"
+            />
+          )}
+        </ManagedWebGLEffect>
+      </div>
 
       <div
         aria-hidden="true"
@@ -566,8 +518,6 @@ export function HeroLineWavesFrame({ children }: HeroLineWavesFrameProps) {
             "linear-gradient(to top, var(--color-canvas) 0%, color-mix(in srgb, var(--color-canvas) 70%, transparent) 12%, transparent 25%)",
         }}
       />
-
-      <div className="relative z-[2]">{children}</div>
-    </div>
+    </>
   );
 }
