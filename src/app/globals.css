@@ -1,13 +1,114 @@
 @import "tailwindcss";
 
+:root {
+  --color-canvas: #06070a;
+  --color-surface: #0c0f14;
+  --color-surface-strong: #111620;
+  --color-text: #f3f6fb;
+  --color-text-muted: #9ba6b5;
+  --color-text-dim: #667083;
+  --color-line: rgba(166, 177, 197, 0.16);
+  --color-line-strong: rgba(184, 195, 216, 0.28);
+  --color-accent-a: #8ea0ff;
+  --color-accent-b: #68d7c5;
+  --color-accent-c: #b49cff;
+  --color-focus: #d5dcff;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-pill: 999px;
+
+  --content-wide: 74rem;
+  --content-reading: 46rem;
+  --page-gutter: clamp(1.25rem, 4vw, 3rem);
+  --section-space: clamp(6rem, 12vw, 10rem);
+
+  --duration-fast: 160ms;
+  --duration-medium: 320ms;
+  --duration-slow: 700ms;
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 * {
   box-sizing: border-box;
 }
 
 html {
-  background: #06070a;
+  background: var(--color-canvas);
+  color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 body {
+  min-width: 20rem;
   margin: 0;
+  overflow-x: clip;
+  background: var(--color-canvas);
+  color: var(--color-text);
+  font-family: var(--font-geist-sans), sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-accent-a) 32%, transparent);
+  color: var(--color-text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
