@@ -74,6 +74,7 @@ Add one row when an order is assigned. Do not remove historical rows.
 | Date | WO | Agent/owner | Branch/worktree | Write scope | Expected handoff |
 | --- | --- | --- | --- | --- | --- |
 | 2026-07-29 | WO-006 | Auto (feat/wo-006-about-scroll-reveal) | `feat/wo-006-about-scroll-reveal` | Adapted Scroll Reveal + gsap; About two-column layout | Lint, type-check, build; hand off for REVIEW |
+| 2026-07-29 | WO-005 | Auto (WO-005 hero CTA) | `development` | Liquid Metal link component, hero layout completion, dependency manifests | Lint, type-check, build; hand off for REVIEW |
 | 2026-07-29 | WO-004 | Auto (feat/wo-004-line-waves) | `feat/wo-004-line-waves` | Adapted Line Waves effect, ogl dependency, hero background integration | Lint, type-check, build; hand off for REVIEW |
 | 2026-07-29 | WO-001 | Guilherme (commit author) | `main` | Application scaffold, tooling, README, base page | Commit `5df896c` and passing foundation checks |
 | 2026-07-29 | WO-002 | Guilherme (commit author) | `main` | Tokens, fonts, layout primitive, hooks, `cn` | Commit `c0c1c18` and passing foundation checks |
