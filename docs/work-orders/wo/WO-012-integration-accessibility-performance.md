@@ -61,6 +61,8 @@ There must be exactly:
 - one Shape Blur instance on desktop and zero below `1024px`
 - one Dotted Surface instance
 
+There must also be one `WebGLManager`. Line Waves, Liquid Metal, Shape Blur, and Dotted Surface must each appear once in its registry and nowhere outside `ManagedWebGLEffect`.
+
 There must be no Laser Flow or other visual-effect component.
 
 ### 3. Audit dependency inventory
@@ -163,6 +165,8 @@ Normal motion:
 - only visible sections animate
 - hidden browser tab stops continuous work
 - leaving and returning to a section does not duplicate frames/listeners
+- desktop active cost never exceeds `4`; mobile active cost never exceeds `2`
+- near-viewport effects mount within the `300px` margin and pause when not actually visible
 
 Reduced motion:
 

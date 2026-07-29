@@ -87,13 +87,19 @@ Make these required changes:
 
 ### 4. Mount exactly one instance
 
-In `ProjectShowcase`:
+In `ProjectShowcase`, wrap the one Shape Blur instance in `ManagedWebGLEffect`:
 
-1. add a ref to the desktop visual stage
-2. call `useEffectActivity(stageRef)`
-3. detect `min-width: 1024px`
-4. call `useMotionPreference()`
-5. mount Shape Blur only when desktop and not reduced motion
+```ts
+{
+  id: "shape-blur",
+  priority: "decorative",
+  estimatedCost: "high",
+  continuous: true,
+  allowMobile: false,
+}
+```
+
+Pass `shouldAnimate` to `active`. The manager handles viewport, document visibility, reduced motion, mobile exclusion, and budget arbitration.
 
 Do not create one Shape Blur per project.
 
@@ -151,6 +157,7 @@ When Shape Blur is not mounted, retain the existing static surface and diagram. 
 - No effect behind selector text
 - No persistent animation while offscreen
 - No React Three Fiber
+- No direct mount outside `ManagedWebGLEffect`
 
 ## Automated Checks
 
@@ -178,5 +185,6 @@ npm run build
 - [ ] Pointer listener is stage-local.
 - [ ] Mobile/tablet and reduced motion mount no canvas.
 - [ ] Inactive states stop frames.
+- [ ] Shape Blur is registered with the fixed decorative/high-cost config.
 - [ ] Text and diagram contrast remain unchanged.
 - [ ] Lint, type-check, and build pass.

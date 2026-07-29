@@ -175,6 +175,7 @@ Rules:
 - Offscreen animated effects should stop rendering.
 - Every animated component requires a reduced-motion state.
 - Mobile variants may simplify or replace GPU-heavy effects.
+- Treat WebGL as a managed resource. Line Waves, Liquid Metal, Shape Blur, and Dotted Surface must register with one shared lifecycle and budget manager.
 
 ## Component Integration Rules
 
@@ -186,6 +187,7 @@ Rules:
 - Test component composition before polishing components individually.
 - Measure GPU load, frame consistency, bundle cost, and mobile behavior.
 - Reject any effect that weakens readability or competes with Line Waves.
+- Never scatter third-party WebGL components directly through sections. Wrap them behind the shared managed interface controlling near-viewport mounting, visibility, DPR, pausing, fallback, and cleanup.
 
 ## Explicitly Excluded
 

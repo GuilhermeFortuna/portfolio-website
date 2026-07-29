@@ -78,15 +78,21 @@ Required implementation behavior:
 - dispose geometry, material, renderer, canvas, observer, frame, and listeners
 - no pointer interaction
 
-### 3. Create an activity wrapper
+### 3. Register Dotted Surface
 
-Inside `contact-section.tsx`, use a small Client Component to:
+Wrap Dotted Surface in `ManagedWebGLEffect`:
 
-1. own the horizon ref
-2. call `useEffectActivity(ref)`
-3. call `useMotionPreference()`
-4. mount Dotted Surface only when motion is allowed
-5. leave the static horizon background in all states
+```ts
+{
+  id: "dotted-surface",
+  priority: "decorative",
+  estimatedCost: "high",
+  continuous: true,
+  allowMobile: false,
+}
+```
+
+Pass `shouldAnimate` to `active`. Use the static horizon as the manager fallback.
 
 Keep the main contact copy in a Server Component.
 
@@ -169,6 +175,7 @@ Style:
 - No starfield
 - No additional CTA button when email is null
 - No invented legal links
+- No direct mount outside `ManagedWebGLEffect`
 
 ## Automated Checks
 
@@ -192,7 +199,7 @@ npm run build
 - [ ] Canonical-source comment exists.
 - [ ] `next-themes` is not installed or imported.
 - [ ] Dotted Surface is a `20rem` shallow horizon.
-- [ ] Animation obeys shared activity policy.
+- [ ] Dotted Surface registers with the fixed decorative/high-cost config.
 - [ ] Email, LinkedIn, and GitHub actions match `docs/content.md`.
 - [ ] Footer content and layout match the recipe.
 - [ ] Reduced motion uses static CSS dots.

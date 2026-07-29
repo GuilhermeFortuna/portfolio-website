@@ -6,7 +6,7 @@ See [`WO-STATUS.md`](WO-STATUS.md). Dispatch only when the WO-004 row is `READY`
 
 ## Result to Produce
 
-One adapted Line Waves WebGL background behind the existing hero content, with fixed parameters, narrow client boundaries, offscreen pausing, mobile simplification, and a static reduced-motion fallback.
+One adapted Line Waves background behind the Hero with activity gating, mobile simplification, and a static fallback. The shared manager is introduced by WO-005 when the second WebGL runtime is added.
 
 Follow the fixed rules in `docs/work-orders/wo/IMPLEMENTATION-SPEC.md`.
 
@@ -15,7 +15,7 @@ Follow the fixed rules in `docs/work-orders/wo/IMPLEMENTATION-SPEC.md`.
 - WO-002
 - WO-003
 - `HeroSection` renders the exact copy and has `id="top"`.
-- `useEffectActivity` exists.
+- WO-002 shared motion primitives exist.
 
 ## Canonical Source
 
@@ -94,14 +94,9 @@ Required changes to the source:
 - Attach pointer movement to the component container, not `document`.
 - Clean up the renderer, canvas, frame, resize listener, and pointer listeners.
 
-### 4. Create a hero-only client wrapper
+### 4. Create the Hero client frame
 
-The hero section remains a Server Component. Add a small local Client Component in the effect file or a separate export that:
-
-1. Owns a wrapper ref.
-2. Calls `useEffectActivity(ref)`.
-3. Checks `(pointer: fine)` and viewport width.
-4. Mounts `LineWaves` only when reduced motion is false.
+Keep the semantic Hero server-rendered. Use the shared activity hook, motion preference, WebGL availability, pointer capability, and mobile detection. Pass activity to Line Waves and render the static fallback when animation is unavailable.
 
 Do not convert the whole hero section into a Client Component.
 
@@ -197,7 +192,7 @@ npm run build
 - [ ] Only `ogl` was added.
 - [ ] Fixed parameter values are used.
 - [ ] Hero remains a Server Component.
-- [ ] Animation is gated by `useEffectActivity`.
+- [ ] Animation is gated by the shared activity hook.
 - [ ] DPR caps are implemented.
 - [ ] Reduced motion uses the static fallback.
 - [ ] Canvas listeners and resources clean up.
