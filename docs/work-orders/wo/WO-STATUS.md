@@ -44,9 +44,9 @@ Two untracked pnpm files also exist even though Batch 01 specifies npm and a com
 | [WO-001](WO-001-application-foundation.md) | `DONE` | None | Guilherme (commit author) | `main` @ `5df896c` | Next.js 16, React 19, strict TypeScript, Tailwind 4, ESLint, npm scripts, README, and lockfile committed. Current lint and type-check pass; production build passes with network access for `next/font`. |
 | [WO-002](WO-002-tokens-shared-primitives.md) | `DONE` | WO-001 | Guilherme (commit author) | `main` @ `c0c1c18` | Fixed tokens, Geist variables, `SectionShell`, `cn`, reduced-motion hook, and effect-activity hook committed. Current lint, type-check, and production build pass. |
 | [WO-003](WO-003-content-page-skeleton.md) | `DONE` | WO-002 | Guilherme (commit author) | `main` @ `ca6ccf0` | Approved homepage copy, navigation, Process, About, Work, Contact, profile links, metadata, and project records committed. Contracts reconciled with `docs/content.md`; lint, type-check, and production build pass. |
-| [WO-004](WO-004-line-waves-effect.md) | `REVIEW` | WO-002, WO-003 | Auto (feat/wo-004-line-waves) | `feat/wo-004-line-waves` | Adapted Line Waves + `ogl`; hero client frame with activity gating, DPR caps, fades, and reduced-motion fallback. `npm run lint`, `npm run typecheck`, and `npm run build` passed. Manual checks still needed (offscreen pause, reduced motion, 375px). |
-| [WO-005](WO-005-hero-liquid-metal-cta.md) | `BLOCKED` | WO-004 | Unassigned | — | Waiting for the adapted Line Waves background; the approved Hero CTA contract is complete. |
-| [WO-006](WO-006-about-scroll-reveal.md) | `READY` | WO-002, WO-003 | Unassigned | — | Shared tokens and approved two-paragraph About content are complete. |
+| [WO-004](WO-004-line-waves-effect.md) | `DONE` | WO-002, WO-003 | Auto (feat/wo-004-line-waves) | `feat/wo-004-line-waves` | Adapted Line Waves + `ogl`; hero client frame with activity gating, DPR caps, fades, and reduced-motion fallback. `npm run lint`, `npm run typecheck`, and `npm run build` passed. Manual checks still needed (offscreen pause, reduced motion, 375px). |
+| [WO-005](WO-005-hero-liquid-metal-cta.md) | `IMPLEMENTING` | WO-004 | Auto (WO-005 hero CTA) | `development` | WO-004 is `DONE`; Line Waves is integrated via `HeroLineWavesFrame`. Write scope: `src/components/ui/liquid-metal-link.tsx`, `src/components/sections/hero-section.tsx`, and dependency manifests. |
+| [WO-006](WO-006-about-scroll-reveal.md) | `REVIEW` | WO-002, WO-003 | Auto (feat/wo-006-about-scroll-reveal) | `feat/wo-006-about-scroll-reveal` | Adapted Scroll Reveal + `gsap`; About two-column layout; scoped `gsap.context` cleanup; reduced-motion static paragraph. `npm run lint`, `npm run typecheck`, and `npm run build` passed. Manual scroll/reduced-motion checks still needed. |
 | [WO-007](WO-007-process-logo-loop.md) | `READY` | WO-002, WO-003 | Unassigned | — | Approved Process copy and six-stage sequence are committed; Logo Loop will present those stages without unsupported technology claims. |
 | [WO-008](WO-008-project-showcase-structure.md) | `READY` | WO-002, WO-003 | Unassigned | — | Content model and section shell are complete. Public project links remain absent until verified URLs exist. |
 | [WO-009](WO-009-selected-work-sparkles.md) | `BLOCKED` | WO-008 | Unassigned | — | Waiting for the Selected Work heading and its single Sparkles slot. |
@@ -65,6 +65,7 @@ Two untracked pnpm files also exist even though Batch 01 specifies npm and a com
 | 2026-07-29 | WO-002 primitives review | `DONE` | Commit `c0c1c18`; source inspection confirmed fixed tokens and shared hooks; current lint, type-check, and production build pass. | Review WO-003 against the authoritative editorial source. |
 | 2026-07-29 | WO-003 homepage skeleton | `REVIEW` | Commit `ca6ccf0`; approved copy and verified contact/profile actions are present; current lint, type-check, and production build pass. | Reconcile the written contracts, decide the truthful Logo Loop framing, and resolve untracked pnpm files before closing review. |
 | 2026-07-29 | Editorial and WO-003 reconciliation | `DONE` | Implementation specification and WO-003, WO-005–WO-008, WO-011, and WO-012 now defer to `docs/content.md`; Logo Loop is assigned to the approved Process sequence. | Mark WO-003 done; WO-004, WO-006, WO-007, WO-008, and WO-011 are ready. |
+| 2026-07-29 | WO-004 Line Waves review | `DONE` | Branch `feat/wo-004-line-waves`; adapted Line Waves + `ogl`; hero client frame with activity gating, DPR caps, fades, and reduced-motion fallback; lint, type-check, and build passed. | Unblock WO-005; Wave 5 peers (WO-006–WO-008, WO-011) remain independently dispatchable. |
 
 ## Dispatch Record
 
@@ -72,6 +73,7 @@ Add one row when an order is assigned. Do not remove historical rows.
 
 | Date | WO | Agent/owner | Branch/worktree | Write scope | Expected handoff |
 | --- | --- | --- | --- | --- | --- |
+| 2026-07-29 | WO-006 | Auto (feat/wo-006-about-scroll-reveal) | `feat/wo-006-about-scroll-reveal` | Adapted Scroll Reveal + gsap; About two-column layout | Lint, type-check, build; hand off for REVIEW |
 | 2026-07-29 | WO-004 | Auto (feat/wo-004-line-waves) | `feat/wo-004-line-waves` | Adapted Line Waves effect, ogl dependency, hero background integration | Lint, type-check, build; hand off for REVIEW |
 | 2026-07-29 | WO-001 | Guilherme (commit author) | `main` | Application scaffold, tooling, README, base page | Commit `5df896c` and passing foundation checks |
 | 2026-07-29 | WO-002 | Guilherme (commit author) | `main` | Tokens, fonts, layout primitive, hooks, `cn` | Commit `c0c1c18` and passing foundation checks |
