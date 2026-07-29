@@ -6,7 +6,7 @@ See [`WO-STATUS.md`](WO-STATUS.md). Dispatch only when the WO-005 row is `READY`
 
 ## Result to Produce
 
-A finished hero layout using the fixed copy, Line Waves background, and one locally adapted Liquid Metal link that navigates to `#work`.
+A finished hero layout using the fixed copy, managed Line Waves background, and the canonical Paper Liquid Metal shader in one managed link to `#work`.
 
 Follow `docs/work-orders/wo/IMPLEMENTATION-SPEC.md`.
 
@@ -26,15 +26,39 @@ Follow `docs/work-orders/wo/IMPLEMENTATION-SPEC.md`.
 ```text
 package.json
 package-lock.json
+src/app/layout.tsx
+src/components/effects/line-waves.tsx
 src/components/sections/hero-section.tsx
 src/components/ui/liquid-metal-link.tsx
+src/components/webgl/managed-webgl-effect.tsx
+src/components/webgl/webgl-manager.tsx
 ```
 
-Do not modify Line Waves or global tokens.
+Do not modify global tokens or Line Waves visual parameters.
 
 ## Procedure
 
-### 1. Copy and reduce the source component
+### 1. Create the shared WebGL manager
+
+Implement section 9 of `IMPLEMENTATION-SPEC.md`. Wrap application children with `WebGLManager` in `layout.tsx`.
+
+Create `ManagedWebGLEffect` with the 300px near-viewport observer, registration lifecycle, static fallback, cost arbitration, and render-prop `shouldAnimate` control.
+
+Migrate the existing `HeroLineWavesFrame` to:
+
+```ts
+{
+  id: "line-waves",
+  priority: "hero",
+  estimatedCost: "high",
+  continuous: true,
+  allowMobile: true,
+}
+```
+
+Do not change the existing Line Waves appearance.
+
+### 2. Copy and reduce the source component
 
 Create `src/components/ui/liquid-metal-link.tsx` with:
 
@@ -42,7 +66,7 @@ Create `src/components/ui/liquid-metal-link.tsx` with:
 // Adapted from https://21st.dev/@johuniq/components/liquid-metal-button
 ```
 
-Use the source shader implementation, but remove:
+Keep the real `liquidMetal` source shader implementation, but remove:
 
 - icon-only mode
 - generic button mode
@@ -53,7 +77,7 @@ Use the source shader implementation, but remove:
 
 Do not install `lucide-react` if no icon remains.
 
-### 2. Use a link-specific API
+### 3. Use a link-specific API
 
 Export:
 
@@ -71,17 +95,15 @@ export function LiquidMetalLink(
 
 The semantic interactive element must be an `<a>`, not a `<button>` with navigation behavior.
 
-### 3. Install only the retained shader dependency
-
-If the copied implementation still uses Paper Shaders, install:
+### 4. Install the canonical shader dependency
 
 ```bash
 npm install @paper-design/shaders
 ```
 
-If adaptation removes that import entirely, install nothing. Record the choice in the handoff.
+Do not replace it with CSS-only animation and do not port the GLSL to OGL.
 
-### 4. Apply exact dimensions and states
+### 5. Apply exact dimensions and states
 
 The link must have:
 
@@ -104,9 +126,25 @@ State behavior:
 - focus-visible: shared two-pixel focus outline remains unobstructed
 - no disabled state is needed
 
-Use only accent A, B, and C in the shader or gradient.
+The shader may retain its canonical grayscale metal striping. Surrounding glow, focus, border, and fallback colors use only accents A, B, and C.
 
-### 5. Implement the static fallback
+### 6. Register Liquid Metal
+
+Wrap the shader surface in `ManagedWebGLEffect` with:
+
+```ts
+{
+  id: "liquid-metal",
+  priority: "hero",
+  estimatedCost: "low",
+  continuous: true,
+  allowMobile: false,
+}
+```
+
+Pass manager animation state into the shader if supported. If the library exposes no pause control, render it only while `shouldAnimate` is true and show the static metallic fallback otherwise.
+
+### 7. Implement the static fallback
 
 When reduced motion is requested:
 
@@ -117,7 +155,7 @@ When reduced motion is requested:
 
 The label remains `Explore my work`.
 
-### 6. Finish the hero layout
+### 8. Finish the hero layout
 
 `HeroSection` remains a Server Component.
 
@@ -151,7 +189,7 @@ Use these measurements:
 
 Use the exact hero typography and copy from the implementation spec.
 
-### 7. Preserve readable layering
+### 9. Preserve readable layering
 
 - Effect: z-index `0`
 - Fades: z-index `1`
@@ -168,6 +206,7 @@ Use the exact hero typography and copy from the implementation spec.
 - No new hero animation
 - No Liquid Metal style elsewhere
 - No CTA label change
+- No CSS-only replacement and no hand-ported GLSL
 
 ## Automated Checks
 
@@ -190,7 +229,10 @@ npm run build
 - [ ] CTA is an anchor to `#work`.
 - [ ] Exact visible label is used.
 - [ ] CTA dimensions and typography match the recipe.
-- [ ] Only the retained dependency was added.
+- [ ] `@paper-design/shaders` is installed and the canonical shader is retained.
+- [ ] Liquid Metal registers with the WebGL manager and uses the fixed low-cost hero config.
+- [ ] Existing Line Waves is migrated to the manager without visual changes.
+- [ ] Desktop manager budget permits Line Waves and Liquid Metal together.
 - [ ] Reduced motion uses the static metallic fallback.
 - [ ] Hero remains a Server Component.
 - [ ] Hero spacing and max widths match the recipe.

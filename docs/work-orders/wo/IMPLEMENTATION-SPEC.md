@@ -45,6 +45,9 @@ src/
     ui/
       liquid-metal-link.tsx
       logo-loop.tsx
+    webgl/
+      managed-webgl-effect.tsx
+      webgl-manager.tsx
   content/
     projects.ts
     site.ts
@@ -169,15 +172,57 @@ Do not use all-uppercase text outside eyebrow labels, wordmark, and compact tech
 
 ## 9. Fixed Motion Policy
 
-Every continuous effect receives an `active` boolean.
+WebGL is a managed resource. Do not mount OGL, Three.js, or Paper shader components directly in section files.
 
-`active` is true only when all are true:
+`WebGLManager` wraps the application and maintains the registry. Every WebGL effect registers:
 
-- the effect container intersects the viewport
-- `document.visibilityState === "visible"`
-- reduced motion is not requested
+- stable ID
+- priority: `hero` or `decorative`
+- estimated cost: `low`, `medium`, or `high`
+- whether it needs continuous animation
+- whether it may run on mobile
+- near-viewport state
+- visible state
 
-Use `useEffectActivity(ref)` to implement this shared policy.
+Use this contract:
+
+```ts
+type WebGLEffectConfig = {
+  id: "line-waves" | "liquid-metal" | "shape-blur" | "dotted-surface";
+  priority: "hero" | "decorative";
+  estimatedCost: "low" | "medium" | "high";
+  continuous: boolean;
+  allowMobile: boolean;
+};
+```
+
+`ManagedWebGLEffect` owns viewport observation with `rootMargin: "300px"` and exposes:
+
+- `shouldMount`: true only near the viewport, with motion allowed, mobile allowed, and a manager budget slot granted
+- `shouldAnimate`: true only while mounted, actually visible, document-visible, and granted a budget slot
+
+Use a render-prop API so the manager controls the child:
+
+```tsx
+<ManagedWebGLEffect config={config} fallback={<StaticFallback />}>
+  {({ shouldAnimate }) => <Effect active={shouldAnimate} />}
+</ManagedWebGLEffect>
+```
+
+After first mount, prefer pausing over repeated shader compilation while the effect remains within the 300px near-viewport margin. Unmount after it leaves that margin.
+
+Desktop cost budget is `4`: low `1`, medium `2`, high `3`. Higher priority wins; ties use registration order. This permits Line Waves (`high`) and the small Liquid Metal CTA (`low`) together. Mobile cost budget is `2`.
+
+Fixed registrations:
+
+| Effect | Priority | Cost | Continuous | Mobile |
+| --- | --- | --- | --- | --- |
+| Line Waves | hero | high | yes | yes, simplified |
+| Liquid Metal | hero | low | yes | no; static metallic fallback |
+| Shape Blur | decorative | high | yes | no |
+| Dotted Surface | decorative | high | yes | no |
+
+`useEffectActivity` remains available for non-WebGL motion such as Logo Loop and Sparkles.
 
 Reduced motion:
 
@@ -193,17 +238,18 @@ Mobile:
 
 - cap WebGL/canvas device pixel ratio at `1.25`
 - disable pointer interaction
-- Shape Blur is not mounted
-- other effects may run only when their Work Order explicitly permits it
+- follow the manager’s `allowMobile` policy
 
 ## 10. Fixed Component Boundaries
 
 - Effect files are Client Components.
+- `WebGLManager` and `ManagedWebGLEffect` are Client Components.
 - Section files remain Server Components unless state is essential.
 - `project-showcase.tsx` may be a Client Component.
 - `page.tsx`, `layout.tsx`, and content files must not use `"use client"`.
 - Decorative canvases use `aria-hidden="true"` and `pointer-events: none`.
 - Essential content must remain in semantic HTML outside canvases.
+- No third-party WebGL component may bypass `ManagedWebGLEffect`.
 
 ## 11. Fixed Project Presentation
 
