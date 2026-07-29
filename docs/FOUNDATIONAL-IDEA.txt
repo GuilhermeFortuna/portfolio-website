@@ -1,0 +1,7 @@
+Rather than designing every UI component from scratch, the goal is to curate a collection of high-quality components from sources such as 21st.dev, React Bits, and other premium libraries, then adapt them into a single, cohesive design system.
+
+These components should be treated as building blocks—not finished designs. Every selected component will be standardized through a shared set of design tokens (colors, typography, spacing, radii, shadows, and motion), along with any necessary structural or stylistic refinements. This adaptation layer ensures that all components feel like they were designed specifically for the product rather than assembled from different libraries.
+
+The emphasis is on careful curation. Each component must serve a purpose and contribute to one unified visual language. Components that do not fit the established design direction should be replaced, regardless of their individual quality.
+
+The end goal is to achieve the polish and consistency of a handcrafted premium interface while dramatically reducing development time by leveraging proven, production-ready components.

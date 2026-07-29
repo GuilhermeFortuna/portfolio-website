@@ -1,0 +1,10 @@
+Background: https://reactbits.dev/backgrounds/line-waves
+
+Animations:
+    - https://reactbits.dev/animations/shape-blur
+    - https://reactbits.dev/animations/logo-loop
+    - https://21st.dev/@sshahaider/components/dotted-surface
+    - https://reactbits.dev/text-animations/scroll-reveal
+
+Buttons:
+    - https://21st.dev/@johuniq/components/liquid-metal-button
