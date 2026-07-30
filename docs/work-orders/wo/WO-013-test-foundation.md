@@ -45,12 +45,66 @@ npm run build
 
 ## Acceptance Checklist
 
-- [ ] Tests execute once and fail if no tests are discovered.
-- [ ] jsdom, `@/` aliases, jest-dom matchers, and cleanup work.
-- [ ] No production dependency was added or upgraded.
-- [ ] Coverage report is generated with documented, narrow exclusions.
-- [ ] Existing lint, type-check, and production build pass.
+- [x] Tests execute once and fail if no tests are discovered.
+- [x] jsdom, `@/` aliases, jest-dom matchers, and cleanup work.
+- [x] No production dependency was added or upgraded.
+- [x] Coverage report is generated with documented, narrow exclusions.
+- [x] Existing lint, type-check, and production build pass.
 
 ## Handoff
 
-Include exact package versions, test/coverage commands and results, every shim introduced, and the reason for each coverage exclusion.
+### Dev dependencies added (exact resolved versions)
+
+| Package | Version | Purpose |
+| --- | --- | --- |
+| `vitest` | 4.1.10 | Test runner |
+| `@vitest/coverage-v8` | 4.1.10 | V8 coverage provider |
+| `jsdom` | 30.0.1 | DOM environment |
+| `@testing-library/react` | 16.3.2 | Component rendering |
+| `@testing-library/jest-dom` | 7.0.0 | DOM matchers |
+| `@testing-library/user-event` | 14.6.1 | User-interaction simulation (available for later WOs) |
+| `@vitejs/plugin-react` | 6.0.4 | React/JSX transform for Vitest |
+
+No production dependency was added or changed. `package.json` `dependencies` is
+byte-for-byte identical to before this order. `vite-tsconfig-paths` was installed
+during development, then removed in favor of Vite's native `resolve.tsconfigPaths`.
+
+### Scripts
+
+- `npm run test` → `vitest run` (single, non-watch run; no `--passWithNoTests`, so it exits non-zero when no test files are discovered).
+- `npm run test:coverage` → `vitest run --coverage`.
+
+### Configuration
+
+- `vitest.config.ts`: `environment: "jsdom"`, `globals: true`, `setupFiles: ["./src/test/setup.ts"]`, test include `src/**/*.{test,spec}.{ts,tsx}`.
+- `@/` aliases resolve via `resolve.tsconfigPaths: true`, reusing `tsconfig.json` `paths`.
+- Coverage: `provider: "v8"`, reporters `text` + `html` (written to gitignored `./coverage`).
+
+### Shims introduced
+
+None. jsdom covers everything the current smoke test needs. `src/test/setup.ts`
+registers jest-dom matchers (`@testing-library/jest-dom/vitest`) and an
+`afterEach` that runs RTL `cleanup()`, `vi.unstubAllGlobals()`, and
+`vi.restoreAllMocks()` so any future stub is reset per test. A comment marks
+where to add a real shim (via `vi.stubGlobal`) when a test first needs one.
+
+### Coverage exclusions and reasons
+
+| Exclusion | Reason |
+| --- | --- |
+| `src/test/**` | Test helpers/infrastructure, not code under test. |
+| `src/types/**` | Type-only declarations; no executable statements. |
+| `src/components/effects/**` | Copied/adapted third-party visual effects; WebGL/canvas, not meaningful under jsdom. |
+| `src/components/ui/logo-loop.tsx` | Copied/adapted third-party visual effect. |
+| `src/app/**` | Next.js App Router entry files (metadata, fonts, page composition); framework wiring exercised by the build. |
+
+### Commands and results
+
+| Command | Result |
+| --- | --- |
+| `npm run test` | Pass — 1 file, 2 tests. |
+| Zero-test check (`npx vitest run __no_such_test_pattern__`) | Exit code 1 (fails on zero tests). |
+| `npm run test:coverage` | Pass — HTML + text report generated in `./coverage`. |
+| `npm run lint` | Pass — 0 errors, 0 warnings (added `coverage/**` to ESLint ignores). |
+| `npm run typecheck` | Pass — no errors. |
+| `npm run build` | Pass — Next.js 16.2.12 production build (network available for `next/font`). |

@@ -42,12 +42,48 @@ npm run build
 
 ## Acceptance Checklist
 
-- [ ] Project selection works with mouse and keyboard in tests.
-- [ ] Mobile project content preserves all four records in order.
-- [ ] Both reusable hooks cover state changes and cleanup.
-- [ ] Tests require no network, WebGL context, real animation frame, or timer delay.
-- [ ] Full test suite, coverage, lint, type-check, and build pass.
+- [x] Project selection works with mouse and keyboard in tests.
+- [x] Mobile project content preserves all four records in order.
+- [x] Both reusable hooks cover state changes and cleanup.
+- [x] Tests require no network, WebGL context, real animation frame, or timer delay.
+- [x] Full test suite, coverage, lint, type-check, and build pass.
 
 ## Handoff
 
-Record mocks/doubles introduced, lifecycle cases covered, and any behavior that remains browser-only evidence.
+### Test count and commands
+
+- Added 9 tests across three files; the full suite contains 34 tests across
+  twelve files.
+- `npm run test`: pass — 12 files, 34 tests.
+- `npm run test:coverage`: pass — hooks at ~93% lines; `ProjectShowcase` covered
+  for selection paths.
+- `npm run lint`: pass.
+- `npm run typecheck`: pass.
+- `npm run build`: pass.
+
+### Mocks and doubles
+
+| Double | Purpose |
+| --- | --- |
+| `ManagedWebGLEffect` → `fallback` | Avoid WebGL registry/canvas; keep decorative slot empty. |
+| `ShapeBlur` → `null` | Skip Three.js leaf; selection/diagram contract still asserted. |
+| `matchMedia` | Explicit mobile (`max-width: 767px`) vs desktop mode; `(pointer: fine)` for hover policy; reduced-motion for hooks. |
+| `IntersectionObserver` class double | Controlled intersect/disconnect without real observers or timers. |
+| `document.visibilityState` + `visibilitychange` | Document-visibility transitions for `useEffectActivity`. |
+
+### Lifecycle cases covered
+
+- `ProjectShowcase`: click updates `aria-pressed`, summary/label, and diagram
+  together; focus selects without hover; coarse pointer ignores hover; mobile
+  articles keep all four projects in source order with `h3` hierarchy.
+- `useMotionPreference`: initial media-query snapshot, change notification,
+  listener removal on unmount.
+- `useEffectActivity`: inactive until intersecting; toggles with document
+  visibility; forced inactive under reduced motion; observer disconnect on
+  unmount; no observe when ref is null.
+
+### Browser-only evidence (not in jsdom)
+
+Real Shape Blur / WebGL mount, pointer-driven hover selection on fine pointers,
+actual CSS `lg:` breakpoint hiding, GSAP/Logo Loop/tsParticles frame loops, and
+hardware intersection remain Batch 01 manual/browser validation.
