@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 
+import { ShapeBlur } from "@/components/effects/shape-blur";
+import { ManagedWebGLEffect } from "@/components/webgl/managed-webgl-effect";
+import type { WebGLEffectConfig } from "@/components/webgl/webgl-manager";
 import { cn } from "@/lib/cn";
 import type { Project } from "@/types/content";
 
@@ -10,6 +13,20 @@ type ProjectShowcaseProps = {
 };
 
 type KnownProjectSlug = "aegis" | "q" | "gosigapp" | "nexo-dental";
+
+const SHAPE_BLUR_CONFIG: WebGLEffectConfig = {
+  id: "shape-blur",
+  priority: "decorative",
+  estimatedCost: "high",
+  continuous: true,
+  allowMobile: false,
+};
+
+/** Fades the outer 12% of every edge so the canvas never meets the stage border. */
+const STAGE_EDGE_MASK = [
+  "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
+  "linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)",
+].join(", ");
 
 function isFinePointer(): boolean {
   return window.matchMedia("(pointer: fine)").matches;
@@ -24,6 +41,27 @@ function isKnownProjectSlug(slug: string): slug is KnownProjectSlug {
       return true;
     default:
       return false;
+  }
+}
+
+function shapeBlurColor(slug: string): string {
+  if (!isKnownProjectSlug(slug)) {
+    return "#8EA0FF";
+  }
+
+  switch (slug) {
+    case "aegis":
+      return "#8EA0FF";
+    case "q":
+      return "#68D7C5";
+    case "gosigapp":
+      return "#B49CFF";
+    case "nexo-dental":
+      return "#8EA0FF";
+    default: {
+      const _exhaustive: never = slug;
+      return _exhaustive;
+    }
   }
 }
 
@@ -242,9 +280,36 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
           <div
             data-shape-blur-slot
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 z-0 opacity-0"
-          />
-          <div className="relative z-10 h-full w-full">
+            className="pointer-events-none absolute inset-0 z-0"
+            style={{
+              opacity: 0.18,
+              maskImage: STAGE_EDGE_MASK,
+              maskComposite: "intersect",
+              WebkitMaskImage: STAGE_EDGE_MASK,
+              WebkitMaskComposite: "source-in",
+            }}
+          >
+            <ManagedWebGLEffect
+              config={SHAPE_BLUR_CONFIG}
+              className="absolute inset-0 h-full w-full"
+              fallback={null}
+            >
+              {({ shouldAnimate }) => (
+                <ShapeBlur
+                  active={shouldAnimate}
+                  color={shapeBlurColor(activeSlug)}
+                  variation={0}
+                  pixelRatio={1.25}
+                  shapeSize={1.05}
+                  roundness={0.45}
+                  borderSize={0.04}
+                  circleSize={0.18}
+                  circleEdge={0.3}
+                />
+              )}
+            </ManagedWebGLEffect>
+          </div>
+          <div className="relative z-[1] h-full w-full">
             <ProjectDiagram slug={activeSlug} />
           </div>
         </div>
