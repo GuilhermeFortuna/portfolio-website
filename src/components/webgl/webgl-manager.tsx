@@ -57,7 +57,13 @@ const PRIORITY_RANK: Record<WebGLEffectConfig["priority"], number> = {
   decorative: 1,
 };
 
-const DESKTOP_COST_BUDGET = 4;
+/**
+ * Raised from the specification's original 4 by owner decision on 2026-07-30. At
+ * 4 units the hero effects held the whole budget while the project stage was
+ * already on screen, so Shape Blur never mounted at a normal reading position. 7
+ * admits Line Waves (3), the Liquid Metal CTA (1), and Shape Blur (3) together.
+ */
+const DESKTOP_COST_BUDGET = 7;
 /**
  * The specification states a mobile budget of 2 while also fixing Line Waves as
  * a `high` (3 unit) effect that runs on mobile in simplified form. The fixed
