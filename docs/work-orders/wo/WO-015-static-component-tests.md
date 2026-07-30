@@ -40,12 +40,51 @@ npm run typecheck
 
 ## Acceptance Checklist
 
-- [ ] Header skip/navigation behavior is covered.
-- [ ] Footer actions and external-link safety are covered.
-- [ ] `SectionShell` semantic behavior is covered without CSS snapshots.
-- [ ] Homepage semantic outline and section order are covered.
-- [ ] Visual-effect mocks are local, minimal, and documented in the test.
+- [x] Header skip/navigation behavior is covered.
+- [x] Footer actions and external-link safety are covered.
+- [x] `SectionShell` semantic behavior is covered without CSS snapshots.
+- [x] Homepage semantic outline and section order are covered.
+- [x] Visual-effect mocks are local, minimal, and documented in the test.
 
 ## Handoff
 
-Report the visible contracts tested and any intentionally untested client-only behavior delegated to WO-016.
+### Test count and commands
+
+- Added 9 tests across four files; the full suite contains 25 tests across
+  nine files.
+- `npm run test`: pass — 9 files, 25 tests.
+- `npm run test:coverage`: pass — v8 text and HTML reports generated.
+- `npm run lint`: pass — 0 errors and 0 warnings.
+- `npm run typecheck`: pass — no errors.
+
+### Visible contracts tested
+
+- `SiteHeader`: skip link → `#main-content`, labelled Primary / Primary mobile
+  navs with approved destinations, wordmark → `#top`, and Tab reaches skip,
+  wordmark, then navigation anchors.
+- `SiteFooter`: copyright from `footerContent`, Back to top → `#top`. The
+  footer has no external links; `target`/`rel` safety for profile actions is
+  asserted on the homepage LinkedIn/GitHub links instead.
+- `SectionShell`: named region landmark via `aria-labelledby`, section `id`,
+  optional eyebrow label, and consumer children — no utility-class assertions.
+- Homepage: one `h1`, section IDs `top → work → process → about → contact`,
+  the four required `h2`s, and the four authored project names as `h3`s
+  (desktop + mobile trees both render in jsdom; uniqueness is the contract).
+
+### Visual-effect mocks (local to `page.test.tsx`)
+
+| Mock | Accessible surface kept |
+| --- | --- |
+| `ManagedWebGLEffect` | Always renders `fallback` (Liquid Metal static accent; decorative slots empty). |
+| `SparklesAccent` | `null` — real leaf is decorative/`aria-hidden`. |
+| `ScrollReveal` | Plain `<p>{children}</p>` (reduced-motion fallback). |
+| `LogoLoop` | Named container with `ariaLabel` (unused when reduced-motion stub is on). |
+
+`matchMedia` is stubbed to prefer reduced motion so Process uses its static
+six-stage list and About skips GSAP.
+
+### Deferred to WO-016
+
+`ProjectShowcase` click/keyboard selection, hover-independent active state,
+and hook behavior (`useMotionPreference`, `useEffectActivity`) remain
+interactive client tests.
