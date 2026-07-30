@@ -89,6 +89,67 @@ Positioning → problem → goal → why difficult → system → 2–4 decision
 
 **DECISION (2026-07-28):** Project repositories are private and will not be linked publicly. Staging/live environment links are planned for Aegis, Q, and Nexo Dental when those environments exist; gosigapp has no UI (CLI/backend only) and will not receive a live-environment action. Until staging URLs are verified, keep `[REQUIRED: live environment URL]` markers.
 
+## Aegis case study
+
+**Status:** accepted facts from WO-018. The claim-level evidence register and
+public disclosure boundary is
+[`aegis-case-study-evidence.md`](./aegis-case-study-evidence.md); it is
+authoritative for every publishable Aegis claim and its classification. WO-020
+turns these accepted facts into exact visible copy.
+
+### Accepted facts
+
+- **FACT (owner):** Aegis is a **fraud-intelligence** product built for an
+  unnamed betting company in the **Brazilian iGaming** sector.
+- **FACT (owner):** Role **Software Developer**; period **April 2026–present**.
+  Repository history begins 2026-04-06 (backend) and 2026-04-12 (frontend).
+- **FACT (owner):** Guilherme designed and built every product and engineering
+  layer, with AI assistance. It was deployed to production and, as far as the
+  owner knows, remains active.
+- **FACT (owner):** The public repository version is a **sanitized,
+  independently maintained evolution** of the company implementation. It is not
+  byte-identical to production.
+- **FACT (source):** Verified system — a standalone React SPA (Vite + React
+  Router v7, static nginx), a read-focused **FastAPI** service, **PostgreSQL**,
+  **Databricks** lakehouse queries, optional **Redis** cache-first reads, batch
+  sync jobs and an hourly sync-then-scan pipeline, an 8-rule detection engine
+  (payment/gameplay/identity/impact) with shadow/live modes, scoring, and
+  generated finding reports, API-enforced auth (sessions, CSRF, MFA, Argon2,
+  permissions), and a synthetic demonstration-data path.
+- **FACT (source):** Verified workflows — overview dashboard, player
+  investigation, alerts queue, cases, reports, rule configuration, Risk
+  Constellation WebGL visualization, player geo/map, and admin/security-audit.
+- **INFERENCE — review required:** Detection rules are *aligned to* Brazilian
+  AML regulation (SPA/MF Portaria 1.143/2024; SISCOAF); do not claim regulator
+  certification.
+
+### Disclosure boundary
+
+- **Confidential — never published:** the employer identity, any former
+  internal portal/system name, deployment/project identifiers and staging URLs,
+  third-party cloud account IDs, and all production/personal data (players,
+  CPFs, transactions, IPs, credentials).
+- **Synthetic media only:** every screenshot, figure, or video uses the
+  repository's synthetic demonstration data.
+- **No invented impact:** no fraud-reduction, revenue, money-saved,
+  investigation-speed, adoption, accuracy, data-volume, uptime, team-size, or
+  client-satisfaction claim may be published.
+
+### Known gaps (state honestly)
+
+- The frontend login is a nonfunctional shell; the API is the sole
+  authorization authority until the client gate lands.
+- The Playwright end-to-end suite is written but skipped.
+- The Risk Constellation is tested to ~350k points, not multi-million.
+
+### Missing inputs
+
+- Verified live/staging URL, or confirmation to keep the case study link-free
+  (`[REQUIRED: live environment URL]`).
+- Approved sanitized Aegis screenshots and optimized intro media (WO-019).
+- Reviewer confirmation on regulatory-alignment wording and the depth of the
+  cases workflow.
+
 ## Metadata
 
 The validated route metadata registry is shared by the client router and the static route-shell generator. Every route requires a unique title, description, canonical URL, `og:url`, `og:title`, and `og:description`. An approved project-specific social image SHOULD be used; routes without one use the approved global 1200×630 default.
