@@ -11,13 +11,19 @@ import { fireEvent, render, screen, within } from "@/test/render";
  * decisions without WebGL, OGL, or animation-frame work.
  */
 vi.mock("@/components/webgl/managed-webgl-effect", () => ({
-  ManagedWebGLEffect: ({ fallback }: { fallback: ReactNode }) => (
-    <>{fallback}</>
-  ),
+  ManagedWebGLEffect: ({
+    children,
+    fallback,
+  }: {
+    children: (state: { shouldAnimate: boolean }) => ReactNode;
+    fallback: ReactNode;
+  }) => <>{children ? children({ shouldAnimate: false }) : fallback}</>,
 }));
 
 vi.mock("@/components/effects/shape-blur", () => ({
-  ShapeBlur: () => null,
+  ShapeBlur: ({ color }: { color: string }) => (
+    <output data-testid="shape-blur-color">{color}</output>
+  ),
 }));
 
 type MediaOptions = {
@@ -148,6 +154,23 @@ describe("ProjectShowcase", () => {
     expect(thirdButton).toHaveTextContent(third.category);
     expect(thirdButton).toHaveTextContent(third.summary);
     expectDiagramFor(third.slug);
+  });
+
+  it("updates the visual-effect decision and diagram for every remaining project", async () => {
+    const user = userEvent.setup();
+    render(<ProjectShowcase projects={projects} />);
+
+    for (const project of projects.slice(1)) {
+      await user.click(
+        screen.getByRole("button", {
+          name: new RegExp(`${project.name}.*${project.summary}`, "s"),
+        }),
+      );
+
+      expectDiagramFor(project.slug);
+    }
+
+    expect(screen.getByTestId("shape-blur-color")).toHaveTextContent("#8EA0FF");
   });
 
   it("exposes all four projects in source order for the mobile presentation", () => {
