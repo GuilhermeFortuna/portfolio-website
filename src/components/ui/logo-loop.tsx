@@ -341,8 +341,7 @@ export const LogoLoop = memo<LogoLoopProps>(
           isVertical ? "overflow-hidden h-full inline-block" : "overflow-x-hidden",
           "[--logoloop-gap:32px]",
           "[--logoloop-logoHeight:28px]",
-          "[--logoloop-fadeColorAuto:#ffffff]",
-          "dark:[--logoloop-fadeColorAuto:#0b0b0b]",
+          "[--logoloop-fadeColorAuto:var(--color-canvas)]",
           scaleOnHover && "py-[calc(var(--logoloop-logoHeight)*0.1)]",
           className,
         ),
@@ -393,7 +392,7 @@ export const LogoLoop = memo<LogoLoopProps>(
               "inline-flex items-center",
               "motion-reduce:transition-none",
               scaleOnHover &&
-                "transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover/item:scale-120",
+                "transition-transform duration-[var(--duration-medium)] ease-[var(--ease-standard)] group-hover/item:scale-120",
             )}
             aria-hidden={Boolean(item.href) && !item.ariaLabel}
           >
@@ -408,7 +407,7 @@ export const LogoLoop = memo<LogoLoopProps>(
               "[image-rendering:-webkit-optimize-contrast]",
               "motion-reduce:transition-none",
               scaleOnHover &&
-                "transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover/item:scale-120",
+                "transition-transform duration-[var(--duration-medium)] ease-[var(--ease-standard)] group-hover/item:scale-120",
             )}
             src={item.src}
             srcSet={item.srcSet}
@@ -430,8 +429,8 @@ export const LogoLoop = memo<LogoLoopProps>(
         const inner = item.href ? (
           <a
             className={cx(
-              "inline-flex items-center no-underline rounded",
-              "transition-opacity duration-200 ease-linear",
+              "inline-flex items-center no-underline rounded-[var(--radius-sm)]",
+              "transition-opacity duration-[var(--duration-fast)] ease-[var(--ease-standard)]",
               "hover:opacity-80",
               "focus-visible:outline focus-visible:outline-current focus-visible:outline-offset-2",
             )}

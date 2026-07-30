@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 
 import { ShapeBlur } from "@/components/effects/shape-blur";
 import { ManagedWebGLEffect } from "@/components/webgl/managed-webgl-effect";
@@ -22,11 +22,29 @@ const SHAPE_BLUR_CONFIG: WebGLEffectConfig = {
   allowMobile: false,
 };
 
+const DESKTOP_SHAPE_BLUR_QUERY = "(min-width: 1024px)";
+
 /** Fades the outer 12% of every edge so the canvas never meets the stage border. */
 const STAGE_EDGE_MASK = [
   "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
   "linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)",
 ].join(", ");
+
+function subscribeToDesktopShapeBlur(onChange: () => void): () => void {
+  const mediaQuery = window.matchMedia(DESKTOP_SHAPE_BLUR_QUERY);
+  mediaQuery.addEventListener("change", onChange);
+  return () => {
+    mediaQuery.removeEventListener("change", onChange);
+  };
+}
+
+function getDesktopShapeBlurSnapshot(): boolean {
+  return window.matchMedia(DESKTOP_SHAPE_BLUR_QUERY).matches;
+}
+
+function getDesktopShapeBlurServerSnapshot(): boolean {
+  return false;
+}
 
 function isFinePointer(): boolean {
   return window.matchMedia("(pointer: fine)").matches;
@@ -245,6 +263,11 @@ function ProjectMeta({
 
 export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
   const [activeSlug, setActiveSlug] = useState(projects[0].slug);
+  const showShapeBlur = useSyncExternalStore(
+    subscribeToDesktopShapeBlur,
+    getDesktopShapeBlurSnapshot,
+    getDesktopShapeBlurServerSnapshot,
+  );
 
   return (
     <div className="mt-12">
@@ -289,25 +312,27 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
               WebkitMaskComposite: "source-in",
             }}
           >
-            <ManagedWebGLEffect
-              config={SHAPE_BLUR_CONFIG}
-              className="absolute inset-0 h-full w-full"
-              fallback={null}
-            >
-              {({ shouldAnimate }) => (
-                <ShapeBlur
-                  active={shouldAnimate}
-                  color={shapeBlurColor(activeSlug)}
-                  variation={0}
-                  pixelRatio={1.25}
-                  shapeSize={1.05}
-                  roundness={0.45}
-                  borderSize={0.04}
-                  circleSize={0.18}
-                  circleEdge={0.3}
-                />
-              )}
-            </ManagedWebGLEffect>
+            {showShapeBlur ? (
+              <ManagedWebGLEffect
+                config={SHAPE_BLUR_CONFIG}
+                className="absolute inset-0 h-full w-full"
+                fallback={null}
+              >
+                {({ shouldAnimate }) => (
+                  <ShapeBlur
+                    active={shouldAnimate}
+                    color={shapeBlurColor(activeSlug)}
+                    variation={0}
+                    pixelRatio={1.25}
+                    shapeSize={1.05}
+                    roundness={0.45}
+                    borderSize={0.04}
+                    circleSize={0.18}
+                    circleEdge={0.3}
+                  />
+                )}
+              </ManagedWebGLEffect>
+            ) : null}
           </div>
           <div className="relative z-[1] h-full w-full">
             <ProjectDiagram slug={activeSlug} />

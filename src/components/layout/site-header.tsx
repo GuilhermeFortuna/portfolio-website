@@ -1,7 +1,7 @@
 import { siteContent, siteNavigation } from "@/content/site";
 
 const linkClassName =
-  "inline-flex min-h-11 items-center [font-family:var(--font-geist-mono)] text-[0.6875rem] font-semibold tracking-[0.14em] uppercase";
+  "inline-flex min-h-11 min-w-11 items-center justify-center [font-family:var(--font-geist-mono)] text-[0.6875rem] font-semibold tracking-[0.14em] uppercase";
 
 export function SiteHeader() {
   return (

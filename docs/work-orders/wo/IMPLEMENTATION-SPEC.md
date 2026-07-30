@@ -211,7 +211,7 @@ Use a render-prop API so the manager controls the child:
 
 After first mount, prefer pausing over repeated shader compilation while the effect remains within the 300px near-viewport margin. Unmount after it leaves that margin.
 
-Desktop cost budget is `7`: low `1`, medium `2`, high `3`. Higher priority wins; ties use registration order. This permits Line Waves (`high`), the small Liquid Metal CTA (`low`), and Shape Blur (`high`) together. Mobile cost budget is `2`.
+Desktop cost budget is `7`: low `1`, medium `2`, high `3`. Higher priority wins; ties use registration order. This permits Line Waves (`high`), the small Liquid Metal CTA (`low`), and Shape Blur (`high`) together. Mobile cost budget is `3`, admitting exactly the simplified mobile Line Waves (`high`) and no additional WebGL effect.
 
 The desktop budget was `4` until 2026-07-30. The owner raised it because the hero effects held the entire budget while the project stage was already on screen, so Shape Blur never mounted at a normal reading position.
 

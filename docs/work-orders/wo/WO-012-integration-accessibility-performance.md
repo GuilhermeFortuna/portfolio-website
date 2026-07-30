@@ -165,7 +165,7 @@ Normal motion:
 - only visible sections animate
 - hidden browser tab stops continuous work
 - leaving and returning to a section does not duplicate frames/listeners
-- desktop active cost never exceeds `4`; mobile active cost never exceeds `2`
+- desktop active cost never exceeds `7`; mobile active cost never exceeds `3`
 - near-viewport effects mount within the `300px` margin and pause when not actually visible
 
 Reduced motion:
@@ -174,7 +174,7 @@ Reduced motion:
 - Line Waves static gradient
 - Liquid Metal static chrome
 - Scroll Reveal unsplit static paragraph
-- Logo Loop static eight-item grid
+- Logo Loop static six-item grid
 - Sparkles static line/glow
 - Shape Blur not mounted
 - Dotted Surface static dot pattern
