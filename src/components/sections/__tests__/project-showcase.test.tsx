@@ -1,0 +1,173 @@
+import type { ReactNode } from "react";
+import userEvent from "@testing-library/user-event";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { ProjectShowcase } from "@/components/sections/project-showcase";
+import { projects } from "@/content/projects";
+import { fireEvent, render, screen, within } from "@/test/render";
+
+/*
+ * Visual-effect leaves are mocked so this file proves selection/fallback
+ * decisions without WebGL, OGL, or animation-frame work.
+ */
+vi.mock("@/components/webgl/managed-webgl-effect", () => ({
+  ManagedWebGLEffect: ({ fallback }: { fallback: ReactNode }) => (
+    <>{fallback}</>
+  ),
+}));
+
+vi.mock("@/components/effects/shape-blur", () => ({
+  ShapeBlur: () => null,
+}));
+
+type MediaOptions = {
+  /** `(max-width: 767px)` — documents intended mobile vs desktop mode. */
+  mobile?: boolean;
+  /** `(pointer: fine)` — controls hover-driven selection. */
+  finePointer?: boolean;
+};
+
+function stubMatchMedia({
+  mobile = false,
+  finePointer = true,
+}: MediaOptions = {}) {
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn((query: string) => {
+      let matches = false;
+      if (query.includes("max-width: 767px")) {
+        matches = mobile;
+      } else if (query.includes("min-width: 1024px") || query.includes("1024px")) {
+        matches = !mobile;
+      } else if (query.includes("pointer: fine")) {
+        matches = finePointer;
+      }
+
+      return {
+        matches,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      };
+    }),
+  );
+}
+
+function getDiagramRoot(): HTMLElement {
+  const slot = document.querySelector("[data-shape-blur-slot]");
+  expect(slot).not.toBeNull();
+  const diagram = slot!.nextElementSibling;
+  expect(diagram).toBeInstanceOf(HTMLElement);
+  return diagram as HTMLElement;
+}
+
+function expectDiagramFor(slug: (typeof projects)[number]["slug"]) {
+  const diagram = getDiagramRoot();
+
+  switch (slug) {
+    case "aegis":
+      expect(diagram.querySelectorAll("span")).toHaveLength(35);
+      expect(diagram.textContent ?? "").not.toMatch(/UPLOAD/);
+      break;
+    case "q":
+      expect(diagram.querySelector(".left-\\[64\\%\\]")).not.toBeNull();
+      expect(diagram.textContent ?? "").not.toMatch(/UPLOAD/);
+      break;
+    case "gosigapp":
+      expect(within(diagram).getByText("UPLOAD")).toBeTruthy();
+      expect(within(diagram).getByText("VALIDATE")).toBeTruthy();
+      expect(within(diagram).getByText("SUBMIT")).toBeTruthy();
+      break;
+    case "nexo-dental":
+      expect(diagram.querySelectorAll(".grid > span")).toHaveLength(12);
+      expect(diagram.textContent ?? "").not.toMatch(/UPLOAD/);
+      break;
+    default: {
+      const _exhaustive: never = slug;
+      throw new Error(`Unhandled project slug: ${_exhaustive}`);
+    }
+  }
+}
+
+describe("ProjectShowcase", () => {
+  beforeEach(() => {
+    stubMatchMedia({ mobile: false, finePointer: true });
+  });
+
+  it("selects a project by click and updates label, summary, and diagram together", async () => {
+    const user = userEvent.setup();
+    render(<ProjectShowcase projects={projects} />);
+
+    const first = projects[0];
+    const second = projects[1];
+
+    expect(
+      screen.getByRole("button", { name: new RegExp(first.name) }),
+    ).toHaveAttribute("aria-pressed", "true");
+    expectDiagramFor(first.slug);
+
+    const nextButton = screen.getByRole("button", {
+      name: new RegExp(`${second.name}.*${second.summary}`, "s"),
+    });
+    await user.click(nextButton);
+
+    expect(nextButton).toHaveAttribute("aria-pressed", "true");
+    expect(
+      screen.getByRole("button", { name: new RegExp(first.name) }),
+    ).toHaveAttribute("aria-pressed", "false");
+    expect(nextButton).toHaveTextContent(second.summary);
+    expectDiagramFor(second.slug);
+  });
+
+  it("selects a project by keyboard focus without requiring hover", async () => {
+    const user = userEvent.setup();
+    // Coarse pointer: hover must not drive selection.
+    stubMatchMedia({ mobile: false, finePointer: false });
+    render(<ProjectShowcase projects={projects} />);
+
+    const first = projects[0];
+    const third = projects[2];
+    const firstButton = screen.getByRole("button", {
+      name: new RegExp(first.name),
+    });
+    const thirdButton = screen.getByRole("button", {
+      name: new RegExp(`${third.name}.*${third.summary}`, "s"),
+    });
+
+    await user.hover(thirdButton);
+    expect(firstButton).toHaveAttribute("aria-pressed", "true");
+    expectDiagramFor(first.slug);
+
+    fireEvent.focus(thirdButton);
+    expect(thirdButton).toHaveAttribute("aria-pressed", "true");
+    expect(firstButton).toHaveAttribute("aria-pressed", "false");
+    expect(thirdButton).toHaveTextContent(third.category);
+    expect(thirdButton).toHaveTextContent(third.summary);
+    expectDiagramFor(third.slug);
+  });
+
+  it("exposes all four projects in source order for the mobile presentation", () => {
+    // Explicit mobile mode via matchMedia — do not infer from layout metrics.
+    stubMatchMedia({ mobile: true, finePointer: false });
+    expect(window.matchMedia("(max-width: 767px)").matches).toBe(true);
+
+    render(<ProjectShowcase projects={projects} />);
+
+    const articles = screen.getAllByRole("article");
+    expect(articles).toHaveLength(projects.length);
+
+    articles.forEach((article, index) => {
+      const project = projects[index];
+      expect(
+        within(article).getByRole("heading", { level: 3 }),
+      ).toHaveTextContent(project.name);
+      expect(article).toHaveTextContent(project.summary);
+      expect(article).toHaveTextContent(project.category);
+      expect(article).toHaveTextContent(project.index);
+    });
+  });
+});
