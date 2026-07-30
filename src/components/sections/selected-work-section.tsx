@@ -16,6 +16,11 @@ export function SelectedWorkSection() {
       >
         {siteContent.workTitle}
       </h2>
+      <div
+        data-sparkles-slot
+        aria-hidden="true"
+        className="mt-6 mb-12 h-24 w-[min(100%,45rem)] border-t border-[var(--color-line)]"
+      />
       <ProjectShowcase projects={projects} />
     </SectionShell>
   );
