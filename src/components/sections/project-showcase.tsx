@@ -224,6 +224,35 @@ function ProjectDiagram({ slug }: { slug: string }) {
   }
 }
 
+/*
+ * The case-study link is a real link only where a route exists. Projects whose
+ * `href` is still `null` render nothing here — no disabled control, no fake
+ * destination, no placeholder action.
+ *
+ * The link is a sibling of the desktop selector button rather than a child,
+ * because a link may never be nested inside a button. Colour is set inline:
+ * the unlayered `a { color: inherit }` reset in globals.css outranks Tailwind's
+ * layered utilities.
+ */
+const caseStudyLinkClassName =
+  "inline-flex min-h-11 items-center [font-family:var(--font-geist-mono)] text-[0.6875rem] font-semibold tracking-[0.14em] uppercase";
+
+function CaseStudyLink({ project }: { project: Project }) {
+  if (project.href === null) {
+    return null;
+  }
+
+  return (
+    <a
+      href={project.href}
+      className={caseStudyLinkClassName}
+      style={{ color: "var(--color-accent-a)" }}
+    >
+      {`View ${project.name} case study`}
+    </a>
+  );
+}
+
 function ProjectMeta({
   project,
   active,
@@ -277,24 +306,38 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
             const isActive = project.slug === activeSlug;
 
             return (
-              <button
-                key={project.slug}
-                type="button"
-                aria-pressed={isActive}
-                onClick={() => setActiveSlug(project.slug)}
-                onFocus={() => setActiveSlug(project.slug)}
-                onMouseEnter={() => {
-                  if (isFinePointer()) {
-                    setActiveSlug(project.slug);
-                  }
-                }}
-                className={cn(
-                  "w-full min-h-40 rounded-none border-t border-[var(--color-line)] bg-transparent py-6 text-left shadow-none",
-                  index === projects.length - 1 && "border-b",
+              // Only a structural wrapper: the button keeps the styling
+              // WO-008 authored, so the selector column looks unchanged.
+              <div key={project.slug}>
+                <button
+                  type="button"
+                  aria-pressed={isActive}
+                  onClick={() => setActiveSlug(project.slug)}
+                  onFocus={() => setActiveSlug(project.slug)}
+                  onMouseEnter={() => {
+                    if (isFinePointer()) {
+                      setActiveSlug(project.slug);
+                    }
+                  }}
+                  className={cn(
+                    "w-full min-h-40 rounded-none border-t border-[var(--color-line)] bg-transparent py-6 text-left shadow-none",
+                    index === projects.length - 1 && "border-b",
+                  )}
+                >
+                  <ProjectMeta project={project} active={isActive} />
+                </button>
+
+                {/*
+                  The slot is reserved for every project that has a route, so
+                  moving the selection never changes the height of this column
+                  and the rows below never shift under the pointer.
+                */}
+                {project.href === null ? null : (
+                  <div className="flex min-h-11 items-start pb-6">
+                    {isActive ? <CaseStudyLink project={project} /> : null}
+                  </div>
                 )}
-              >
-                <ProjectMeta project={project} active={isActive} />
-              </button>
+              </div>
             );
           })}
         </div>
@@ -350,6 +393,11 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
             )}
           >
             <ProjectMeta project={project} />
+            {project.href === null ? null : (
+              <div className="mt-4">
+                <CaseStudyLink project={project} />
+              </div>
+            )}
           </article>
         ))}
       </div>

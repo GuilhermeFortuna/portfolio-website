@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type {
   CaseStudyClosing,
   CaseStudySection as CaseStudySectionContent,
@@ -24,10 +26,17 @@ function Prose({ paragraphs }: { paragraphs: readonly string[] }) {
   );
 }
 
+/**
+ * `children` is the seam for a section that needs a diagram the authored
+ * content cannot express as prose, such as the Aegis system map. It renders
+ * after the prose it explains and before the section's own media.
+ */
 export function CaseStudySection({
   section,
+  children,
 }: {
   section: CaseStudySectionContent;
+  children?: ReactNode;
 }) {
   const headingId = `${section.id}-heading`;
 
@@ -42,6 +51,8 @@ export function CaseStudySection({
       </h2>
 
       <Prose paragraphs={section.paragraphs} />
+
+      {children}
 
       {section.images?.map((image) => (
         <CaseStudyFigure key={image.src} image={image} />

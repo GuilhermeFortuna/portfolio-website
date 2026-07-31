@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import AegisCaseStudyPage, { metadata } from "@/app/work/aegis/page";
 import { aegisCaseStudy, caseStudyBodySections } from "@/content/case-studies";
 import { siteNavigation } from "@/content/site";
-import { render, screen } from "@/test/render";
+import { render, screen, within } from "@/test/render";
 
 /**
  * The case-study route is fully static: no effect, hook, or client runtime is
@@ -156,6 +156,107 @@ describe("/work/aegis private-source behaviour", () => {
     // Author-note plumbing from the content contract must not leak into the DOM.
     expect(html).not.toContain("copy:start");
     expect(html).not.toContain("Author note");
+  });
+});
+
+describe("/work/aegis system map", () => {
+  function systemSection(): HTMLElement {
+    const section = document.querySelector(
+      `section#${aegisCaseStudy.system.id}`,
+    );
+    expect(section).not.toBeNull();
+    return section as HTMLElement;
+  }
+
+  it("renders inside the system section, after the prose it explains", () => {
+    render(<AegisCaseStudyPage />);
+    const section = systemSection();
+
+    const lists = section.querySelectorAll("ol");
+    expect(lists.length).toBeGreaterThan(0);
+
+    // Order within the section: prose, then map, then the screenshot.
+    const prose = section.querySelector("p");
+    const firstList = lists[0];
+    const figure = section.querySelector("figure");
+    expect(prose).not.toBeNull();
+    expect(
+      prose!.compareDocumentPosition(firstList) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      firstList.compareDocumentPosition(figure as Node) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("states every node as real text rather than an image or canvas", () => {
+    render(<AegisCaseStudyPage />);
+    const section = systemSection();
+
+    for (const label of [
+      "Investigator UI",
+      "FastAPI service",
+      "Curated PostgreSQL schema",
+      "Databricks lakehouse",
+      "Redis cache",
+      "Scheduled sync and detection jobs",
+      "PostgreSQL and cache refresh",
+    ]) {
+      expect(within(section).getAllByText(label).length).toBeGreaterThan(0);
+    }
+
+    // The map is HTML and CSS: no canvas, SVG, or extra image is introduced.
+    expect(section.querySelector("canvas")).toBeNull();
+    expect(section.querySelector("svg")).toBeNull();
+    expect(section.querySelectorAll("img")).toHaveLength(1);
+  });
+
+  it("names each path so the two lists are distinguishable", () => {
+    render(<AegisCaseStudyPage />);
+    const section = systemSection();
+
+    for (const name of [
+      "What a request touches",
+      "What keeps that data current",
+    ]) {
+      const list = within(section).getByRole("list", { name });
+      expect(list.tagName).toBe("OL");
+    }
+  });
+
+  it("keeps the connectors decorative and out of the accessibility tree", () => {
+    render(<AegisCaseStudyPage />);
+    const section = systemSection();
+
+    const hidden = section.querySelectorAll('[aria-hidden="true"]');
+    expect(hidden.length).toBeGreaterThan(0);
+    for (const element of hidden) {
+      // A hidden node may not swallow any of the map's text.
+      expect(element.textContent?.trim()).toBe("");
+    }
+  });
+
+  it("exposes no confidential identifier, company name, or invented figure", () => {
+    render(<AegisCaseStudyPage />);
+    const text = systemSection().textContent ?? "";
+
+    for (const forbidden of [
+      "localhost",
+      "http://",
+      "https://",
+      "aegis.",
+      "gcp",
+      "project-id",
+      "requests/s",
+      "req/s",
+      "ms latency",
+      "uptime",
+    ]) {
+      expect(text.toLowerCase()).not.toContain(forbidden.toLowerCase());
+    }
+    // No throughput or volume number beyond the counts in the approved copy.
+    expect(text).not.toMatch(/\d+\s*(k|m|million|per second|\/s)\b/i);
   });
 });
 

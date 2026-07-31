@@ -109,4 +109,51 @@ describe("homepage composition", () => {
       expect(link).toHaveAttribute("rel", "noreferrer");
     }
   });
+
+  it("sends the hero action to the Aegis case study", async () => {
+    const { default: Home } = await import("@/app/page");
+    render(<Home />);
+
+    expect(
+      screen.getByRole("link", { name: siteContent.heroCta }),
+    ).toHaveAttribute("href", "/work/aegis");
+  });
+
+  it("links Aegis to its case study and leaves every other project unlinked", async () => {
+    const { default: Home } = await import("@/app/page");
+    render(<Home />);
+
+    const [aegis, ...pending] = projects;
+
+    // Desktop selector and mobile article each carry the link; CSS hides one.
+    const aegisLinks = screen.getAllByRole("link", {
+      name: `View ${aegis.name} case study`,
+    });
+    expect(aegisLinks).toHaveLength(2);
+    for (const link of aegisLinks) {
+      expect(link).toHaveAttribute("href", "/work/aegis");
+    }
+
+    for (const project of pending) {
+      expect(project.href).toBeNull();
+      expect(
+        screen.queryByRole("link", { name: new RegExp(project.name) }),
+      ).toBeNull();
+    }
+  });
+
+  it("keeps every case-study destination same-origin", async () => {
+    const { default: Home } = await import("@/app/page");
+    render(<Home />);
+
+    const caseStudyHrefs = Array.from(document.querySelectorAll("a"))
+      .map((anchor) => anchor.getAttribute("href") ?? "")
+      .filter((href) => href.startsWith("/work/"));
+
+    expect(caseStudyHrefs).toEqual([
+      "/work/aegis",
+      "/work/aegis",
+      "/work/aegis",
+    ]);
+  });
 });

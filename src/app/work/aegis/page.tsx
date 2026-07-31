@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { AegisSystemMap } from "@/components/case-study/aegis-system-map";
 import { CaseStudyHero } from "@/components/case-study/case-study-hero";
 import {
   CaseStudyClosingSection,
@@ -24,7 +25,12 @@ export default function AegisCaseStudyPage() {
           <CaseStudyHero hero={aegisCaseStudy.hero} />
 
           {caseStudyBodySections(aegisCaseStudy).map((section) => (
-            <CaseStudySection key={section.id} section={section} />
+            <CaseStudySection key={section.id} section={section}>
+              {/* The map belongs to the system section only. */}
+              {section.id === aegisCaseStudy.system.id ? (
+                <AegisSystemMap />
+              ) : null}
+            </CaseStudySection>
           ))}
 
           <CaseStudyClosingSection closing={aegisCaseStudy.confidentiality} />

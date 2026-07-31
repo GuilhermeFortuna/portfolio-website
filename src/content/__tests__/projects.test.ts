@@ -44,7 +44,25 @@ describe("project content contract", () => {
     }
   });
 
-  it("keeps project URLs null until approved destinations exist", () => {
-    expect(projects.every(({ href }) => href === null)).toBe(true);
+  it("links only the projects whose case-study route exists", () => {
+    // Aegis is the only published chapter. The rest stay null rather than
+    // pointing at a route that would 404.
+    expect(
+      projects.map(({ slug, href }) => [slug, href]),
+    ).toEqual([
+      ["aegis", "/work/aegis"],
+      ["q", null],
+      ["gosigapp", null],
+      ["nexo-dental", null],
+    ]);
+  });
+
+  it("keeps every project destination a root-relative route", () => {
+    for (const { href } of projects) {
+      if (href === null) {
+        continue;
+      }
+      expect(href.startsWith("/work/")).toBe(true);
+    }
   });
 });

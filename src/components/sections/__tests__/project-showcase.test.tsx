@@ -173,6 +173,79 @@ describe("ProjectShowcase", () => {
     expect(screen.getByTestId("shape-blur-color")).toHaveTextContent("#8EA0FF");
   });
 
+  it("offers the case-study link only for the active project that has a route", async () => {
+    const user = userEvent.setup();
+    render(<ProjectShowcase projects={projects} />);
+
+    const [aegis, q] = projects;
+    expect(aegis.href).toBe("/work/aegis");
+
+    // Aegis starts active, so its link is visible in both trees.
+    const links = screen.getAllByRole("link", {
+      name: `View ${aegis.name} case study`,
+    });
+    expect(links).toHaveLength(2);
+    for (const link of links) {
+      expect(link).toHaveAttribute("href", aegis.href as string);
+      // A link may never be nested inside the selector button.
+      expect(link.closest("button")).toBeNull();
+    }
+
+    await user.click(
+      screen.getByRole("button", {
+        name: new RegExp(`${q.name}.*${q.summary}`, "s"),
+      }),
+    );
+
+    // Selecting Q hides the desktop link; only the mobile article keeps one.
+    expect(
+      screen.getAllByRole("link", {
+        name: `View ${aegis.name} case study`,
+      }),
+    ).toHaveLength(1);
+  });
+
+  it("renders no link, disabled control, or placeholder for a project without a route", () => {
+    render(<ProjectShowcase projects={projects} />);
+
+    for (const project of projects.filter(({ href }) => href === null)) {
+      expect(
+        screen.queryByRole("link", {
+          name: new RegExp(project.name),
+        }),
+      ).toBeNull();
+    }
+
+    // Exactly one selector button per project, and no extra pending control.
+    expect(screen.getAllByRole("button")).toHaveLength(projects.length);
+    expect(document.querySelector("[aria-disabled]")).toBeNull();
+    expect(document.body.textContent).not.toContain("[REQUIRED:");
+  });
+
+  it("reserves the link slot whether or not the linked project is active", async () => {
+    const user = userEvent.setup();
+    render(<ProjectShowcase projects={projects} />);
+
+    // The slot survives deselection so rows below it never shift when the
+    // pointer crosses the column.
+    const aegisRow = () =>
+      screen
+        .getByRole("button", { name: new RegExp(projects[0].name) })
+        .parentElement as HTMLElement;
+
+    expect(aegisRow().children).toHaveLength(2);
+
+    await user.click(
+      screen.getByRole("button", {
+        name: new RegExp(`${projects[1].name}.*${projects[1].summary}`, "s"),
+      }),
+    );
+
+    const row = aegisRow();
+    expect(row.children).toHaveLength(2);
+    expect(row.querySelector("a")).toBeNull();
+  });
+
   it("exposes all four projects in source order for the mobile presentation", () => {
     // Explicit mobile mode via matchMedia — do not infer from layout metrics.
     stubMatchMedia({ mobile: true, finePointer: false });

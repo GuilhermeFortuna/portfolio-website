@@ -6,7 +6,9 @@ export const siteContent = {
   heroBody:
     "Software developer creating intelligent products, complex systems, and experiences that generate leverage.",
   heroCta: "Explore my work",
-  heroCtaHref: "#work",
+  // The approved destination is the first chapter in fixed order, not the
+  // section anchor (docs/content.md, Identity).
+  heroCtaHref: "/work/aegis",
   heroGithubLabel: "View GitHub",
   heroGithubHref: "https://github.com/GuilhermeFortuna",
 

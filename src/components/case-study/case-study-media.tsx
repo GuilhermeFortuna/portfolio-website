@@ -46,6 +46,11 @@ export function CaseStudyFigure({
  * The intro is poster-first and never autoplayed: playback is a deliberate
  * visitor action. The film is silent, so the visible transcript carries its
  * content whether or not the video ever plays.
+ *
+ * WO-022 permits an optional muted in-view preview. It is deliberately not
+ * implemented: with no automatic playback at all, reduced motion, Save-Data,
+ * and a hidden tab need no special case, and this stays a Server Component
+ * with no client runtime to clean up on route exit.
  */
 export function CaseStudyVideoFigure({ video }: { video: CaseStudyVideo }) {
   return (
