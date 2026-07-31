@@ -54,13 +54,16 @@ export function HeroSection() {
             {siteContent.heroTitle}
           </h1>
 
-          <p className="mt-6 [font-family:var(--font-geist-mono)] text-[0.6875rem] font-semibold tracking-[0.14em] text-[var(--color-text-muted)] uppercase">
+          <p
+            className="[font-family:var(--font-geist-mono)] text-[0.6875rem] font-semibold tracking-[0.14em] text-[var(--color-text-muted)] uppercase"
+            style={{ marginTop: "2.25rem" }}
+          >
             {siteContent.heroDisciplines}
           </p>
 
           <p
-            className="mt-8 text-[clamp(1.0625rem,1.5vw,1.25rem)] leading-[1.65] text-[var(--color-text-muted)]"
-            style={{ maxWidth: "42rem" }}
+            className="text-[clamp(1.0625rem,1.5vw,1.25rem)] leading-[1.65] text-[var(--color-text-muted)]"
+            style={{ maxWidth: "42rem", marginTop: "2rem" }}
           >
             {siteContent.heroBody}
           </p>
