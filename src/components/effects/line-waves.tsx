@@ -483,19 +483,19 @@ export function HeroLineWavesBackground() {
               active={shouldAnimate}
               dpr={dpr}
               resolvePointerTarget={() => layerRef.current?.parentElement ?? null}
-              speed={isMobile ? 0.1 : 0.16}
-              innerLineCount={isMobile ? 18 : 24}
-              outerLineCount={isMobile ? 22 : 30}
-              warpIntensity={isMobile ? 0.35 : 0.55}
-              rotation={-35}
-              edgeFadeWidth={0.15}
+              speed={isMobile ? 0.1 : 0.3}
+              innerLineCount={isMobile ? 18 : 32}
+              outerLineCount={isMobile ? 22 : 36}
+              warpIntensity={isMobile ? 0.35 : 1.0}
+              rotation={-45}
+              edgeFadeWidth={0.0}
               colorCycleSpeed={0.35}
-              brightness={0.16}
-              color1="#5366D8"
-              color2="#53BBAA"
-              color3="#8772D6"
+              brightness={0.2}
+              color1="#ffffff"
+              color2="#8300ff"
+              color3="#ffffff"
               enableMouseInteraction={pointerEnabled}
-              mouseInfluence={0.25}
+              mouseInfluence={1.0}
               className="pointer-events-none absolute inset-0 h-full w-full"
             />
           )}
