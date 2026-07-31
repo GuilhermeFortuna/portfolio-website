@@ -89,13 +89,22 @@ Positioning → problem → goal → why difficult → system → 2–4 decision
 
 **DECISION (2026-07-28):** Project repositories are private and will not be linked publicly. Staging/live environment links are planned for Aegis, Q, and Nexo Dental when those environments exist; gosigapp has no UI (CLI/backend only) and will not receive a live-environment action. Until staging URLs are verified, keep `[REQUIRED: live environment URL]` markers.
 
+**DECISION (2026-07-31):** On a case-study page whose live environment is still unverified, the live-environment action renders as a visibly disabled, non-interactive control reading `Live environment — coming soon` (`aria-disabled="true"`, no `href`). It must never render a `[REQUIRED: …]` marker as visible text. Applies to Aegis now; extend to Q and Nexo Dental when those case studies are built.
+
 ## Aegis case study
 
-**Status:** accepted facts from WO-018. The claim-level evidence register and
-public disclosure boundary is
+**Status:** accepted facts from WO-018, with the WO-020 content contract drafted.
+The claim-level evidence register and public disclosure boundary is
 [`aegis-case-study-evidence.md`](./aegis-case-study-evidence.md); it is
-authoritative for every publishable Aegis claim and its classification. WO-020
-turns these accepted facts into exact visible copy.
+authoritative for every publishable Aegis claim and its classification.
+
+The exact visible copy, media placement, alt text, and intro transcript for
+`/work/aegis` live in
+[`aegis-case-study-content.md`](./aegis-case-study-content.md) (WO-020), which is
+authoritative for **wording**; this chapter stays authoritative for **facts**.
+Where the two ever disagree, the evidence register decides. Approved assets are
+inventoried in [`aegis-case-study-media.md`](./aegis-case-study-media.md)
+(WO-019, `DONE`).
 
 ### Accepted facts
 
@@ -105,7 +114,9 @@ turns these accepted facts into exact visible copy.
   Repository history begins 2026-04-06 (backend) and 2026-04-12 (frontend).
 - **FACT (owner):** Guilherme designed and built every product and engineering
   layer, with AI assistance. It was deployed to production and, as far as the
-  owner knows, remains active.
+  owner knows, remains active. The owner confirmed on 2026-07-31 that the extra
+  frontend git author names are tooling identities, not additional
+  contributors, so single-owner wording is accepted as fact (closes GIT-03).
 - **FACT (owner):** The public repository version is a **sanitized,
   independently maintained evolution** of the company implementation. It is not
   byte-identical to production.
@@ -117,11 +128,18 @@ turns these accepted facts into exact visible copy.
   generated finding reports, API-enforced auth (sessions, CSRF, MFA, Argon2,
   permissions), and a synthetic demonstration-data path.
 - **FACT (source):** Verified workflows — overview dashboard, player
-  investigation, alerts queue, cases, reports, rule configuration, Risk
+  investigation, alerts queue, saved cases, reports, rule configuration, Risk
   Constellation WebGL visualization, player geo/map, and admin/security-audit.
-- **INFERENCE — review required:** Detection rules are *aligned to* Brazilian
-  AML regulation (SPA/MF Portaria 1.143/2024; SISCOAF); do not claim regulator
-  certification.
+- **FACT (source):** The cases route is a browser-local shelf of findings an
+  analyst is working through (`localStorage` key `aegis:cases`, populated from
+  the alerts queue); triage status changes and report generation do go through
+  the API, but no backend cases table or router exists. Verified 2026-07-31.
+  Do **not** describe it as full case management (closes WF-04).
+- **DECISION (2026-07-31):** Regulatory framing is published generically as
+  alignment with Brazilian anti-money-laundering obligations. Do not name
+  SPA/MF Portaria 1.143/2024 or SISCOAF in public copy, and never claim
+  regulator certification or approval (closes SYS-11). The WO-020 copy omits
+  regulatory framing altogether, which is within this decision.
 
 ### Disclosure boundary
 
@@ -142,13 +160,40 @@ turns these accepted facts into exact visible copy.
 - The Playwright end-to-end suite is written but skipped.
 - The Risk Constellation is tested to ~350k points, not multi-million.
 
+All three are stated in the published copy rather than glossed over; see the
+`Delivered` section of the content contract.
+
+### Approved media
+
+Six assets in `public/work/aegis/`, accepted at WO-019 `DONE`: `entry-intro.mp4`
+(1920×1080, 8.625 s, silent), `entry-intro-poster.webp`, `overview.webp`,
+`player-investigation.webp`, `risk-constellation.webp`, and `alerts.webp`. All
+product captures come from the synthetic demonstration path; the interface in
+them is Portuguese, so English copy must not invent UI labels that are not in
+the pixels. Hashes and provenance are in
+[`aegis-case-study-media.md`](./aegis-case-study-media.md).
+
+**DECISION (2026-07-31):** `player-investigation.webp` ships as captured. It
+shows a synthetic name and a CPF-formatted number in legible type; the visible
+caption states that every value including the document number is synthetic, and
+the owner accepted that disclosure instead of masking the field.
+
+**DECISION (2026-07-31):** `SISCOAF` and `COAF` remain legible in
+`player-investigation.webp` and `alerts.webp`. They are public regulator names,
+the copy makes no compliance claim, and no explanatory sentence is added — the
+generic-regulatory decision above stands, with regulatory framing omitted from
+the visible copy entirely.
+
 ### Missing inputs
 
-- Verified live/staging URL, or confirmation to keep the case study link-free
-  (`[REQUIRED: live environment URL]`).
-- Approved sanitized Aegis screenshots and optimized intro media (WO-019).
-- Reviewer confirmation on regulatory-alignment wording and the depth of the
-  cases workflow.
+- Verified live/staging URL (`[REQUIRED: live environment URL]`). **DECISION
+  (2026-07-31):** until one exists, the Aegis case study renders a visibly
+  disabled `Live environment — coming soon` control in its hero — not a link,
+  and never a placeholder marker. The documentation-only marker stays here and
+  closes when a URL is verified.
+
+Screenshots/intro media and the regulatory-wording and cases-workflow questions
+are resolved above; no other Aegis input is outstanding.
 
 ## Metadata
 
