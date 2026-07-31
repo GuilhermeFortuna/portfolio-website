@@ -6,7 +6,10 @@
   --color-surface-strong: #111620;
   --color-text: #f3f6fb;
   --color-text-muted: #9ba6b5;
-  --color-text-dim: #667083;
+  /* 4.80:1 against canvas, surface, and surface-strong. The previous #667083
+     was 4.04:1 on canvas, below the 4.5:1 SC 1.4.3 needs for the 11px labels
+     that use this token. */
+  --color-text-dim: #7a8496;
   --color-line: rgba(166, 177, 197, 0.16);
   --color-line-strong: rgba(184, 195, 216, 0.28);
   --color-accent-a: #8ea0ff;
