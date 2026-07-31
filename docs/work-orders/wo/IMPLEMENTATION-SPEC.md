@@ -53,7 +53,6 @@ src/
     site.ts
   hooks/
     use-effect-activity.ts
-    use-motion-preference.ts
   lib/
     cn.ts
   types/
@@ -109,7 +108,7 @@ Define these values in `:root` and consume them through CSS variables:
   --color-surface-strong: #111620;
   --color-text: #f3f6fb;
   --color-text-muted: #9ba6b5;
-  --color-text-dim: #667083;
+  --color-text-dim: #7a8496;
   --color-line: rgba(166, 177, 197, 0.16);
   --color-line-strong: rgba(184, 195, 216, 0.28);
   --color-accent-a: #8ea0ff;
@@ -188,7 +187,12 @@ Use this contract:
 
 ```ts
 type WebGLEffectConfig = {
-  id: "line-waves" | "liquid-metal" | "shape-blur" | "dotted-surface";
+  id:
+    | "line-waves"
+    | "liquid-metal"
+    | "shape-blur"
+    | "dotted-surface"
+    | "case-study-threads";
   priority: "hero" | "decorative";
   estimatedCost: "low" | "medium" | "high";
   continuous: boolean;
@@ -198,7 +202,8 @@ type WebGLEffectConfig = {
 
 `ManagedWebGLEffect` owns viewport observation with `rootMargin: "300px"` and exposes:
 
-- `shouldMount`: true only near the viewport, with motion allowed, mobile allowed, and a manager budget slot granted
+- `shouldMount`: true only near the viewport, with mobile allowed, WebGL
+  available, and a manager budget slot granted
 - `shouldAnimate`: true only while mounted, actually visible, document-visible, and granted a budget slot
 
 Use a render-prop API so the manager controls the child:
@@ -223,18 +228,50 @@ Fixed registrations:
 | Liquid Metal | hero | low | yes | no; static metallic fallback |
 | Shape Blur | decorative | high | yes | no |
 | Dotted Surface | decorative | high | yes | no |
+| Case Study Threads | hero | high | yes | no; designed CSS fallback |
 
 `useEffectActivity` remains available for non-WebGL motion such as Logo Loop and Sparkles.
 
-Reduced motion:
+Forced-motion owner decision, effective in Batch 04:
 
-- no requestAnimationFrame loops
-- no pointer-reactive distortion
-- no infinite marquee movement
-- no scrubbed text rotation or blur
-- no particle movement
-- no animated 3D dotted surface
-- preserve the same layout with static CSS or static rendered content
+- ignore `prefers-reduced-motion` in CSS and JavaScript
+- do not suppress, shorten, replace, or statically restage authored motion based
+  on the operating-system motion preference
+- remove the legacy motion-preference hook and every active preference-based
+  motion branch in WO-024
+- preserve hidden-tab and offscreen pausing, deterministic WebGL budgets,
+  cleanup, no-JavaScript rendering, WebGL-capability fallbacks, mobile policy,
+  and Save-Data media behavior; these are capability/lifecycle controls, not
+  alternate motion preferences
+
+Batch 04 motion runtimes and ownership are fixed:
+
+```text
+motion@12.43.0
+lenis@1.3.25
+```
+
+- Mount exactly one site-level `MotionConfig` with `reducedMotion="never"`.
+- Mount exactly one root `ReactLenis`; no component may construct Lenis, create
+  another scroll container, call root Motion `useScroll`, or own a page RAF.
+- Lenis owns smooth document scrolling and feeds `ScrollTrigger.update`, one
+  shared progress `MotionValue`, and the existing GSAP ticker. Remove all
+  subscriptions and ticker callbacks during provider cleanup.
+- Motion owns state-driven transitions, layout, presence, hover/tap, and the
+  accepted Magic UI and Aceternity internals.
+- GSAP/ScrollTrigger owns authored timelines and accepted React Bits components
+  already built on GSAP. CSS owns simple visual transitions. WebGL animation
+  remains exclusively manager-owned.
+- Remove CSS `scroll-behavior: smooth`; Lenis must preserve native anchors,
+  keyboard/touch scrolling, sticky positioning, and history restoration.
+
+Batch 04 visual components are source-first and portfolio-owned. Use the exact
+accepted and pinned React Bits, Magic UI, and Aceternity components recorded in
+`BATCH-04-README.md` and the WO-024 source register. Adapt demo content and
+styling to the existing portfolio tokens and shared case-study primitives; do
+not custom-rebuild their signature mechanics or reskin the route as Aegis UI.
+Aegis is the first case study, carries no special status, and its shared presentation
+patterns must give later project pages roughly equal visual weight.
 
 Mobile:
 
@@ -303,7 +340,6 @@ Stop and report `blocked` instead of guessing if:
 - prerequisite files do not exist
 - a prerequisite changed a required public API
 - an external source cannot be accessed
-- the source license prohibits the intended local use
 - verified contact information is required but absent
 - required validation fails because of unrelated pre-existing changes
 
