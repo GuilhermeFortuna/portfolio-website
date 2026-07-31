@@ -34,7 +34,7 @@ Do not change the page structure, copy, palette, component selection, breakpoint
 - React and strict TypeScript
 - Tailwind CSS and CSS custom properties
 - Geist Sans and Geist Mono
-- npm with `package-lock.json`
+- pnpm with `pnpm-lock.yaml` (npm and `package-lock.json` through WO-022; migrated under WO-023)
 - Server Components for page composition
 - Client Components only for effects and stateful interaction
 - No CMS, database, authentication, analytics, contact backend, UI kit, or second animation system
