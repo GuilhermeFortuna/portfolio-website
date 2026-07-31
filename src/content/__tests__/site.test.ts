@@ -2,11 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import { siteContent, siteNavigation } from "@/content/site";
 
+// Root-relative so the shared header resolves to the homepage from any route.
 const expectedDesktopNavigation = [
-  { label: "Work", href: "#work" },
-  { label: "Process", href: "#process" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "Work", href: "/#work" },
+  { label: "Process", href: "/#process" },
+  { label: "About", href: "/#about" },
+  { label: "Contact", href: "/#contact" },
 ] as const;
 
 const expectedProfileLinks = {
@@ -29,14 +30,26 @@ describe("site content contract", () => {
   });
 
   it("keeps page-level navigation references aligned with section IDs", () => {
-    expect(siteNavigation.wordmarkHref).toBe("#top");
+    expect(siteNavigation.wordmarkHref).toBe("/#top");
     expect(siteContent.heroCtaHref).toBe("#work");
     expect(siteNavigation.desktop.map(({ href }) => href)).toEqual([
-      "#work",
-      "#process",
-      "#about",
-      "#contact",
+      "/#work",
+      "/#process",
+      "/#about",
+      "/#contact",
     ]);
+  });
+
+  it("keeps every global navigation destination same-origin", () => {
+    const destinations = [
+      siteNavigation.wordmarkHref,
+      ...siteNavigation.desktop.map(({ href }) => href),
+      ...siteNavigation.mobile.map(({ href }) => href),
+    ];
+
+    for (const href of destinations) {
+      expect(href.startsWith("/#")).toBe(true);
+    }
   });
 
   it("keeps approved profile destinations consistent across sections", () => {

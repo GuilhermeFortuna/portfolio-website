@@ -459,9 +459,14 @@ The transcript was written from frames sampled across the delivered
 `entry-intro.mp4` at roughly 0.0, 1.0, 2.5, 4.0, 5.5, 7.0, and 8.3 seconds. The
 subtitle in the pixels reads `FRAUD INTELLIGENCE`; do not substitute any other
 tagline (`aegis-case-study-media.md`, "Limitations for WO-020"). Rendering
-requirements: muted, `playsInline`, `preload="none"`, poster shown until play,
-never autoplaying under `prefers-reduced-motion: reduce`, and a visible pause
-or play control.
+requirements: muted, `playsInline`, `preload="metadata"`, poster shown until
+play, never autoplaying under `prefers-reduced-motion: reduce`, and a visible
+pause or play control.
+
+`preload` was corrected from `none` to `metadata` on 2026-07-31 by owner
+decision, resolving the conflict with WO-021 step 4 in favour of the value
+WO-021 fixes. The poster is always specified, so playback stays poster-first
+either way; see the WO-STATUS Gate Log.
 
 ---
 

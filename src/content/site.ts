@@ -55,18 +55,23 @@ export const siteContent = {
   ],
 } as const;
 
+/*
+ * Global navigation destinations are root-relative homepage fragments so the
+ * same header works from the homepage and from a case-study route. `Back to
+ * top` stays a bare fragment: every route provides its own `#top` anchor.
+ */
 export const siteNavigation = {
   skipLink: "Skip to content",
-  wordmarkHref: "#top",
+  wordmarkHref: "/#top",
   desktop: [
-    { label: "Work", href: "#work" },
-    { label: "Process", href: "#process" },
-    { label: "About", href: "#about" },
-    { label: "Contact", href: "#contact" },
+    { label: "Work", href: "/#work" },
+    { label: "Process", href: "/#process" },
+    { label: "About", href: "/#about" },
+    { label: "Contact", href: "/#contact" },
   ],
   mobile: [
-    { label: "Work", href: "#work" },
-    { label: "Contact", href: "#contact" },
+    { label: "Work", href: "/#work" },
+    { label: "Contact", href: "/#contact" },
   ],
 } as const;
 
