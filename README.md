@@ -178,7 +178,7 @@ portfolio-website/
 
 Ensure you have the following installed on your environment:
 - **Node.js**: `v18.x` or higher (LTS recommended)
-- **npm**: `v9.x` or higher
+- **pnpm**: `v11.x` or higher (the repository pins `pnpm@11.17.0` through the `packageManager` field; `corepack enable` will honour it)
 
 ### Installation
 
@@ -190,12 +190,12 @@ Ensure you have the following installed on your environment:
 
 2. Install dependencies:
    ```bash
-   npm install
+   pnpm install
    ```
 
 3. Launch the development server:
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
@@ -206,13 +206,13 @@ Ensure you have the following installed on your environment:
 
 | Command | Action |
 | :--- | :--- |
-| `npm run dev` | Starts the Next.js local development server with HMR. |
-| `npm run build` | Compiles the production build bundle. |
-| `npm run start` | Serves the optimized production build locally. |
-| `npm run lint` | Runs ESLint checks across the codebase. |
-| `npm run typecheck` | Executes TypeScript type checking without emitting files (`tsc --noEmit`). |
-| `npm run test` | Executes the Vitest unit test suite once. |
-| `npm run test:coverage` | Generates text and HTML test coverage reports under `./coverage`. |
+| `pnpm run dev` | Starts the Next.js local development server with HMR. |
+| `pnpm run build` | Compiles the production build bundle. |
+| `pnpm run start` | Serves the optimized production build locally. |
+| `pnpm run lint` | Runs ESLint checks across the codebase. |
+| `pnpm run typecheck` | Executes TypeScript type checking without emitting files (`tsc --noEmit`). |
+| `pnpm run test` | Executes the Vitest unit test suite once. |
+| `pnpm run test:coverage` | Generates text and HTML test coverage reports under `./coverage`. |
 
 ---
 
@@ -244,10 +244,10 @@ The codebase includes comprehensive unit and integration testing powered by **Vi
 
 ```bash
 # Run unit tests
-npm run test
+pnpm run test
 
 # Run tests with V8 coverage report
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 ### Testing Strategy & Mocking

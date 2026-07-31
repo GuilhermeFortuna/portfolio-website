@@ -1,0 +1,17 @@
+allowBuilds:
+  '@tsparticles/engine': true
+  sharp: true
+  unrs-resolver: true
+# Let non-interactive runs (CI, agents) rebuild node_modules without a TTY
+# prompt; pnpm otherwise aborts every script when the layout needs a purge.
+confirmModulesPurge: false
+
+# Dependencies allowed to run install lifecycle scripts. npm ran these
+# unconditionally; pnpm blocks them by default, and all three need theirs:
+# sharp compiles the image pipeline Next.js uses, unrs-resolver builds the
+# native binding eslint-config-next resolves imports through, and
+# @tsparticles/engine runs its own postinstall.
+onlyBuiltDependencies:
+  - '@tsparticles/engine'
+  - sharp
+  - unrs-resolver
