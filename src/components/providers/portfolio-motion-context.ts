@@ -40,6 +40,7 @@ function usePortfolioMotionStore(): PortfolioMotionStore {
   return store;
 }
 
+/** Root Lenis instance. Case-study scenes (D-006) must consume this — never `new Lenis`. */
 export function usePortfolioLenis(): Lenis | null {
   const store = usePortfolioMotionStore();
   return useSyncExternalStore(
@@ -49,6 +50,7 @@ export function usePortfolioLenis(): Lenis | null {
   );
 }
 
+/** Shared scroll snapshot updated by the root Lenis → GSAP bridge. */
 export function usePortfolioScrollSnapshot(): PortfolioScrollSnapshot {
   const store = usePortfolioMotionStore();
   return useSyncExternalStore(

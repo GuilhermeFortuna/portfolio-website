@@ -300,6 +300,21 @@ reserved for the chapter instrument and state/layout/presence transitions.
 D-008 is the only Batch 04 WebGL source. D-010, D-012, D-013, and D-014 use
 scoped DOM/CSS/GSAP timelines and may not create another Canvas or renderer.
 
+### Case-study scene foundation (D-006 / WO-026)
+
+- Copied BSMNT source lives under
+  `src/components/case-study/experience/bsmnt/` (Root, Animation, Waypoint,
+  context, util/types). Do not install `@bsmnt/scrollytelling` or
+  `@radix-ui/react-portal`. Local Slot replaces `@radix-ui/react-slot`.
+- `CaseStudySceneManager` owns exactly one BSMNT root timeline per case-study
+  article, fed by the root Lenis/`ScrollTrigger` bridge. It exposes
+  `useCaseStudyScene()` with `activeSceneId`, `sceneProgress`,
+  `activeSectionId`, `sectionProgress`, and `articleProgress`.
+- Aegis supplies scene/section data only through `AegisExperience`; shared
+  primitives stay project-agnostic. Scene timelines stay visually inert until
+  later orders register animations. No component-local Lenis, ScrollSmoother,
+  root RAF, nested scroller, Canvas, or WebGL.
+
 Mobile:
 
 - cap WebGL/canvas device pixel ratio at `1.25`

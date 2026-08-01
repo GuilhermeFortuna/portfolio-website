@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import { forwardRef, type CSSProperties, type ReactNode } from "react";
 
 const shellStyle: CSSProperties = {
   maxWidth: "var(--content-wide)",
@@ -33,10 +33,13 @@ export const eyebrowStyle: CSSProperties = {
   textTransform: "uppercase",
 };
 
-export function CaseStudyShell({ children }: { children: ReactNode }) {
+export const CaseStudyShell = forwardRef<
+  HTMLElement,
+  { children: ReactNode }
+>(function CaseStudyShell({ children }, ref) {
   return (
-    <article style={shellStyle} className="flex flex-col gap-24">
+    <article ref={ref} style={shellStyle} className="flex flex-col gap-24">
       {children}
     </article>
   );
-}
+});

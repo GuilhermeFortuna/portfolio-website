@@ -1,14 +1,66 @@
-import { describe, expect, it } from "vitest";
+import type { ReactElement, ReactNode } from "react";
+import { describe, expect, it, vi } from "vitest";
 
 import AegisCaseStudyPage, { metadata } from "@/app/work/aegis/page";
+import { PortfolioMotionProvider } from "@/components/providers/portfolio-motion-provider";
 import { aegisCaseStudy, caseStudyBodySections } from "@/content/case-studies";
 import { siteNavigation } from "@/content/site";
-import { render, screen, within } from "@/test/render";
+import { render as rtlRender, screen, within } from "@/test/render";
 
 /**
- * The case-study route is fully static: no effect, hook, or client runtime is
- * involved, so a plain render is a faithful stand-in for the server HTML.
+ * WO-026 wraps the article in a client scene manager that reads the root
+ * Motion/Lenis provider. Structure assertions still target the same semantic
+ * DOM; GSAP/Lenis are stubbed so jsdom does not own a second scroll runtime.
  */
+
+vi.mock("gsap", () => {
+  const timeline = {
+    data: { id: "aegis-page-root" },
+    eventCallback: vi.fn(),
+    to: vi.fn(),
+    add: vi.fn(),
+    addLabel: vi.fn(),
+    removeLabel: vi.fn(),
+    revert: vi.fn(),
+  };
+  const api = {
+    registerPlugin: vi.fn(),
+    context: vi.fn((fn: () => void) => {
+      fn();
+      return { revert: vi.fn() };
+    }),
+    timeline: vi.fn(() => timeline),
+    utils: { selector: vi.fn(() => vi.fn()) },
+    getById: vi.fn(),
+    set: vi.fn(() => ({
+      play: vi.fn(),
+      vars: {},
+      data: {},
+    })),
+    ticker: { add: vi.fn(), remove: vi.fn() },
+  };
+  return { gsap: api, default: api };
+});
+
+vi.mock("gsap/ScrollTrigger", () => ({
+  ScrollTrigger: {
+    refresh: vi.fn(),
+    update: vi.fn(),
+  },
+}));
+
+vi.mock("motion/react", () => ({
+  MotionConfig: ({ children }: { children: ReactNode }) => <>{children}</>,
+}));
+
+vi.mock("lenis/react", () => ({
+  ReactLenis: ({ children }: { children: ReactNode }) => <>{children}</>,
+  useLenis: () => null,
+}));
+
+function render(ui: ReactElement) {
+  return rtlRender(<PortfolioMotionProvider>{ui}</PortfolioMotionProvider>);
+}
 
 const EXPECTED_H2_ORDER = [
   ...caseStudyBodySections(aegisCaseStudy).map((section) => section.heading),

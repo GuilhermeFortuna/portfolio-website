@@ -70,13 +70,12 @@ them without re-encoding, cropping, or adding any asset.
 
 WO-024 recorded immutable revisions/captures and SHA-256 values in
 [`batch-04-component-source-register.md`](./batch-04-component-source-register.md).
-No Batch 04 source has been adapted into `src/` yet. Local paths below are the
-destination orders that will perform the adaptation; they are not present until
-those orders land.
+WO-026 adapted D-006 into `src/components/case-study/experience/bsmnt/`. Other
+Batch 04 rows remain registered until their destination orders land.
 
 | Decision | Canonical source | Destination | Adaptation status |
 | --- | --- | --- | --- |
-| D-006 BSMNT Scrollytelling | https://github.com/basementstudio/scrollytelling @ `0c26959` (copy strategy) | WO-026 | Registered; not yet adapted |
+| D-006 BSMNT Scrollytelling | https://github.com/basementstudio/scrollytelling @ `0c26959` (copy strategy) | `src/components/case-study/experience/bsmnt/` (WO-026) | Adapted — Root/Animation/Waypoint/context/util/types only; local Slot (zero packages); no debugger/Portal/Pin/Parallax/image-sequence |
 | D-008 Codrops Cinematic 3D Scroll Demo 1 | https://github.com/JosephASG/codrops-cinematic-scroll-animations @ `7a56d1f` | WO-027 | Registered; not yet adapted |
 | D-009 Codrops Kinetic Typography Page Transition | https://github.com/codrops/KineticTypePageTransition @ `ebe926e` | WO-027, WO-032 | Registered; not yet adapted |
 | D-010 Codrops One Element Scroll | https://github.com/codrops/OneElementScroll @ `feb7ad7` | WO-028 | Registered; not yet adapted |
@@ -85,5 +84,6 @@ those orders land.
 | D-013 Codrops Rotating On-Scroll Animations Variation 3 | https://github.com/codrops/RotatingOnScrollAnimations @ `ebbe2c9` | WO-031 | Registered; not yet adapted |
 | D-014 Codrops/Thibault Guignand Next-Project Scroll Morph | https://tympanus.net/codrops/2026/05/06/from-shader-uniforms-to-clip-path-wipes-how-gsap-drives-my-portfolio/ (capture 2026-07-31) | WO-032 | Registered; not yet adapted |
 
-Runtime pins verified but not installed by WO-024: `motion@12.43.0` and
-`lenis@1.3.25` for WO-025; BSMNT via copied source for WO-026.
+Runtime pins: `motion@12.43.0` and `lenis@1.3.25` installed by WO-025. BSMNT
+Scrollytelling is copied from commit `0c26959` (WO-026); `@bsmnt/scrollytelling`
+is not installed.

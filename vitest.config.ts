@@ -27,6 +27,9 @@ export default defineConfig({
         // WebGL/canvas and cannot run meaningfully under jsdom.
         "src/components/effects/**",
         "src/components/ui/logo-loop.tsx",
+        // Copied BSMNT scrollytelling foundation (D-006). Portfolio-owned scene
+        // manager/config/context remain covered by unit tests.
+        "src/components/case-study/experience/bsmnt/**",
         // Next.js App Router entry files (metadata, fonts, page composition).
         // These are framework-owned wiring exercised by the build, not units.
         "src/app/**",
