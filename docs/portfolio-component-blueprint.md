@@ -2,7 +2,14 @@
 
 ## Status
 
-This document locks the component set for the first complete homepage prototype. Do not add more visual-effect components until the assembled page has been evaluated in context.
+This document locks the component set for the first complete homepage prototype
+(Batch 01) and records the planned Batch 04 case-study presentation set.
+
+Do not add homepage visual-effect components beyond the Batch 01 table without
+revisiting the assembled page. Batch 04 case-study work uses only the
+owner-selected D-006 and D-008–D-014 sources recorded below and in
+[`batch-04-component-source-register.md`](./batch-04-component-source-register.md).
+Earlier Batch 04 draft shortlists are superseded.
 
 ## Visual Thesis
 
@@ -194,6 +201,30 @@ Rules:
 ### [Laser Flow](https://reactbits.dev/animations/laser-flow)
 
 Do not include it in the initial prototype. It would introduce a second dominant visual effect that competes with Line Waves. Reconsider only if the visual direction changes or Line Waves is removed.
+
+## Batch 04 Case-Study Presentation Set
+
+Owner-selected for the Aegis case study and reusable project-page primitives.
+Immutable revisions, hashes, and compatibility notes live in
+[`batch-04-component-source-register.md`](./batch-04-component-source-register.md).
+Design intent lives in
+[`design/batch-04-aegis-visual-decisions.md`](./design/batch-04-aegis-visual-decisions.md).
+
+| Decision | Component | Source | Role | Destination |
+| --- | --- | --- | --- | --- |
+| D-006 | BSMNT Scrollytelling | https://github.com/basementstudio/scrollytelling | Master scene composition | WO-026 |
+| D-008 | Codrops Cinematic 3D Scroll, Demo 1 | https://github.com/JosephASG/codrops-cinematic-scroll-animations | Media cylinder and reactive particles | WO-027 |
+| D-009 | Codrops Kinetic Typography Page Transition | https://github.com/codrops/KineticTypePageTransition | Route entrance and kinetic title | WO-027, WO-032 |
+| D-010 | Codrops One Element Scroll | https://github.com/codrops/OneElementScroll | Persistent evidence aperture | WO-028 |
+| D-011 | 21st.dev Dynamic Island TOC | https://21st.dev/@digitalzone0707/components/dynamic-island-toc | Chapter instrument | WO-029 |
+| D-012 | 21st.dev Story Scroll | https://21st.dev/@boudjadjasamira/components/story-scroll | Angular decision panels | WO-030 |
+| D-013 | Codrops Rotating On-Scroll Animations, Variation 3 | https://github.com/codrops/RotatingOnScrollAnimations | CSS 3D evidence stage | WO-031 |
+| D-014 | Codrops/Thibault Guignand Next-Project Scroll Morph | https://tympanus.net/codrops/2026/05/06/from-shader-uniforms-to-clip-path-wipes-how-gsap-drives-my-portfolio/ | Closing scene and route exit | WO-032 |
+
+Batch 04 runtime pins: `motion@12.43.0`, `lenis@1.3.25`, one BSMNT scene root
+(copied source per the register), one managed case-study WebGL context for
+D-008 only. Forced authored motion applies; there is no reduced-motion
+presentation path for these selections.
 
 ## Prototype Scope
 

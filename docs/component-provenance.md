@@ -5,12 +5,20 @@ sourced visual component used in the Batch 01 homepage. It covers the seven
 locked components from [`docs/portfolio-component-blueprint.md`](./portfolio-component-blueprint.md).
 
 The Aegis case-study route (Batch 03) adds no external component; its own
-provenance is recorded at the end of this file.
+provenance is recorded after the Batch 01 table.
+
+Batch 04 planned selections are recorded after Batch 03. The only planned
+Batch 04 external sources are D-006 and D-008–D-014 from
+[`docs/design/batch-04-aegis-visual-decisions.md`](./design/batch-04-aegis-visual-decisions.md)
+and the immutable register
+[`docs/batch-04-component-source-register.md`](./batch-04-component-source-register.md).
+Earlier Batch 04 draft shortlists are superseded and are not planned work.
 
 Each external component is treated as source material, not a finished design.
-Every component was normalized through the shared design tokens, wrapped behind
-the project's own interfaces (including the managed WebGL lifecycle where
-relevant), and given a reduced-motion state.
+Batch 01 components were normalized through the shared design tokens, wrapped
+behind the project's own interfaces (including the managed WebGL lifecycle
+where relevant), and given a reduced-motion state. Batch 04 follows the
+forced-motion and one-owner runtime contract instead.
 
 ## Attribution and license status
 
@@ -56,3 +64,25 @@ them without re-encoding, cropping, or adding any asset.
 | `entry-intro.mp4` | Owner-produced identity film: modelled and animated in Blender, exported as FBX, assembled, lit, and rendered in Unreal Engine 5 as a 4K image sequence, finished in DaVinci Resolve, then optimized to 1920×1080 for the portfolio (the 4K master is never shipped). | Section 8 video |
 | `entry-intro-poster.webp` | Frame from the same film. | Hero still and the video's `poster` |
 | `overview.webp`, `player-investigation.webp`, `risk-constellation.webp`, `alerts.webp` | Screenshots of the product running against its own synthetic demonstration data. No production or personal data appears in them. | Sections 4, 7, 7, and 10 |
+
+## Batch 04 planned selections (WO-024 register)
+
+WO-024 recorded immutable revisions/captures and SHA-256 values in
+[`batch-04-component-source-register.md`](./batch-04-component-source-register.md).
+No Batch 04 source has been adapted into `src/` yet. Local paths below are the
+destination orders that will perform the adaptation; they are not present until
+those orders land.
+
+| Decision | Canonical source | Destination | Adaptation status |
+| --- | --- | --- | --- |
+| D-006 BSMNT Scrollytelling | https://github.com/basementstudio/scrollytelling @ `0c26959` (copy strategy) | WO-026 | Registered; not yet adapted |
+| D-008 Codrops Cinematic 3D Scroll Demo 1 | https://github.com/JosephASG/codrops-cinematic-scroll-animations @ `7a56d1f` | WO-027 | Registered; not yet adapted |
+| D-009 Codrops Kinetic Typography Page Transition | https://github.com/codrops/KineticTypePageTransition @ `ebe926e` | WO-027, WO-032 | Registered; not yet adapted |
+| D-010 Codrops One Element Scroll | https://github.com/codrops/OneElementScroll @ `feb7ad7` | WO-028 | Registered; not yet adapted |
+| D-011 21st.dev Dynamic Island TOC | https://21st.dev/@digitalzone0707/components/dynamic-island-toc (capture 2026-07-31) | WO-029 | Registered; not yet adapted |
+| D-012 21st.dev Story Scroll | https://21st.dev/@boudjadjasamira/components/story-scroll (capture 2026-07-31) | WO-030 | Registered; not yet adapted |
+| D-013 Codrops Rotating On-Scroll Animations Variation 3 | https://github.com/codrops/RotatingOnScrollAnimations @ `ebbe2c9` | WO-031 | Registered; not yet adapted |
+| D-014 Codrops/Thibault Guignand Next-Project Scroll Morph | https://tympanus.net/codrops/2026/05/06/from-shader-uniforms-to-clip-path-wipes-how-gsap-drives-my-portfolio/ (capture 2026-07-31) | WO-032 | Registered; not yet adapted |
+
+Runtime pins verified but not installed by WO-024: `motion@12.43.0` and
+`lenis@1.3.25` for WO-025; BSMNT via copied source for WO-026.

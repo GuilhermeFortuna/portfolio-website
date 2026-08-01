@@ -228,7 +228,7 @@ Fixed registrations:
 | Liquid Metal | hero | low | yes | no; static metallic fallback |
 | Shape Blur | decorative | high | yes | no |
 | Dotted Surface | decorative | high | yes | no |
-| Case Study Threads | hero | high | yes | no; designed CSS fallback |
+| Case Study Cinematic | hero | high | yes | no; approved poster/surface fallback |
 
 `useEffectActivity` remains available for non-WebGL motion such as Logo Loop and Sparkles.
 
@@ -257,21 +257,42 @@ lenis@1.3.25
 - Lenis owns smooth document scrolling and feeds `ScrollTrigger.update`, one
   shared progress `MotionValue`, and the existing GSAP ticker. Remove all
   subscriptions and ticker callbacks during provider cleanup.
-- Motion owns state-driven transitions, layout, presence, hover/tap, and the
-  accepted Magic UI and Aceternity internals.
-- GSAP/ScrollTrigger owns authored timelines and accepted React Bits components
-  already built on GSAP. CSS owns simple visual transitions. WebGL animation
-  remains exclusively manager-owned.
+- Motion owns state-driven layout and presence, including D-011's chapter
+  instrument.
+- GSAP/ScrollTrigger owns D-006 scene timelines plus D-008–D-010 and
+  D-012–D-014 choreography. CSS owns simple visual transitions and D-013's 3D
+  presentation styles. WebGL animation remains exclusively manager-owned and
+  is used only by D-008 in Batch 04.
 - Remove CSS `scroll-behavior: smooth`; Lenis must preserve native anchors,
   keyboard/touch scrolling, sticky positioning, and history restoration.
 
-Batch 04 visual components are source-first and portfolio-owned. Use the exact
-accepted and pinned React Bits, Magic UI, and Aceternity components recorded in
-`BATCH-04-README.md` and the WO-024 source register. Adapt demo content and
-styling to the existing portfolio tokens and shared case-study primitives; do
-not custom-rebuild their signature mechanics or reskin the route as Aegis UI.
-Aegis is the first case study, carries no special status, and its shared presentation
-patterns must give later project pages roughly equal visual weight.
+Batch 04 visual components are source-first and portfolio-owned. Use only the
+owner-selected D-006 and D-008–D-014 sources recorded in
+`docs/design/batch-04-aegis-visual-decisions.md`, `BATCH-04-README.md`, and the
+WO-024 source register:
+
+- BSMNT Scrollytelling for the master scene system;
+- Codrops Cinematic 3D Scroll Demo 1 for the media cylinder and particles;
+- Codrops Kinetic Typography Page Transition for route/title choreography;
+- Codrops One Element Scroll for the persistent chapter aperture;
+- 21st.dev Dynamic Island TOC for the chapter instrument;
+- 21st.dev Story Scroll for angular decision-panel takeovers;
+- Codrops Rotating On-Scroll Animations Variation 3 for evidence media; and
+- Codrops/Thibault Guignand Next-Project Scroll Morph for the closing scene.
+
+React Bits Threads/Animated Content/Fade Content/Scroll Stack/Glare Hover,
+Magic UI Scroll Progress, and Aceternity Sticky Scroll Reveal are superseded
+and forbidden in Batch 04. Adapt selected mechanics to the existing portfolio
+tokens and shared case-study primitives; do not custom-rebuild their signature
+behavior or reskin the route as Aegis UI. Aegis is the first case study, carries
+no special status, and its shared presentation patterns must give later project
+pages roughly equal visual weight.
+
+The runtime boundary is one root Lenis, one GSAP ticker integration, one BSMNT
+case-study scene root, and one managed case-study WebGL context. Motion is
+reserved for the chapter instrument and state/layout/presence transitions.
+D-008 is the only Batch 04 WebGL source. D-010, D-012, D-013, and D-014 use
+scoped DOM/CSS/GSAP timelines and may not create another Canvas or renderer.
 
 Mobile:
 

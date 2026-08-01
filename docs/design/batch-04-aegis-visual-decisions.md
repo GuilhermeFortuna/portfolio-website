@@ -482,6 +482,158 @@ principally image-gallery or repeated-card treatments and cannot carry both the
 prose-only and media-backed decisions honestly at the required level. Do not
 substitute them for D-012.
 
+### D-013 — Evidence-media presentation and transitions
+
+**Status:** Selected
+**Owner decision:** 2026-07-31
+**Selected source:** Codrops `Rotating On-Scroll Animations`, Variation 3
+**Demo:** https://tympanus.net/Development/RotatingOnScrollAnimations/index3.html
+**Article:** https://tympanus.net/codrops/2026/06/18/exploring-3d-image-rotations-on-scroll/
+**Source:** https://github.com/codrops/RotatingOnScrollAnimations
+
+Variation 3's non-linear CSS 3D movement is selected as the presentation
+language for published Aegis evidence. Each 16:9 media plane travels vertically
+through perspective, rotates on its x-axis, resolves to a frontal orientation,
+and regains its full saturation and brightness at the inspection point. This
+creates a spatial evidence stage without introducing another WebGL renderer or
+reducing the screenshots to a conventional gallery.
+
+The source's fashion imagery, names marquee, random gallery sequence, extreme
+darkening, page styling, and fixed transform values are not selected. The
+portfolio adaptation must preserve Variation 3's defining combination of
+non-linear rotation, z-depth, vertical movement, and tonal modulation while
+tuning its geometry for legibility:
+
+- every screenshot must become completely frontal, sharp, fully saturated,
+  uncropped, and large enough to inspect at the center of its sequence;
+- the off-axis and darkened states are transitional only and must not obscure
+  evidence while its caption or factual annotation is active;
+- deterministic values replace random angles or placement so reverse scrolling
+  reproduces the same composition exactly;
+- captions remain semantic HTML associated with the original media rather than
+  being baked into the image, duplicated in WebGL, or rendered as decorative
+  floating labels;
+- desktop and mobile use separately authored perspective and travel values so
+  the media does not become a tiny receding card on narrow viewports.
+
+The published Aegis evidence is staged as follows:
+
+1. `overview.webp` and `alerts.webp` each receive a single arrival, frontal
+   inspection state, and departure appropriate to their existing chapters.
+2. Decision 3 uses a two-beat sequence. `player-investigation.webp` reaches the
+   inspection plane first; `risk-constellation.webp` advances only after the
+   first screenshot has been readable at full size. They must not be reduced to
+   two small simultaneous cards.
+3. `entry-intro.mp4` may inherit the same spatial arrival and departure, but at
+   the inspection point it remains a native video with its existing poster and
+   controls. Playback is never driven by scroll, and the video must not
+   autoplay or loop.
+
+The component must be integrated under D-004, D-005, D-006, and D-012:
+
+- retain GSAP, ScrollTrigger, CSS perspective, and Variation 3's non-linear
+  transform and filter progression;
+- remove the source's Lenis instance, marquee timeline, DOM-reparenting setup,
+  image preloader ownership, global resize listener, and document-level
+  initialization;
+- register deterministic, scoped media timelines with the BSMNT scene manager
+  and drive them through the portfolio's single root Lenis instance;
+- do not add another Canvas, WebGL context, render loop, nested scroller, input
+  observer, or reduced-motion branch;
+- disable pointer interaction while a native video is off-axis and restore it
+  only in the stable frontal inspection state;
+- keep these media movements subordinate to D-012's chapter panels so the two
+  systems read as one composition rather than competing scroll effects.
+
+The 21st.dev `Scroll Media Expansion Hero`, Codrops `Grid to Full Preview`,
+Codrops `On-Scroll SVG Mask Transitions`, and Codrops `On-Scroll Revealing
+WebGL Images` were screened out. They are respectively too conventional,
+interaction-led rather than narrative, overlapping with D-010's aperture
+language, or incompatible with the one-canvas runtime boundary. Do not
+substitute them for D-013.
+
+### D-014 — Closing scene and route exit
+
+**Status:** Selected
+**Owner decision:** 2026-07-31
+**Selected source:** Codrops / Thibault Guignand `Next-Project Scroll Morph`
+**Demo:** https://www.thibaultguignand.com/en/project/atelier-stratus
+**Source and technical reference:** https://tympanus.net/codrops/2026/05/06/from-shader-uniforms-to-clip-path-wipes-how-gsap-drives-my-portfolio/
+
+The `Next-Project Scroll Morph` is selected as the reusable closing scene and
+route-exit system for portfolio case studies. It meets the visual bar because
+the destination preview becomes the page's final composition: deliberate
+scroll expands a constrained, scaled media field into a full-viewport scene
+while a traced circular indicator advances from 0 to 100. The completed scene
+then hands into navigation rather than ending with a conventional footer card
+or static pair of links.
+
+The portfolio adaptation has two data-driven destination modes:
+
+1. When a later project has a published case-study route, the closing scene
+   previews that next equal-weight project using its portfolio-owned title,
+   index, category, and approved hero media.
+2. When no later published route exists, the scene targets `Selected Work` at
+   `/#work` and uses the portfolio's work-index atmosphere. It must not preview
+   an unpublished project, manufacture unavailable case-study media, or imply
+   that another route exists.
+
+Aegis uses the second mode in this batch. It is currently the only project with
+a published case-study route; `q`, `gosigapp`, and `nexo-dental` remain listed
+without routes. The existing `Get in touch` action remains available as a
+secondary semantic action, but it must not compete with the full-scene closing
+gesture.
+
+The following signature qualities must survive adaptation:
+
+- the destination begins as a strongly inset preview rather than a normal
+  full-width banner;
+- scroll progress continuously removes the clip-path inset while reducing the
+  media scale from approximately `1.3` to `1`;
+- an SVG progress circle and numeric counter trace the same normalized 0-to-100
+  progress as the spatial transformation;
+- reverse scrolling reverses the complete composition and cancels an uncommitted
+  navigation;
+- the scene is also directly activatable; activation completes the same visual
+  progression rather than jumping to a separate link behavior;
+- completion at 100 initiates the guarded route handoff only after the visitor
+  has deliberately traversed the scene, not after a fragment load, restored
+  scroll position, or high-velocity pass through the page ending.
+
+The source's typography, photography, white project-page styling, minimap,
+labels, portfolio identity, and exact destination layout are not selected. The
+adaptation uses the portfolio's existing type, palette, grid, interaction
+language, and approved project media. Its closing composition must remain
+reusable and must not become Aegis-branded.
+
+The component must be integrated under D-004, D-005, D-006, and D-009:
+
+- implement the morph as one scoped GSAP/ScrollTrigger scene driven by the
+  portfolio's root Lenis instance;
+- retain the source's direct per-frame DOM writes for clip path, transform,
+  circle stroke, and counter rather than causing React renders on scroll;
+- retain a guarded `idle -> triggered -> navigating` state model, including a
+  low-progress traversal guard, high-velocity rejection, and a short cancellable
+  commit window;
+- at committed completion, hand navigation to D-009's kinetic route-transition
+  language instead of adding a second, unrelated exit transition;
+- preload a real destination route and approved hero media during the closing
+  progression when they exist; the `/#work` fallback must not preload or imply
+  an unpublished case study;
+- do not create another Lenis owner, global ticker, render loop, input observer,
+  nested scroller, Canvas, or WebGL context;
+- keep the authored scroll morph, counter, and route handoff mandatory under
+  D-004. Remove the source's `prefers-reduced-motion` behavior and do not create
+  a static, shortened, or alternate reduced-motion ending;
+- preserve semantic, keyboard-accessible destination activation and ensure an
+  interrupted or failed navigation leaves the current page operable.
+
+The 21st.dev footer, reveal, and scroll components screened for this role were
+not selected because they are isolated component-level embellishments rather
+than a cinematic closing composition with a reversible route handoff. Do not
+substitute a generic animated footer, marquee, magnetic link, expanding dot,
+or ordinary next-project card for D-014.
+
 ## Planning Impact
 
 The current Batch 04 drafts predate this ledger and contain premature component
@@ -492,15 +644,15 @@ Before any Batch 04 implementation Work Order is dispatched:
 
 1. Replace the old master-scrollytelling selection with D-006.
 2. Remove D-007 candidates from locked or accepted component tables.
-3. Treat every other preselected Batch 04 component as unapproved until it has
-   gone through the selection process in this document.
+3. Replace any other premature component choices with the complete selected set
+   in D-008 through D-014.
 4. Reconcile the Work Order scope and runtime contract with the final selected
    component set.
 
-## Open Component Roles
+## Component Role Coverage
 
-No source is selected yet for the remaining roles. This list defines search
-categories only; it is not a component shortlist.
+All Batch 04 component roles now have owner-selected sources. This table is a
+coverage summary, not a component shortlist.
 
 | Role | Status |
 | --- | --- |
@@ -509,8 +661,8 @@ categories only; it is not a component shortlist.
 | Chapter-to-chapter narrative transitions | Selected — D-010 |
 | Reading progress and orientation | Selected — D-011 |
 | Decision-chapter evidence choreography | Selected — D-012 |
-| Evidence-media presentation and transitions | Open |
-| Closing scene and route exit | Open |
+| Evidence-media presentation and transitions | Selected — D-013 |
+| Closing scene and route exit | Selected — D-014 |
 
 ## Entry Template
 
