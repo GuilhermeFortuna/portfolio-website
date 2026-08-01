@@ -58,7 +58,7 @@ WO-018 Aegis Evidence and Publication Contract
   └─ WO-019 Aegis Safe Media Capture and Adaptation
        └─ WO-020 Aegis Case-Study Content Contract
             └─ WO-021 Shared Case-Study Route Foundation
-                 └─ WO-022 Aegis Flagship Case-Study Implementation
+                 └─ WO-022 Aegis Case-Study Implementation
                       └─ WO-023 Case-Study Integration and Release Review
 ```
 
@@ -73,7 +73,7 @@ next one. Only WO-018 may be `READY` when this batch is created.
 | WO-019 | [Aegis Safe Media Capture and Adaptation](./WO-019-aegis-safe-media-capture-adaptation.md) | Sanitized screenshots, optimized intro, posters, and media manifest |
 | WO-020 | [Aegis Case-Study Content Contract](./WO-020-aegis-case-study-content-contract.md) | Owner-approved narrative and exact visible copy |
 | WO-021 | [Shared Case-Study Route Foundation](./WO-021-case-study-route-foundation.md) | Typed content model, reusable shell, and `/work/aegis` route |
-| WO-022 | [Aegis Flagship Case-Study Implementation](./WO-022-aegis-flagship-case-study.md) | Finished Aegis route and homepage entry point |
+| WO-022 | [Aegis Case-Study Implementation](./WO-022-aegis-case-study.md) | Finished Aegis route and homepage entry point |
 | WO-023 | [Case-Study Integration and Release Review](./WO-023-case-study-integration-release-review.md) | Independent truth, browser, accessibility, metadata, and performance gate |
 
 ## Shared Prohibitions
