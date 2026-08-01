@@ -53,7 +53,7 @@ Adaptation:
 - Style the CTA as dark chrome using colors derived from Line Waves.
 - Reduce the button’s glow and fluid speed.
 - Use Geist Mono for the CTA label.
-- Provide a static metallic fallback for reduced-motion and constrained devices.
+- Provide a static metallic fallback for constrained devices and denied WebGL budgets.
 - Reserve this button style for the primary CTA only.
 
 ### 2. About / Manifesto
@@ -138,7 +138,7 @@ Adaptation:
 - Keep the geometry subordinate to project content.
 - Reuse the global palette and motion easing.
 - Avoid persistent high-intensity blur.
-- Disable or simplify the effect on mobile and reduced-motion modes.
+- Disable or simplify the effect on mobile and when the WebGL manager denies a slot.
 
 The exact project-card or project-chapter layout remains open and should be resolved during the integrated prototype.
 
@@ -180,7 +180,9 @@ Rules:
 - Use one shared easing system and a small duration scale.
 - Effects must support content hierarchy rather than become the content.
 - Offscreen animated effects should stop rendering.
-- Every animated component requires a reduced-motion state.
+- Authored motion is forced; do not add OS motion-preference branches.
+  Capability, visibility, near-viewport, Save-Data, mobile budget, and failure
+  fallbacks remain required.
 - Mobile variants may simplify or replace GPU-heavy effects.
 - Treat WebGL as a managed resource. Line Waves, Liquid Metal, Shape Blur, and Dotted Surface must register with one shared lifecycle and budget manager.
 
@@ -245,7 +247,7 @@ During integration, lock:
 - Section transitions
 - Motion durations and easing
 - Project presentation pattern
-- Mobile and reduced-motion behavior
+- Mobile and capability-fallback behavior
 - GPU and performance budgets
 
 ## Acceptance Criteria
@@ -257,5 +259,5 @@ The first prototype is successful when:
 - Project content remains the main focus after the hero.
 - No viewport contains competing dominant effects.
 - All seven selected components have a clear, non-overlapping role.
-- The experience remains usable with reduced motion.
+- The experience remains usable when WebGL or budgets are unavailable.
 - Desktop performance is smooth and mobile has an intentional simplified mode.

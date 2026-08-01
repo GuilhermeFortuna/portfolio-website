@@ -3,7 +3,6 @@
 
 import { useEffect, useMemo, useRef, useSyncExternalStore } from "react";
 
-import { useMotionPreference } from "@/hooks/use-motion-preference";
 import { cn } from "@/lib/cn";
 
 export type ScrollRevealProps = {
@@ -52,12 +51,11 @@ export function ScrollReveal({
   wordAnimationEnd = "bottom 65%",
 }: ScrollRevealProps) {
   const paragraphRef = useRef<HTMLParagraphElement>(null);
-  const prefersReducedMotion = useMotionPreference();
   const isClient = useIsClient();
 
   // Keep the static paragraph until the client is live so hydration does not
-  // mirror the motion-allowed server snapshot and import GSAP under reduced motion.
-  const useStaticFallback = !isClient || prefersReducedMotion;
+  // import GSAP before the split-word markup is mounted.
+  const useStaticFallback = !isClient;
 
   const splitText = useMemo(() => {
     return children.split(/(\s+)/).map((word, index) => {

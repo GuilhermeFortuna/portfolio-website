@@ -8,22 +8,6 @@ type ObserverCallback = (
   entries: Array<Pick<IntersectionObserverEntry, "isIntersecting">>,
 ) => void;
 
-function stubMatchMedia(reducedMotion: boolean) {
-  vi.stubGlobal(
-    "matchMedia",
-    vi.fn((query: string) => ({
-      matches: reducedMotion && query.includes("prefers-reduced-motion"),
-      media: query,
-      onchange: null,
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn(),
-    })),
-  );
-}
-
 function stubVisibility(initial: DocumentVisibilityState) {
   let visibilityState = initial;
   Object.defineProperty(document, "visibilityState", {
@@ -89,8 +73,7 @@ function ActivityProbe(): ReactElement {
 }
 
 describe("useEffectActivity", () => {
-  it("becomes active only while intersecting, document-visible, and motion-allowed", () => {
-    stubMatchMedia(false);
+  it("becomes active only while intersecting and document-visible", () => {
     const visibility = stubVisibility("visible");
     const intersection = createIntersectionObserverDouble();
 
@@ -119,21 +102,7 @@ describe("useEffectActivity", () => {
     expect(screen.getByTestId("active")).toHaveTextContent("false");
   });
 
-  it("stays inactive when reduced motion is preferred", () => {
-    stubMatchMedia(true);
-    stubVisibility("visible");
-    const intersection = createIntersectionObserverDouble();
-
-    render(<ActivityProbe />);
-
-    act(() => {
-      intersection.trigger(true);
-    });
-    expect(screen.getByTestId("active")).toHaveTextContent("false");
-  });
-
   it("disconnects the IntersectionObserver on unmount", () => {
-    stubMatchMedia(false);
     stubVisibility("visible");
     const intersection = createIntersectionObserverDouble();
 
@@ -145,7 +114,6 @@ describe("useEffectActivity", () => {
   });
 
   it("skips observing when the ref has no element", () => {
-    stubMatchMedia(false);
     stubVisibility("visible");
     const intersection = createIntersectionObserverDouble();
 

@@ -3,8 +3,6 @@
 import type { RefObject } from "react";
 import { useEffect, useState, useSyncExternalStore } from "react";
 
-import { useMotionPreference } from "@/hooks/use-motion-preference";
-
 function subscribeVisibility(onChange: () => void): () => void {
   document.addEventListener("visibilitychange", onChange);
   return () => {
@@ -21,7 +19,6 @@ function getVisibilityServerSnapshot(): boolean {
 }
 
 export function useEffectActivity(ref: RefObject<Element | null>): boolean {
-  const prefersReducedMotion = useMotionPreference();
   const isVisible = useSyncExternalStore(
     subscribeVisibility,
     getVisibilitySnapshot,
@@ -48,5 +45,5 @@ export function useEffectActivity(ref: RefObject<Element | null>): boolean {
     };
   }, [ref]);
 
-  return isIntersecting && isVisible && !prefersReducedMotion;
+  return isIntersecting && isVisible;
 }

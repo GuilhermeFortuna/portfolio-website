@@ -6,7 +6,6 @@ import { SectionShell } from "@/components/layout/section-shell";
 import { LogoLoop, type LogoItem } from "@/components/ui/logo-loop";
 import { siteContent } from "@/content/site";
 import { useEffectActivity } from "@/hooks/use-effect-activity";
-import { useMotionPreference } from "@/hooks/use-motion-preference";
 
 const PROCESS_STAGES = [
   "IDEA",
@@ -45,7 +44,6 @@ function stageAccent(index: number): string {
 
 export function ProcessSection() {
   const loopRef = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = useMotionPreference();
   const active = useEffectActivity(loopRef);
 
   const stageItems = useMemo<LogoItem[]>(
@@ -70,36 +68,23 @@ export function ProcessSection() {
       </h2>
 
       <div className="mt-8">
-        {prefersReducedMotion ? (
-          <ul
-            aria-label="Engineering process"
-            className="grid grid-cols-2 gap-x-6 gap-y-4 sm:gap-x-10 lg:grid-cols-6"
-          >
-            {PROCESS_STAGES.map((stage, index) => (
-              <li key={stage}>
-                <StageLabel stage={stage} accent={stageAccent(index)} />
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div ref={loopRef}>
-            <LogoLoop
-              logos={stageItems}
-              speed={34}
-              direction="left"
-              width="100%"
-              logoHeight={22}
-              gap={48}
-              pauseOnHover
-              pauseOnFocus
-              fadeOut
-              fadeOutColor="#06070a"
-              scaleOnHover={false}
-              ariaLabel="Engineering process"
-              active={active}
-            />
-          </div>
-        )}
+        <div ref={loopRef}>
+          <LogoLoop
+            logos={stageItems}
+            speed={34}
+            direction="left"
+            width="100%"
+            logoHeight={22}
+            gap={48}
+            pauseOnHover
+            pauseOnFocus
+            fadeOut
+            fadeOutColor="#06070a"
+            scaleOnHover={false}
+            ariaLabel="Engineering process"
+            active={active}
+          />
+        </div>
       </div>
 
       <p className="mt-8 max-w-[var(--content-reading)] text-[clamp(1.0625rem,1.5vw,1.25rem)] leading-[1.65] text-[var(--color-text-muted)]">

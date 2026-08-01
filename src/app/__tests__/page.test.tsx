@@ -24,7 +24,7 @@ vi.mock("@/components/effects/sparkles", () => ({
 }));
 
 vi.mock("@/components/effects/scroll-reveal", () => ({
-  // Mirrors the reduced-motion accessible fallback: a plain paragraph.
+  // Keep a plain paragraph under jsdom; the real client path imports GSAP.
   ScrollReveal: ({
     children,
     className,
@@ -41,11 +41,11 @@ vi.mock("@/components/ui/logo-loop", () => ({
   ),
 }));
 
-function stubMatchMedia(reducedMotion: boolean) {
+function stubMatchMedia() {
   vi.stubGlobal(
     "matchMedia",
     vi.fn((query: string) => ({
-      matches: reducedMotion && query.includes("prefers-reduced-motion"),
+      matches: false,
       media: query,
       onchange: null,
       addListener: vi.fn(),
@@ -57,11 +57,23 @@ function stubMatchMedia(reducedMotion: boolean) {
   );
 }
 
+function stubIntersectionObserver() {
+  vi.stubGlobal(
+    "IntersectionObserver",
+    class IntersectionObserverStub {
+      observe = vi.fn();
+      unobserve = vi.fn();
+      disconnect = vi.fn();
+    },
+  );
+}
+
 describe("homepage composition", () => {
   beforeEach(() => {
-    // Prefer reduced motion so ProcessSection uses its static stage list and
-    // About avoids GSAP ScrollTrigger under jsdom.
-    stubMatchMedia(true);
+    // ProjectShowcase still reads desktop media queries under jsdom.
+    // ProcessSection always mounts LogoLoop, which observes via useEffectActivity.
+    stubMatchMedia();
+    stubIntersectionObserver();
   });
 
   it("keeps one h1, section order, required h2s, and four project h3s", async () => {

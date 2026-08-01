@@ -42,7 +42,6 @@ export type WebGLEffectState = {
 
 const MOBILE_QUERY = "(max-width: 767px)";
 const FINE_POINTER_QUERY = "(pointer: fine)";
-const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
 const MOBILE_DPR_CAP = 1.25;
 const DESKTOP_DPR_CAP = 1.5;
@@ -135,7 +134,7 @@ function readEnvironment() {
   const isMobile = matches(MOBILE_QUERY);
   return {
     isMobile,
-    motionAllowed: !matches(REDUCED_MOTION_QUERY) && canCreateWebGl(),
+    motionAllowed: canCreateWebGl(),
     documentVisible:
       typeof document === "undefined"
         ? false
@@ -269,11 +268,9 @@ export function WebGLManager({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const refresh = () => registry.refreshEnvironment();
-    const queries = [
-      MOBILE_QUERY,
-      FINE_POINTER_QUERY,
-      REDUCED_MOTION_QUERY,
-    ].map((query) => window.matchMedia(query));
+    const queries = [MOBILE_QUERY, FINE_POINTER_QUERY].map((query) =>
+      window.matchMedia(query),
+    );
 
     for (const query of queries) {
       query.addEventListener("change", refresh);

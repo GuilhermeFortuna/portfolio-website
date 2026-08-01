@@ -238,7 +238,7 @@ Forced-motion owner decision, effective in Batch 04:
 - do not suppress, shorten, replace, or statically restage authored motion based
   on the operating-system motion preference
 - remove the legacy motion-preference hook and every active preference-based
-  motion branch in WO-024
+  motion branch in WO-025
 - preserve hidden-tab and offscreen pausing, deterministic WebGL budgets,
   cleanup, no-JavaScript rendering, WebGL-capability fallbacks, mobile policy,
   and Save-Data media behavior; these are capability/lifecycle controls, not
@@ -251,12 +251,18 @@ motion@12.43.0
 lenis@1.3.25
 ```
 
+Owned by `src/components/providers/portfolio-motion-provider.tsx` and
+`portfolio-motion-context.ts`:
+
 - Mount exactly one site-level `MotionConfig` with `reducedMotion="never"`.
 - Mount exactly one root `ReactLenis`; no component may construct Lenis, create
   another scroll container, call root Motion `useScroll`, or own a page RAF.
 - Lenis owns smooth document scrolling and feeds `ScrollTrigger.update`, one
-  shared progress `MotionValue`, and the existing GSAP ticker. Remove all
-  subscriptions and ticker callbacks during provider cleanup.
+  shared scroll snapshot via `usePortfolioScrollSnapshot`, and the existing
+  GSAP ticker (`lenis.raf(time * 1000)`). Remove all subscriptions and ticker
+  callbacks during provider cleanup. Stop Lenis while the document is hidden;
+  restart and `ScrollTrigger.refresh()` once when visible again.
+- Consumers may use `usePortfolioLenis()` / `usePortfolioScrollSnapshot()` only.
 - Motion owns state-driven layout and presence, including D-011's chapter
   instrument.
 - GSAP/ScrollTrigger owns D-006 scene timelines plus D-008–D-010 and

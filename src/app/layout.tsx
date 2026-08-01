@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { PortfolioMotionProvider } from "@/components/providers/portfolio-motion-provider";
 import { WebGLManager } from "@/components/webgl/webgl-manager";
 import { siteMetadata } from "@/content/site";
 import "./globals.css";
@@ -29,7 +30,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-full flex flex-col`}
       >
-        <WebGLManager>{children}</WebGLManager>
+        <PortfolioMotionProvider>
+          <WebGLManager>{children}</WebGLManager>
+        </PortfolioMotionProvider>
       </body>
     </html>
   );

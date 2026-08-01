@@ -30,7 +30,7 @@ The site is built with a strict separation between **static semantic content**, 
 ## 💡 Key Engineering Features
 
 - ⚡ **Centralized WebGL Manager (`WebGLManager`)**: Single arbiter governing context acquisition, viewport intersection observation, device-pixel-ratio caps, animation cost budgeting, frame pausing, and static fallbacks.
-- ♿ **100% Accessible & Reduced-Motion Compliant**: Complete compliance with `prefers-reduced-motion: reduce`. Canvas elements and `requestAnimationFrame` loops automatically unmount and fall back to static CSS/SVG equivalents.
+- ♿ **Accessible with Forced Authored Motion**: Semantic structure, keyboard access, and focus management stay first-class. Authored motion is not suppressed by the OS motion preference; capability and lifecycle gates (WebGL support, viewport, visibility, mobile budget, Save-Data media) still pause or fall back when hardware or context requires it.
 - 🎨 **Cinematic Graphic Shaders & Effects**: Custom GLSL line waves, liquid metallic chrome CTA buttons, interactive shape blur shaders, particle sparkles, scroll-triggered text reveals, and 3D dotted surface terrains.
 - 🛠️ **Decoupled Architecture**: Content lives strictly in [`src/content`](file:///home/gui/projects/portfolio-website/src/content), section layouts in [`src/components/sections`](file:///home/gui/projects/portfolio-website/src/components/sections), and visual effects in [`src/components/effects`](file:///home/gui/projects/portfolio-website/src/components/effects).
 - 📱 **Adaptive Performance Budgeting**: Automatically scales resolution based on hardware concurrency, limits pixel ratios, and halts background animation frames when out of viewport.
@@ -58,7 +58,7 @@ The visual thesis of this site is **"Precise software emerging from fluid comput
 ```
         ┌─────────────────────────────────────────────────────────┐
         │                     WebGLManager                        │
-        │  (Viewport Intersection / DPR Cap / Motion Preference)  │
+        │  (Viewport Intersection / DPR Cap / Capability Gates)   │
         └────────────────────────────┬────────────────────────────┘
                                      │
            ┌─────────────────────────┼─────────────────────────┐
@@ -70,7 +70,7 @@ The visual thesis of this site is **"Precise software emerging from fluid comput
            │                         │                         │
            └─────────────────────────┼─────────────────────────┘
                                      ▼
-                   [ Static Fallback under Reduced Motion ]
+            [ Static Fallback when WebGL / budget is unavailable ]
 ```
 
 ### Locked Visual Components
@@ -100,6 +100,8 @@ The visual thesis of this site is **"Precise software emerging from fluid comput
 - **Shaders**: [`@paper-design/shaders`](https://www.npmjs.com/package/@paper-design/shaders)
 - **Particles**: [`@tsparticles/react`](https://particles.js.org/) & `@tsparticles/slim`
 - **Timeline Motion**: [GSAP 3.15](https://greensock.com/gsap/)
+- **Layout / Presence Motion**: [`motion@12.43.0`](https://motion.dev/)
+- **Smooth Scroll**: [`lenis@1.3.25`](https://github.com/darkroomengineering/lenis) (one root owner)
 
 ### Styling & Design System
 - **CSS Framework**: [Tailwind CSS v4](https://tailwindcss.com/)
@@ -150,6 +152,9 @@ portfolio-website/
 │   │   ├── ui/                           # Reusable UI controls
 │   │   │   ├── liquid-metal-link.tsx     # Custom metallic shader link button
 │   │   │   └── logo-loop.tsx             # Infinite wordmark sequence loop
+│   │   ├── providers/                    # Site-level motion / scroll owners
+│   │   │   ├── portfolio-motion-provider.tsx  # MotionConfig + root ReactLenis + GSAP bridge
+│   │   │   └── portfolio-motion-context.ts    # Shared Lenis / scroll snapshot hooks
 │   │   └── webgl/                        # WebGL Manager subsystem
 │   │       ├── webgl-manager.tsx         # Global GPU context & lifecycle coordinator
 │   │       └── managed-webgl-effect.tsx  # HOC wrapper for safe canvas mounting
@@ -157,8 +162,7 @@ portfolio-website/
 │   │   ├── site.ts                       # Site metadata, bio, nav & contact links
 │   │   └── projects.ts                   # Featured project records & descriptions
 │   ├── hooks/                            # Custom React hooks
-│   │   ├── use-effect-activity.ts        # Hook for WebGL visibility tracking
-│   │   └── use-motion-preference.ts      # Media query hook for prefers-reduced-motion
+│   │   └── use-effect-activity.ts        # Intersection + document-visibility gate
 │   ├── lib/                              # Utility helpers
 │   │   └── cn.ts                         # Class merging utility (clsx + tailwind-merge)
 │   ├── test/                             # Vitest custom setup & render helpers
@@ -216,23 +220,26 @@ Ensure you have the following installed on your environment:
 
 ---
 
-## ♿ Reduced Motion & Accessibility Architecture
+## ♿ Accessibility & Forced-Motion Architecture
 
-Accessibility is a core architectural pillar of this portfolio. Every animated and canvas-based component strictly respects user accessibility preferences:
+Accessibility remains a core pillar (semantics, keyboard access, focus, contrast). Motion policy is owner-pinned forced authored motion:
 
-1. **Media Query Detection**: The custom `useMotionPreference` hook listens to `(prefers-reduced-motion: reduce)`.
-2. **WebGL Context Guard**: When reduced motion is requested, `WebGLManager` refuses to allocate WebGL contexts or start `requestAnimationFrame` loops.
-3. **Static Fallbacks**:
-   - **Line Waves** $\rightarrow$ Static subtle gradient background.
-   - **Liquid Metal CTA** $\rightarrow$ Static dark metallic chrome styling.
-   - **Scroll Reveal** $\rightarrow$ Standard static paragraph text block.
-   - **Logo Loop** $\rightarrow$ Frozen grid of wordmark badges.
-   - **Sparkles** $\rightarrow$ Static ambient glow filter.
-   - **Shape Blur** $\rightarrow$ Unmounted; clean static card surfaces are rendered instead.
-   - **Dotted Surface** $\rightarrow$ Static 2D dot grid pattern.
+1. **Root Motion Owner**: `PortfolioMotionProvider` mounts one `MotionConfig` with `reducedMotion="never"` and one root `ReactLenis`, feeding `ScrollTrigger.update` and the existing GSAP ticker exactly once.
+2. **No OS Preference Branch**: Active code does not read the OS motion preference media query or substitute static restages based on it. OS `reduce` and `no-preference` produce the same authored behavior.
+3. **Capability / Lifecycle Gates Still Apply**:
+   - **WebGLManager** still gates on WebGL support, near-viewport, visibility, mobile policy, and cost budget.
+   - **Save-Data / media** rules for case-study video remain unchanged.
+   - Offscreen and hidden-tab pausing remain required.
+4. **Capability Fallbacks** (not preference restages):
+   - **Line Waves** $\rightarrow$ Static subtle gradient when WebGL is unavailable or denied.
+   - **Liquid Metal CTA** $\rightarrow$ Static dark metallic chrome styling on mobile / denied budget.
+   - **Scroll Reveal** $\rightarrow$ Plain paragraph until the client mounts GSAP.
+   - **Logo Loop** $\rightarrow$ Frozen track while inactive (offscreen / hidden tab / pause).
+   - **Sparkles** $\rightarrow$ Static ambient glow when inactive or on particle failure.
+   - **Shape Blur / Dotted Surface** $\rightarrow$ Unmounted or static surfaces when the manager denies a slot.
 
 > [!NOTE]
-> Testing reduced motion locally: Set `prefers-reduced-motion: reduce` in your browser devtools rendering tab to observe instant static graceful fallbacks across all sections.
+> Smooth scrolling is Lenis-owned. CSS `scroll-behavior: smooth` is intentionally absent.
 
 ---
 
@@ -253,7 +260,7 @@ pnpm run test:coverage
 ### Testing Strategy & Mocking
 - **Content Contracts**: Ensures all site and project copy structures conform to TypeScript schemas.
 - **Semantic HTML & Accessibility**: Verifies header hierarchies (`h1`, `h2`, `h3`), landmark roles (`<main>`, `<header>`, `<footer>`), skip links, and ARIA attributes.
-- **WebGL Boundary Mocking**: Third-party WebGL, GSAP, OGL, and particle runtimes are mocked during unit tests so tests focus on application logic, decision boundaries, and reduced-motion states without relying on GPU hardware.
+- **WebGL Boundary Mocking**: Third-party WebGL, GSAP, OGL, Lenis, Motion, and particle runtimes are mocked during unit tests so tests focus on application logic and lifecycle decision boundaries without relying on GPU hardware.
 
 ---
 

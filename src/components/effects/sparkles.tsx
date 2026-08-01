@@ -13,7 +13,6 @@ import {
 } from "react";
 
 import { useEffectActivity } from "@/hooks/use-effect-activity";
-import { useMotionPreference } from "@/hooks/use-motion-preference";
 import { cn } from "@/lib/cn";
 
 type SparklesCoreProps = {
@@ -143,7 +142,6 @@ export function SparklesAccent({
 }: SparklesAccentProps): ReactElement {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const active = useEffectActivity(wrapperRef);
-  const prefersReducedMotion = useMotionPreference();
   const [failed, setFailed] = useState(false);
 
   const init = useCallback(async (engine: Engine) => {
@@ -155,7 +153,7 @@ export function SparklesAccent({
     }
   }, []);
 
-  const showParticles = active && !prefersReducedMotion && !failed;
+  const showParticles = active && !failed;
 
   return (
     <div

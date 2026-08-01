@@ -51,8 +51,8 @@ export interface LogoLoopProps {
   ariaLabel?: string;
   /**
    * Gates the animation loop. requestAnimationFrame only runs while `active`
-   * is true, letting the caller stop motion when the section is offscreen, the
-   * tab is hidden, or reduced motion is requested.
+   * is true, letting the caller stop motion when the section is offscreen or
+   * the tab is hidden.
    */
   active?: boolean;
   className?: string;
@@ -166,15 +166,9 @@ const useAnimationLoop = (
         : `translate3d(${-offsetRef.current}px, 0, 0)`;
     }
 
-    const prefersReduced =
-      typeof window !== "undefined" &&
-      typeof window.matchMedia === "function" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
     // requestAnimationFrame runs only while active and not paused; hover,
-    // focus, offscreen, hidden-tab, and reduced-motion all resolve to a
-    // frozen track here.
-    if (!animating || prefersReduced) {
+    // focus, offscreen, and hidden-tab all resolve to a frozen track here.
+    if (!animating) {
       lastTimestampRef.current = null;
       return;
     }
@@ -390,7 +384,6 @@ export const LogoLoop = memo<LogoLoopProps>(
           <span
             className={cx(
               "inline-flex items-center",
-              "motion-reduce:transition-none",
               scaleOnHover &&
                 "transition-transform duration-[var(--duration-medium)] ease-[var(--ease-standard)] group-hover/item:scale-120",
             )}
@@ -405,7 +398,6 @@ export const LogoLoop = memo<LogoLoopProps>(
               "h-[var(--logoloop-logoHeight)] w-auto block object-contain",
               "[-webkit-user-drag:none] pointer-events-none",
               "[image-rendering:-webkit-optimize-contrast]",
-              "motion-reduce:transition-none",
               scaleOnHover &&
                 "transition-transform duration-[var(--duration-medium)] ease-[var(--ease-standard)] group-hover/item:scale-120",
             )}
@@ -550,7 +542,6 @@ export const LogoLoop = memo<LogoLoopProps>(
         <div
           className={cx(
             "flex will-change-transform select-none relative z-0",
-            "motion-reduce:transform-none",
             isVertical ? "flex-col h-max w-full" : "flex-row w-max",
           )}
           ref={trackRef}
