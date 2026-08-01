@@ -192,7 +192,7 @@ type WebGLEffectConfig = {
     | "liquid-metal"
     | "shape-blur"
     | "dotted-surface"
-    | "case-study-threads";
+    | "case-study-cinematic";
   priority: "hero" | "decorative";
   estimatedCost: "low" | "medium" | "high";
   continuous: boolean;

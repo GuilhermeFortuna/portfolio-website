@@ -40,13 +40,21 @@ const pendingActionStyle: CSSProperties = {
 /** The site header already owns the `banner` landmark, so the hero is a section. */
 const TITLE_ID = "case-study-title";
 
-export function CaseStudyHero({ hero }: { hero: CaseStudyHeroContent }) {
-  return (
-    <section
-      id="top"
-      aria-labelledby={TITLE_ID}
-      className="flex flex-col gap-10"
-    >
+type CaseStudyHeroProps = {
+  hero: CaseStudyHeroContent;
+  /**
+   * When true, omit the outer `<section id="top">` — the cinematic hero scene
+   * owns the landmark and 100svh composition.
+   */
+  embedded?: boolean;
+};
+
+export function CaseStudyHero({
+  hero,
+  embedded = false,
+}: CaseStudyHeroProps) {
+  const body = (
+    <>
       <nav aria-label="Breadcrumb">
         <a
           href={hero.backLink.href}
@@ -106,6 +114,20 @@ export function CaseStudyHero({ hero }: { hero: CaseStudyHeroContent }) {
       </div>
 
       <CaseStudyFigure image={hero.media} eager />
+    </>
+  );
+
+  if (embedded) {
+    return <div className="flex flex-col gap-10">{body}</div>;
+  }
+
+  return (
+    <section
+      id="top"
+      aria-labelledby={TITLE_ID}
+      className="flex flex-col gap-10"
+    >
+      {body}
     </section>
   );
 }

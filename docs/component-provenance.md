@@ -76,8 +76,8 @@ Batch 04 rows remain registered until their destination orders land.
 | Decision | Canonical source | Destination | Adaptation status |
 | --- | --- | --- | --- |
 | D-006 BSMNT Scrollytelling | https://github.com/basementstudio/scrollytelling @ `0c26959` (copy strategy) | `src/components/case-study/experience/bsmnt/` (WO-026) | Adapted — Root/Animation/Waypoint/context/util/types only; local Slot (zero packages); no debugger/Portal/Pin/Parallax/image-sequence |
-| D-008 Codrops Cinematic 3D Scroll Demo 1 | https://github.com/JosephASG/codrops-cinematic-scroll-animations @ `7a56d1f` | WO-027 | Registered; not yet adapted |
-| D-009 Codrops Kinetic Typography Page Transition | https://github.com/codrops/KineticTypePageTransition @ `ebe926e` | WO-027, WO-032 | Registered; not yet adapted |
+| D-008 Codrops Cinematic 3D Scroll Demo 1 | https://github.com/JosephASG/codrops-cinematic-scroll-animations @ `7a56d1f` | `src/components/case-study/experience/cinematic-media-cylinder.ts`, `reactive-particle-field.ts`, `case-study-webgl-stage.tsx` (WO-027) | Adapted — cylinder geometry/shaders, reactive particles, and parameter-driven camera; one `case-study-cinematic` managed context; demo scroll owner / independent frame loop removed |
+| D-009 Codrops Kinetic Typography Page Transition | https://github.com/codrops/KineticTypePageTransition @ `ebe926e` | `src/components/case-study/experience/kinetic-route-transition.tsx` (WO-027, WO-032) | Adapted — oversized glyph field enter/exit controller; portfolio tokens/Geist; title as data; reusable exit for WO-032 |
 | D-010 Codrops One Element Scroll | https://github.com/codrops/OneElementScroll @ `feb7ad7` | WO-028 | Registered; not yet adapted |
 | D-011 21st.dev Dynamic Island TOC | https://21st.dev/@digitalzone0707/components/dynamic-island-toc (capture 2026-07-31) | WO-029 | Registered; not yet adapted |
 | D-012 21st.dev Story Scroll | https://21st.dev/@boudjadjasamira/components/story-scroll (capture 2026-07-31) | WO-030 | Registered; not yet adapted |

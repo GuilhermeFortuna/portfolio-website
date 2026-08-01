@@ -58,6 +58,27 @@ vi.mock("lenis/react", () => ({
   useLenis: () => null,
 }));
 
+vi.mock("@/components/case-study/experience/case-study-webgl-stage", () => ({
+  CASE_STUDY_CINEMATIC_CONFIG: {
+    id: "case-study-cinematic",
+    priority: "hero",
+    estimatedCost: "high",
+    continuous: true,
+    allowMobile: false,
+  },
+  CaseStudyWebGLStage: ({ fallback }: { fallback: ReactNode }) => (
+    <div data-testid="aegis-cinematic-stage">{fallback}</div>
+  ),
+}));
+
+vi.mock("@/components/case-study/experience/kinetic-route-transition", () => ({
+  KineticRouteTransition: () => (
+    <div data-testid="aegis-kinetic-field" aria-hidden="true" />
+  ),
+  createKineticRouteTransitionController: vi.fn(),
+  getKineticControllerFromElement: vi.fn(() => null),
+}));
+
 function render(ui: ReactElement) {
   return rtlRender(<PortfolioMotionProvider>{ui}</PortfolioMotionProvider>);
 }

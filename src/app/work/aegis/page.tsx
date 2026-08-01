@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 
-import { AegisExperience } from "@/components/case-study/aegis/aegis-experience";
+import {
+  AEGIS_CINEMATIC_MEDIA,
+  AegisExperience,
+} from "@/components/case-study/aegis/aegis-experience";
 import { AegisSystemMap } from "@/components/case-study/aegis-system-map";
-import { CaseStudyHero } from "@/components/case-study/case-study-hero";
 import {
   CaseStudyClosingSection,
   CaseStudySection,
 } from "@/components/case-study/case-study-section";
 import { CaseStudyShell } from "@/components/case-study/case-study-shell";
 import type { CaseStudySceneId } from "@/components/case-study/experience/case-study-scene-config";
+import { CaseStudyHeroScene } from "@/components/case-study/experience/case-study-hero-scene";
 import { CaseStudyScene } from "@/components/case-study/experience/case-study-scene";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -60,7 +63,10 @@ export default function AegisCaseStudyPage() {
         <AegisExperience>
           <CaseStudyShell>
             <CaseStudyScene id="hero">
-              <CaseStudyHero hero={aegisCaseStudy.hero} />
+              <CaseStudyHeroScene
+                hero={aegisCaseStudy.hero}
+                media={AEGIS_CINEMATIC_MEDIA}
+              />
             </CaseStudyScene>
 
             {beforeDecisions.map((section) => (

@@ -1,0 +1,95 @@
+/* Kinetic field geometry adapted from Codrops KineticTypePageTransition
+   base.css .type / .type__line — portfolio tokens and Geist only. */
+
+.heroScene {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  min-height: 100svh;
+  isolation: isolate;
+}
+
+.webglStage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.webglMount {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.posterFallback {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-canvas);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.7;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  flex: 1 1 auto;
+  padding-block: clamp(1.5rem, 4vh, 3rem);
+  transition: opacity 0.45s ease, filter 0.45s ease;
+}
+
+/* Only hide after client enhancement initializes — SSR/no-JS stays readable. */
+.heroContentEnhanced.heroContentPending {
+  opacity: 0;
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.heroContentEnhanced.heroContentReady {
+  opacity: 1;
+  filter: none;
+}
+
+.typeField {
+  position: fixed;
+  z-index: 3;
+  height: 100vmax;
+  width: 100vmax;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+  text-transform: uppercase;
+  top: 50%;
+  left: 50%;
+  margin-top: -50vmax;
+  margin-left: -50vmax;
+  pointer-events: none;
+  will-change: transform;
+  color: var(--color-text);
+}
+
+.typeLine {
+  white-space: nowrap;
+  font-family: var(--font-geist-sans), ui-sans-serif, sans-serif;
+  font-size: clamp(7rem, 18.75vh, 15rem);
+  line-height: 0.75;
+  font-weight: 650;
+  letter-spacing: -0.04em;
+  opacity: var(--type-line-opacity, 0.35);
+  user-select: none;
+  will-change: transform, opacity;
+  color: color-mix(in srgb, var(--color-text) 88%, var(--color-accent-a));
+}
+
+.semanticPoster {
+  position: relative;
+  z-index: 2;
+}

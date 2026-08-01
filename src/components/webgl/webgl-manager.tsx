@@ -20,7 +20,8 @@ export type WebGLEffectId =
   | "line-waves"
   | "liquid-metal"
   | "shape-blur"
-  | "dotted-surface";
+  | "dotted-surface"
+  | "case-study-cinematic";
 
 export type WebGLEffectConfig = {
   id: WebGLEffectId;

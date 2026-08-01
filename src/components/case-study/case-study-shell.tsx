@@ -35,10 +35,14 @@ export const eyebrowStyle: CSSProperties = {
 
 export const CaseStudyShell = forwardRef<
   HTMLElement,
-  { children: ReactNode }
->(function CaseStudyShell({ children }, ref) {
+  { children: ReactNode; className?: string }
+>(function CaseStudyShell({ children, className }, ref) {
   return (
-    <article ref={ref} style={shellStyle} className="flex flex-col gap-24">
+    <article
+      ref={ref}
+      style={shellStyle}
+      className={["flex flex-col gap-24", className].filter(Boolean).join(" ")}
+    >
       {children}
     </article>
   );
