@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import { resolveCinematicHeroParameters } from "../cinematic-hero-parameters";
+import {
+  DEFAULT_PARTICLE_CONFIG,
+  resolveParticleUserData,
+} from "../reactive-particle-field";
 
 describe("resolveCinematicHeroParameters", () => {
   it("keeps the restrained opening frame at hero progress 0", () => {
@@ -22,6 +26,16 @@ describe("resolveCinematicHeroParameters", () => {
     expect(mid.cameraZ).toBeLessThan(early.cameraZ);
   });
 
+  it("starts restrained cylinder motion before the primary expansion", () => {
+    const start = resolveCinematicHeroParameters("hero", 0);
+    const early = resolveCinematicHeroParameters("hero", 0.18);
+
+    expect(early.cylinderRotation).toBeGreaterThan(start.cylinderRotation);
+    expect(early.cameraZ).toBeLessThan(start.cameraZ);
+    expect(early.particleEnergy).toBeGreaterThan(start.particleEnergy);
+    expect(early.arcExpansion).toBe(0);
+  });
+
   it("opens oversized arcs near the end of the hero scene", () => {
     const mid = resolveCinematicHeroParameters("hero", 0.5);
     const late = resolveCinematicHeroParameters("hero", 0.9);
@@ -39,5 +53,22 @@ describe("resolveCinematicHeroParameters", () => {
     const end = resolveCinematicHeroParameters("hero", 1);
     const context = resolveCinematicHeroParameters("context", 0.3);
     expect(context).toEqual(end);
+  });
+
+  it("recedes the camera after splitting the cylinder into final arcs", () => {
+    const middle = resolveCinematicHeroParameters("hero", 0.7);
+    const end = resolveCinematicHeroParameters("hero", 1);
+
+    expect(end.arcExpansion).toBeGreaterThan(1.5);
+    expect(end.cameraZ).toBeGreaterThan(middle.cameraZ);
+  });
+});
+
+describe("reactive particle layout", () => {
+  it("uses deterministic particle geometry across remounts", () => {
+    const first = resolveParticleUserData(DEFAULT_PARTICLE_CONFIG, 4, 1.2);
+    const remount = resolveParticleUserData(DEFAULT_PARTICLE_CONFIG, 4, 1.2);
+
+    expect(remount).toEqual(first);
   });
 });

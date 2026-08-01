@@ -10,12 +10,39 @@
   isolation: isolate;
 }
 
+/* Narrative sections paint above the departing sticky scene. Their canvas-
+   colored surface is the explicit visual handoff boundary: arcs may remain in
+   the surrounding gap, but can never wash over readable case-study content. */
+.heroScene ~ section {
+  position: relative;
+  z-index: 1;
+  background: var(--color-canvas);
+}
+
 .webglStage {
-  position: absolute;
-  inset: 0;
+  position: sticky;
+  top: 0;
   z-index: 0;
+  width: 100%;
+  height: 100svh;
+  flex: 0 0 100svh;
+  margin-bottom: -100svh;
   overflow: hidden;
   pointer-events: none;
+  opacity: var(--webgl-stage-opacity, 1);
+  transition: opacity 80ms linear;
+  will-change: opacity;
+}
+
+.webglStage::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-canvas) 72%, transparent) 0%, transparent 62%),
+    linear-gradient(to right, color-mix(in srgb, var(--color-canvas) 56%, transparent) 0%, transparent 74%);
 }
 
 .webglMount {
@@ -29,9 +56,19 @@
   position: absolute;
   inset: 0;
   background-color: var(--color-canvas);
-  background-size: cover;
-  background-position: center;
-  opacity: 0.7;
+  background-size: contain;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  opacity: 0.42;
+}
+
+.posterFallback::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(to bottom, var(--color-canvas) 0%, transparent 38%),
+    linear-gradient(to right, color-mix(in srgb, var(--color-canvas) 82%, transparent), transparent 80%);
 }
 
 .heroContent {
@@ -92,4 +129,28 @@
 .semanticPoster {
   position: relative;
   z-index: 2;
+  opacity: var(--semantic-poster-opacity, 1);
+  transition: opacity 80ms linear;
+  will-change: opacity;
+}
+
+@media (max-width: 767px) {
+  .webglStage {
+    display: none;
+  }
+
+  .posterFallback {
+    opacity: 0.3;
+  }
+
+  .posterFallback::after {
+    background:
+      linear-gradient(to bottom, var(--color-canvas) 0%, color-mix(in srgb, var(--color-canvas) 45%, transparent) 52%, var(--color-canvas) 100%),
+      linear-gradient(to right, color-mix(in srgb, var(--color-canvas) 88%, transparent), transparent);
+  }
+
+  .semanticPoster {
+    opacity: 1;
+    will-change: auto;
+  }
 }

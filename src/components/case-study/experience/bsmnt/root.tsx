@@ -67,7 +67,21 @@ const Scrollytelling = ({
   const explicitTriggerMode = trigger !== undefined;
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const scopedQuerySelector = gsap.utils.selector(ref);
+  const explicitScope =
+    explicitTriggerMode &&
+    typeof Element !== "undefined" &&
+    trigger instanceof Element
+      ? trigger
+      : null;
+  const scopedQuerySelector = React.useMemo<gsap.utils.SelectorFunc>(
+    () =>
+      explicitScope
+        ? gsap.utils.selector(explicitScope)
+        : ref.current
+          ? gsap.utils.selector(ref)
+          : () => [],
+    [explicitScope],
+  );
   const id = React.useId();
 
   const [timeline, setTimeline] = React.useState<gsap.core.Timeline>();
@@ -89,7 +103,7 @@ const Scrollytelling = ({
       return;
     }
 
-    const ctx = gsap.context(() => {
+    const buildTimeline = () => {
       const defaultToggleActions =
         scrub === false ? "play none none none" : undefined;
 
@@ -125,7 +139,11 @@ const Scrollytelling = ({
       });
 
       setTimeline(tl);
-    }, ref);
+    };
+
+    const ctx = explicitScope
+      ? gsap.context(buildTimeline, explicitScope)
+      : gsap.context(buildTimeline, ref);
 
     return () => {
       ctx.revert();
@@ -144,6 +162,7 @@ const Scrollytelling = ({
     id,
     debugMarkers,
     debugVisualizer,
+    explicitScope,
   ]);
 
   const addRestToTimeline = React.useCallback(

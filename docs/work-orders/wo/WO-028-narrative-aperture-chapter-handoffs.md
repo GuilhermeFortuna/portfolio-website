@@ -2,7 +2,7 @@
 
 ## Status
 
-See [`WO-STATUS.md`](WO-STATUS.md). Dispatch only when WO-028 is `READY`.
+See `[WO-STATUS.md](WO-STATUS.md)`. Dispatch only when WO-028 is `READY`.
 
 ## Result to Produce
 
@@ -20,6 +20,8 @@ rather than independent reveal effects.
 
 - `https://github.com/codrops/OneElementScroll`
 - Use only the immutable revision, source paths, and hashes recorded by WO-024.
+
+
 
 ## Files to Create or Modify
 
@@ -66,18 +68,18 @@ semantic HTML and are never baked into WebGL or images.
 ## Fixed Narrative Sequence
 
 1. `context`: aperture emerges from D-008's receding hero arcs into a broad
-   cinematic position showing approved overview evidence.
+  cinematic position showing approved overview evidence.
 2. `problem`: aperture contracts and relocates beside the prose; do not invent
-   problem evidence or a diagram.
+  problem evidence or a diagram.
 3. `system`: aperture expands as the system explanation begins while the
-   existing semantic `AegisSystemMap` composes beside it. Do not convert the map
+  existing semantic `AegisSystemMap` composes beside it. Do not convert the map
    to canvas, SVG, or an image and do not add labels.
 4. `decisions`: aperture clears the stage for D-012; WO-030 owns the panel
-   sequence and WO-031 owns evidence motion inside it.
+  sequence and WO-031 owns evidence motion inside it.
 5. `contribution` and `delivered`: aperture returns to support the existing
-   evidence/captions without changing their order.
+  evidence/captions without changing their order.
 6. `technology` and `confidentiality`: aperture recedes and leaves a restrained
-   reading composition ready for D-014.
+  reading composition ready for D-014.
 
 Each waypoint must have an authored desktop and mobile layout. Do not repeat
 the same center/scale movement for every section.
@@ -97,25 +99,29 @@ ScrollTrigger root, observer, RAF, Canvas, or WebGL context.
 ## Content and Resilience
 
 - Preserve all section IDs, headings, prose, map labels, media, captions, and
-  DOM order from Batch 03.
+DOM order from Batch 03.
 - No-JS and initialization failure render every chapter in normal flow with
-  media adjacent to its original semantic caption.
+media adjacent to its original semantic caption.
 - At the readable waypoint, screenshots are uncropped and selectable captions
-  are visible. Transitional cropping is allowed only while no evidence caption
-  is presented as active.
+are visible. Transitional cropping is allowed only while no evidence caption
+is presented as active.
 - Direct fragment loads and restored scroll positions must initialize the
-  aperture at the matching waypoint without replaying earlier chapters.
+aperture at the matching waypoint without replaying earlier chapters.
+
+
 
 ## Procedure
 
 1. Recheck the D-010 source hash and copy the accepted Flip mechanism with its
-   provenance header.
+  provenance header.
 2. Implement the generic aperture and explicit waypoint slots.
 3. Register the sequence with D-006 and remove all source-local runtime owners.
 4. Compose the existing map and approved media without changing content.
 5. Author desktop, tablet, and mobile waypoint geometry.
 6. Test forward/reverse traversal, fast scroll, fragment entry, resize across
-   breakpoints, failure initialization, and route exit.
+  breakpoints, failure initialization, and route exit.
+
+
 
 ## Automated Checks
 
@@ -129,12 +135,16 @@ rg -n "new Lenis|ScrollSmoother|requestAnimationFrame|prefers-reduced-motion" sr
 git diff --check
 ```
 
+
+
 ## Manual Checks
 
 - 1440×900, 1280×800, 1024×768, 768×1024, 390×844, 320×568, and 200% zoom.
 - Slow, fast, reverse, keyboard, and touch scroll; fragment loads; history
-  restoration; breakpoint resize; JavaScript disabled; route exit mid-Flip.
+restoration; breakpoint resize; JavaScript disabled; route exit mid-Flip.
 - Capture each stable waypoint and at least one midpoint between every pair.
+
+
 
 ## Acceptance Checklist
 
@@ -147,6 +157,8 @@ git diff --check
   reduced-motion branch exists.
 - [ ] Normal-flow failure and no-JS rendering preserve the full story.
 - [ ] Repository and browser checks pass.
+
+
 
 ## Handoff
 

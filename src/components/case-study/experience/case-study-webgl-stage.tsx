@@ -7,11 +7,7 @@
 
 import { gsap } from "gsap";
 import { Camera, Renderer, Transform } from "ogl";
-import {
-  useEffect,
-  useRef,
-  type ReactNode,
-} from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
 import {
   ManagedWebGLEffect,
@@ -57,18 +53,35 @@ type Runtime = {
   particles: ReactiveParticleFieldHandle | null;
   lastRotation: number;
   pointer: { x: number; y: number };
-  targetPointer: { x: number; y: number };
+  contextLost: boolean;
   disposed: boolean;
 };
+
+function resizeRuntime(
+  runtime: Runtime,
+  width: number,
+  height: number,
+  dpr: number,
+) {
+  if (runtime.disposed || width <= 0 || height <= 0) return;
+  runtime.renderer.dpr = dpr;
+  runtime.renderer.setSize(width, height);
+  runtime.camera.perspective({
+    fov: width < 1024 ? 50 : 45,
+    aspect: width / height,
+  });
+}
 
 function CinematicScene({
   media,
   parameters,
   renderState,
+  onAvailabilityChange,
 }: {
   media: readonly { src: string }[];
   parameters: CinematicHeroParameters;
   renderState: ManagedWebGlRenderState;
+  onAvailabilityChange: (available: boolean) => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const runtimeRef = useRef<Runtime | null>(null);
@@ -84,6 +97,17 @@ function CinematicScene({
   }, [renderState]);
 
   useEffect(() => {
+    const runtime = runtimeRef.current;
+    if (!runtime) return;
+    resizeRuntime(
+      runtime,
+      renderState.size.width,
+      renderState.size.height,
+      renderState.dpr,
+    );
+  }, [renderState.dpr, renderState.size.height, renderState.size.width]);
+
+  useEffect(() => {
     const mount = containerRef.current;
     if (!mount) return;
     const container = mount;
@@ -91,24 +115,54 @@ function CinematicScene({
     let cancelled = false;
     let runtime: Runtime | null = null;
     let tick: (() => void) | null = null;
-    let resizeObserver: ResizeObserver | null = null;
 
-    const onPointerMove = (event: PointerEvent) => {
-      if (!runtime || !renderStateRef.current.pointerEnabled) return;
-      const rect = container.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) return;
-      runtime.targetPointer.x = (event.clientX - rect.left) / rect.width - 0.5;
-      runtime.targetPointer.y = (event.clientY - rect.top) / rect.height - 0.5;
-    };
+    const installResources = async (active: Runtime) => {
+      active.cylinder?.dispose();
+      active.particles?.dispose();
+      active.scene = new Transform();
 
-    const onPointerLeave = () => {
-      if (!runtime) return;
-      runtime.targetPointer.x = 0;
-      runtime.targetPointer.y = 0;
+      try {
+        const atlas = await buildCylinderTextureAtlas(
+          active.renderer.gl,
+          media.map((item) => item.src),
+        );
+        if (cancelled || active.disposed || active.contextLost) return;
+
+        active.cylinder = createCinematicCylinder(
+          active.renderer.gl,
+          active.scene,
+          atlas,
+          DEFAULT_CYLINDER_CONFIG,
+        );
+        active.particles = createReactiveParticleField(
+          active.renderer.gl,
+          active.scene,
+          DEFAULT_CYLINDER_CONFIG.height,
+          {
+            ...DEFAULT_PARTICLE_CONFIG,
+            particleRadius: DEFAULT_CYLINDER_CONFIG.radius + 0.8,
+          },
+        );
+        active.lastRotation = parametersRef.current.cylinderRotation;
+        onAvailabilityChange(true);
+      } catch {
+        onAvailabilityChange(false);
+      }
     };
 
     const onContextLost = (event: Event) => {
       event.preventDefault();
+      if (!runtime) return;
+      runtime.contextLost = true;
+      onAvailabilityChange(false);
+    };
+
+    const onContextRestored = () => {
+      if (!runtime || runtime.disposed) return;
+      runtime.contextLost = false;
+      const state = renderStateRef.current;
+      resizeRuntime(runtime, state.size.width, state.size.height, state.dpr);
+      void installResources(runtime);
     };
 
     async function boot() {
@@ -120,6 +174,7 @@ function CinematicScene({
           dpr: renderStateRef.current.dpr,
         });
       } catch {
+        onAvailabilityChange(false);
         return;
       }
 
@@ -137,82 +192,37 @@ function CinematicScene({
       gl.canvas.style.pointerEvents = "none";
       container.appendChild(gl.canvas);
       gl.canvas.addEventListener("webglcontextlost", onContextLost);
+      gl.canvas.addEventListener("webglcontextrestored", onContextRestored);
 
       const camera = new Camera(gl, { fov: 45 });
       camera.position.set(0, 0, 8);
-      const scene = new Transform();
-
       runtime = {
         renderer,
         camera,
-        scene,
+        scene: new Transform(),
         cylinder: null,
         particles: null,
         lastRotation: 0.5,
         pointer: { x: 0, y: 0 },
-        targetPointer: { x: 0, y: 0 },
+        contextLost: false,
         disposed: false,
       };
       runtimeRef.current = runtime;
-
-      const resize = () => {
-        if (!runtime || runtime.disposed) return;
-        const width = container.clientWidth;
-        const height = container.clientHeight;
-        if (width <= 0 || height <= 0) return;
-        runtime.renderer.dpr = renderStateRef.current.dpr;
-        runtime.renderer.setSize(width, height);
-        runtime.camera.perspective({
-          fov: width < 1024 ? 50 : 45,
-          aspect: width / height,
-        });
-      };
-
-      resize();
-      resizeObserver = new ResizeObserver(resize);
-      resizeObserver.observe(container);
-
-      try {
-        const atlas = await buildCylinderTextureAtlas(
-          gl,
-          media.map((item) => item.src),
-        );
-        if (cancelled || runtime.disposed) return;
-
-        runtime.cylinder = createCinematicCylinder(
-          gl,
-          scene,
-          atlas,
-          DEFAULT_CYLINDER_CONFIG,
-        );
-        runtime.particles = createReactiveParticleField(
-          gl,
-          scene,
-          DEFAULT_CYLINDER_CONFIG.height,
-          {
-            ...DEFAULT_PARTICLE_CONFIG,
-            particleRadius: DEFAULT_CYLINDER_CONFIG.radius + 0.8,
-          },
-        );
-        runtime.lastRotation = parametersRef.current.cylinderRotation;
-      } catch {
-        // Texture failure leaves the managed fallback surface via parent.
-        return;
-      }
+      const state = renderStateRef.current;
+      resizeRuntime(runtime, state.size.width, state.size.height, state.dpr);
+      await installResources(runtime);
 
       tick = () => {
-        if (!runtime || runtime.disposed) return;
+        if (!runtime || runtime.disposed || runtime.contextLost) return;
         const state = renderStateRef.current;
-        if (!state.shouldAnimate) return;
+        if (!state.active || state.disposeRequested || !state.shouldAnimate) return;
 
         const params = parametersRef.current;
-        runtime.renderer.dpr = state.dpr;
-
         const influence = state.pointerEnabled ? params.pointerInfluence : 0;
         runtime.pointer.x +=
-          (runtime.targetPointer.x * influence - runtime.pointer.x) * 0.08;
+          (state.pointer.x * influence - runtime.pointer.x) * 0.08;
         runtime.pointer.y +=
-          (runtime.targetPointer.y * influence - runtime.pointer.y) * 0.08;
+          (state.pointer.y * influence - runtime.pointer.y) * 0.08;
 
         runtime.cylinder?.applyParameters(params);
         const rotationDelta = params.cylinderRotation - runtime.lastRotation;
@@ -229,8 +239,6 @@ function CinematicScene({
       };
 
       gsap.ticker.add(tick);
-      window.addEventListener("pointermove", onPointerMove);
-      window.addEventListener("pointerleave", onPointerLeave);
     }
 
     void boot();
@@ -238,9 +246,6 @@ function CinematicScene({
     return () => {
       cancelled = true;
       if (tick) gsap.ticker.remove(tick);
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerleave", onPointerLeave);
-      resizeObserver?.disconnect();
 
       const active = runtimeRef.current;
       if (!active) return;
@@ -249,13 +254,14 @@ function CinematicScene({
       active.particles?.dispose();
       const { gl } = active.renderer;
       gl.canvas.removeEventListener("webglcontextlost", onContextLost);
+      gl.canvas.removeEventListener("webglcontextrestored", onContextRestored);
       if (gl.canvas.parentNode === container) {
         container.removeChild(gl.canvas);
       }
       gl.getExtension("WEBGL_lose_context")?.loseContext();
       runtimeRef.current = null;
     };
-  }, [media]);
+  }, [media, onAvailabilityChange]);
 
   return <div ref={containerRef} className={styles.webglMount} aria-hidden="true" />;
 }
@@ -266,6 +272,11 @@ export function CaseStudyWebGLStage({
   fallback,
   className,
 }: CaseStudyWebGLStageProps) {
+  const [available, setAvailable] = useState(false);
+  const handleAvailabilityChange = useCallback((next: boolean) => {
+    setAvailable(next);
+  }, []);
+
   return (
     <ManagedWebGLEffect
       config={CASE_STUDY_CINEMATIC_CONFIG}
@@ -273,11 +284,15 @@ export function CaseStudyWebGLStage({
       fallback={fallback}
     >
       {(renderState) => (
-        <CinematicScene
-          media={media}
-          parameters={parameters}
-          renderState={renderState}
-        />
+        <>
+          <CinematicScene
+            media={media}
+            parameters={parameters}
+            renderState={renderState}
+            onAvailabilityChange={handleAvailabilityChange}
+          />
+          {available ? null : fallback}
+        </>
       )}
     </ManagedWebGLEffect>
   );

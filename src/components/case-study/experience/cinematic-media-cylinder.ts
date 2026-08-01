@@ -44,12 +44,24 @@ export const cylinderVertex = /* glsl */ `
 
   uniform mat4 modelViewMatrix;
   uniform mat4 projectionMatrix;
+  uniform float uArcExpansion;
 
   varying vec2 vUv;
 
   void main() {
     vUv = uv;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    vec3 transformed = position;
+    float side = uv.x < 0.5 ? -1.0 : 1.0;
+    float open = smoothstep(0.08, 1.15, uArcExpansion);
+
+    // Split the two cylinder halves into opposing crescents instead of merely
+    // scaling a closed tube. Pulling them back as they separate creates the
+    // oversized-arc-to-environmental-trace handoff required by WO-027.
+    transformed.x += side * open * 4.4;
+    transformed.y *= 1.0 + open * 0.42;
+    transformed.z -= open * 1.35;
+
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
   }
 `;
 
@@ -59,13 +71,14 @@ export const cylinderFragment = /* glsl */ `
 
   uniform sampler2D tMap;
   uniform float uDarkness;
+  uniform float uOpacity;
 
   varying vec2 vUv;
 
   void main() {
     vec4 tex = texture2D(tMap, vUv);
     tex.rgb *= (1.0 - uDarkness);
-    gl_FragColor = tex;
+    gl_FragColor = vec4(tex.rgb, tex.a * uOpacity);
   }
 `;
 
@@ -180,8 +193,11 @@ export function createCinematicCylinder(
     uniforms: {
       tMap: { value: texture },
       uDarkness: { value: 0.3 },
+      uArcExpansion: { value: 0 },
+      uOpacity: { value: 1 },
     },
     cullFace: null,
+    transparent: true,
   });
 
   const mesh = new Mesh(gl, { geometry, program });
@@ -192,11 +208,18 @@ export function createCinematicCylinder(
     mesh,
     applyParameters(parameters) {
       const radiusScale = parameters.cylinderRadius / config.radius;
-      const arcY = 1 + parameters.arcExpansion * 1.35;
       const scale = parameters.mediaScale * radiusScale;
       mesh.rotation.y = parameters.cylinderRotation;
-      mesh.scale.set(scale, scale * arcY, scale);
+      mesh.scale.set(scale, scale, scale);
+      const lift = Math.min(parameters.particleEnergy / 0.85, 1);
+      mesh.position.y = -1.15 * (1 - lift);
       program.uniforms.uDarkness.value = cinematicShaderDarkness(parameters);
+      program.uniforms.uArcExpansion.value = parameters.arcExpansion;
+      const fade = Math.min(
+        Math.max((parameters.arcExpansion - 0.72) / 0.88, 0),
+        1,
+      );
+      program.uniforms.uOpacity.value = 1 - fade * fade * (3 - 2 * fade);
     },
     dispose() {
       mesh.setParent(null);

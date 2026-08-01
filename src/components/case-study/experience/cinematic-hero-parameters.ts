@@ -47,23 +47,31 @@ export function resolveCinematicHeroParameters(
   const progress =
     activeSceneId === "hero" ? clamp01(sceneProgress) : 1;
 
+  const restrainedMotion = smoothstep(0.02, 0.28, progress);
   const expand = smoothstep(0.28, 0.72, progress);
   const open = smoothstep(0.72, 1, progress);
-  const restrained = 1 - expand;
 
-  const cylinderRotation = lerp(0.5, 0.5 + FULL_ROTATION * 0.55, expand) + open * 6;
+  const cylinderRotation =
+    0.5 + restrainedMotion * 1.35 + FULL_ROTATION * 0.5 * expand + open * 4;
   const cylinderRadius =
-    BASE_RADIUS * lerp(1, 1.35, expand) * lerp(1, 1.75, open);
-  const mediaScale = lerp(1, 1.2, expand) * lerp(1, 1.55, open);
-  const cameraZ = lerp(8, 3.2, expand) * lerp(1, 0.55, open) + open * 2.4;
-  const arcExpansion = lerp(0, 0.35, expand) + open * 0.95;
+    BASE_RADIUS *
+    lerp(1, 1.04, restrainedMotion) *
+    lerp(1, 1.18, expand) *
+    lerp(1, 1.12, open);
+  const mediaScale =
+    lerp(1, 1.025, restrainedMotion) *
+    lerp(1, 1.075, expand) *
+    lerp(1, 1.08, open);
+  const cameraZ =
+    lerp(8, 7.4, restrainedMotion) - 2.6 * expand + open * 4.7;
+  const arcExpansion = lerp(0, 0.12, expand) + open * 1.48;
   const particleEnergy =
-    lerp(0.05, 0.85, expand) * (1 - open * 0.55) + open * 0.22;
-  const pointerInfluence = lerp(0.15, 0.9, expand) * (1 - open * 0.4);
-
-  // Keep title-readable darkness bias implicit via restrained phase; WebGL
-  // stage maps `restrained` into shader darkness without a separate scroll read.
-  void restrained;
+    lerp(0.05, 0.18, restrainedMotion) +
+    0.67 * expand * (1 - open * 0.55) +
+    open * 0.22;
+  const pointerInfluence =
+    lerp(0.15, 0.28, restrainedMotion) +
+    0.62 * expand * (1 - open * 0.4);
 
   return {
     cylinderRotation,

@@ -47,11 +47,13 @@ type CaseStudyHeroProps = {
    * owns the landmark and 100svh composition.
    */
   embedded?: boolean;
+  mediaClassName?: string;
 };
 
 export function CaseStudyHero({
   hero,
   embedded = false,
+  mediaClassName,
 }: CaseStudyHeroProps) {
   const body = (
     <>
@@ -113,7 +115,9 @@ export function CaseStudyHero({
         </button>
       </div>
 
-      <CaseStudyFigure image={hero.media} eager />
+      <div className={mediaClassName} data-hero-poster="">
+        <CaseStudyFigure image={hero.media} eager />
+      </div>
     </>
   );
 

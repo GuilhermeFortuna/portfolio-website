@@ -12,8 +12,8 @@ import { gsap } from "gsap";
 import {
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
-  useState,
   type ReactNode,
 } from "react";
 
@@ -209,7 +209,6 @@ export function KineticRouteTransition({
   const rootRef = useRef<HTMLDivElement>(null);
   const onReadyRef = useRef(onReady);
   const onCompleteRef = useRef(onEnterComplete);
-  const [ready, setReady] = useState(false);
   const lines = buildTitleLines(title);
 
   useEffect(() => {
@@ -220,7 +219,7 @@ export function KineticRouteTransition({
     onCompleteRef.current = onEnterComplete;
   }, [onEnterComplete]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root) return;
 
@@ -231,11 +230,8 @@ export function KineticRouteTransition({
     (root as ControllerHost).__kineticController = controller;
 
     let cancelled = false;
-    queueMicrotask(() => {
-      if (cancelled) return;
-      setReady(true);
-      onReadyRef.current?.();
-    });
+    root.dataset.kineticReady = "true";
+    onReadyRef.current?.();
 
     void controller.enter().then(() => {
       if (!cancelled) {
@@ -247,6 +243,7 @@ export function KineticRouteTransition({
       cancelled = true;
       controller.cancel();
       controller.dispose();
+      root.dataset.kineticReady = "false";
       delete (root as ControllerHost).__kineticController;
     };
   }, [reactId, title]);
@@ -257,7 +254,7 @@ export function KineticRouteTransition({
         ref={rootRef}
         className={[styles.typeField, className].filter(Boolean).join(" ")}
         data-type-transition=""
-        data-kinetic-ready={ready ? "true" : "false"}
+        data-kinetic-ready="false"
         aria-hidden="true"
       >
         {lines.map((line, index) => (

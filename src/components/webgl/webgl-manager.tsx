@@ -39,6 +39,8 @@ export type WebGLEffectState = {
   dpr: number;
   pointerEnabled: boolean;
   isMobile: boolean;
+  /** Live viewport-normalized pointer coordinates owned by the manager. */
+  pointer: Readonly<{ x: number; y: number }>;
 };
 
 const MOBILE_QUERY = "(max-width: 767px)";
@@ -72,12 +74,15 @@ const DESKTOP_COST_BUDGET = 7;
  */
 const MOBILE_COST_BUDGET = 3;
 
+const INERT_POINTER = { x: 0, y: 0 } as const;
+
 const DENIED_STATE: WebGLEffectState = {
   shouldMount: false,
   shouldAnimate: false,
   dpr: 1,
   pointerEnabled: false,
   isMobile: false,
+  pointer: INERT_POINTER,
 };
 
 type Registration = {
@@ -94,6 +99,7 @@ type WebGlRegistry = {
   getState: (id: WebGLEffectId) => WebGLEffectState;
   subscribe: (listener: () => void) => () => void;
   refreshEnvironment: () => void;
+  setPointer: (x: number, y: number) => void;
 };
 
 function matches(query: string): boolean {
@@ -160,6 +166,7 @@ function createWebGlRegistry(): WebGlRegistry {
   const states = new Map<WebGLEffectId, WebGLEffectState>();
   const listeners = new Set<() => void>();
   let registrationCounter = 0;
+  const pointer = { x: 0, y: 0 };
 
   function recompute(): void {
     const environment = readEnvironment();
@@ -200,6 +207,7 @@ function createWebGlRegistry(): WebGlRegistry {
         dpr: environment.dpr,
         pointerEnabled: environment.pointerEnabled,
         isMobile: environment.isMobile,
+        pointer,
       };
 
       const previous = states.get(config.id);
@@ -259,6 +267,10 @@ function createWebGlRegistry(): WebGlRegistry {
       };
     },
     refreshEnvironment: recompute,
+    setPointer(x: number, y: number) {
+      pointer.x = x;
+      pointer.y = y;
+    },
   };
 }
 
@@ -269,6 +281,13 @@ export function WebGLManager({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const refresh = () => registry.refreshEnvironment();
+    const updatePointer = (event: PointerEvent) => {
+      registry.setPointer(
+        event.clientX / Math.max(window.innerWidth, 1) - 0.5,
+        event.clientY / Math.max(window.innerHeight, 1) - 0.5,
+      );
+    };
+    const resetPointer = () => registry.setPointer(0, 0);
     const queries = [MOBILE_QUERY, FINE_POINTER_QUERY].map((query) =>
       window.matchMedia(query),
     );
@@ -277,6 +296,8 @@ export function WebGLManager({ children }: { children: ReactNode }) {
       query.addEventListener("change", refresh);
     }
     window.addEventListener("resize", refresh);
+    window.addEventListener("pointermove", updatePointer, { passive: true });
+    window.addEventListener("pointerleave", resetPointer);
     document.addEventListener("visibilitychange", refresh);
     refresh();
 
@@ -285,6 +306,8 @@ export function WebGLManager({ children }: { children: ReactNode }) {
         query.removeEventListener("change", refresh);
       }
       window.removeEventListener("resize", refresh);
+      window.removeEventListener("pointermove", updatePointer);
+      window.removeEventListener("pointerleave", resetPointer);
       document.removeEventListener("visibilitychange", refresh);
     };
   }, [registry]);

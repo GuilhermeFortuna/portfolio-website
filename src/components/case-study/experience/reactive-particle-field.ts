@@ -14,12 +14,39 @@ import {
 import type { CinematicHeroParameters } from "./cinematic-hero-parameters";
 
 export type ParticleUserData = {
+  originAngle: number;
   baseAngle: number;
   angleSpan: number;
   baseY: number;
   speed: number;
   radius: number;
 };
+
+function seededUnit(index: number, salt: number): number {
+  const value = Math.sin((index + 1) * 12.9898 + salt * 78.233) * 43758.5453;
+  return value - Math.floor(value);
+}
+
+export function resolveParticleUserData(
+  config: ParticleConfig,
+  index: number,
+  height: number,
+): ParticleUserData {
+  const startAngle = (index / config.numParticles) * Math.PI * 2;
+  const isTopHalf = index < config.numParticles / 2;
+  const baseY = isTopHalf
+    ? height * 0.7 + seededUnit(index, 1) * height * 0.3
+    : -height + seededUnit(index, 1) * height * 0.3;
+
+  return {
+    originAngle: startAngle,
+    baseAngle: startAngle,
+    angleSpan: config.angleSpan,
+    baseY,
+    speed: 0.5 + seededUnit(index, 2),
+    radius: config.particleRadius,
+  };
+}
 
 export type ParticleConfig = {
   numParticles: number;
@@ -69,21 +96,16 @@ export function createParticleGeometry(
   index: number,
   height: number,
 ): { geometry: Geometry; userData: ParticleUserData } {
-  const { numParticles, particleRadius, segments, angleSpan } = config;
+  const { particleRadius, segments, angleSpan } = config;
   const linePositions: number[] = [];
-  const startAngle = (index / numParticles) * Math.PI * 2;
-
-  const isTopHalf = index < numParticles / 2;
-  const yPosition = isTopHalf
-    ? height * 0.7 + Math.random() * height * 0.3
-    : -height * 1.0 + Math.random() * height * 0.3;
+  const userData = resolveParticleUserData(config, index, height);
 
   for (let j = 0; j <= segments; j += 1) {
     const t = j / segments;
-    const angle = startAngle + angleSpan * t;
+    const angle = userData.baseAngle + angleSpan * t;
     linePositions.push(
       Math.cos(angle) * particleRadius,
-      yPosition,
+      userData.baseY,
       Math.sin(angle) * particleRadius,
     );
   }
@@ -92,13 +114,7 @@ export function createParticleGeometry(
     geometry: new Geometry(gl, {
       position: { size: 3, data: new Float32Array(linePositions) },
     }),
-    userData: {
-      baseAngle: startAngle,
-      angleSpan,
-      baseY: yPosition,
-      speed: 0.5 + Math.random() * 1.0,
-      radius: particleRadius,
-    },
+    userData,
   };
 }
 
@@ -117,8 +133,6 @@ export function createReactiveParticleField(
   config: ParticleConfig = DEFAULT_PARTICLE_CONFIG,
 ): ReactiveParticleFieldHandle {
   const particles: ParticleMesh[] = [];
-  let momentum = 0;
-
   for (let i = 0; i < config.numParticles; i += 1) {
     const { geometry, userData } = createParticleGeometry(
       gl,
@@ -150,28 +164,22 @@ export function createReactiveParticleField(
   }
 
   return {
-    applyParameters(parameters, rotationDelta) {
-      const inertiaFactor = 0.15;
-      const decayFactor = 0.92;
-      momentum = momentum * decayFactor + rotationDelta * inertiaFactor;
-
-      const speed = Math.abs(rotationDelta) * 100;
+    applyParameters(parameters, _rotationDelta) {
+      void _rotationDelta;
       const energy = parameters.particleEnergy;
-      const isActive = Math.abs(rotationDelta) > 0.00005 || energy > 0.08;
+      const isActive = energy > 0.08;
 
       for (const particle of particles) {
         const userData = particle.userData;
         const targetOpacity = isActive
-          ? Math.min(Math.max(speed * 3, energy * 0.55), 0.95) * energy
+          ? Math.min(energy * 0.82, 0.9)
           : 0;
-        const currentOpacity = particle.program.uniforms.uOpacity.value as number;
-        particle.program.uniforms.uOpacity.value =
-          currentOpacity + (targetOpacity - currentOpacity) * 0.15;
+        particle.program.uniforms.uOpacity.value = targetOpacity;
 
         if (!isActive) continue;
 
-        const rotationOffset = rotationDelta * userData.speed * 1.5;
-        const newBaseAngle = userData.baseAngle + rotationOffset;
+        const newBaseAngle =
+          userData.originAngle + parameters.cylinderRotation * userData.speed;
         userData.baseAngle = newBaseAngle;
         userData.radius =
           config.particleRadius *

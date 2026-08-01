@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type CSSProperties,
+} from "react";
 
 import { CaseStudyHero } from "@/components/case-study/case-study-hero";
 import { usePortfolioLenis } from "@/components/providers/portfolio-motion-context";
@@ -20,6 +26,19 @@ export type CaseStudyHeroSceneProps = {
   /** Approved stills for the media cylinder (never native video). */
   media: readonly CaseStudyImage[];
 };
+
+type HeroSceneStyle = CSSProperties & {
+  "--semantic-poster-opacity": number;
+  "--webgl-stage-opacity": number;
+};
+
+function smoothstep(edge0: number, edge1: number, value: number): number {
+  const progress = Math.min(
+    Math.max((value - edge0) / Math.max(edge1 - edge0, Number.EPSILON), 0),
+    1,
+  );
+  return progress * progress * (3 - 2 * progress);
+}
 
 function PosterSurface({ image }: { image: CaseStudyImage }) {
   return (
@@ -42,14 +61,31 @@ export function CaseStudyHeroScene({ hero, media }: CaseStudyHeroSceneProps) {
   const [enhanced, setEnhanced] = useState(false);
   const [entranceComplete, setEntranceComplete] = useState(false);
 
+  // The article-wide scene ranges are intentionally inert scaffolding. Drive
+  // the hero from its real semantic section so the final frame meets the
+  // physical context boundary at every viewport height.
+  const heroProgress =
+    scene.activeSectionId === "top" ? scene.sectionProgress : 1;
+
   const parameters = useMemo(
     () =>
       resolveCinematicHeroParameters(
-        scene.activeSceneId,
-        entranceComplete ? scene.sceneProgress : 0,
+        scene.activeSectionId === "top" ? "hero" : scene.activeSceneId,
+        entranceComplete ? heroProgress : 0,
       ),
-    [entranceComplete, scene.activeSceneId, scene.sceneProgress],
+    [
+      entranceComplete,
+      heroProgress,
+      scene.activeSceneId,
+      scene.activeSectionId,
+    ],
   );
+  const sceneStyle: HeroSceneStyle = {
+    // Clear the semantic poster before the primary cylinder expansion begins;
+    // otherwise it masks the first half of the WebGL choreography.
+    "--semantic-poster-opacity": 1 - smoothstep(0.03, 0.2, heroProgress),
+    "--webgl-stage-opacity": 1 - smoothstep(0.8, 0.94, heroProgress),
+  };
 
   useEffect(() => {
     if (!lenis || !enhanced) return;
@@ -77,6 +113,8 @@ export function CaseStudyHeroScene({ hero, media }: CaseStudyHeroSceneProps) {
       aria-labelledby="case-study-title"
       className={styles.heroScene}
       data-entrance={entranceComplete ? "complete" : "pending"}
+      data-hero-progress={heroProgress.toFixed(3)}
+      style={sceneStyle}
     >
       <CaseStudyWebGLStage
         media={media}
@@ -101,7 +139,11 @@ export function CaseStudyHeroScene({ hero, media }: CaseStudyHeroSceneProps) {
           .join(" ")}
         data-hero-content=""
       >
-        <CaseStudyHero hero={hero} embedded />
+        <CaseStudyHero
+          hero={hero}
+          embedded
+          mediaClassName={styles.semanticPoster}
+        />
       </div>
     </section>
   );
