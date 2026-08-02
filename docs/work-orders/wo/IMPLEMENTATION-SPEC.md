@@ -232,26 +232,17 @@ Fixed registrations:
 
 `useEffectActivity` remains available for non-WebGL motion such as Logo Loop and Sparkles.
 
-Forced-motion owner decision, effective in Batch 04:
-
-- ignore `prefers-reduced-motion` in CSS and JavaScript
-- do not suppress, shorten, replace, or statically restage authored motion based
-  on the operating-system motion preference
-- remove the legacy motion-preference hook and every active preference-based
-  motion branch in WO-024
-- preserve hidden-tab and offscreen pausing, deterministic WebGL budgets,
-  cleanup, no-JavaScript rendering, WebGL-capability fallbacks, mobile policy,
-  and Save-Data media behavior; these are capability/lifecycle controls, not
-  alternate motion preferences
-
-Batch 04 motion runtimes and ownership are fixed:
+When future cinematic implementation begins, install and pin these motion
+runtimes:
 
 ```text
 motion@12.43.0
 lenis@1.3.25
 ```
 
-- Mount exactly one site-level `MotionConfig` with `reducedMotion="never"`.
+- Mount exactly one site-level `MotionConfig`. It must preserve the portfolio's
+  existing reduced-motion behavior rather than overriding the operating-system
+  preference.
 - Mount exactly one root `ReactLenis`; no component may construct Lenis, create
   another scroll container, call root Motion `useScroll`, or own a page RAF.
 - Lenis owns smooth document scrolling and feeds `ScrollTrigger.update`, one
@@ -265,13 +256,14 @@ lenis@1.3.25
 - Remove CSS `scroll-behavior: smooth`; Lenis must preserve native anchors,
   keyboard/touch scrolling, sticky positioning, and history restoration.
 
-Batch 04 visual components are source-first and portfolio-owned. Use the exact
-accepted and pinned React Bits, Magic UI, and Aceternity components recorded in
-`BATCH-04-README.md` and the WO-024 source register. Adapt demo content and
-styling to the existing portfolio tokens and shared case-study primitives; do
-not custom-rebuild their signature mechanics or reskin the route as Aegis UI.
-Aegis is the first case study, carries no special status, and its shared presentation
-patterns must give later project pages roughly equal visual weight.
+Future cinematic visual components are source-first and portfolio-owned. The
+saved visual-decisions ledger is a reference library, not an active
+implementation contract; a future Work Order must approve each selected source,
+license, revision, and adaptation boundary before implementation. Adapt demo
+content and styling to the existing portfolio tokens and shared case-study
+primitives; do not custom-rebuild a selected component's signature mechanics or
+reskin a route as its product UI. Every project page must receive roughly equal
+editorial care and visual weight.
 
 Mobile:
 
