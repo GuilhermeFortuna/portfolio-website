@@ -5,7 +5,9 @@ import {
   AEGIS_APERTURE_WAYPOINTS,
 } from "@/components/case-study/aegis/aegis-aperture-config";
 import {
+  AEGIS_CHAPTERS,
   AEGIS_CINEMATIC_MEDIA,
+  AegisChapterInstrument,
   AegisExperience,
 } from "@/components/case-study/aegis/aegis-experience";
 import { AEGIS_SCENE_DEFINITIONS } from "@/components/case-study/experience/case-study-scene-config";
@@ -169,6 +171,8 @@ export default function AegisCaseStudyPage() {
                 </div>
               </CaseStudyScene>
             </CaseStudyNarrativeScenes>
+
+            <AegisChapterInstrument chapters={AEGIS_CHAPTERS} />
           </CaseStudyShell>
         </AegisExperience>
       </main>

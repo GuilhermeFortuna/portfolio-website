@@ -1,4 +1,4 @@
-import type { ReactElement, ReactNode } from "react";
+import type { ReactElement, ReactNode, SVGProps } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import AegisCaseStudyPage, { metadata } from "@/app/work/aegis/page";
@@ -58,6 +58,26 @@ vi.mock("gsap/Flip", () => ({
 
 vi.mock("motion/react", () => ({
   MotionConfig: ({ children }: { children: ReactNode }) => <>{children}</>,
+  AnimatePresence: ({ children }: { children: ReactNode }) => <>{children}</>,
+  motion: {
+    div: ({
+      children,
+      ...props
+    }: {
+      children?: ReactNode;
+      [key: string]: unknown;
+    }) => <div {...props}>{children}</div>,
+    span: ({
+      children,
+      ...props
+    }: {
+      children?: ReactNode;
+      [key: string]: unknown;
+    }) => <span {...props}>{children}</span>,
+    circle: (props: { [key: string]: unknown }) => (
+      <circle {...(props as SVGProps<SVGCircleElement>)} />
+    ),
+  },
 }));
 
 vi.mock("lenis/react", () => ({
@@ -126,6 +146,48 @@ describe("/work/aegis document structure", () => {
     expect(screen.getByRole("banner")).toBeInTheDocument();
     expect(screen.getByRole("contentinfo")).toBeInTheDocument();
     expect(screen.getByRole("main")).toHaveAttribute("id", "main-content");
+  });
+
+  it("exposes the chapter instrument nav with twelve approved destinations", () => {
+    render(<AegisCaseStudyPage />);
+
+    const chapterNav = screen.getByRole("navigation", {
+      name: "Case study chapters",
+    });
+
+    const ordered = Array.from(
+      chapterNav.querySelectorAll<HTMLAnchorElement>("[data-chapter-static] a"),
+    ).map((link) => ({
+      href: link.getAttribute("href"),
+      label: (link.textContent ?? "").replace(/^\d{2}/, "").trim(),
+    }));
+
+    expect(ordered).toEqual([
+      { href: "#top", label: "Aegis" },
+      { href: "#context", label: "The context" },
+      { href: "#problem", label: "The problem" },
+      { href: "#system", label: "How the system fits together" },
+      {
+        href: "#decision-1",
+        label: "Decision 1 — Keep Aegis a standalone product",
+      },
+      {
+        href: "#decision-2",
+        label: "Decision 2 — Read from a curated store, not the lakehouse",
+      },
+      {
+        href: "#decision-3",
+        label: "Decision 3 — Build for investigation, not for monitoring",
+      },
+      {
+        href: "#decision-4",
+        label: "Decision 4 — Give the product its own identity",
+      },
+      { href: "#contribution", label: "What I did" },
+      { href: "#delivered", label: "Delivered" },
+      { href: "#technology", label: "Technology, in context" },
+      { href: "#confidentiality", label: "A note on confidentiality" },
+    ]);
   });
 
   it("provides the skip-link and back-to-top anchor targets", () => {

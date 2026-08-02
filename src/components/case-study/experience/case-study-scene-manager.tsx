@@ -28,7 +28,10 @@ import {
   type CaseStudySceneDefinition,
   type CaseStudySceneSnapshot,
 } from "./case-study-scene-config";
-import { CaseStudySceneContext } from "./case-study-scene-context";
+import {
+  CaseStudyEntranceDispatchContext,
+  CaseStudySceneContext,
+} from "./case-study-scene-context";
 
 type CaseStudySceneManagerProps = {
   scenes: readonly CaseStudySceneDefinition[];
@@ -69,6 +72,12 @@ export function CaseStudySceneManager({
   const [trigger, setTrigger] = useState<HTMLElement | null>(null);
   const [snapshot, setSnapshot] = useState<CaseStudySceneSnapshot>(() =>
     createInitialSceneSnapshot(scenes, sectionIds),
+  );
+  const [entranceComplete, setEntranceComplete] = useState(false);
+
+  const contextValue = useMemo(
+    () => ({ ...snapshot, entranceComplete }),
+    [snapshot, entranceComplete],
   );
 
   const scenesRef = useRef(scenes);
@@ -150,25 +159,27 @@ export function CaseStudySceneManager({
   });
 
   return (
-    <CaseStudySceneContext.Provider value={snapshot}>
-      <Root
-        trigger={trigger}
-        disabled={!trigger}
-        start={start}
-        end={end}
-        scrub
-        callbacks={callbacks}
-        defaults={{ ease: "none" }}
-      >
-        {scenes.map((scene) => (
-          <Waypoint
-            key={scene.id}
-            at={parseSceneBoundary(scene.start)}
-            label={`scene:${scene.id}`}
-          />
-        ))}
-        {shell}
-      </Root>
-    </CaseStudySceneContext.Provider>
+    <CaseStudyEntranceDispatchContext.Provider value={setEntranceComplete}>
+      <CaseStudySceneContext.Provider value={contextValue}>
+        <Root
+          trigger={trigger}
+          disabled={!trigger}
+          start={start}
+          end={end}
+          scrub
+          callbacks={callbacks}
+          defaults={{ ease: "none" }}
+        >
+          {scenes.map((scene) => (
+            <Waypoint
+              key={scene.id}
+              at={parseSceneBoundary(scene.start)}
+              label={`scene:${scene.id}`}
+            />
+          ))}
+          {shell}
+        </Root>
+      </CaseStudySceneContext.Provider>
+    </CaseStudyEntranceDispatchContext.Provider>
   );
 }

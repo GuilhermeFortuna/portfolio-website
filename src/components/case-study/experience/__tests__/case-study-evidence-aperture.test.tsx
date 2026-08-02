@@ -61,6 +61,7 @@ vi.mock("../case-study-scene-context", () => ({
     activeSectionId: "context",
     sectionProgress: 0.2,
     articleProgress: 0.12,
+    entranceComplete: true,
   }),
 }));
 

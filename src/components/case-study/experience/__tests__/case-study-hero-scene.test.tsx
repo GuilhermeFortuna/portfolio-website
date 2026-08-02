@@ -34,7 +34,9 @@ vi.mock("@/components/case-study/experience/case-study-scene-context", () => ({
     activeSectionId: "top",
     sectionProgress: 0,
     articleProgress: 0,
+    entranceComplete: false,
   }),
+  useCaseStudyEntranceDispatch: () => vi.fn(),
 }));
 
 vi.mock("@/components/webgl/managed-webgl-effect", () => ({

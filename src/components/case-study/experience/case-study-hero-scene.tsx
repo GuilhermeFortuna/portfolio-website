@@ -15,7 +15,10 @@ import type {
   CaseStudyImage,
 } from "@/types/case-study";
 
-import { useCaseStudyScene } from "./case-study-scene-context";
+import {
+  useCaseStudyEntranceDispatch,
+  useCaseStudyScene,
+} from "./case-study-scene-context";
 import { resolveCinematicHeroParameters } from "./cinematic-hero-parameters";
 import { CaseStudyWebGLStage } from "./case-study-webgl-stage";
 import { KineticRouteTransition } from "./kinetic-route-transition";
@@ -57,6 +60,7 @@ function PosterSurface({ image }: { image: CaseStudyImage }) {
  */
 export function CaseStudyHeroScene({ hero, media }: CaseStudyHeroSceneProps) {
   const scene = useCaseStudyScene();
+  const setSceneEntranceComplete = useCaseStudyEntranceDispatch();
   const lenis = usePortfolioLenis();
   const [enhanced, setEnhanced] = useState(false);
   const [entranceComplete, setEntranceComplete] = useState(false);
@@ -105,7 +109,8 @@ export function CaseStudyHeroScene({ hero, media }: CaseStudyHeroSceneProps) {
 
   const handleEnterComplete = useCallback(() => {
     setEntranceComplete(true);
-  }, []);
+    setSceneEntranceComplete(true);
+  }, [setSceneEntranceComplete]);
 
   return (
     <section
