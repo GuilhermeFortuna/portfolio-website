@@ -351,10 +351,26 @@
     align-items: start;
   }
 
+  /* Full width is the default for every direct child so a chapter that has no
+     authored placement reads at full measure instead of collapsing into a
+     single 1/12 track. Placements below are more specific and still win. */
+  .narrativeRoot > :global(section#context) > *,
+  .narrativeRoot > :global(section#problem) > *,
+  .narrativeRoot > :global(section#system) > *,
+  .narrativeRoot > :global(section#contribution) > *,
+  .narrativeRoot > :global(section#delivered) > * {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
   .narrativeRoot > :global(section#context > h2),
   .narrativeRoot > :global(section#context > [data-case-study-prose]),
   .narrativeRoot > :global(section#problem > h2),
-  .narrativeRoot > :global(section#problem > [data-case-study-prose]) {
+  .narrativeRoot > :global(section#problem > [data-case-study-prose]),
+  .narrativeRoot > :global(section#contribution > h2),
+  .narrativeRoot > :global(section#contribution > [data-case-study-prose]),
+  .narrativeRoot > :global(section#delivered > h2),
+  .narrativeRoot > :global(section#delivered > [data-case-study-prose]) {
     grid-column: 1 / 8;
   }
 
@@ -537,7 +553,7 @@
   }
 }
 
-/* Decision 3 — one large evidence stage seam for WO-031 */
+/* Decision 3 — one large evidence stage for sequential D-013 planes */
 .decisionBody[data-decision-composition="evidenceStage"]
   :global([data-decision-media-stage]) {
   display: grid;
@@ -545,12 +561,18 @@
   gap: 1.25rem;
   width: 100%;
   max-width: 56rem;
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+}
+
+.decisionBody[data-decision-composition="evidenceStage"]
+  :global([data-decision-media-stage] [data-evidence-plane-shell]) {
+  grid-area: 1 / 1;
+  width: 100%;
 }
 
 .decisionBody[data-decision-composition="evidenceStage"]
   :global([data-decision-media-stage] figure + figure) {
-  /* Keep both assets in the DOM for no-JS / WO-031; visually stage as one
-     large plane rather than two equal cards. */
   margin-top: 0;
 }
 
@@ -575,17 +597,65 @@
     aspect-ratio: 16 / 9;
     max-width: none;
     overflow: hidden;
+    position: relative;
   }
 
+  /* Enhanced: stack planes in one 16:9 stage; D-013 owns visibility via
+     transforms rather than clipping the second figure out of flow. */
   .decisionPanels[data-decision-enhanced="true"]
     .decisionBody[data-decision-composition="evidenceStage"]
-    :global([data-decision-media-stage] figure + figure) {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
+    :global([data-decision-media-stage]) {
+    display: grid;
   }
+}
+
+/* D-013 evidence planes — CSS 3D stage shell */
+.evidenceStage {
+  display: block;
+  min-height: 0;
+}
+
+.evidencePlaneShell {
+  position: relative;
+  width: 100%;
+  pointer-events: none;
+  transform-style: preserve-3d;
+}
+
+.evidencePlaneShell[data-evidence-inspect="true"] {
+  pointer-events: auto;
+  z-index: 2;
+}
+
+.evidencePlaneInner {
+  width: 100%;
+  transform-style: preserve-3d;
+  will-change: transform, filter;
+}
+
+.evidencePlaneInner :global(img),
+.evidencePlaneInner :global(video),
+.evidencePlaneInner :global(picture) {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.evidenceStage[data-evidence-enhanced="true"]
+  .evidencePlaneShell[data-evidence-inspect="false"] {
+  z-index: 1;
+}
+
+.aperture .evidencePlaneShell {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.aperture .evidencePlaneShell[hidden] {
+  display: none;
 }
 
 /* Decision 4 — identity resolves around the native video */

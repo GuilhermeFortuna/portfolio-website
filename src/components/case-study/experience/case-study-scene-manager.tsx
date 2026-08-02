@@ -199,6 +199,18 @@ export function CaseStudySceneManager({
     [publish],
   );
 
+  // A child that does not forward `ref` leaves the root timeline disabled, and
+  // every D-010/D-012/D-013 effect bails out with no error of its own.
+  useEffect(() => {
+    if (process.env.NODE_ENV === "production" || trigger) return;
+    const timer = window.setTimeout(() => {
+      console.error(
+        "CaseStudySceneManager: the child element never forwarded its ref, so the D-006 root timeline stays disabled. Give the child a `ref` prop that lands on a real DOM element.",
+      );
+    }, 1000);
+    return () => window.clearTimeout(timer);
+  }, [trigger]);
+
   useEffect(() => {
     if (!lenis) return;
     refreshLayout();

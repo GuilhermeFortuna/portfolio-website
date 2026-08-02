@@ -245,6 +245,26 @@ describe("/work/aegis document structure", () => {
     );
     expect(stage).not.toBeNull();
     expect(stage?.querySelectorAll("img")).toHaveLength(2);
+    expect(
+      stage?.querySelector(
+        '[data-evidence-plane="aegis-player-investigation"]',
+      ),
+    ).not.toBeNull();
+    expect(
+      stage?.querySelector(
+        '[data-evidence-plane="aegis-risk-constellation"]',
+      ),
+    ).not.toBeNull();
+    expect(
+      document.querySelector(
+        'section#decision-4 [data-evidence-plane="aegis-entry-intro"]',
+      ),
+    ).not.toBeNull();
+    expect(document.querySelector("[data-evidence-stage]")).not.toBeNull();
+    const decisionVideo = document.querySelector("section#decision-4 video");
+    expect(decisionVideo).toHaveAttribute("controls");
+    expect(decisionVideo).not.toHaveAttribute("autoplay");
+    expect(decisionVideo).not.toHaveAttribute("loop");
 
     expect(
       document.querySelector("section#decision-1 img"),

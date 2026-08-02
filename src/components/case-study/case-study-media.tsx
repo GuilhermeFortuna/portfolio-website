@@ -11,17 +11,26 @@ const captionClassName =
  * Screenshots render as plain image elements so the page is complete with
  * JavaScript disabled. `<picture>` declares the delivered format and is the
  * seam for adding an additional source without touching callers.
+ *
+ * `evidencePlaneId` is the WO-031 D-013 shell hook — captions stay on the
+ * figure; transforms target the plane inner only when enhanced.
  */
 export function CaseStudyFigure({
   image,
   eager = false,
+  evidencePlaneId,
 }: {
   image: CaseStudyImage;
   eager?: boolean;
+  /** Optional D-013 plane id for CaseStudyEvidenceStage registration. */
+  evidencePlaneId?: string;
 }) {
   return (
-    <figure style={{ margin: 0 }}>
-      <picture className={figureClassName + " block"}>
+    <figure style={{ margin: 0 }} data-evidence-figure={evidencePlaneId}>
+      <picture
+        className={figureClassName + " block"}
+        data-evidence-media={evidencePlaneId}
+      >
         <source srcSet={image.src} type="image/webp" />
         <img
           src={image.src}
@@ -54,10 +63,19 @@ export function CaseStudyFigure({
  *
  * WO-030 decision-4 may place this figure first in the identity composition;
  * playback remains user-controlled and is never scroll-scrubbed.
+ *
+ * WO-031 may wrap this figure in a D-013 plane for spatial arrival only;
+ * inspect restores pointer events so native controls stay usable.
  */
-export function CaseStudyVideoFigure({ video }: { video: CaseStudyVideo }) {
+export function CaseStudyVideoFigure({
+  video,
+  evidencePlaneId,
+}: {
+  video: CaseStudyVideo;
+  evidencePlaneId?: string;
+}) {
   return (
-    <figure style={{ margin: 0 }}>
+    <figure style={{ margin: 0 }} data-evidence-figure={evidencePlaneId}>
       <p
         style={eyebrowStyle}
         className="mb-4 text-[var(--color-text-muted)]"
@@ -75,6 +93,7 @@ export function CaseStudyVideoFigure({ video }: { video: CaseStudyVideo }) {
         preload="metadata"
         aria-label={video.ariaLabel}
         className={figureClassName + " h-auto w-full"}
+        data-evidence-media={evidencePlaneId}
       />
       <figcaption className={captionClassName} style={readingColumnStyle}>
         {video.transcript}

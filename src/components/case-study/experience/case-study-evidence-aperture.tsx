@@ -270,6 +270,9 @@ export function CaseStudyEvidenceAperture({
     "--aperture-align": activeWaypoint?.alignment ?? "center",
   } as CSSProperties;
 
+  const overviewMedia = mediaByKey.overview;
+  const alertsMedia = mediaByKey.alerts;
+
   return (
     <div
       ref={apertureRef}
@@ -279,20 +282,59 @@ export function CaseStudyEvidenceAperture({
       data-aperture-caption-active={captionActive ? "true" : "false"}
       data-aperture-visible={visible ? "true" : "false"}
       data-aperture-scene={activeSceneId}
+      data-aperture-media={activeMediaKey ?? ""}
       style={apertureStyle}
       aria-hidden={activeMedia ? undefined : true}
     >
-      {activeMedia ? (
-        // eslint-disable-next-line @next/next/no-img-element -- traveling Flip frame; semantic figures remain in chapter DOM.
-        <img
-          className={styles.apertureImage}
-          src={activeMedia.src}
-          alt={activeMedia.alt}
-          width={activeMedia.width}
-          height={activeMedia.height}
-          decoding="async"
-          draggable={false}
-        />
+      {overviewMedia ? (
+        <div
+          className={styles.evidencePlaneShell}
+          data-evidence-plane="aegis-overview"
+          data-evidence-plane-shell=""
+          data-aperture-plane="overview"
+          hidden={activeMediaKey !== "overview"}
+        >
+          <div
+            className={styles.evidencePlaneInner}
+            data-evidence-plane-inner=""
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element -- traveling Flip frame; semantic figures remain in chapter DOM. */}
+            <img
+              className={styles.apertureImage}
+              src={overviewMedia.src}
+              alt={overviewMedia.alt}
+              width={overviewMedia.width}
+              height={overviewMedia.height}
+              decoding="async"
+              draggable={false}
+            />
+          </div>
+        </div>
+      ) : null}
+      {alertsMedia ? (
+        <div
+          className={styles.evidencePlaneShell}
+          data-evidence-plane="aegis-alerts"
+          data-evidence-plane-shell=""
+          data-aperture-plane="alerts"
+          hidden={activeMediaKey !== "alerts"}
+        >
+          <div
+            className={styles.evidencePlaneInner}
+            data-evidence-plane-inner=""
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element -- traveling Flip frame; semantic figures remain in chapter DOM. */}
+            <img
+              className={styles.apertureImage}
+              src={alertsMedia.src}
+              alt={alertsMedia.alt}
+              width={alertsMedia.width}
+              height={alertsMedia.height}
+              decoding="async"
+              draggable={false}
+            />
+          </div>
+        </div>
       ) : null}
     </div>
   );

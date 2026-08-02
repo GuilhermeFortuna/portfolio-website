@@ -142,6 +142,50 @@ test("chapter instrument preserves native anchors and focus cleanup", async ({ p
   await expect(opener).toBeFocused();
 });
 
+test("decision 3 evidence planes inspect sequentially and reverse", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await openAegis(page, "#decision-3");
+  await expect(page.locator("[data-evidence-stage]")).toHaveAttribute(
+    "data-evidence-enhanced",
+    "true",
+  );
+  const player = page.locator(
+    '[data-evidence-plane="aegis-player-investigation"]',
+  );
+  const risk = page.locator(
+    '[data-evidence-plane="aegis-risk-constellation"]',
+  );
+  await expect(player).toBeVisible();
+  await expect(risk).toBeVisible();
+
+  await page.locator("#decision-3-heading").evaluate((heading) => {
+    const top = heading.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, top - window.innerHeight * 0.35);
+  });
+  await expect
+    .poll(async () => player.getAttribute("data-evidence-inspect"))
+    .toBe("true");
+  await expect(risk).toHaveAttribute("data-evidence-inspect", "false");
+
+  await page.locator("#decision-3-heading").evaluate((heading) => {
+    const top = heading.getBoundingClientRect().top + window.scrollY;
+    const height = document.querySelector("#decision-3")!.getBoundingClientRect()
+      .height;
+    window.scrollTo(0, top + height * 0.55 - window.innerHeight * 0.25);
+  });
+  await expect
+    .poll(async () => risk.getAttribute("data-evidence-inspect"))
+    .toBe("true");
+
+  await page.locator("#decision-3-heading").evaluate((heading) => {
+    const top = heading.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, top - window.innerHeight * 0.35);
+  });
+  await expect
+    .poll(async () => player.getAttribute("data-evidence-inspect"))
+    .toBe("true");
+});
+
 test("decision panels settle and reverse from physical heading ranges", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await openAegis(page, "#decision-3");

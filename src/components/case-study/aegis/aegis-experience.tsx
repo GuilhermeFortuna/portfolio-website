@@ -7,15 +7,19 @@ import {
   AEGIS_SCENE_DEFINITIONS,
   AEGIS_SECTION_IDS,
 } from "@/components/case-study/experience/case-study-scene-config";
+import { CaseStudyEvidenceStage } from "@/components/case-study/experience/case-study-evidence-stage";
 import { CaseStudySceneManager } from "@/components/case-study/experience/case-study-scene-manager";
 import { aegisCaseStudy } from "@/content/case-studies";
 import type { CaseStudyImage } from "@/types/case-study";
+
+import { AEGIS_EVIDENCE_PLANES } from "./aegis-evidence-config";
 
 export {
   AEGIS_APERTURE_MEDIA,
   AEGIS_APERTURE_WAYPOINTS,
 } from "./aegis-aperture-config";
 
+export { AEGIS_EVIDENCE_PLANES } from "./aegis-evidence-config";
 export { AegisChapterInstrument } from "./aegis-chapter-instrument";
 export {
   AegisDecisionPanels,
@@ -118,7 +122,9 @@ export function AegisExperience({ children }: { children: ReactNode }) {
       scenes={AEGIS_SCENE_DEFINITIONS}
       sectionIds={AEGIS_SECTION_IDS}
     >
-      {children}
+      <CaseStudyEvidenceStage planes={AEGIS_EVIDENCE_PLANES}>
+        {children}
+      </CaseStudyEvidenceStage>
     </CaseStudySceneManager>
   );
 }

@@ -5,11 +5,18 @@ import type {
   CaseStudySection as CaseStudySectionContent,
 } from "@/types/case-study";
 import { CaseStudyFigure, CaseStudyVideoFigure } from "./case-study-media";
+import { CaseStudyEvidencePlane } from "./experience/case-study-evidence-plane";
 import type { DecisionComposition } from "./experience/case-study-decision-panel";
 import {
   headingStyle,
   readingColumnStyle,
 } from "./case-study-shell";
+
+/** Stable D-013 plane ids for Aegis Decision 3/4 media (WO-031). */
+const DECISION_EVIDENCE_PLANE_IDS = [
+  "aegis-player-investigation",
+  "aegis-risk-constellation",
+] as const;
 
 const proseClassName =
   "flex flex-col gap-5 text-[clamp(1rem,1.2vw,1.0625rem)] leading-[1.7] text-[var(--color-text-muted)]";
@@ -149,9 +156,25 @@ export function CaseStudySection({
     );
 
   const images =
-    section.images?.map((image) => (
-      <CaseStudyFigure key={image.src} image={image} />
-    )) ?? null;
+    section.images?.map((image, index) => {
+      const planeId =
+        composition === "evidenceStage"
+          ? DECISION_EVIDENCE_PLANE_IDS[index]
+          : undefined;
+      const figure = (
+        <CaseStudyFigure
+          key={image.src}
+          image={image}
+          evidencePlaneId={planeId}
+        />
+      );
+      if (!planeId) return figure;
+      return (
+        <CaseStudyEvidencePlane key={image.src} id={planeId}>
+          {figure}
+        </CaseStudyEvidencePlane>
+      );
+    }) ?? null;
 
   const stagedImages =
     composition === "evidenceStage" && images ? (
@@ -163,7 +186,16 @@ export function CaseStudySection({
     );
 
   const video = section.video ? (
-    <CaseStudyVideoFigure video={section.video} />
+    composition === "identityVideo" ? (
+      <CaseStudyEvidencePlane id="aegis-entry-intro">
+        <CaseStudyVideoFigure
+          video={section.video}
+          evidencePlaneId="aegis-entry-intro"
+        />
+      </CaseStudyEvidencePlane>
+    ) : (
+      <CaseStudyVideoFigure video={section.video} />
+    )
   ) : null;
 
   return (
