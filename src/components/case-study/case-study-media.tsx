@@ -51,6 +51,9 @@ export function CaseStudyFigure({
  * implemented: with no automatic playback at all, reduced motion, Save-Data,
  * and a hidden tab need no special case, and this stays a Server Component
  * with no client runtime to clean up on route exit.
+ *
+ * WO-030 decision-4 may place this figure first in the identity composition;
+ * playback remains user-controlled and is never scroll-scrubbed.
  */
 export function CaseStudyVideoFigure({ video }: { video: CaseStudyVideo }) {
   return (

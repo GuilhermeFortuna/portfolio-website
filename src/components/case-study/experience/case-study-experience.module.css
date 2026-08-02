@@ -359,3 +359,176 @@
     aspect-ratio: 16 / 10;
   }
 }
+
+/* ——— D-012 decision panel choreography (21st.dev Story Scroll) ——— */
+
+.decisionPanels {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+.decisionPanel {
+  position: relative;
+  width: 100%;
+}
+
+.decisionInner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  width: 100%;
+  min-height: auto;
+  padding-block: 0.5rem;
+  background: var(--color-canvas);
+  will-change: transform;
+}
+
+.decisionNumeral {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+.decisionBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-width: 0;
+}
+
+/* Enhanced path: sticky stack reproduces source pin/overlap without a second
+   ScrollTrigger owner. Before hydration / on init failure, panels stay flow. */
+.decisionPanels[data-decision-enhanced="true"] {
+  gap: 0;
+}
+
+.decisionPanels[data-decision-enhanced="true"] .decisionPanel {
+  min-height: 100svh;
+}
+
+.decisionPanels[data-decision-enhanced="true"] .decisionInner {
+  position: sticky;
+  top: 0;
+  min-height: 100svh;
+  justify-content: center;
+  padding-block: clamp(2rem, 6vh, 4rem);
+  overflow: hidden;
+}
+
+/* Decision 1 — typography-led declaration */
+.decisionBody[data-decision-composition="declaration"] :global(section) {
+  gap: clamp(1.5rem, 3vw, 2.75rem);
+}
+
+/* Decision 2 — editorial contrast (offset supporting column on desktop) */
+@media (min-width: 1024px) {
+  .decisionBody[data-decision-composition="contrast"]
+    :global([data-decision-prose="contrast"]) {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: clamp(1.5rem, 3vw, 3rem);
+    align-items: start;
+  }
+
+  .decisionBody[data-decision-composition="contrast"]
+    :global([data-decision-contrast-rest]) {
+    margin-inline-start: 0;
+    padding-top: clamp(2rem, 6vh, 4rem);
+  }
+}
+
+/* Decision 3 — one large evidence stage seam for WO-031 */
+.decisionBody[data-decision-composition="evidenceStage"]
+  :global([data-decision-media-stage]) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 56rem;
+}
+
+.decisionBody[data-decision-composition="evidenceStage"]
+  :global([data-decision-media-stage] figure + figure) {
+  /* Keep both assets in the DOM for no-JS / WO-031; visually stage as one
+     large plane rather than two equal cards. */
+  margin-top: 0;
+}
+
+@media (min-width: 1024px) {
+  .decisionBody[data-decision-composition="evidenceStage"] :global(section) {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-areas:
+      "heading heading"
+      "prose stage"
+      "children stage";
+    column-gap: clamp(1.5rem, 3vw, 2.75rem);
+    row-gap: 1.5rem;
+    align-items: start;
+  }
+
+  .decisionBody[data-decision-composition="evidenceStage"] :global(h2) {
+    grid-area: heading;
+  }
+
+  .decisionBody[data-decision-composition="evidenceStage"]
+    :global([data-decision-prose]) {
+    grid-area: prose;
+  }
+
+  .decisionBody[data-decision-composition="evidenceStage"]
+    :global([data-decision-media-stage]) {
+    grid-area: stage;
+    max-width: none;
+  }
+}
+
+/* Decision 4 — identity resolves around the native video */
+.decisionBody[data-decision-composition="identityVideo"] :global(section) {
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+@media (min-width: 1024px) {
+  .decisionBody[data-decision-composition="identityVideo"] :global(section) {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    grid-template-areas:
+      "heading heading"
+      "video prose";
+    column-gap: clamp(1.5rem, 3vw, 2.75rem);
+    row-gap: 1.5rem;
+    align-items: start;
+  }
+
+  .decisionBody[data-decision-composition="identityVideo"] :global(h2) {
+    grid-area: heading;
+  }
+
+  .decisionBody[data-decision-composition="identityVideo"] :global(figure) {
+    grid-area: video;
+  }
+
+  .decisionBody[data-decision-composition="identityVideo"]
+    :global([data-decision-prose]) {
+    grid-area: prose;
+  }
+}
+
+@media (max-width: 767px) {
+  .decisionPanels[data-decision-enhanced="true"] .decisionInner {
+    min-height: auto;
+    padding-block: 1.5rem;
+    overflow: visible;
+  }
+
+  .decisionPanels[data-decision-enhanced="true"] .decisionPanel {
+    min-height: auto;
+  }
+}

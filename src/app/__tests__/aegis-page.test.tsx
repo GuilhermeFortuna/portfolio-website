@@ -37,6 +37,7 @@ vi.mock("gsap", () => {
       vars: {},
       data: {},
     })),
+    fromTo: vi.fn(() => ({})),
     ticker: { add: vi.fn(), remove: vi.fn() },
   };
   return { gsap: api, default: api };
@@ -220,6 +221,37 @@ describe("/work/aegis document structure", () => {
         `${section.id}-heading`,
       );
     }
+  });
+
+  it("authors four distinct decision-panel compositions under one sequence", () => {
+    render(<AegisCaseStudyPage />);
+
+    expect(document.querySelector("[data-decision-panels]")).not.toBeNull();
+    const panels = Array.from(
+      document.querySelectorAll("[data-decision-panel]"),
+    );
+    expect(panels).toHaveLength(4);
+    expect(
+      panels.map((panel) => panel.getAttribute("data-decision-composition")),
+    ).toEqual([
+      "declaration",
+      "contrast",
+      "evidenceStage",
+      "identityVideo",
+    ]);
+
+    const stage = document.querySelector(
+      "section#decision-3 [data-decision-media-stage]",
+    );
+    expect(stage).not.toBeNull();
+    expect(stage?.querySelectorAll("img")).toHaveLength(2);
+
+    expect(
+      document.querySelector("section#decision-1 img"),
+    ).toBeNull();
+    expect(
+      document.querySelector("section#decision-2 img"),
+    ).toBeNull();
   });
 });
 

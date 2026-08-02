@@ -8,8 +8,11 @@ import {
   AEGIS_CHAPTERS,
   AEGIS_CINEMATIC_MEDIA,
   AegisChapterInstrument,
+  AegisDecisionPanels,
   AegisExperience,
+  CaseStudyDecisionPanel,
 } from "@/components/case-study/aegis/aegis-experience";
+import { decisionCompositionForIndex } from "@/components/case-study/experience/case-study-decision-panel";
 import { AEGIS_SCENE_DEFINITIONS } from "@/components/case-study/experience/case-study-scene-config";
 import { AegisSystemMap } from "@/components/case-study/aegis-system-map";
 import {
@@ -138,9 +141,23 @@ export default function AegisCaseStudyPage() {
                     waypoint={waypointFor("decisions")}
                     className={SLOT_CLASS.decisions}
                   />
-                  {decisionSections.map((section) => (
-                    <CaseStudySection key={section.id} section={section} />
-                  ))}
+                  <AegisDecisionPanels>
+                    {decisionSections.map((section, index) => {
+                      const composition = decisionCompositionForIndex(index);
+                      return (
+                        <CaseStudyDecisionPanel
+                          key={section.id}
+                          index={index}
+                          composition={composition}
+                        >
+                          <CaseStudySection
+                            section={section}
+                            composition={composition}
+                          />
+                        </CaseStudyDecisionPanel>
+                      );
+                    })}
+                  </AegisDecisionPanels>
                 </div>
               </CaseStudyScene>
 

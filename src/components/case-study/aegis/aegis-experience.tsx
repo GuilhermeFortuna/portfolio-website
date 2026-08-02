@@ -17,6 +17,11 @@ export {
 } from "./aegis-aperture-config";
 
 export { AegisChapterInstrument } from "./aegis-chapter-instrument";
+export {
+  AegisDecisionPanels,
+  CaseStudyDecisionPanel,
+} from "./aegis-decision-panels";
+export type { DecisionComposition } from "./aegis-decision-panels";
 
 /**
  * Approved Aegis stills for the D-008 media cylinder. Native video is never

@@ -5,6 +5,7 @@ import type {
   CaseStudySection as CaseStudySectionContent,
 } from "@/types/case-study";
 import { CaseStudyFigure, CaseStudyVideoFigure } from "./case-study-media";
+import type { DecisionComposition } from "./experience/case-study-decision-panel";
 import {
   headingStyle,
   readingColumnStyle,
@@ -16,9 +17,19 @@ const proseClassName =
 const actionClassName =
   "inline-flex min-h-11 items-center [font-family:var(--font-geist-mono)] text-[0.6875rem] font-semibold tracking-[0.14em] uppercase";
 
-function Prose({ paragraphs }: { paragraphs: readonly string[] }) {
+function Prose({
+  paragraphs,
+  kind,
+}: {
+  paragraphs: readonly string[];
+  kind?: DecisionComposition;
+}) {
   return (
-    <div className={proseClassName} style={readingColumnStyle}>
+    <div
+      className={proseClassName}
+      style={readingColumnStyle}
+      data-decision-prose={kind}
+    >
       {paragraphs.map((paragraph) => (
         <p key={paragraph}>{paragraph}</p>
       ))}
@@ -27,42 +38,160 @@ function Prose({ paragraphs }: { paragraphs: readonly string[] }) {
 }
 
 /**
+ * Typography-led declaration: first paragraph is the decision statement;
+ * remaining paragraphs keep the approved reasoning order.
+ */
+function DeclarationProse({ paragraphs }: { paragraphs: readonly string[] }) {
+  const [declaration, ...reasoning] = paragraphs;
+  return (
+    <div className={proseClassName} data-decision-prose="declaration">
+      {declaration ? (
+        <p
+          data-decision-declaration=""
+          style={{
+            ...readingColumnStyle,
+            maxWidth: "42rem",
+            fontSize: "clamp(1.25rem, 2.4vw, 1.75rem)",
+            lineHeight: 1.35,
+            color: "var(--color-text)",
+            fontWeight: 500,
+          }}
+        >
+          {declaration}
+        </p>
+      ) : null}
+      {reasoning.length > 0 ? (
+        <div style={readingColumnStyle} data-decision-reasoning="">
+          {reasoning.map((paragraph) => (
+            <p key={paragraph} className="mt-5 first:mt-0">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * Editorial contrast: lead statement versus supporting trade-off copy. No
+ * invented diagram or metric chrome — typography only.
+ */
+function ContrastProse({ paragraphs }: { paragraphs: readonly string[] }) {
+  const [lead, ...rest] = paragraphs;
+  return (
+    <div className={proseClassName} data-decision-prose="contrast">
+      {lead ? (
+        <p
+          data-decision-contrast-lead=""
+          style={{
+            ...readingColumnStyle,
+            maxWidth: "36rem",
+            color: "var(--color-text)",
+            fontSize: "clamp(1.125rem, 2vw, 1.375rem)",
+            lineHeight: 1.45,
+          }}
+        >
+          {lead}
+        </p>
+      ) : null}
+      {rest.length > 0 ? (
+        <div
+          data-decision-contrast-rest=""
+          style={{
+            ...readingColumnStyle,
+            maxWidth: "34rem",
+            marginInlineStart: "auto",
+          }}
+        >
+          {rest.map((paragraph) => (
+            <p key={paragraph} className="mt-5 first:mt-0">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/**
  * `children` is the seam for a section that needs a diagram the authored
  * content cannot express as prose, such as the Aegis system map. It renders
  * after the prose it explains and before the section's own media.
+ *
+ * `composition` is the WO-030 decision-panel layout seam. It never invents
+ * copy or media — it only rearranges approved slots.
  */
 export function CaseStudySection({
   section,
   children,
   className,
+  composition,
 }: {
   section: CaseStudySectionContent;
   children?: ReactNode;
   /** Optional layout seam for chapter composition (aperture slots, map). */
   className?: string;
+  /** Decision-panel composition variant (WO-030). */
+  composition?: DecisionComposition;
 }) {
   const headingId = `${section.id}-heading`;
+
+  const prose =
+    composition === "declaration" ? (
+      <DeclarationProse paragraphs={section.paragraphs} />
+    ) : composition === "contrast" ? (
+      <ContrastProse paragraphs={section.paragraphs} />
+    ) : (
+      <Prose paragraphs={section.paragraphs} kind={composition} />
+    );
+
+  const images =
+    section.images?.map((image) => (
+      <CaseStudyFigure key={image.src} image={image} />
+    )) ?? null;
+
+  const stagedImages =
+    composition === "evidenceStage" && images ? (
+      <div data-decision-media-stage="" className="flex flex-col gap-6">
+        {images}
+      </div>
+    ) : (
+      images
+    );
+
+  const video = section.video ? (
+    <CaseStudyVideoFigure video={section.video} />
+  ) : null;
 
   return (
     <section
       id={section.id}
       aria-labelledby={headingId}
       data-case-study-section={section.id}
+      data-decision-composition={composition}
       className={["flex flex-col gap-8", className].filter(Boolean).join(" ")}
     >
       <h2 id={headingId} style={headingStyle}>
         {section.heading}
       </h2>
 
-      <Prose paragraphs={section.paragraphs} />
-
-      {children}
-
-      {section.images?.map((image) => (
-        <CaseStudyFigure key={image.src} image={image} />
-      ))}
-
-      {section.video ? <CaseStudyVideoFigure video={section.video} /> : null}
+      {composition === "identityVideo" ? (
+        <>
+          {video}
+          {prose}
+          {children}
+          {stagedImages}
+        </>
+      ) : (
+        <>
+          {prose}
+          {children}
+          {stagedImages}
+          {video}
+        </>
+      )}
     </section>
   );
 }
