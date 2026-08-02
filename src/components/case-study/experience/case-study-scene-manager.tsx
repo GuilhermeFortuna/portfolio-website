@@ -51,9 +51,11 @@ function composeRefs<T>(...refs: Array<Ref<T> | undefined>) {
 }
 
 /**
- * One BSMNT root timeline for a case-study article. Enhances hydrated DOM with
- * inert scene waypoints; does not pin, animate, or alter server markup order.
- * Consumes the WO-025 root Lenis instance — never constructs a local scroller.
+ * One BSMNT root timeline for a case-study article. Owns pinning/progress/
+ * labels/handoffs for D-006. Child effects (D-010 Flip aperture, later D-012+)
+ * register onto this root via useScrollytelling — never a second ScrollTrigger
+ * root, Lenis, RAF, Canvas, or WebGL context. Consumes the WO-025 root Lenis
+ * instance — never constructs a local scroller.
  */
 export function CaseStudySceneManager({
   scenes,

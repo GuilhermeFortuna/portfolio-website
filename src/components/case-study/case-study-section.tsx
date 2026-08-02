@@ -34,9 +34,12 @@ function Prose({ paragraphs }: { paragraphs: readonly string[] }) {
 export function CaseStudySection({
   section,
   children,
+  className,
 }: {
   section: CaseStudySectionContent;
   children?: ReactNode;
+  /** Optional layout seam for chapter composition (aperture slots, map). */
+  className?: string;
 }) {
   const headingId = `${section.id}-heading`;
 
@@ -44,7 +47,8 @@ export function CaseStudySection({
     <section
       id={section.id}
       aria-labelledby={headingId}
-      className="flex flex-col gap-8"
+      data-case-study-section={section.id}
+      className={["flex flex-col gap-8", className].filter(Boolean).join(" ")}
     >
       <h2 id={headingId} style={headingStyle}>
         {section.heading}

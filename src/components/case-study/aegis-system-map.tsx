@@ -120,9 +120,12 @@ const listStyle = "m-0 flex list-none flex-col p-0";
 const READ_PATH_LABEL_ID = "aegis-map-read-path";
 const REFRESH_PATH_LABEL_ID = "aegis-map-refresh-path";
 
-export function AegisSystemMap() {
+export function AegisSystemMap({ className }: { className?: string }) {
   return (
-    <div className="flex flex-col gap-12">
+    <div
+      className={["flex flex-col gap-12", className].filter(Boolean).join(" ")}
+      data-aegis-system-map=""
+    >
       <div className="flex flex-col gap-4">
         {/*
           Each group label names its own list, so the two paths are announced as

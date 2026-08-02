@@ -154,3 +154,208 @@
     will-change: auto;
   }
 }
+
+/* ——— D-010 persistent evidence aperture (Codrops One Element Scroll) ——— */
+
+.narrativeRoot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6rem;
+}
+
+/* Structural traveler — adapted from source `.one` (base.css ~296–304). */
+.aperture {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 12rem;
+  height: 8rem;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, width, height;
+}
+
+.narrativeRoot[data-aperture-enhanced="true"] .aperture[data-aperture-enabled="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.apertureImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: var(--aperture-fit, contain);
+  object-position: var(--aperture-align, center) center;
+  user-select: none;
+}
+
+.aperture[data-aperture-caption-active="false"] .apertureImage {
+  /* Transitional crop only while no evidence caption is active. */
+  object-fit: cover;
+}
+
+.apertureEmpty {
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-surface) 88%, var(--color-line)) 0%,
+      var(--color-canvas) 100%
+    );
+}
+
+.apertureSlot {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  pointer-events: none;
+}
+
+/* When enhanced, slot boxes reserve Flip geometry; semantic pictures that the
+   aperture owns are visually deferred so captions stay in chapter DOM. */
+.narrativeRoot[data-aperture-enhanced="true"] :global(section#system > figure:has(img[src*="overview"]) picture),
+.narrativeRoot[data-aperture-enhanced="true"] :global(section#delivered > figure:has(img[src*="alerts"]) picture) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Distinct chapter geometries — desktop defaults. */
+.slotContext {
+  width: min(100%, 56rem);
+  margin-inline: auto;
+  aspect-ratio: 16 / 9;
+}
+
+.slotProblem {
+  width: min(100%, 22rem);
+  margin-inline-start: auto;
+  aspect-ratio: 4 / 3;
+}
+
+.slotSystem {
+  width: min(100%, 36rem);
+  aspect-ratio: 16 / 9;
+}
+
+.slotDecisions {
+  width: min(42%, 18rem);
+  margin-inline-start: 0;
+  aspect-ratio: 3 / 4;
+  opacity: 0.35;
+}
+
+.slotContribution {
+  width: min(100%, 40rem);
+  margin-inline: auto;
+  aspect-ratio: 16 / 9;
+}
+
+.slotDelivered {
+  width: min(100%, 48rem);
+  margin-inline-start: 0;
+  aspect-ratio: 16 / 9;
+}
+
+.slotTechnology {
+  width: min(36%, 14rem);
+  margin-inline-start: auto;
+  aspect-ratio: 3 / 2;
+  opacity: 0.4;
+}
+
+.slotConfidentiality {
+  width: min(28%, 11rem);
+  margin-inline: auto;
+  aspect-ratio: 3 / 2;
+  opacity: 0.25;
+}
+
+.systemCompose {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.systemCompose .slotSystem {
+  order: -1;
+}
+
+@media (min-width: 1024px) {
+  .systemCompose {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: start;
+    gap: clamp(1.5rem, 3vw, 2.75rem);
+  }
+
+  .systemCompose .slotSystem {
+    order: 0;
+    width: 100%;
+  }
+
+  .slotContext {
+    width: min(100%, 64rem);
+  }
+
+  .slotProblem {
+    width: min(42%, 26rem);
+  }
+
+  .slotDecisions {
+    width: min(28%, 16rem);
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .slotContext {
+    width: min(100%, 48rem);
+  }
+
+  .slotProblem {
+    width: min(70%, 24rem);
+  }
+
+  .slotSystem {
+    width: min(100%, 100%);
+  }
+
+  .slotDelivered {
+    width: min(100%, 40rem);
+  }
+}
+
+@media (max-width: 767px) {
+  .slotContext,
+  .slotProblem,
+  .slotSystem,
+  .slotContribution,
+  .slotDelivered {
+    width: 100%;
+    margin-inline: 0;
+  }
+
+  .slotDecisions,
+  .slotTechnology,
+  .slotConfidentiality {
+    width: min(48%, 12rem);
+  }
+
+  .slotProblem {
+    aspect-ratio: 16 / 10;
+  }
+}

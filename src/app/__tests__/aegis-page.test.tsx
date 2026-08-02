@@ -49,6 +49,13 @@ vi.mock("gsap/ScrollTrigger", () => ({
   },
 }));
 
+vi.mock("gsap/Flip", () => ({
+  Flip: {
+    getState: vi.fn(() => ({})),
+    fit: vi.fn(() => ({ kill: vi.fn() })),
+  },
+}));
+
 vi.mock("motion/react", () => ({
   MotionConfig: ({ children }: { children: ReactNode }) => <>{children}</>,
 }));
@@ -337,7 +344,11 @@ describe("/work/aegis media", () => {
   it("renders each screenshot with alt text and a visible caption", () => {
     render(<AegisCaseStudyPage />);
 
-    const images = Array.from(document.querySelectorAll("img"));
+    // Semantic chapter figures stay in Batch 03 DOM; the D-010 aperture may
+    // add one traveling still that must not replace captions or figure count.
+    const images = Array.from(document.querySelectorAll("img")).filter(
+      (image) => !image.closest("[data-aperture]"),
+    );
     expect(images).toHaveLength(5);
 
     for (const image of images) {
@@ -354,6 +365,26 @@ describe("/work/aegis media", () => {
         ).toBeInTheDocument();
       }
     }
+  });
+
+  it("places one Flip waypoint slot per authored narrative scene", () => {
+    render(<AegisCaseStudyPage />);
+
+    const slots = Array.from(
+      document.querySelectorAll("[data-aperture-slot]"),
+    ).map((node) => node.getAttribute("data-aperture-slot"));
+
+    expect(slots).toEqual([
+      "aegis-aperture-context",
+      "aegis-aperture-problem",
+      "aegis-aperture-system",
+      "aegis-aperture-decisions",
+      "aegis-aperture-contribution",
+      "aegis-aperture-delivered",
+      "aegis-aperture-technology",
+      "aegis-aperture-confidentiality",
+    ]);
+    expect(document.querySelector("[data-aperture]")).not.toBeNull();
   });
 
   it("keeps the intro poster-first, controlled, and never autoplaying", () => {

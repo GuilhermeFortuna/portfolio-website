@@ -9,6 +9,11 @@ import {
 import { CaseStudySceneManager } from "@/components/case-study/experience/case-study-scene-manager";
 import type { CaseStudyImage } from "@/types/case-study";
 
+export {
+  AEGIS_APERTURE_MEDIA,
+  AEGIS_APERTURE_WAYPOINTS,
+} from "./aegis-aperture-config";
+
 /**
  * Approved Aegis stills for the D-008 media cylinder. Native video is never
  * textured into WebGL; the poster remains in semantic DOM separately.
@@ -45,6 +50,8 @@ export const AEGIS_CINEMATIC_MEDIA: readonly CaseStudyImage[] = [
     height: 900,
   },
 ];
+
+export { AEGIS_SCENE_DEFINITIONS };
 
 /**
  * Aegis adapter: supplies scene/section data to the shared scene manager.
