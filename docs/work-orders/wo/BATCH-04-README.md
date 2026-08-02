@@ -67,7 +67,7 @@ palette, dashboard bezel, shield, iris, or risk-console skin.
 
 ## Runtime Ownership
 
-WO-024 installs exact direct dependencies:
+WO-025 installs exact direct dependencies after WO-024 records their source contract:
 
 ```text
 motion@12.43.0
@@ -120,14 +120,16 @@ motion designs.
 
 ```text
 WO-023 Batch 03 Release Review
-  └─ WO-024 Source Register, Runtime, and Scene Foundation (D-006)
-       └─ WO-025 Cinematic WebGL Hero and Kinetic Entrance (D-008, D-009)
-            └─ WO-026 Narrative Aperture and Chapter Handoffs (D-010)
-                 └─ WO-027 Chapter Instrument (D-011)
-                      └─ WO-028 Decision Panel Choreography (D-012)
-                           └─ WO-029 Evidence Media Choreography (D-013)
-                                └─ WO-030 Closing Scene and Route Exit (D-014)
-                                     └─ WO-031 Visual Integration Release Review
+  └─ WO-024 Component Source Register
+       └─ WO-025 Motion Runtime and Forced-Motion Migration
+            └─ WO-026 BSMNT Case-Study Scene Foundation (D-006)
+                 └─ WO-027 Cinematic WebGL Hero and Kinetic Entrance (D-008, D-009)
+                      └─ WO-028 Narrative Aperture and Chapter Handoffs (D-010)
+                           └─ WO-029 Chapter Instrument (D-011)
+                                └─ WO-030 Decision Panel Choreography (D-012)
+                                     └─ WO-031 Evidence Media Choreography (D-013)
+                                          └─ WO-032 Closing Scene and Route Exit (D-014)
+                                               └─ WO-033 Visual Integration Release Review
 ```
 
 Run sequentially. These orders deliberately share scene timelines and
@@ -137,14 +139,16 @@ composition files; parallel implementation is forbidden.
 
 | ID | Work Order | Primary output |
 | --- | --- | --- |
-| WO-024 | [Source Register, Runtime, and Scene Foundation](./WO-024-forced-motion-aegis-experience-foundation.md) | Immutable source register, Motion/Lenis foundation, BSMNT scene manager |
-| WO-025 | [Cinematic WebGL Hero and Kinetic Entrance](./WO-025-aegis-signal-field-cinematic-hero.md) | Shared D-008 environment and D-009 route entrance |
-| WO-026 | [Narrative Aperture and Chapter Handoffs](./WO-026-aegis-narrative-rail-section-choreography.md) | Persistent D-010 evidence aperture and chapter composition |
-| WO-027 | [Chapter Instrument](./WO-027-case-study-chapter-instrument.md) | Motion-powered D-011 reading orientation and navigation |
-| WO-028 | [Decision Panel Choreography](./WO-028-aegis-decision-panel-choreography.md) | D-012 angular decision sequence |
-| WO-029 | [Evidence Media Choreography](./WO-029-aegis-evidence-media-choreography.md) | D-013 deterministic 3D media stages |
-| WO-030 | [Closing Scene and Route Exit](./WO-030-case-study-closing-route-exit.md) | D-014 reversible destination morph and guarded navigation |
-| WO-031 | [Visual Integration Release Review](./WO-031-aegis-visual-integration-release-review.md) | Full source, truth, browser, lifecycle, visual-delta, and performance gate |
+| WO-024 | [Component Source Register](./WO-024-component-source-register.md) | Immutable D-006 and D-008–D-014 source register |
+| WO-025 | [Motion Runtime and Forced-Motion Migration](./WO-025-motion-runtime-forced-motion.md) | One Motion/Lenis owner and forced-motion policy |
+| WO-026 | [BSMNT Case-Study Scene Foundation](./WO-026-case-study-scene-foundation.md) | Geometry-derived D-006 scene manager |
+| WO-027 | [Cinematic WebGL Hero and Kinetic Entrance](./WO-027-aegis-cinematic-webgl-hero.md) | Shared D-008 environment and D-009 route entrance |
+| WO-028 | [Narrative Aperture and Chapter Handoffs](./WO-028-narrative-aperture-chapter-handoffs.md) | Persistent D-010 evidence aperture and chapter composition |
+| WO-029 | [Chapter Instrument](./WO-029-case-study-chapter-instrument.md) | Motion-powered D-011 reading orientation and navigation |
+| WO-030 | [Decision Panel Choreography](./WO-030-aegis-decision-panel-choreography.md) | D-012 angular decision sequence |
+| WO-031 | [Evidence Media Choreography](./WO-031-aegis-evidence-media-choreography.md) | D-013 deterministic 3D media stages |
+| WO-032 | [Closing Scene and Route Exit](./WO-032-case-study-closing-route-exit.md) | D-014 reversible destination morph and guarded navigation |
+| WO-033 | [Visual Integration Release Review](./WO-033-aegis-visual-integration-release-review.md) | Full source, truth, browser, lifecycle, visual-delta, and performance gate |
 
 ## Mandatory Reading
 
@@ -161,7 +165,7 @@ composition files; parallel implementation is forbidden.
 
 ## Batch Completion Rule
 
-Batch 04 is complete only when WO-031 records `GO` and is `DONE`. Passing unit
+Batch 04 is complete only when WO-033 records `GO` and is `DONE`. Passing unit
 tests is insufficient. The final review must prove a substantial visual and
 compositional transformation, source-mechanic fidelity, one-owner runtime
 discipline, readable evidence, portfolio-style continuity, and no special

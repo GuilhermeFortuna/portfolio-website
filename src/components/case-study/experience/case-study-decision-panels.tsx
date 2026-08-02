@@ -16,20 +16,14 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 
 import { useDispatcher, useScrollytelling } from "./bsmnt";
-import {
-  AEGIS_SCENE_DEFINITIONS,
-  parseSceneBoundary,
-} from "./case-study-scene-config";
+import type { CaseStudySceneBoundary } from "./case-study-scene-config";
 import { useCaseStudyScene } from "./case-study-scene-context";
 import styles from "./case-study-experience.module.css";
-
-const DECISIONS_SCENE = AEGIS_SCENE_DEFINITIONS.find(
-  (scene) => scene.id === "decisions",
-)!;
 
 type CaseStudyDecisionPanelsProps = {
   children: ReactNode;
@@ -58,7 +52,17 @@ export function CaseStudyDecisionPanels({
   const rootRef = useRef<HTMLDivElement>(null);
   const { timeline } = useScrollytelling();
   const { getTimelineSpace } = useDispatcher();
-  const { articleProgress } = useCaseStudyScene();
+  const {
+    articleProgress,
+    layoutRevision,
+    refreshLayout,
+    resolveBoundary,
+  } = useCaseStudyScene();
+  const layoutEnhanced = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
   const [enhanced, setEnhanced] = useState(false);
   const readyRef = useRef(false);
   const ctxRef = useRef<gsap.Context | null>(null);
@@ -71,8 +75,13 @@ export function CaseStudyDecisionPanels({
   }, [articleProgress]);
 
   useLayoutEffect(() => {
+    if (!layoutEnhanced) return;
+    refreshLayout();
+  }, [layoutEnhanced, refreshLayout]);
+
+  useLayoutEffect(() => {
     const root = rootRef.current;
-    if (!root || !timeline) {
+    if (!root || !timeline || !layoutEnhanced) {
       return;
     }
 
@@ -122,14 +131,6 @@ export function CaseStudyDecisionPanels({
 
       try {
         ctxRef.current = gsap.context(() => {
-          const sceneStart = parseSceneBoundary(DECISIONS_SCENE.start);
-          const sceneEnd = parseSceneBoundary(DECISIONS_SCENE.end);
-          const span = Math.max(sceneEnd - sceneStart, Number.EPSILON);
-          const panelSpan = span / panels.length;
-          // Takeover occupies the first 55% of each incoming panel window so
-          // the settled composition stays readable before the next handoff.
-          const takeoverRatio = 0.55;
-
           panels.forEach((panel, index) => {
             gsap.set(panel, { zIndex: index + 1 });
             const inner = inners[index]!;
@@ -146,9 +147,20 @@ export function CaseStudyDecisionPanels({
               rotation,
               transformOrigin: "bottom left",
             });
-
-            const windowStart = sceneStart + index * panelSpan;
-            const takeoverEnd = windowStart + panelSpan * takeoverRatio;
+            const section = panel.querySelector<HTMLElement>("section[id]");
+            if (!section?.id) return;
+            const boundary = (viewportProgress: number): CaseStudySceneBoundary => ({
+              type: "section",
+              id: section.id,
+              viewportProgress,
+            });
+            const windowStart = resolveBoundary(boundary(1));
+            const takeoverEnd = resolveBoundary(boundary(0.2));
+            if (
+              windowStart === null ||
+              takeoverEnd === null ||
+              takeoverEnd <= windowStart
+            ) return;
             const space = getTimelineSpace({
               start: windowStart,
               end: takeoverEnd,
@@ -206,7 +218,15 @@ export function CaseStudyDecisionPanels({
       clearSpaces();
       geometryKeyRef.current = "";
     };
-  }, [getTimelineSpace, onFailed, onReady, timeline]);
+  }, [
+    getTimelineSpace,
+    layoutEnhanced,
+    layoutRevision,
+    onFailed,
+    onReady,
+    resolveBoundary,
+    timeline,
+  ]);
 
   useEffect(() => {
     if (!enhanced || !timeline || !ctxRef.current) return;
@@ -219,6 +239,7 @@ export function CaseStudyDecisionPanels({
       className={styles.decisionPanels}
       data-decision-panels=""
       data-decision-enhanced={enhanced ? "true" : "false"}
+      data-decision-layout={layoutEnhanced ? "enhanced" : "flow"}
     >
       {children}
     </div>

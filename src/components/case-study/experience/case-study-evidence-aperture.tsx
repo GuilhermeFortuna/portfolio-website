@@ -24,11 +24,7 @@ import type {
   ApertureWaypoint,
 } from "./aperture-types";
 import { useDispatcher, useScrollytelling } from "./bsmnt";
-import type {
-  CaseStudySceneDefinition,
-  CaseStudySceneId,
-} from "./case-study-scene-config";
-import { parseSceneBoundary } from "./case-study-scene-config";
+import type { CaseStudySceneDefinition, CaseStudySceneId } from "./case-study-scene-config";
 import { useCaseStudyScene } from "./case-study-scene-context";
 import styles from "./case-study-experience.module.css";
 
@@ -45,28 +41,6 @@ type CaseStudyEvidenceApertureProps = {
   /** Called when init fails so the host can keep normal-flow media. */
   onFailed?: () => void;
 };
-
-function sceneStart(
-  scenes: readonly CaseStudySceneDefinition[],
-  sceneId: CaseStudySceneId,
-): number {
-  const scene = scenes.find((entry) => entry.id === sceneId);
-  if (!scene) {
-    throw new Error(`Missing scene definition for aperture waypoint: ${sceneId}`);
-  }
-  return parseSceneBoundary(scene.start);
-}
-
-function sceneEnd(
-  scenes: readonly CaseStudySceneDefinition[],
-  sceneId: CaseStudySceneId,
-): number {
-  const scene = scenes.find((entry) => entry.id === sceneId);
-  if (!scene) {
-    throw new Error(`Missing scene definition for aperture waypoint: ${sceneId}`);
-  }
-  return parseSceneBoundary(scene.end);
-}
 
 function resolveActiveMediaKey(
   waypoints: readonly ApertureWaypoint[],
@@ -99,7 +73,13 @@ export function CaseStudyEvidenceAperture({
   const apertureRef = useRef<HTMLDivElement>(null);
   const { timeline } = useScrollytelling();
   const { getTimelineSpace } = useDispatcher();
-  const { activeSceneId, articleProgress } = useCaseStudyScene();
+  const {
+    activeSceneId,
+    articleProgress,
+    sceneProgress,
+    sceneRanges,
+    layoutRevision,
+  } = useCaseStudyScene();
   const [enabled, setEnabled] = useState(false);
   const readyRef = useRef(false);
   const flipCtxRef = useRef<gsap.Context | null>(null);
@@ -120,6 +100,11 @@ export function CaseStudyEvidenceAperture({
   const objectFit = captionActive
     ? "contain"
     : (activeWaypoint?.fit ?? "cover");
+  const visible = Boolean(
+    enabled &&
+      activeMedia &&
+      (activeSceneId !== "hero" || sceneProgress >= 0.82),
+  );
 
   useLayoutEffect(() => {
     const aperture = apertureRef.current;
@@ -187,14 +172,22 @@ export function CaseStudyEvidenceAperture({
           } as const;
 
           const states = slots.map((slot) => Flip.getState(slot));
+          Flip.fit(aperture, states[0]!, { absolute: true });
 
-          states.forEach((state, index) => {
+          states.forEach((_state, index) => {
             const waypoint = waypoints[index]!;
-            const start = sceneStart(scenes, waypoint.sceneId);
-            const end =
-              index < waypoints.length - 1
-                ? sceneStart(scenes, waypoints[index + 1]!.sceneId)
-                : sceneEnd(scenes, waypoint.sceneId);
+            const nextState = states[index + 1];
+            if (!nextState) return;
+            const range = sceneRanges.find((entry) => entry.id === waypoint.sceneId);
+            if (!range) {
+              throw new Error(`Missing resolved aperture scene: ${waypoint.sceneId}`);
+            }
+            const holdUntil = Math.min(
+              Math.max(waypoint.holdUntil ?? 0.6, 0),
+              1,
+            );
+            const start = range.start + (range.end - range.start) * holdUntil;
+            const end = range.end;
             const space = getTimelineSpace({ start, end });
             if (!space) return;
 
@@ -203,12 +196,12 @@ export function CaseStudyEvidenceAperture({
             const customFlipConfig = {
               ...flipConfig,
               duration: Math.max(space.duration, 0.01),
-              ease: index === 0 ? "none" : flipConfig.ease,
+              ease: flipConfig.ease,
               absolute: true,
             };
             const fitTween = Flip.fit(
               aperture,
-              state,
+              nextState,
               customFlipConfig,
             ) as gsap.core.Tween | gsap.core.Timeline | null;
             if (fitTween) {
@@ -255,7 +248,16 @@ export function CaseStudyEvidenceAperture({
       clearSpaces();
       geometryKeyRef.current = "";
     };
-  }, [getTimelineSpace, onFailed, onReady, scenes, timeline, waypoints]);
+  }, [
+    getTimelineSpace,
+    layoutRevision,
+    onFailed,
+    onReady,
+    sceneRanges,
+    scenes,
+    timeline,
+    waypoints,
+  ]);
 
   // Re-seek when article progress jumps (hash / history) without full rebuild.
   useEffect(() => {
@@ -275,6 +277,7 @@ export function CaseStudyEvidenceAperture({
       data-aperture=""
       data-aperture-enabled={enabled ? "true" : "false"}
       data-aperture-caption-active={captionActive ? "true" : "false"}
+      data-aperture-visible={visible ? "true" : "false"}
       data-aperture-scene={activeSceneId}
       style={apertureStyle}
       aria-hidden={activeMedia ? undefined : true}
@@ -290,9 +293,7 @@ export function CaseStudyEvidenceAperture({
           decoding="async"
           draggable={false}
         />
-      ) : (
-        <div className={styles.apertureEmpty} />
-      )}
+      ) : null}
     </div>
   );
 }

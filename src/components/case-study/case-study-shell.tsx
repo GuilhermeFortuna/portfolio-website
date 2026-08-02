@@ -5,6 +5,8 @@ const shellStyle: CSSProperties = {
   marginInline: "auto",
   paddingInline: "var(--page-gutter)",
   paddingBlock: "var(--section-space)",
+  position: "relative",
+  scrollPaddingBottom: "calc(6rem + env(safe-area-inset-bottom))",
 };
 
 /** Reading measure for prose. Media is allowed the full shell width. */

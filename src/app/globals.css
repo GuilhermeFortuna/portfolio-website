@@ -40,6 +40,9 @@
 html {
   background: var(--color-canvas);
   color-scheme: dark;
+  scroll-padding-block:
+    clamp(5rem, 10vh, 7rem)
+    calc(6rem + env(safe-area-inset-bottom, 0px));
 }
 
 body {

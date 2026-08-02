@@ -469,6 +469,7 @@ describe("/work/aegis media", () => {
     ).map((node) => node.getAttribute("data-aperture-slot"));
 
     expect(slots).toEqual([
+      "aegis-aperture-hero",
       "aegis-aperture-context",
       "aegis-aperture-problem",
       "aegis-aperture-system",

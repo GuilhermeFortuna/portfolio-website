@@ -102,6 +102,12 @@ export default function AegisCaseStudyPage() {
               <CaseStudyHeroScene
                 hero={aegisCaseStudy.hero}
                 media={AEGIS_CINEMATIC_MEDIA}
+                handoffSlot={
+                  <NarrativeSceneSlot
+                    waypoint={waypointFor("hero")}
+                    className={styles.slotHero}
+                  />
+                }
               />
             </CaseStudyScene>
 

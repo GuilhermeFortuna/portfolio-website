@@ -6,6 +6,7 @@ import {
   useMemo,
   useState,
   type CSSProperties,
+  type ReactNode,
 } from "react";
 
 import { CaseStudyHero } from "@/components/case-study/case-study-hero";
@@ -28,6 +29,8 @@ export type CaseStudyHeroSceneProps = {
   hero: CaseStudyHeroContent;
   /** Approved stills for the media cylinder (never native video). */
   media: readonly CaseStudyImage[];
+  /** Generic scene handoff target owned by the article-level aperture. */
+  handoffSlot?: ReactNode;
 };
 
 type HeroSceneStyle = CSSProperties & {
@@ -58,7 +61,11 @@ function PosterSurface({ image }: { image: CaseStudyImage }) {
  * as one opening scene. Scroll-driven cinematic parameters activate after the
  * entrance completes so the aperture and cylinder form a continuous handoff.
  */
-export function CaseStudyHeroScene({ hero, media }: CaseStudyHeroSceneProps) {
+export function CaseStudyHeroScene({
+  hero,
+  media,
+  handoffSlot,
+}: CaseStudyHeroSceneProps) {
   const scene = useCaseStudyScene();
   const setSceneEntranceComplete = useCaseStudyEntranceDispatch();
   const lenis = usePortfolioLenis();
@@ -149,6 +156,9 @@ export function CaseStudyHeroScene({ hero, media }: CaseStudyHeroSceneProps) {
           embedded
           mediaClassName={styles.semanticPoster}
         />
+        <div className={styles.heroHandoff} data-hero-handoff="">
+          {handoffSlot}
+        </div>
       </div>
     </section>
   );

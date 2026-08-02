@@ -23,6 +23,12 @@ const { flipFit, flipGetState } = vi.hoisted(() => ({
   flipGetState: vi.fn(() => ({ id: "flip-state" })),
 }));
 
+const sceneRanges = [
+  { id: "hero" as const, start: 0, end: 10 },
+  { id: "context" as const, start: 10, end: 20 },
+  { id: "problem" as const, start: 20, end: 30 },
+];
+
 vi.mock("gsap", () => {
   const api = {
     registerPlugin: vi.fn(),
@@ -62,6 +68,8 @@ vi.mock("../case-study-scene-context", () => ({
     sectionProgress: 0.2,
     articleProgress: 0.12,
     entranceComplete: true,
+    sceneRanges,
+    layoutRevision: 1,
   }),
 }));
 
@@ -73,9 +81,21 @@ import {
 import type { CaseStudySceneDefinition } from "../case-study-scene-config";
 
 const scenes: readonly CaseStudySceneDefinition[] = [
-  { id: "hero", start: "0", end: "10" },
-  { id: "context", start: "10", end: "20" },
-  { id: "problem", start: "20", end: "30" },
+  {
+    id: "hero",
+    start: { type: "article", edge: "start" },
+    end: { type: "section", id: "context" },
+  },
+  {
+    id: "context",
+    start: { type: "section", id: "context" },
+    end: { type: "section", id: "problem" },
+  },
+  {
+    id: "problem",
+    start: { type: "section", id: "problem" },
+    end: { type: "article", edge: "end" },
+  },
 ];
 
 const waypoints: readonly ApertureWaypoint[] = [
@@ -162,12 +182,11 @@ describe("CaseStudyEvidenceAperture", () => {
     await waitFor(() => {
       expect(flipGetState).toHaveBeenCalledTimes(2);
       expect(flipFit).toHaveBeenCalledTimes(2);
-      expect(timeline.add).toHaveBeenCalledTimes(2);
+      expect(timeline.add).toHaveBeenCalledTimes(1);
       expect(onReady).toHaveBeenCalledTimes(1);
     });
 
-    expect(getTimelineSpace).toHaveBeenCalledWith({ start: 10, end: 20 });
-    expect(getTimelineSpace).toHaveBeenCalledWith({ start: 20, end: 30 });
+    expect(getTimelineSpace).toHaveBeenCalledWith({ start: 16, end: 20 });
     expect(timeline.progress).toHaveBeenCalledWith(0.12);
     expect(screen.getByAltText("Overview on synthetic data")).toBeInTheDocument();
     expect(document.querySelector("[data-aperture-enabled='true']")).not.toBeNull();

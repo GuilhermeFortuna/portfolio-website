@@ -26,6 +26,15 @@ export const AEGIS_APERTURE_MEDIA: ApertureMediaMap = {
 /** Authored desktop/tablet/mobile waypoint sequence for Aegis chapters. */
 export const AEGIS_APERTURE_WAYPOINTS: readonly ApertureWaypoint[] = [
   {
+    sceneId: "hero",
+    slotId: "aegis-aperture-hero",
+    aspectRatio: "16 / 9",
+    mediaKey: "overview",
+    fit: "contain",
+    alignment: "end",
+    holdUntil: 0.82,
+  },
+  {
     sceneId: "context",
     slotId: "aegis-aperture-context",
     aspectRatio: "16 / 9",

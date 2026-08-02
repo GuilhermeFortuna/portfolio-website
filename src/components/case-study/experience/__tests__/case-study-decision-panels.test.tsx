@@ -20,6 +20,14 @@ const getTimelineSpace = vi.fn(
     cleanup: vi.fn(),
   }),
 );
+const refreshLayout = vi.fn();
+const resolveBoundary = vi.fn(
+  (boundary: { id?: string; viewportProgress?: number }) => {
+    const index = Number(boundary.id?.split("-")[1] ?? 1) - 1;
+    const base = 40 + index * 5;
+    return base + (1 - (boundary.viewportProgress ?? 0)) * 4;
+  },
+);
 
 vi.mock("gsap", () => {
   const api = {
@@ -58,6 +66,9 @@ vi.mock("../case-study-scene-context", () => ({
     sectionProgress: 0.1,
     articleProgress: 0.42,
     entranceComplete: true,
+    layoutRevision: 1,
+    refreshLayout,
+    resolveBoundary,
   }),
 }));
 

@@ -110,11 +110,17 @@ export function drawImageCover(
     sourceY = (img.naturalHeight - sourceHeight) / 2;
   }
 
-  ctx.save();
-  ctx.translate(x, y + h);
-  ctx.scale(1, -1);
-  ctx.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, w, h);
-  ctx.restore();
+  ctx.drawImage(
+    img,
+    sourceX,
+    sourceY,
+    sourceWidth,
+    sourceHeight,
+    x,
+    y,
+    w,
+    h,
+  );
 }
 
 /**

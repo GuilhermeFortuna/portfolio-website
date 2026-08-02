@@ -7,6 +7,7 @@ import {
   isValidElement,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -23,8 +24,12 @@ import {
 import { Root, Waypoint } from "./bsmnt";
 import {
   computeSceneSnapshot,
+  createFallbackSceneDefinitions,
   createInitialSceneSnapshot,
-  parseSceneBoundary,
+  resolveSceneBoundary,
+  resolveSceneDefinitions,
+  type CaseStudyLayoutMetrics,
+  type CaseStudySceneBoundary,
   type CaseStudySceneDefinition,
   type CaseStudySceneSnapshot,
 } from "./case-study-scene-config";
@@ -74,16 +79,22 @@ export function CaseStudySceneManager({
     createInitialSceneSnapshot(scenes, sectionIds),
   );
   const [entranceComplete, setEntranceComplete] = useState(false);
-
-  const contextValue = useMemo(
-    () => ({ ...snapshot, entranceComplete }),
-    [snapshot, entranceComplete],
+  const [sceneRanges, setSceneRanges] = useState(() =>
+    createFallbackSceneDefinitions(scenes),
   );
+  const [layoutRevision, setLayoutRevision] = useState(0);
 
   const scenesRef = useRef(scenes);
   const sectionIdsRef = useRef(sectionIds);
   const scrollRef = useRef(portfolioScroll);
   const articleProgressRef = useRef(0);
+  const metricsRef = useRef<CaseStudyLayoutMetrics | null>(null);
+  const signatureRef = useRef("");
+  const sceneRangesRef = useRef(sceneRanges);
+
+  useEffect(() => {
+    sceneRangesRef.current = sceneRanges;
+  }, [sceneRanges]);
 
   useEffect(() => {
     scenesRef.current = scenes;
@@ -103,7 +114,7 @@ export function CaseStudySceneManager({
       typeof window !== "undefined" ? window.innerHeight : 1;
     setSnapshot(
       computeSceneSnapshot(
-        scenesRef.current,
+        sceneRangesRef.current,
         sectionIdsRef.current,
         articleProgress,
         scrollY,
@@ -111,6 +122,70 @@ export function CaseStudySceneManager({
       ),
     );
   }, []);
+
+  const measureLayout = useCallback(() => {
+    if (!trigger || typeof window === "undefined") return;
+    const scrollY = window.scrollY;
+    const articleRect = trigger.getBoundingClientRect();
+    if (articleRect.height <= 0 || articleRect.bottom <= articleRect.top) return;
+    const sections: Record<string, { top: number; height: number }> = {};
+    for (const id of sectionIdsRef.current) {
+      const element = document.getElementById(id);
+      if (!element) continue;
+      const rect = element.getBoundingClientRect();
+      sections[id] = {
+        top: rect.top + scrollY,
+        height: Math.max(rect.height || element.offsetHeight, 1),
+      };
+    }
+    const metrics: CaseStudyLayoutMetrics = {
+      articleTop: articleRect.top + scrollY,
+      articleEnd: articleRect.bottom + scrollY,
+      viewportHeight: window.innerHeight,
+      sections,
+    };
+    const signature = JSON.stringify(metrics);
+    metricsRef.current = metrics;
+    if (signature === signatureRef.current) return;
+    signatureRef.current = signature;
+    const nextRanges = resolveSceneDefinitions(scenesRef.current, metrics);
+    sceneRangesRef.current = nextRanges;
+    setSceneRanges(nextRanges);
+    setLayoutRevision((revision) => revision + 1);
+    publish(articleProgressRef.current);
+  }, [publish, trigger]);
+
+  const refreshLayout = useCallback(() => {
+    measureLayout();
+    ScrollTrigger.refresh();
+  }, [measureLayout]);
+
+  const resolveBoundary = useCallback(
+    (boundary: CaseStudySceneBoundary) => {
+      if (!metricsRef.current) return null;
+      return resolveSceneBoundary(boundary, metricsRef.current);
+    },
+    [],
+  );
+
+  const contextValue = useMemo(
+    () => ({
+      ...snapshot,
+      entranceComplete,
+      sceneRanges,
+      layoutRevision,
+      resolveBoundary,
+      refreshLayout,
+    }),
+    [
+      snapshot,
+      entranceComplete,
+      sceneRanges,
+      layoutRevision,
+      resolveBoundary,
+      refreshLayout,
+    ],
+  );
 
   const callbacks = useMemo(
     () => ({
@@ -126,23 +201,30 @@ export function CaseStudySceneManager({
 
   useEffect(() => {
     if (!lenis) return;
-    ScrollTrigger.refresh();
-  }, [lenis]);
+    refreshLayout();
+  }, [lenis, refreshLayout]);
 
   useEffect(() => {
     publish(articleProgressRef.current);
   }, [portfolioScroll.scroll, portfolioScroll.limit, publish]);
 
+  useLayoutEffect(() => {
+    measureLayout();
+  }, [measureLayout]);
+
   useEffect(() => {
-    const onResize = () => {
-      ScrollTrigger.refresh();
-      publish(articleProgressRef.current);
-    };
+    const onResize = refreshLayout;
     window.addEventListener("resize", onResize);
+    const observer =
+      typeof ResizeObserver === "undefined"
+        ? null
+        : new ResizeObserver(() => measureLayout());
+    if (trigger) observer?.observe(trigger);
     return () => {
       window.removeEventListener("resize", onResize);
+      observer?.disconnect();
     };
-  }, [publish]);
+  }, [measureLayout, refreshLayout, trigger]);
 
   const child = Children.only(children);
   if (!isValidElement(child)) {
@@ -170,10 +252,10 @@ export function CaseStudySceneManager({
           callbacks={callbacks}
           defaults={{ ease: "none" }}
         >
-          {scenes.map((scene) => (
+          {sceneRanges.map((scene) => (
             <Waypoint
               key={scene.id}
-              at={parseSceneBoundary(scene.start)}
+              at={scene.start}
               label={`scene:${scene.id}`}
             />
           ))}

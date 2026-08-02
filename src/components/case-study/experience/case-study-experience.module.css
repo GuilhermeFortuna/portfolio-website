@@ -3,20 +3,18 @@
 
 .heroScene {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-  min-height: 100svh;
+  min-height: 180svh;
   isolation: isolate;
 }
 
 /* Narrative sections paint above the departing sticky scene. Their canvas-
    colored surface is the explicit visual handoff boundary: arcs may remain in
    the surrounding gap, but can never wash over readable case-study content. */
-.heroScene ~ section {
+.narrativeRoot {
   position: relative;
-  z-index: 1;
+  z-index: 5;
   background: var(--color-canvas);
+  isolation: isolate;
 }
 
 .webglStage {
@@ -25,8 +23,6 @@
   z-index: 0;
   width: 100%;
   height: 100svh;
-  flex: 0 0 100svh;
-  margin-bottom: -100svh;
   overflow: hidden;
   pointer-events: none;
   opacity: var(--webgl-stage-opacity, 1);
@@ -72,14 +68,46 @@
 }
 
 .heroContent {
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-  flex: 1 1 auto;
+  height: 100svh;
+  margin-top: -100svh;
   padding-block: clamp(1.5rem, 4vh, 3rem);
   transition: opacity 0.45s ease, filter 0.45s ease;
+}
+
+.heroContent > [data-hero-layout] {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: auto 1fr auto auto;
+  gap: clamp(1rem, 2vw, 2rem);
+  height: 100%;
+}
+
+.heroContent [data-hero-breadcrumb] { grid-column: 1 / -1; }
+.heroContent [data-hero-narrative] { grid-column: 1 / 8; align-self: center; }
+.heroContent [data-hero-facts] { grid-column: 1 / -1; }
+.heroContent [data-hero-action] { grid-column: 1 / 5; }
+.heroContent [data-hero-poster] { display: none; }
+
+.heroHandoff {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: 14%;
+  width: min(42%, 34rem);
+  pointer-events: none;
+}
+
+.slotHero { width: 100%; }
+
+.typeViewport {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  overflow: clip;
+  pointer-events: none;
 }
 
 /* Only hide after client enhancement initializes — SSR/no-JS stays readable. */
@@ -95,8 +123,7 @@
 }
 
 .typeField {
-  position: fixed;
-  z-index: 3;
+  position: absolute;
   height: 100vmax;
   width: 100vmax;
   display: grid;
@@ -111,6 +138,10 @@
   pointer-events: none;
   will-change: transform;
   color: var(--color-text);
+}
+
+.typeField[data-kinetic-state="hidden"] {
+  visibility: hidden;
 }
 
 .typeLine {
@@ -135,6 +166,23 @@
 }
 
 @media (max-width: 767px) {
+  .heroScene { min-height: auto; }
+
+  .heroContent {
+    position: relative;
+    height: auto;
+    margin-top: 0;
+    padding-block: 0;
+  }
+
+  .heroContent > [data-hero-layout] {
+    display: flex;
+    height: auto;
+  }
+
+  .heroContent [data-hero-poster] { display: block; }
+  .heroHandoff { position: relative; inset: auto; width: 100%; }
+  .aperture[data-aperture-scene="hero"] { opacity: 0 !important; }
   .webglStage {
     display: none;
   }
@@ -155,6 +203,13 @@
   }
 }
 
+@media (min-width: 768px) and (max-width: 1023px) {
+  .heroScene { min-height: 145svh; }
+  .heroContent > [data-hero-layout] { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+  .heroContent [data-hero-narrative] { grid-column: 1 / 7; }
+  .heroContent [data-hero-action] { grid-column: 1 / 4; }
+}
+
 /* ——— D-010 persistent evidence aperture (Codrops One Element Scroll) ——— */
 
 .narrativeRoot {
@@ -162,6 +217,7 @@
   display: flex;
   flex-direction: column;
   gap: 6rem;
+  padding-block: 2rem;
 }
 
 /* Structural traveler — adapted from source `.one` (base.css ~296–304). */
@@ -181,9 +237,8 @@
   will-change: transform, width, height;
 }
 
-.narrativeRoot[data-aperture-enhanced="true"] .aperture[data-aperture-enabled="true"] {
+.aperture[data-aperture-enabled="true"][data-aperture-visible="true"] {
   opacity: 1;
-  pointer-events: auto;
 }
 
 .apertureImage {
@@ -198,17 +253,6 @@
 .aperture[data-aperture-caption-active="false"] .apertureImage {
   /* Transitional crop only while no evidence caption is active. */
   object-fit: cover;
-}
-
-.apertureEmpty {
-  width: 100%;
-  height: 100%;
-  background:
-    linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--color-surface) 88%, var(--color-line)) 0%,
-      var(--color-canvas) 100%
-    );
 }
 
 .apertureSlot {
@@ -296,6 +340,36 @@
 }
 
 @media (min-width: 1024px) {
+  .narrativeRoot > :global(section#context),
+  .narrativeRoot > :global(section#problem),
+  .narrativeRoot > :global(section#system),
+  .narrativeRoot > :global(section#contribution),
+  .narrativeRoot > :global(section#delivered) {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(1.25rem, 2.5vw, 2.5rem);
+    align-items: start;
+  }
+
+  .narrativeRoot > :global(section#context > h2),
+  .narrativeRoot > :global(section#context > [data-case-study-prose]),
+  .narrativeRoot > :global(section#problem > h2),
+  .narrativeRoot > :global(section#problem > [data-case-study-prose]) {
+    grid-column: 1 / 8;
+  }
+
+  .narrativeRoot > :global(section#context > [data-aperture-slot]) {
+    grid-column: 2 / 13;
+  }
+  .narrativeRoot > :global(section#problem > [data-aperture-slot]) {
+    grid-column: 9 / 13;
+    grid-row: 1 / span 2;
+  }
+
+  .narrativeRoot > :global(section#system > h2),
+  .narrativeRoot > :global(section#system > [data-case-study-prose]) { grid-column: 1 / 8; }
+  .narrativeRoot > :global(section#system) > .systemCompose { grid-column: 1 / -1; }
+
   .systemCompose {
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
@@ -367,6 +441,7 @@
   flex-direction: column;
   gap: 2rem;
   width: 100%;
+  overflow: clip;
 }
 
 .decisionPanel {
@@ -393,7 +468,6 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-text-muted);
-  opacity: 0.7;
 }
 
 .decisionBody {
@@ -409,17 +483,16 @@
   gap: 0;
 }
 
-.decisionPanels[data-decision-enhanced="true"] .decisionPanel {
-  min-height: 100svh;
+.decisionPanels[data-decision-layout="enhanced"] .decisionPanel {
+  min-height: 135svh;
 }
 
-.decisionPanels[data-decision-enhanced="true"] .decisionInner {
+.decisionPanels[data-decision-layout="enhanced"] .decisionInner {
   position: sticky;
   top: 0;
   min-height: 100svh;
   justify-content: center;
   padding-block: clamp(2rem, 6vh, 4rem);
-  overflow: hidden;
 }
 
 /* Decision 1 — typography-led declaration */
@@ -429,17 +502,37 @@
 
 /* Decision 2 — editorial contrast (offset supporting column on desktop) */
 @media (min-width: 1024px) {
+  .decisionBody :global(section) {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(1rem, 2vw, 2rem);
+    align-items: start;
+  }
+
+  .decisionBody[data-decision-composition="declaration"] :global(h2),
+  .decisionBody[data-decision-composition="declaration"]
+    :global([data-decision-declaration]) { grid-column: 1 / 9; }
+
+  .decisionBody[data-decision-composition="declaration"]
+    :global([data-decision-prose]) { display: contents; }
+
+  .decisionBody[data-decision-composition="declaration"]
+    :global([data-decision-reasoning]) { grid-column: 5 / 12; }
+
   .decisionBody[data-decision-composition="contrast"]
     :global([data-decision-prose="contrast"]) {
-    display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-    gap: clamp(1.5rem, 3vw, 3rem);
-    align-items: start;
+    display: contents;
+  }
+
+  .decisionBody[data-decision-composition="contrast"] :global(h2),
+  .decisionBody[data-decision-composition="contrast"]
+    :global([data-decision-contrast-lead]) {
+    grid-column: 1 / 7;
   }
 
   .decisionBody[data-decision-composition="contrast"]
     :global([data-decision-contrast-rest]) {
-    margin-inline-start: 0;
+    grid-column: 7 / 13;
     padding-top: clamp(2rem, 6vh, 4rem);
   }
 }
@@ -463,30 +556,35 @@
 
 @media (min-width: 1024px) {
   .decisionBody[data-decision-composition="evidenceStage"] :global(section) {
-    display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    grid-template-areas:
-      "heading heading"
-      "prose stage"
-      "children stage";
-    column-gap: clamp(1.5rem, 3vw, 2.75rem);
     row-gap: 1.5rem;
-    align-items: start;
   }
 
   .decisionBody[data-decision-composition="evidenceStage"] :global(h2) {
-    grid-area: heading;
+    grid-column: 1 / 6;
   }
 
   .decisionBody[data-decision-composition="evidenceStage"]
     :global([data-decision-prose]) {
-    grid-area: prose;
+    grid-column: 1 / 6;
   }
 
   .decisionBody[data-decision-composition="evidenceStage"]
     :global([data-decision-media-stage]) {
-    grid-area: stage;
+    grid-column: 6 / 13;
+    grid-row: 1 / span 3;
+    aspect-ratio: 16 / 9;
     max-width: none;
+    overflow: hidden;
+  }
+
+  .decisionPanels[data-decision-enhanced="true"]
+    .decisionBody[data-decision-composition="evidenceStage"]
+    :global([data-decision-media-stage] figure + figure) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
   }
 }
 
@@ -497,38 +595,44 @@
 
 @media (min-width: 1024px) {
   .decisionBody[data-decision-composition="identityVideo"] :global(section) {
-    display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-    grid-template-areas:
-      "heading heading"
-      "video prose";
-    column-gap: clamp(1.5rem, 3vw, 2.75rem);
     row-gap: 1.5rem;
-    align-items: start;
   }
 
   .decisionBody[data-decision-composition="identityVideo"] :global(h2) {
-    grid-area: heading;
+    grid-column: 9 / 13;
   }
 
   .decisionBody[data-decision-composition="identityVideo"] :global(figure) {
-    grid-area: video;
+    grid-column: 1 / 10;
+    grid-row: 1 / span 2;
   }
 
   .decisionBody[data-decision-composition="identityVideo"]
     :global([data-decision-prose]) {
-    grid-area: prose;
+    grid-column: 9 / 13;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .decisionPanels[data-decision-layout="enhanced"] .decisionPanel {
+    min-height: 120svh;
   }
 }
 
 @media (max-width: 767px) {
-  .decisionPanels[data-decision-enhanced="true"] .decisionInner {
+  .decisionPanels[data-decision-layout="enhanced"] .decisionInner {
+    position: relative;
+    top: auto;
     min-height: auto;
     padding-block: 1.5rem;
     overflow: visible;
   }
 
-  .decisionPanels[data-decision-enhanced="true"] .decisionPanel {
+  .decisionPanels[data-decision-layout="enhanced"] .decisionPanel {
     min-height: auto;
+  }
+
+  .decisionPanels[data-decision-layout="enhanced"] .decisionPanel + .decisionPanel {
+    margin-top: -8svh;
   }
 }

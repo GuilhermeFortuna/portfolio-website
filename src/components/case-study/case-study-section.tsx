@@ -28,6 +28,7 @@ function Prose({
     <div
       className={proseClassName}
       style={readingColumnStyle}
+      data-case-study-prose=""
       data-decision-prose={kind}
     >
       {paragraphs.map((paragraph) => (

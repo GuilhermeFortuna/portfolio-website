@@ -78,6 +78,8 @@ import {
   AEGIS_SECTION_IDS,
   clamp01,
   computeSceneSnapshot,
+  createFallbackSceneDefinitions,
+  resolveSceneDefinitions,
   resolveActiveScene,
   resolveActiveSection,
 } from "@/components/case-study/experience/case-study-scene-config";
@@ -100,22 +102,23 @@ function SnapshotProbe() {
 
 describe("case-study scene resolution", () => {
   it("clamps progress and resolves scenes from the 0–100 timeline", () => {
+    const ranges = createFallbackSceneDefinitions(AEGIS_SCENE_DEFINITIONS);
     expect(clamp01(-1)).toBe(0);
     expect(clamp01(2)).toBe(1);
-    expect(resolveActiveScene(AEGIS_SCENE_DEFINITIONS, 0).activeSceneId).toBe(
+    expect(resolveActiveScene(ranges, 0).activeSceneId).toBe(
       "hero",
     );
     expect(
-      resolveActiveScene(AEGIS_SCENE_DEFINITIONS, 0.45).activeSceneId,
+      resolveActiveScene(ranges, 0.45).activeSceneId,
     ).toBe("decisions");
-    expect(resolveActiveScene(AEGIS_SCENE_DEFINITIONS, 1).activeSceneId).toBe(
+    expect(resolveActiveScene(ranges, 1).activeSceneId).toBe(
       "closing",
     );
     expect(
-      resolveActiveScene(AEGIS_SCENE_DEFINITIONS, 0.45).sceneProgress,
+      resolveActiveScene(ranges, 0.45).sceneProgress,
     ).toBeGreaterThan(0);
     expect(
-      resolveActiveScene(AEGIS_SCENE_DEFINITIONS, 0.45).sceneProgress,
+      resolveActiveScene(ranges, 0.45).sceneProgress,
     ).toBeLessThan(1);
   });
 
@@ -156,17 +159,37 @@ describe("case-study scene resolution", () => {
     expect(mid.sectionProgress).toBeLessThanOrEqual(1);
 
     const snapshot = computeSceneSnapshot(
-      AEGIS_SCENE_DEFINITIONS,
+      createFallbackSceneDefinitions(AEGIS_SCENE_DEFINITIONS),
       AEGIS_SECTION_IDS,
-      0.5,
+      0.45,
       scrollY,
       800,
     );
     expect(snapshot.activeSceneId).toBe("decisions");
     expect(snapshot.activeSectionId).toBe("decision-1");
-    expect(snapshot.articleProgress).toBe(0.5);
+    expect(snapshot.articleProgress).toBe(0.45);
 
     getElementById.mockRestore();
+  });
+
+  it("derives contiguous ranges from article and section geometry", () => {
+    const ranges = resolveSceneDefinitions(AEGIS_SCENE_DEFINITIONS, {
+      articleTop: 100,
+      articleEnd: 20100,
+      viewportHeight: 1000,
+      sections: Object.fromEntries(
+        AEGIS_SECTION_IDS.map((id, index) => [
+          id,
+          { top: 100 + index * 800, height: 800 },
+        ]),
+      ),
+    });
+    expect(ranges[0]).toMatchObject({ id: "hero", start: 0 });
+    expect(ranges.at(-1)).toMatchObject({ id: "closing", end: 100 });
+    expect(ranges[0]!.end).toBe(ranges[1]!.start);
+    expect(ranges.find((range) => range.id === "confidentiality")!.end).toBeLessThan(
+      100,
+    );
   });
 });
 

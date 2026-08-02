@@ -181,7 +181,7 @@ export function CaseStudyChapterInstrument({
       }
     };
 
-    const onPointerDown = (event: PointerEvent) => {
+    const onOutsideClick = (event: globalThis.MouseEvent) => {
       const target = event.target;
       if (!(target instanceof Node)) return;
       if (rootRef.current?.contains(target)) return;
@@ -189,10 +189,10 @@ export function CaseStudyChapterInstrument({
     };
 
     document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("click", onOutsideClick);
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("click", onOutsideClick);
     };
   }, [expanded, collapse]);
 
@@ -250,7 +250,7 @@ export function CaseStudyChapterInstrument({
       <ol
         className={styles.staticList}
         data-chapter-static=""
-        aria-hidden={enhanced ? true : undefined}
+        hidden={enhanced}
       >
         {chapters.map((chapter, index) => {
           const isActive = chapter.id === activeId;

@@ -2,11 +2,19 @@
 
 import { createContext, useContext } from "react";
 
-import type { CaseStudySceneSnapshot } from "./case-study-scene-config";
+import type {
+  CaseStudySceneBoundary,
+  CaseStudySceneSnapshot,
+  ResolvedCaseStudySceneDefinition,
+} from "./case-study-scene-config";
 
 export type CaseStudySceneContextValue = CaseStudySceneSnapshot & {
   /** True after the D-009 kinetic entrance completes (or when no entrance runs). */
   entranceComplete: boolean;
+  sceneRanges: readonly ResolvedCaseStudySceneDefinition[];
+  layoutRevision: number;
+  resolveBoundary: (boundary: CaseStudySceneBoundary) => number | null;
+  refreshLayout: () => void;
 };
 
 export const CaseStudySceneContext =

@@ -5,7 +5,8 @@
 
 "use client";
 
-import { useCallback, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 import type { CaseStudySceneDefinition } from "./case-study-scene-config";
 import {
@@ -35,6 +36,12 @@ export function CaseStudyNarrativeScenes({
   children,
 }: CaseStudyNarrativeScenesProps) {
   const [enhanced, setEnhanced] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [experienceLayer, setExperienceLayer] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setExperienceLayer(rootRef.current?.closest("article") ?? null);
+  }, []);
 
   const onReady = useCallback(() => {
     setEnhanced(true);
@@ -45,19 +52,27 @@ export function CaseStudyNarrativeScenes({
   }, []);
 
   return (
-    <div
-      className={styles.narrativeRoot}
-      data-aperture-enhanced={enhanced ? "true" : "false"}
-    >
-      <CaseStudyEvidenceAperture
-        waypoints={waypoints}
-        scenes={scenes}
-        mediaByKey={mediaByKey}
-        onReady={onReady}
-        onFailed={onFailed}
-      />
-      {children}
-    </div>
+    <>
+      <div
+        ref={rootRef}
+        className={styles.narrativeRoot}
+        data-aperture-enhanced={enhanced ? "true" : "false"}
+      >
+        {children}
+      </div>
+      {experienceLayer
+        ? createPortal(
+            <CaseStudyEvidenceAperture
+              waypoints={waypoints}
+              scenes={scenes}
+              mediaByKey={mediaByKey}
+              onReady={onReady}
+              onFailed={onFailed}
+            />,
+            experienceLayer,
+          )
+        : null}
+    </>
   );
 }
 

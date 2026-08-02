@@ -74,6 +74,8 @@
 }
 
 .islandShell {
+  position: relative;
+  z-index: 40;
   pointer-events: auto;
   display: flex;
   flex-direction: column;
@@ -182,7 +184,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-height: min(24rem, calc(100dvh - 6rem));
+  max-height: min(30rem, calc(100dvh - 4rem - env(safe-area-inset-bottom, 0px)));
 }
 
 .expandedHidden {

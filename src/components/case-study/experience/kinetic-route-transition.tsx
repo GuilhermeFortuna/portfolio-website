@@ -84,6 +84,7 @@ export function createKineticRouteTransitionController(
 
   return {
     enter() {
+      root.dataset.kineticState = "entering";
       // Adapted from TypeTransition.in() — scale/rotate field + staggered lines.
       return run(() =>
         gsap
@@ -118,6 +119,7 @@ export function createKineticRouteTransitionController(
       );
     },
     exit() {
+      root.dataset.kineticState = "exiting";
       // Adapted from TypeTransition.out() for WO-032 reuse.
       const typeLineOpacity =
         Number.parseFloat(
@@ -235,6 +237,7 @@ export function KineticRouteTransition({
 
     void controller.enter().then(() => {
       if (!cancelled) {
+        root.dataset.kineticState = "hidden";
         onCompleteRef.current?.();
       }
     });
@@ -250,22 +253,24 @@ export function KineticRouteTransition({
 
   return (
     <>
-      <div
-        ref={rootRef}
-        className={[styles.typeField, className].filter(Boolean).join(" ")}
-        data-type-transition=""
-        data-kinetic-ready="false"
-        aria-hidden="true"
-      >
-        {lines.map((line, index) => (
-          <div
-            key={`${reactId}-${index}`}
-            className={styles.typeLine}
-            data-kinetic-line=""
-          >
-            {line}
-          </div>
-        ))}
+      <div className={styles.typeViewport} aria-hidden="true">
+        <div
+          ref={rootRef}
+          className={[styles.typeField, className].filter(Boolean).join(" ")}
+          data-type-transition=""
+          data-kinetic-ready="false"
+          data-kinetic-state="idle"
+        >
+          {lines.map((line, index) => (
+            <div
+              key={`${reactId}-${index}`}
+              className={styles.typeLine}
+              data-kinetic-line=""
+            >
+              {line}
+            </div>
+          ))}
+        </div>
       </div>
       {children}
     </>

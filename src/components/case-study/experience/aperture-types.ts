@@ -7,6 +7,8 @@ export type ApertureWaypoint = {
   slotId: string;
   aspectRatio: `${number} / ${number}`;
   mediaKey?: string;
+  /** Fraction of this scene held at its stable waypoint before traveling. */
+  holdUntil?: number;
   fit: "contain" | "cover";
   alignment: "start" | "center" | "end";
 };

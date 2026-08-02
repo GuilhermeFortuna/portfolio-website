@@ -57,7 +57,7 @@ export function CaseStudyHero({
 }: CaseStudyHeroProps) {
   const body = (
     <>
-      <nav aria-label="Breadcrumb">
+      <nav aria-label="Breadcrumb" data-hero-breadcrumb="">
         <a
           href={hero.backLink.href}
           style={backLinkStyle}
@@ -67,7 +67,7 @@ export function CaseStudyHero({
         </a>
       </nav>
 
-      <div className="flex flex-col gap-6" style={readingColumnStyle}>
+      <div className="flex flex-col gap-6" style={readingColumnStyle} data-hero-narrative="">
         <p style={eyebrowStyle} className="text-[var(--color-accent-a)]">
           {hero.category}
         </p>
@@ -85,10 +85,10 @@ export function CaseStudyHero({
         </p>
       </div>
 
-      <dl className="grid grid-cols-2 gap-x-8 gap-y-6 border-t border-[var(--color-line)] pt-8 md:grid-cols-4">
+      <dl className="grid grid-cols-2 gap-x-8 gap-y-6 border-t border-[var(--color-line)] pt-8 md:grid-cols-4" data-hero-facts="">
         {hero.facts.map((fact) => (
           <div key={fact.label} className="flex flex-col gap-2">
-            <dt style={eyebrowStyle} className="text-[var(--color-text-dim)]">
+            <dt style={eyebrowStyle} className="text-[var(--color-text-muted)]">
               {fact.label}
             </dt>
             <dd className="m-0 text-[0.9375rem] text-[var(--color-text)]">
@@ -98,7 +98,7 @@ export function CaseStudyHero({
         ))}
       </dl>
 
-      <div>
+      <div data-hero-action="">
         {/*
           No verified live URL exists yet. This is a real disabled control
           rather than a link to nowhere or a visible placeholder marker, so it
@@ -122,7 +122,7 @@ export function CaseStudyHero({
   );
 
   if (embedded) {
-    return <div className="flex flex-col gap-10">{body}</div>;
+    return <div className="flex flex-col gap-10" data-hero-layout="">{body}</div>;
   }
 
   return (
