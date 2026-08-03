@@ -22,18 +22,21 @@ export function AboutSection() {
       id="about"
       label={siteContent.aboutLabel}
       labelledBy="about-title"
+      className="scene-section about-scene"
     >
       <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[4fr_8fr] lg:gap-[clamp(2rem,6vw,6rem)]">
-        <h2 id="about-title" className={sectionTitleClassName}>
-          {siteContent.aboutTitle}
-        </h2>
+        <div data-scene-intro className="scene-introduction">
+          <h2 id="about-title" className={sectionTitleClassName}>
+            {siteContent.aboutTitle}
+          </h2>
+        </div>
 
         <div>
           <ScrollReveal
             className={manifestoClassName}
-            baseOpacity={0.3}
-            baseRotation={2}
-            blurStrength={2}
+            baseOpacity={0.45}
+            baseRotation={1}
+            blurStrength={0}
             rotationEnd="bottom 70%"
             wordAnimationEnd="bottom 65%"
           >

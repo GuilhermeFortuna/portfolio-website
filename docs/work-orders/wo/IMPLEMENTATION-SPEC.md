@@ -63,23 +63,27 @@ Do not create `components/common`, `components/shared`, or alternate section dir
 
 ## 3. Fixed Page Order and IDs
 
-`src/app/page.tsx` must render this order:
+`src/app/page.tsx` renders this semantic order through the VIZ-004
+`ScrollChoreography` wrapper:
 
 ```tsx
 <>
   <SiteHeader />
-  <main id="main-content">
+  <ScrollChoreography>       // renders main#main-content
     <HeroSection />          // id="top"
     <SelectedWorkSection />  // id="work"
     <ProcessSection />       // id="process"
     <AboutSection />         // id="about"
     <ContactSection />       // id="contact"
-  </main>
+  </ScrollChoreography>
   <SiteFooter />
 </>
 ```
 
-Do not add, remove, rename, or reorder sections in Batch 01.
+VIZ-004 preserves this order and every ID while replacing isolated section
+motion with one scoped page choreography. Visual transforms and atmospheric
+handoffs may overlap in the viewport; DOM order, anchor order, keyboard order,
+and native scroll position do not.
 
 ## 4. Fixed Content
 
@@ -160,6 +164,13 @@ Do not use all-uppercase text outside eyebrow labels, wordmark, and compact tech
 - Never create horizontal scrolling.
 - Touch targets must be at least `44px` in both dimensions.
 
+VIZ-004 supersedes the generic contained Process composition. Process uses one
+large two-column introduction followed by a semantic six-step typographic rail;
+mobile collapses it to a compact single-axis stack. The rail is natural document
+flow: it does not pin, add a spacer, create a nested scroller, or hide any stage.
+Section introductions may translate into place through the shared timeline but
+remain fully opaque and readable at every scroll position.
+
 ## 8. Fixed Header
 
 - Position absolute over the hero, top `0`, width `100%`, z-index above effects.
@@ -230,7 +241,9 @@ Fixed registrations:
 | Dotted Surface | decorative | high | yes | no |
 | Case Study Threads | hero | high | yes | no; designed CSS fallback |
 
-`useEffectActivity` remains available for non-WebGL motion such as Logo Loop and Sparkles.
+`useEffectActivity` remains available for isolated non-WebGL effects. VIZ-004
+removes Logo Loop and Sparkles from the homepage: Process is a semantic ordered
+rail and the Work handoff uses shared page choreography.
 
 When future cinematic implementation begins, install and pin these motion
 runtimes:
@@ -259,6 +272,15 @@ lenis@1.3.25
   remains exclusively manager-owned.
 - Remove CSS `scroll-behavior: smooth`; Lenis must preserve native anchors,
   keyboard/touch scrolling, sticky positioning, and history restoration.
+
+VIZ-004 mounts one `ScrollChoreography` client boundary around the semantic
+homepage sections. It registers responsive chapter introductions, Process rail
+geometry, and the Contact-horizon arrival only through `useSceneTimeline`.
+There is no section-wide opacity animation or VIZ-owned pin. About's word reveal
+also uses `useSceneTimeline`; its server and client markup are identical, its
+minimum word opacity is `0.45`, and reduced motion keeps the settled composition.
+Hash changes, history traversal, font settlement, and resize refresh
+ScrollTrigger state without preventing navigation or calling `scrollTo`.
 
 Future cinematic visual components are source-first and portfolio-owned. The
 saved visual-decisions ledger is a reference library, not an active

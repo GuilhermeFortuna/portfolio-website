@@ -1,9 +1,9 @@
 // Adapted from https://reactbits.dev/text-animations/scroll-reveal
 "use client";
 
-import { useEffect, useMemo, useRef, useSyncExternalStore } from "react";
+import { useMemo, useRef } from "react";
 
-import { useMotionPreference } from "@/hooks/use-motion-preference";
+import { useSceneTimeline } from "@/components/motion/motion-runtime";
 import { cn } from "@/lib/cn";
 
 export type ScrollRevealProps = {
@@ -15,26 +15,6 @@ export type ScrollRevealProps = {
   rotationEnd?: string;
   wordAnimationEnd?: string;
 };
-
-function subscribeToNothing(): () => void {
-  return () => {};
-}
-
-function getClientMountedSnapshot(): boolean {
-  return true;
-}
-
-function getServerMountedSnapshot(): boolean {
-  return false;
-}
-
-function useIsClient(): boolean {
-  return useSyncExternalStore(
-    subscribeToNothing,
-    getClientMountedSnapshot,
-    getServerMountedSnapshot,
-  );
-}
 
 function clearWillChange(elements: HTMLElement[]) {
   for (const element of elements) {
@@ -52,12 +32,9 @@ export function ScrollReveal({
   wordAnimationEnd = "bottom 65%",
 }: ScrollRevealProps) {
   const paragraphRef = useRef<HTMLParagraphElement>(null);
-  const prefersReducedMotion = useMotionPreference();
-  const isClient = useIsClient();
-
-  // Keep the static paragraph until the client is live so hydration does not
-  // mirror the motion-allowed server snapshot and import GSAP under reduced motion.
-  const useStaticFallback = !isClient || prefersReducedMotion;
+  const safeBaseOpacity = Math.max(0.45, Math.min(baseOpacity, 1));
+  const safeBaseRotation = Math.max(-1, Math.min(baseRotation, 1));
+  const safeBlurStrength = Math.max(0, Math.min(blurStrength, 1.5));
 
   const splitText = useMemo(() => {
     return children.split(/(\s+)/).map((word, index) => {
@@ -73,115 +50,73 @@ export function ScrollReveal({
     });
   }, [children]);
 
-  useEffect(() => {
-    const paragraph = paragraphRef.current;
-    if (!paragraph || useStaticFallback) {
-      return;
-    }
-
-    let cancelled = false;
-    let cleanup: (() => void) | undefined;
-
-    void (async () => {
-      try {
-        const [{ gsap }, { ScrollTrigger }] = await Promise.all([
-          import("gsap"),
-          import("gsap/ScrollTrigger"),
-        ]);
-
-        const liveParagraph = paragraphRef.current;
-        if (cancelled || !liveParagraph) {
-          return;
-        }
-
-        gsap.registerPlugin(ScrollTrigger);
-
-        const wordElements = Array.from(
-          liveParagraph.querySelectorAll<HTMLElement>(".word"),
-        );
-
-        const context = gsap.context(() => {
-          gsap.fromTo(
-            liveParagraph,
-            { transformOrigin: "0% 50%", rotate: baseRotation },
-            {
-              ease: "none",
-              rotate: 0,
-              scrollTrigger: {
-                trigger: liveParagraph,
-                start: "top bottom",
-                end: rotationEnd,
-                scrub: true,
-              },
-            },
-          );
-
-          gsap.fromTo(
-            wordElements,
-            { opacity: baseOpacity, willChange: "opacity, filter" },
-            {
-              ease: "none",
-              opacity: 1,
-              stagger: 0.05,
-              scrollTrigger: {
-                trigger: liveParagraph,
-                start: "top bottom-=20%",
-                end: wordAnimationEnd,
-                scrub: true,
-                onUpdate: (self) => {
-                  if (self.progress === 1) {
-                    clearWillChange(wordElements);
-                  }
-                },
-              },
-            },
-          );
-
-          gsap.fromTo(
-            wordElements,
-            { filter: `blur(${blurStrength}px)` },
-            {
-              ease: "none",
-              filter: "blur(0px)",
-              stagger: 0.05,
-              scrollTrigger: {
-                trigger: liveParagraph,
-                start: "top bottom-=20%",
-                end: wordAnimationEnd,
-                scrub: true,
-              },
-            },
-          );
-        }, liveParagraph);
-
-        cleanup = () => {
-          context.revert();
-          clearWillChange(wordElements);
-          if (ScrollTrigger.getAll().length === 0) {
-            gsap.ticker.sleep();
-          }
-        };
-      } catch {
-        // Keep the static/split paragraph readable if the motion chunk fails.
+  useSceneTimeline(
+    paragraphRef,
+    ({ gsap }) => {
+      const paragraph = paragraphRef.current;
+      if (!paragraph) {
+        return;
       }
-    })();
 
-    return () => {
-      cancelled = true;
-      cleanup?.();
-    };
-  }, [
-    baseOpacity,
-    baseRotation,
-    blurStrength,
-    rotationEnd,
-    useStaticFallback,
-    wordAnimationEnd,
-  ]);
+      const wordElements = Array.from(
+        paragraph.querySelectorAll<HTMLElement>(".word"),
+      );
+      const animateBlur = safeBlurStrength > 0;
 
-  if (useStaticFallback) {
-    return <p className={cn(className)}>{children}</p>;
-  }
+      gsap.fromTo(
+        paragraph,
+        { transformOrigin: "0% 50%", rotate: safeBaseRotation },
+        {
+          ease: "none",
+          immediateRender: false,
+          rotate: 0,
+          scrollTrigger: {
+            trigger: paragraph,
+            start: "top bottom",
+            end: rotationEnd,
+            scrub: 0.45,
+            invalidateOnRefresh: true,
+          },
+        },
+      );
+
+      gsap.fromTo(
+        wordElements,
+        {
+          ...(animateBlur
+            ? { filter: `blur(${safeBlurStrength}px)` }
+            : undefined),
+          opacity: safeBaseOpacity,
+          willChange: animateBlur ? "opacity, filter" : "opacity",
+        },
+        {
+          ease: "none",
+          ...(animateBlur ? { filter: "blur(0px)" } : undefined),
+          immediateRender: false,
+          opacity: 1,
+          stagger: 0.045,
+          scrollTrigger: {
+            trigger: paragraph,
+            start: "top 82%",
+            end: wordAnimationEnd,
+            scrub: 0.45,
+            invalidateOnRefresh: true,
+            onLeave: () => clearWillChange(wordElements),
+            onLeaveBack: () => clearWillChange(wordElements),
+          },
+        },
+      );
+
+      return () => clearWillChange(wordElements);
+    },
+    [
+      rotationEnd,
+      safeBaseOpacity,
+      safeBaseRotation,
+      safeBlurStrength,
+      wordAnimationEnd,
+    ],
+  );
 
   return (
     <p ref={paragraphRef} className={cn(className)}>

@@ -192,6 +192,162 @@ canvas {
   color: color-mix(in srgb, var(--color-accent-c) 16%, transparent);
 }
 
+.scene-section {
+  position: relative;
+  isolation: isolate;
+  scroll-margin-top: 0;
+}
+
+.scene-introduction {
+  position: relative;
+  z-index: 1;
+}
+
+.scene-rule {
+  width: min(100%, 46rem);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-accent-a) 54%, transparent),
+    color-mix(in srgb, var(--color-line-strong) 70%, transparent) 48%,
+    transparent
+  );
+}
+
+.work-scene {
+  overflow-x: clip;
+}
+
+.process-scene {
+  overflow: clip;
+}
+
+.process-scene::before {
+  position: absolute;
+  z-index: -1;
+  inset: 4% 0 0;
+  background:
+    radial-gradient(
+      ellipse 46% 36% at 82% 38%,
+      color-mix(in srgb, var(--color-accent-c) 6%, transparent),
+      transparent 72%
+    ),
+    linear-gradient(
+      180deg,
+      transparent,
+      color-mix(in srgb, var(--color-surface) 48%, transparent) 48%,
+      transparent
+    );
+  content: "";
+  pointer-events: none;
+}
+
+.process-introduction {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(18rem, 4fr);
+  gap: clamp(2rem, 8vw, 8rem);
+  align-items: end;
+  margin-top: clamp(2rem, 5vw, 4rem);
+}
+
+.process-title {
+  max-width: 12ch;
+  font-size: clamp(3rem, 7.25vw, 7.25rem);
+  font-weight: 540;
+  line-height: 0.92;
+  letter-spacing: -0.058em;
+  text-wrap: balance;
+}
+
+.process-support {
+  max-width: 30rem;
+  padding-bottom: 0.35rem;
+  color: var(--color-text-muted);
+  font-size: clamp(1.0625rem, 1.45vw, 1.25rem);
+  line-height: 1.65;
+}
+
+.process-rail {
+  margin: clamp(4rem, 9vw, 8rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.process-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: clamp(2.75rem, 5vw, 4.5rem) minmax(0, 1fr) auto;
+  gap: clamp(1rem, 2.5vw, 2.5rem);
+  align-items: center;
+  min-height: clamp(6.5rem, 10vw, 9.5rem);
+  padding-inline: clamp(0rem, 3vw, 2.5rem);
+}
+
+.process-stage:nth-child(even) {
+  padding-right: clamp(2rem, 11vw, 11rem);
+  padding-left: clamp(1rem, 8vw, 8rem);
+}
+
+.process-stage-line {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-line-strong) 12%,
+    var(--color-line-strong) 88%,
+    transparent
+  );
+}
+
+.process-stage-index {
+  font-family: var(--font-geist-mono), monospace;
+  color: var(--color-text-dim);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+.process-stage-name {
+  min-width: 0;
+  font-size: clamp(2.5rem, 6.5vw, 6.75rem);
+  font-weight: 520;
+  line-height: 0.9;
+  letter-spacing: -0.058em;
+  text-transform: uppercase;
+}
+
+.process-stage-marker {
+  width: clamp(0.45rem, 0.7vw, 0.65rem);
+  aspect-ratio: 1;
+  box-shadow: 0 0 1.75rem currentColor;
+}
+
+.contact-horizon {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.contact-scene::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in srgb, var(--color-accent-a) 2.5%, transparent) 72%,
+    transparent
+  );
+  content: "";
+  pointer-events: none;
+}
+
 @media (max-width: 767px) {
   .hero-scene::after {
     position: absolute;
@@ -230,6 +386,46 @@ canvas {
     top: 61%;
     left: 38%;
   }
+
+  .process-introduction {
+    display: block;
+    margin-top: 2rem;
+  }
+
+  .process-title {
+    max-width: 10ch;
+    font-size: clamp(2.75rem, 14vw, 4.5rem);
+  }
+
+  .process-support {
+    margin-top: 2rem;
+  }
+
+  .process-rail {
+    margin-top: 3.5rem;
+  }
+
+  .process-stage,
+  .process-stage:nth-child(even) {
+    grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    min-height: 5.5rem;
+    padding-inline: 0;
+  }
+
+  .process-stage-name {
+    font-size: clamp(1.75rem, 9.5vw, 3rem);
+    letter-spacing: -0.045em;
+  }
+
+  .process-stage-line {
+    background: linear-gradient(
+      90deg,
+      var(--color-line-strong),
+      var(--color-line-strong) 76%,
+      transparent
+    );
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -248,5 +444,13 @@ canvas {
 
   .hero-kinetic-field {
     display: none;
+  }
+
+  .scene-introduction,
+  .process-stage,
+  .process-stage-line,
+  .contact-horizon {
+    translate: none !important;
+    transform: none !important;
   }
 }

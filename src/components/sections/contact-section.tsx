@@ -8,12 +8,15 @@ export function ContactSection() {
       id="contact"
       label={siteContent.contactLabel}
       labelledBy="contact-title"
-      className="relative min-h-[44rem]"
+      className="scene-section contact-scene relative min-h-[44rem]"
     >
-      <ContactDottedSurfaceHorizon />
+      <div data-contact-horizon className="contact-horizon">
+        <ContactDottedSurfaceHorizon />
+      </div>
 
       <div
-        className="relative z-[1]"
+        data-scene-intro
+        className="scene-introduction relative z-[1]"
         style={{ maxWidth: "var(--content-reading)" }}
       >
         {/*
