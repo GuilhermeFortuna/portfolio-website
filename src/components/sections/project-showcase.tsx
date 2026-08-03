@@ -60,7 +60,7 @@ function apertureAccent(slug: string): string {
  * because of it.
  */
 const caseStudyLinkClassName =
-  "mt-4 inline-flex min-h-11 items-center [font-family:var(--font-geist-mono)] text-[0.6875rem] font-semibold tracking-[0.14em] uppercase";
+  "inline-flex min-h-11 items-center [font-family:var(--font-geist-mono)] text-[0.75rem] font-semibold tracking-[0.14em] uppercase lg:text-[0.8125rem]";
 
 function CaseStudyLink({ project }: { project: Project }) {
   const locale = useLocale();
@@ -88,19 +88,21 @@ function CaseStudyLink({ project }: { project: Project }) {
 function ProjectMeta({ project }: { project: Project }) {
   return (
     <div>
-      <p className="[font-family:var(--font-geist-mono)] text-[0.6875rem] leading-none font-semibold tracking-[0.14em] text-[var(--color-accent-a)] uppercase">
+      <p className="[font-family:var(--font-geist-mono)] text-[0.75rem] leading-none font-semibold tracking-[0.14em] text-[var(--color-accent-a)] uppercase lg:text-[0.8125rem]">
         {project.index}
       </p>
-      <p className="mt-3 [font-family:var(--font-geist-mono)] text-[0.6875rem] leading-none font-semibold tracking-[0.14em] text-[var(--color-text-dim)] uppercase">
+      <p className="mt-4 [font-family:var(--font-geist-mono)] text-[0.75rem] leading-none font-semibold tracking-[0.14em] text-[var(--color-text-dim)] uppercase lg:text-[0.8125rem]">
         {project.category}
       </p>
-      <h3 className="mt-4 text-3xl font-[540] tracking-[-0.04em] text-[var(--color-text)]">
+      <h3 className="mt-5 text-[clamp(2.25rem,4vw,4rem)] leading-[0.95] font-[540] tracking-[-0.04em] text-[var(--color-text)]">
         {project.name}
       </h3>
-      <p className="mt-3 max-w-[var(--content-reading)] leading-relaxed text-[var(--color-text-muted)]">
+      <p className="mt-6 max-w-[38rem] text-[1.125rem] leading-relaxed text-[var(--color-text-muted)] lg:text-[1.25rem]">
         {project.summary}
       </p>
-      <CaseStudyLink project={project} />
+      <div className="mt-8">
+        <CaseStudyLink project={project} />
+      </div>
     </div>
   );
 }
@@ -184,9 +186,18 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
         // the section itself would collapse to the rail's height and pin
         // flush against the top edge. Give it the full viewport instead and
         // let each panel's own `items-center` grid centre its content in it.
+        // The shared aperture takes over showing each project's image; the
+        // per-panel slot's own <img> stays in the DOM (for the static/no-JS
+        // state) but must not paint underneath it here, or the two visibly
+        // double up whenever their rects drift apart even slightly.
+        const slotImages = projects
+          .map((project) => slotRefs.current[project.slug]?.querySelector("img"))
+          .filter((img): img is HTMLImageElement => img !== null && img !== undefined);
+
         gsap.set(section, { minHeight: "100vh" });
         gsap.set(panels, { position: "absolute", inset: 0, opacity: 0 });
         gsap.set(panels[0], { opacity: 1 });
+        gsap.set(slotImages, { opacity: 0 });
         gsap.set(aperture, { opacity: 1 });
 
         const positionAperture = (index: number, animate: boolean) => {
@@ -319,6 +330,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
           section.removeEventListener("click", handleRailClick);
           gsap.set(section, { clearProps: "minHeight" });
           gsap.set(panels, { clearProps: "all" });
+          gsap.set(slotImages, { clearProps: "all" });
           gsap.set(aperture, { clearProps: "all" });
           (["a", "b"] as const).forEach((layer) => {
             const img = apertureImageRefs.current[layer];
@@ -333,75 +345,86 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
   );
 
   return (
-    <div ref={sectionRef} className="relative mt-12">
-      <div
-        ref={apertureRef}
-        aria-hidden="true"
-        className="pointer-events-none absolute z-10 hidden overflow-hidden rounded-[var(--radius-lg)] border opacity-0 lg:block"
-        style={{ borderColor: "var(--color-line)" }}
-      >
-        <img
-          ref={(element) => {
-            apertureImageRefs.current.a = element;
-          }}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <img
-          ref={(element) => {
-            apertureImageRefs.current.b = element;
-          }}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-0"
-        />
+    <div className="mt-12 lg:mx-[calc(50%-50vw)] lg:w-screen">
+      <div className="lg:mx-auto lg:max-w-[100rem] lg:px-[clamp(3rem,6vw,7rem)]">
+        {/*
+          Panels use `position: absolute; inset: 0`, which resolves against
+          this element's own padding box and ignores any padding declared on
+          it directly — so the horizontal gutter has to live one level up,
+          on a non-positioned ancestor, or the panels render flush to the
+          true edge regardless of it.
+        */}
+        <div ref={sectionRef} className="relative">
+          <div
+            ref={apertureRef}
+            aria-hidden="true"
+            className="pointer-events-none absolute z-10 hidden overflow-hidden rounded-[var(--radius-lg)] border opacity-0 lg:block"
+            style={{ borderColor: "var(--color-line)" }}
+          >
+            <img
+              ref={(element) => {
+                apertureImageRefs.current.a = element;
+              }}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <img
+              ref={(element) => {
+                apertureImageRefs.current.b = element;
+              }}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover opacity-0"
+            />
+          </div>
+
+          <nav
+            aria-label="Select project"
+            className="relative z-20 mb-8 hidden gap-4 lg:flex"
+          >
+            {projects.map((project) => (
+              <a
+                key={project.slug}
+                href={`#${project.slug}`}
+                data-project-jump={project.slug}
+                className="[font-family:var(--font-geist-mono)] text-[0.6875rem] font-semibold tracking-[0.14em] text-[var(--color-text-dim)] uppercase transition-colors hover:text-[var(--color-text)]"
+              >
+                {`${project.index} ${project.name}`}
+              </a>
+            ))}
+          </nav>
+
+          {projects.map((project, index) => {
+            const meta = <ProjectMeta key="meta" project={project} />;
+            const aperture = (
+              <ProjectAperture
+                key="aperture"
+                slug={project.slug}
+                eager={index === 0}
+                slotRef={(element) => {
+                  slotRefs.current[project.slug] = element;
+                }}
+              />
+            );
+
+            return (
+              <article
+                key={project.slug}
+                id={project.slug}
+                ref={(element) => {
+                  panelRefs.current[project.slug] = element;
+                }}
+                data-project-panel={project.slug}
+                className={cn(
+                  "grid gap-8 border-t border-[var(--color-line)] py-10 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:items-center lg:gap-[clamp(3rem,6vw,6rem)] lg:py-16",
+                  index === projects.length - 1 && "border-b",
+                )}
+              >
+                {index % 2 === 1 ? [aperture, meta] : [meta, aperture]}
+              </article>
+            );
+          })}
+        </div>
       </div>
-
-      <nav
-        aria-label="Select project"
-        className="relative z-20 mb-8 hidden gap-4 lg:flex"
-      >
-        {projects.map((project) => (
-          <a
-            key={project.slug}
-            href={`#${project.slug}`}
-            data-project-jump={project.slug}
-            className="[font-family:var(--font-geist-mono)] text-[0.6875rem] font-semibold tracking-[0.14em] text-[var(--color-text-dim)] uppercase transition-colors hover:text-[var(--color-text)]"
-          >
-            {`${project.index} ${project.name}`}
-          </a>
-        ))}
-      </nav>
-
-      {projects.map((project, index) => {
-        const meta = <ProjectMeta key="meta" project={project} />;
-        const aperture = (
-          <ProjectAperture
-            key="aperture"
-            slug={project.slug}
-            eager={index === 0}
-            slotRef={(element) => {
-              slotRefs.current[project.slug] = element;
-            }}
-          />
-        );
-
-        return (
-          <article
-            key={project.slug}
-            id={project.slug}
-            ref={(element) => {
-              panelRefs.current[project.slug] = element;
-            }}
-            data-project-panel={project.slug}
-            className={cn(
-              "grid gap-8 border-t border-[var(--color-line)] py-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-[clamp(2rem,5vw,4rem)]",
-              index === projects.length - 1 && "border-b",
-            )}
-          >
-            {index % 2 === 1 ? [aperture, meta] : [meta, aperture]}
-          </article>
-        );
-      })}
     </div>
   );
 }
