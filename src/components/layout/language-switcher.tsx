@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useLocale } from "@/components/i18n/language-context";
 import type { Locale } from "@/lib/i18n";
-import { locales } from "@/lib/i18n";
+import { locales, localizePathname } from "@/lib/i18n";
 
 export function LanguageSwitcher() {
   const currentLocale = useLocale();
@@ -21,19 +21,7 @@ export function LanguageSwitcher() {
   const handleSwitch = (targetLocale: Locale) => {
     if (targetLocale === currentLocale) return;
 
-    let newPathname = pathname;
-    for (const loc of locales) {
-      if (pathname === `/${loc}` || pathname.startsWith(`/${loc}/`)) {
-        newPathname = pathname.replace(`/${loc}`, `/${targetLocale}`);
-        break;
-      }
-    }
-
-    if (newPathname === pathname) {
-      const prefix = targetLocale === "en" ? "" : `/${targetLocale}`;
-      newPathname = `${prefix}${pathname === "/" ? "" : pathname}`;
-      if (!newPathname) newPathname = "/";
-    }
+    const newPathname = localizePathname(pathname, targetLocale);
 
     if (typeof document !== "undefined") {
       document.cookie = `NEXT_LOCALE=${targetLocale}; path=/; max-age=31536000; SameSite=Lax`;

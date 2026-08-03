@@ -2,15 +2,53 @@ import { describe, expect, it } from "vitest";
 import { getSiteContent, getSiteNavigation, getSiteMetadata, getFooterContent } from "@/content/site";
 import { getProjects } from "@/content/projects";
 import { getAegisCaseStudy, getQCaseStudy, getCaseStudy } from "@/content/case-studies";
-import { isValidLocale, locales, defaultLocale } from "@/lib/i18n";
+import {
+  isValidLocale,
+  isPrefixedLocale,
+  locales,
+  defaultLocale,
+  prefixedLocales,
+  getLocaleFromPathname,
+  stripLocalePrefix,
+  localizePathname,
+  getHtmlLang,
+} from "@/lib/i18n";
 
 describe("i18n infrastructure & Brazilian Portuguese content", () => {
   it("defines valid locales and defaults", () => {
     expect(locales).toEqual(["en", "pt-BR"]);
     expect(defaultLocale).toBe("en");
+    expect(prefixedLocales).toEqual(["pt-BR"]);
     expect(isValidLocale("en")).toBe(true);
     expect(isValidLocale("pt-BR")).toBe(true);
     expect(isValidLocale("fr")).toBe(false);
+    expect(isPrefixedLocale("en")).toBe(false);
+    expect(isPrefixedLocale("pt-BR")).toBe(true);
+    expect(isPrefixedLocale("fr")).toBe(false);
+  });
+
+  it("maps document language tags and path locales", () => {
+    expect(getHtmlLang("en")).toBe("en");
+    expect(getHtmlLang("pt-BR")).toBe("pt-BR");
+    expect(getLocaleFromPathname("/")).toBeNull();
+    expect(getLocaleFromPathname("/work/aegis")).toBeNull();
+    expect(getLocaleFromPathname("/en")).toBe("en");
+    expect(getLocaleFromPathname("/en/work/aegis")).toBe("en");
+    expect(getLocaleFromPathname("/pt-BR")).toBe("pt-BR");
+    expect(getLocaleFromPathname("/pt-BR/work/q")).toBe("pt-BR");
+    expect(getLocaleFromPathname("/fr")).toBeNull();
+  });
+
+  it("localizes and strips locale prefixes without duplicating English routes", () => {
+    expect(stripLocalePrefix("/en")).toBe("/");
+    expect(stripLocalePrefix("/en/work/aegis")).toBe("/work/aegis");
+    expect(stripLocalePrefix("/pt-BR/work/q")).toBe("/work/q");
+    expect(localizePathname("/", "en")).toBe("/");
+    expect(localizePathname("/work/aegis", "en")).toBe("/work/aegis");
+    expect(localizePathname("/pt-BR/work/aegis", "en")).toBe("/work/aegis");
+    expect(localizePathname("/", "pt-BR")).toBe("/pt-BR");
+    expect(localizePathname("/work/aegis", "pt-BR")).toBe("/pt-BR/work/aegis");
+    expect(localizePathname("/en/work/aegis", "pt-BR")).toBe("/pt-BR/work/aegis");
   });
 
   it("provides complete Portuguese (pt-BR) site content", () => {

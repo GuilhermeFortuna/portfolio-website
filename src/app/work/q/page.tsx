@@ -11,11 +11,23 @@ import { LanguageProvider } from "@/components/i18n/language-context";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { caseStudyBodySections, qCaseStudy } from "@/content/case-studies";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
+  locale: "en",
+  pathname: "/work/q",
   title: qCaseStudy.metadata.title,
   description: qCaseStudy.metadata.description,
-};
+  type: "article",
+  images: [
+    {
+      url: "/work/q/launcher.webp",
+      width: 2560,
+      height: 1440,
+      alt: "The Quant launcher dashboard showing market status and research activity.",
+    },
+  ],
+});
 
 export default function QuantCaseStudyPage() {
   return (

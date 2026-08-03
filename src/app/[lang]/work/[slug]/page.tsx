@@ -12,20 +12,43 @@ import { CaseStudyShell } from "@/components/case-study/case-study-shell";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { caseStudyBodySections, getCaseStudy } from "@/content/case-studies";
-import { isValidLocale, defaultLocale, locales, type Locale } from "@/lib/i18n";
+import { isPrefixedLocale, prefixedLocales, type Locale } from "@/lib/i18n";
+import { createPageMetadata, type SeoImage } from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{
     lang: string;
     slug: string;
-  }> | Promise<unknown>;
+  }>;
 };
+
+const caseStudyImages: Record<string, SeoImage> = {
+  aegis: {
+    url: "/work/aegis/overview.webp",
+    width: 1600,
+    height: 900,
+    alt: "The Aegis overview screen with risk summary and investigation constellation.",
+  },
+  q: {
+    url: "/work/q/launcher.webp",
+    width: 2560,
+    height: 1440,
+    alt: "The Quant launcher dashboard showing market status and research activity.",
+  },
+};
+
+function resolvePrefixedLocale(lang: string | undefined): Locale {
+  if (!lang || !isPrefixedLocale(lang)) {
+    notFound();
+  }
+  return lang;
+}
 
 export function generateStaticParams() {
   const slugs = ["aegis", "q"];
   const params: Array<{ lang: string; slug: string }> = [];
 
-  for (const lang of locales) {
+  for (const lang of prefixedLocales) {
     for (const slug of slugs) {
       params.push({ lang, slug });
     }
@@ -35,27 +58,29 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const resolved = (await params) as { lang?: string; slug?: string } | undefined;
-  const lang = resolved?.lang ?? defaultLocale;
-  const slug = resolved?.slug ?? "";
-  const locale: Locale = isValidLocale(lang) ? lang : defaultLocale;
+  const { lang, slug } = await params;
+  const locale = resolvePrefixedLocale(lang);
   const caseStudy = getCaseStudy(slug, locale);
 
   if (!caseStudy) {
     return {};
   }
 
-  return {
+  const image = caseStudyImages[slug];
+
+  return createPageMetadata({
+    locale,
+    pathname: `/work/${slug}`,
     title: caseStudy.metadata.title,
     description: caseStudy.metadata.description,
-  };
+    type: "article",
+    images: image ? [image] : undefined,
+  });
 }
 
 export default async function DynamicCaseStudyPage({ params }: PageProps) {
-  const resolved = (await params) as { lang?: string; slug?: string } | undefined;
-  const lang = resolved?.lang ?? defaultLocale;
-  const slug = resolved?.slug ?? "";
-  const locale: Locale = isValidLocale(lang) ? lang : defaultLocale;
+  const { lang, slug } = await params;
+  const locale = resolvePrefixedLocale(lang);
   const caseStudy = getCaseStudy(slug, locale);
 
   if (!caseStudy) {

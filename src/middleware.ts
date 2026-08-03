@@ -1,6 +1,42 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { defaultLocale, isValidLocale, locales } from "@/lib/i18n";
+import {
+  defaultLocale,
+  getLocaleFromPathname,
+  isPrefixedLocale,
+  isValidLocale,
+  localeHeader,
+  localizePathname,
+  stripLocalePrefix,
+  type Locale,
+} from "@/lib/i18n";
+
+function preferredLocale(request: NextRequest): Locale {
+  const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
+  if (cookieLocale && isValidLocale(cookieLocale)) {
+    return cookieLocale;
+  }
+
+  const acceptLanguage = request.headers.get("accept-language");
+  if (
+    acceptLanguage &&
+    (acceptLanguage.includes("pt-BR") || acceptLanguage.includes("pt"))
+  ) {
+    return "pt-BR";
+  }
+
+  return defaultLocale;
+}
+
+function nextWithLocale(request: NextRequest, locale: Locale) {
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(localeHeader, locale);
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+}
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -14,34 +50,30 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check if pathname starts with a supported locale
-  const pathnameHasLocale = locales.some(
-    (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`),
-  );
+  const pathLocale = getLocaleFromPathname(pathname);
 
-  if (pathnameHasLocale) {
-    return NextResponse.next();
+  // Default locale is unprefixed — collapse /en and /en/... to canonical URLs.
+  if (pathLocale === defaultLocale) {
+    const canonicalPath = stripLocalePrefix(pathname);
+    return NextResponse.redirect(new URL(canonicalPath, request.url));
   }
 
-  // Determine locale from cookie or Accept-Language header
-  const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
-  let targetLocale = defaultLocale;
-
-  if (cookieLocale && isValidLocale(cookieLocale)) {
-    targetLocale = cookieLocale;
-  } else {
-    const acceptLanguage = request.headers.get("accept-language");
-    if (acceptLanguage && (acceptLanguage.includes("pt") || acceptLanguage.includes("pt-BR"))) {
-      targetLocale = "pt-BR";
-    }
+  // Prefixed locales (e.g. /pt-BR) pass through with locale metadata.
+  if (pathLocale && isPrefixedLocale(pathLocale)) {
+    return nextWithLocale(request, pathLocale);
   }
 
-  // Redirect to localized URL
-  const redirectUrl = new URL(
-    `/${targetLocale}${pathname === "/" ? "" : pathname}`,
-    request.url,
-  );
-  return NextResponse.redirect(redirectUrl);
+  // Unprefixed routes: serve English, or redirect when preference is prefixed.
+  const targetLocale = preferredLocale(request);
+  if (isPrefixedLocale(targetLocale)) {
+    const redirectUrl = new URL(
+      localizePathname(pathname, targetLocale),
+      request.url,
+    );
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  return nextWithLocale(request, defaultLocale);
 }
 
 export const config = {

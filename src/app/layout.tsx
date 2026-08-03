@@ -1,8 +1,17 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import { MotionRuntime } from "@/components/motion/motion-runtime";
 import { WebGLManager } from "@/components/webgl/webgl-manager";
-import { siteMetadata } from "@/content/site";
+import { getSiteMetadata } from "@/content/site";
+import {
+  defaultLocale,
+  getHtmlLang,
+  isValidLocale,
+  localeHeader,
+} from "@/lib/i18n";
+import { createPageMetadata } from "@/lib/seo";
+import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,18 +24,30 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const englishSiteMetadata = getSiteMetadata("en");
+
 export const metadata: Metadata = {
-  title: siteMetadata.title,
-  description: siteMetadata.description,
+  metadataBase: getSiteUrl(),
+  ...createPageMetadata({
+    locale: "en",
+    pathname: "/",
+    title: englishSiteMetadata.title,
+    description: englishSiteMetadata.description,
+  }),
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headerStore = await headers();
+  const headerLocale = headerStore.get(localeHeader);
+  const locale =
+    headerLocale && isValidLocale(headerLocale) ? headerLocale : defaultLocale;
+
   return (
-    <html className="h-full antialiased">
+    <html lang={getHtmlLang(locale)} className="h-full antialiased">
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-full flex flex-col`}
       >

@@ -11,11 +11,23 @@ import { LanguageProvider } from "@/components/i18n/language-context";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { aegisCaseStudy, caseStudyBodySections } from "@/content/case-studies";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
+  locale: "en",
+  pathname: "/work/aegis",
   title: aegisCaseStudy.metadata.title,
   description: aegisCaseStudy.metadata.description,
-};
+  type: "article",
+  images: [
+    {
+      url: "/work/aegis/overview.webp",
+      width: 1600,
+      height: 900,
+      alt: "The Aegis overview screen with risk summary and investigation constellation.",
+    },
+  ],
+});
 
 export default function AegisCaseStudyPage() {
   return (
