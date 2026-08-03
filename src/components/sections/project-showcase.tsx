@@ -180,6 +180,11 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
         let activeIndex = 0;
         let topLayer: "a" | "b" = "a";
 
+        // Panels lose their document-flow height once they go absolute, so
+        // the section itself would collapse to the rail's height and pin
+        // flush against the top edge. Give it the full viewport instead and
+        // let each panel's own `items-center` grid centre its content in it.
+        gsap.set(section, { minHeight: "100vh" });
         gsap.set(panels, { position: "absolute", inset: 0, opacity: 0 });
         gsap.set(panels[0], { opacity: 1 });
         gsap.set(aperture, { opacity: 1 });
@@ -312,6 +317,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
           window.removeEventListener("resize", handleResize);
           section.removeEventListener("focusin", handleFocusIn);
           section.removeEventListener("click", handleRailClick);
+          gsap.set(section, { clearProps: "minHeight" });
           gsap.set(panels, { clearProps: "all" });
           gsap.set(aperture, { clearProps: "all" });
           (["a", "b"] as const).forEach((layer) => {
