@@ -136,26 +136,27 @@ describe("homepage composition", () => {
 
     const [aegis, quant, ...pending] = projects;
 
-    // Desktop shows the link only for the active selector row (defaults to
-    // Aegis); mobile lists every linked project. CSS hides one tree.
-    const aegisLinks = screen.getAllByRole("link", {
+    // Every project is always fully visible (no active/selected state), so
+    // each linked project renders exactly one case-study link.
+    const aegisLink = screen.getByRole("link", {
       name: `View ${aegis.name} case study`,
     });
-    expect(aegisLinks).toHaveLength(2);
-    for (const link of aegisLinks) {
-      expect(link).toHaveAttribute("href", "/work/aegis");
-    }
+    expect(aegisLink).toHaveAttribute("href", "/work/aegis");
 
-    const quantLinks = screen.getAllByRole("link", {
+    const quantLink = screen.getByRole("link", {
       name: `View ${quant.name} case study`,
     });
-    expect(quantLinks).toHaveLength(1);
-    expect(quantLinks[0]).toHaveAttribute("href", "/work/q");
+    expect(quantLink).toHaveAttribute("href", "/work/q");
 
     for (const project of pending) {
       expect(project.href).toBeNull();
+      // No case-study link, disabled control, or placeholder action — the
+      // in-page "select project" rail link (an honest same-page anchor, not
+      // a fake case-study destination) is not this.
       expect(
-        screen.queryByRole("link", { name: new RegExp(project.name) }),
+        screen.queryByRole("link", {
+          name: `View ${project.name} case study`,
+        }),
       ).toBeNull();
     }
   });
@@ -168,12 +169,7 @@ describe("homepage composition", () => {
       .map((anchor) => anchor.getAttribute("href") ?? "")
       .filter((href) => href.startsWith("/work/"));
 
-    // Hero CTA + desktop active Aegis + mobile Aegis + mobile Quant.
-    expect(caseStudyHrefs).toEqual([
-      "/work/aegis",
-      "/work/aegis",
-      "/work/aegis",
-      "/work/q",
-    ]);
+    // Hero CTA + Aegis project link + Quant project link.
+    expect(caseStudyHrefs).toEqual(["/work/aegis", "/work/aegis", "/work/q"]);
   });
 });

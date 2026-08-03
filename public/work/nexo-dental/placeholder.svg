@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-hidden="true">
+  <title>Placeholder visual for Nexo Dental</title>
+  <defs>
+    <pattern id="hatch" width="28" height="28" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="0" y2="28" stroke="#8EA0FF" stroke-opacity="0.14" stroke-width="1" />
+    </pattern>
+  </defs>
+  <rect width="800" height="450" fill="#0c0f14" />
+  <rect width="800" height="450" fill="url(#hatch)" />
+  <rect x="0.5" y="0.5" width="799" height="449" fill="none" stroke="#a6b1c5" stroke-opacity="0.16" />
+  <text x="400" y="217" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="600" letter-spacing="2.5" fill="#7a8496">PLACEHOLDER</text>
+  <text x="400" y="251" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" font-weight="600" letter-spacing="2.5" fill="#9ba6b5">NEXO DENTAL</text>
+</svg>

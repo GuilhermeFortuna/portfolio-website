@@ -72,14 +72,21 @@ a {
   text-decoration: none;
 }
 
-button {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
+/*
+ * Layered so Tailwind's own `base`/`utilities` cascade order applies: utility
+ * classes like `border-t`/`py-6` on a <button> must win over this reset. An
+ * unlayered rule here would silently outrank them regardless of source order.
+ */
+@layer base {
+  button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
 }
 
 img,

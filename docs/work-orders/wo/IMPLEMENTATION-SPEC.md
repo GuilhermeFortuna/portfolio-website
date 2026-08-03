@@ -201,7 +201,6 @@ type WebGLEffectConfig = {
   id:
     | "line-waves"
     | "liquid-metal"
-    | "shape-blur"
     | "dotted-surface"
     | "case-study-threads";
   priority: "hero" | "decorative";
@@ -227,9 +226,9 @@ Use a render-prop API so the manager controls the child:
 
 After first mount, prefer pausing over repeated shader compilation while the effect remains within the 300px near-viewport margin. Unmount after it leaves that margin.
 
-Desktop cost budget is `8`: low `1`, medium `2`, high `3`. Higher priority wins; ties use registration order. This permits Line Waves (`high`), both Liquid Metal CTAs (`low` each), and Shape Blur (`high`) to coexist near the hero/project transition. Mobile cost budget is `3`, admitting exactly the simplified mobile Line Waves (`high`) and no additional WebGL effect.
+Desktop cost budget is `8`: low `1`, medium `2`, high `3`. Higher priority wins; ties use registration order. Mobile cost budget is `3`, admitting exactly the simplified mobile Line Waves (`high`) and no additional WebGL effect.
 
-The desktop budget was `4` until 2026-07-30. The owner raised it because the hero effects held the entire budget while the project stage was already on screen, so Shape Blur never mounted at a normal reading position. VIZ-002 reconciled the stale documented value of `7` with the shipped manager's `8`-unit transition budget on 2026-08-03; VIZ-006 must refit the budget from measured assembled-page evidence after VIZ-003 and VIZ-005 remove the rejected effects.
+The desktop budget was `4` until 2026-07-30. The owner raised it because the hero effects held the entire budget while the project stage was already on screen, so Shape Blur never mounted at a normal reading position. VIZ-002 reconciled the stale documented value of `7` with the shipped manager's `8`-unit transition budget on 2026-08-03. VIZ-005 removed Shape Blur and its `WebGLEffectId` entry entirely (§11); VIZ-006 must refit the budget from measured assembled-page evidence now that it no longer needs to reserve a slot for it.
 
 Fixed registrations:
 
@@ -237,7 +236,6 @@ Fixed registrations:
 | --- | --- | --- | --- | --- |
 | Line Waves | hero | high | yes | yes, simplified |
 | Liquid Metal | hero | low | yes | no; static metallic fallback |
-| Shape Blur | decorative | high | yes | no |
 | Dotted Surface | decorative | high | yes | no |
 | Case Study Threads | hero | high | yes | no; designed CSS fallback |
 
@@ -310,34 +308,60 @@ Mobile:
 
 ## 11. Fixed Project Presentation
 
-The Selected Work layout is not open.
+Superseded by VIZ-005 per the D-010/D-011 selections in
+`docs/design/viz-visual-decisions.md`. The `5fr/7fr` selector-button/sticky-stage
+premise and the four abstract diagrams (dot matrix, plot lines, labeled boxes,
+appointment grid) are gone. `project-showcase.tsx` implements:
 
-Desktop:
+Baseline markup (present for every viewport, and the entirety of what renders
+with JS disabled or `prefers-reduced-motion: reduce`):
 
-- two-column grid: `5fr 7fr`, gap `clamp(2rem, 5vw, 5rem)`
-- left column contains four full-width project selector buttons
-- right column contains one sticky visual stage with `top: 8rem`, aspect ratio `4 / 3`
-- the first project is active on initial render
-- clicking or focusing a selector changes the active project
-- pointer hover may change the active project only on fine pointers
-- all project name, category, and summary text remains visible in the left list
+- every project renders as a full, always-visible `<article>` in document
+  order — index, category, name, summary, and (only when `href !== null`) one
+  unconditional case-study link with the derived label
+  `` `View ${project.name} case study` `` (localized per `useLocale()`)
+- each article carries its own aperture slot: a `16/9` bordered frame holding
+  that project's own `<img loading="eager|lazy" decoding="async">`, sourced
+  from `src/content/project-media.ts` (a VIZ-005-owned file, read-only against
+  `src/content/projects.ts`); the first project's image is eager, the rest lazy
+- desktop widens each article into a two-column row (text / aperture,
+  alternating sides by index parity); mobile stacks single column
+- a `<nav aria-label="Select project">` of four `href="#slug"` anchors is
+  present at `lg:` and up — a same-page, no-JS-capable jump list so every
+  project, including ones with no case-study link, has a reachable in-page
+  destination
 
-Mobile and tablet:
+Desktop enhancement (`(min-width: 1024px)`, only when motion is not reduced,
+registered through `useSceneTimeline` — one `gsap.context()`, one
+`gsap.matchMedia()`, no independent ScrollTrigger/Lenis/WebGL ownership):
 
-- single column
-- no sticky stage
-- no Shape Blur
-- each project is a bordered content row
-- the active-state interaction is unnecessary; all four rows remain equally visible
+- pins the section and scrubs progress across the four projects (D-011 panel
+  choreography): each article crossfades into the next as the equivalent
+  scroll-linked "story" panel takeover, snapping to the nearest project on
+  release
+- one persistent, absolutely-positioned aperture (D-010) is Flip-animated
+  (`gsap/Flip`) from the outgoing project's slot rect to the incoming one's on
+  every stop change, with its own image content crossfading between two
+  stacked `<img>` layers; the per-article slot's own image is the one visible
+  at rest (baseline markup) and is superseded visually by the shared aperture
+  only while this enhancement is active
+- a `focusin` listener and the rail's `click` handler both drive the same
+  pinned-scroll jump, so keyboard focus landing in any project's content (or a
+  rail anchor) brings that project into view even while pinned — the fix for
+  articles with no case-study link having no other focusable element
+- unmounts and fully reverts (`clearProps`) outside the `1024px` breakpoint or
+  when reduced motion is preferred, leaving the baseline markup as the actual
+  rendered state
 
-The visual stage uses abstract, non-factual diagrams:
+Media: real screenshots for Aegis (`/work/aegis/overview.webp`) and Quant
+(`/work/q/dock.webp`); authored placeholder SVGs at
+`/work/gosigapp/placeholder.svg` and `/work/nexo-dental/placeholder.svg` for
+the two chapters without approved captures, at the exact path a real capture
+will later replace. Every project goes through the identical
+image-in-aperture code path — no separate typographic fallback branch — so
+D-002's equal treatment is structural, not a special case.
 
-- Aegis: a 7×5 dot matrix with three highlighted nodes.
-- Q: three thin horizontal plot lines with one moving-marker position represented statically.
-- gosigapp: three boxes labeled `UPLOAD`, `VALIDATE`, `SUBMIT`, connected left to right.
-- Nexo Dental: a 4×3 appointment grid with one accent cell and a centered crosshair.
-
-These diagrams are decorative and use only the fixed tokens.
+Shape Blur (`WebGLEffectId`, `shape-blur.tsx`) is removed entirely; see §9.
 
 ## 12. External Component Rule
 

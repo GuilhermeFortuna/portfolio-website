@@ -1,256 +1,77 @@
-import type { ReactNode } from "react";
-import userEvent from "@testing-library/user-event";
+import type { RefObject } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ProjectShowcase } from "@/components/sections/project-showcase";
+import type { SceneTimelineFactory } from "@/components/motion/motion-runtime";
+import { projectMedia } from "@/content/project-media";
 import { projects } from "@/content/projects";
-import { fireEvent, render, screen, within } from "@/test/render";
+import { render, screen, within } from "@/test/render";
 
 /*
- * Visual-effect leaves are mocked so this file proves selection/fallback
- * decisions without WebGL, OGL, or animation-frame work.
+ * `useSceneTimeline` is mocked so this file proves DOM structure, content,
+ * and the enhancement's wiring (pin/Flip/keyboard-follow) without real GSAP,
+ * ScrollTrigger, or Flip work — matching the convention already used by
+ * scroll-choreography.test.tsx.
  */
-vi.mock("@/components/webgl/managed-webgl-effect", () => ({
-  ManagedWebGLEffect: ({
-    children,
-    fallback,
-  }: {
-    children: (state: { shouldAnimate: boolean }) => ReactNode;
-    fallback: ReactNode;
-  }) => <>{children ? children({ shouldAnimate: false }) : fallback}</>,
+const timelineRegistration = vi.hoisted(() => vi.fn());
+
+vi.mock("@/components/motion/motion-runtime", () => ({
+  useSceneTimeline: timelineRegistration,
 }));
 
-vi.mock("@/components/effects/shape-blur", () => ({
-  ShapeBlur: ({ color }: { color: string }) => (
-    <output data-testid="shape-blur-color">{color}</output>
-  ),
+vi.mock("gsap/Flip", () => ({
+  Flip: {
+    getState: vi.fn(() => ({})),
+    from: vi.fn(),
+  },
 }));
 
-type MediaOptions = {
-  /** `(max-width: 767px)` — documents intended mobile vs desktop mode. */
-  mobile?: boolean;
-  /** `(pointer: fine)` — controls hover-driven selection. */
-  finePointer?: boolean;
-};
-
-function stubMatchMedia({
-  mobile = false,
-  finePointer = true,
-}: MediaOptions = {}) {
-  vi.stubGlobal(
-    "matchMedia",
-    vi.fn((query: string) => {
-      let matches = false;
-      if (query.includes("max-width: 767px")) {
-        matches = mobile;
-      } else if (query.includes("min-width: 1024px") || query.includes("1024px")) {
-        matches = !mobile;
-      } else if (query.includes("pointer: fine")) {
-        matches = finePointer;
-      }
-
-      return {
-        matches,
-        media: query,
-        onchange: null,
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      };
-    }),
-  );
+function registeredTimeline(): { createTimeline: SceneTimelineFactory } {
+  const call = timelineRegistration.mock.calls.at(-1) as [
+    RefObject<Element | null>,
+    SceneTimelineFactory,
+    unknown[],
+  ];
+  return { createTimeline: call[1] };
 }
 
-function getDiagramRoot(): HTMLElement {
-  const slot = document.querySelector("[data-shape-blur-slot]");
-  expect(slot).not.toBeNull();
-  const diagram = slot!.nextElementSibling;
-  expect(diagram).toBeInstanceOf(HTMLElement);
-  return diagram as HTMLElement;
-}
+function runDesktopEnhancement() {
+  const { createTimeline } = registeredTimeline();
 
-function expectDiagramFor(slug: (typeof projects)[number]["slug"]) {
-  const diagram = getDiagramRoot();
+  const set = vi.fn();
+  const to = vi.fn();
+  const registerPlugin = vi.fn();
+  const matchMediaAdd = vi.fn((_query: string, callback: () => unknown) => {
+    callback();
+  });
+  const gsapFake = {
+    registerPlugin,
+    set,
+    to,
+    matchMedia: vi.fn(() => ({ add: matchMediaAdd })),
+  };
 
-  switch (slug) {
-    case "aegis":
-      expect(diagram.querySelectorAll("span")).toHaveLength(35);
-      expect(diagram.textContent ?? "").not.toMatch(/UPLOAD/);
-      break;
-    case "q":
-      expect(diagram.querySelector(".left-\\[64\\%\\]")).not.toBeNull();
-      expect(diagram.textContent ?? "").not.toMatch(/UPLOAD/);
-      break;
-    case "gosigapp":
-      expect(within(diagram).getByText("UPLOAD")).toBeTruthy();
-      expect(within(diagram).getByText("VALIDATE")).toBeTruthy();
-      expect(within(diagram).getByText("SUBMIT")).toBeTruthy();
-      break;
-    case "nexo-dental":
-      expect(diagram.querySelectorAll(".grid > span")).toHaveLength(12);
-      expect(diagram.textContent ?? "").not.toMatch(/UPLOAD/);
-      break;
-    default: {
-      const _exhaustive: never = slug;
-      throw new Error(`Unhandled project slug: ${_exhaustive}`);
-    }
-  }
+  const trigger = { start: 0, end: 900, scroll: vi.fn() };
+  const create = vi.fn((_config: Record<string, unknown>) => trigger);
+  const ScrollTriggerFake = { create };
+
+  createTimeline({
+    gsap: gsapFake,
+    ScrollTrigger: ScrollTriggerFake,
+    scrollProgress: { on: vi.fn(() => vi.fn()) },
+    prefersReducedMotion: false,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } as any);
+
+  return { gsapFake, trigger, create, matchMediaAdd, registerPlugin };
 }
 
 describe("ProjectShowcase", () => {
   beforeEach(() => {
-    stubMatchMedia({ mobile: false, finePointer: true });
+    timelineRegistration.mockClear();
   });
 
-  it("selects a project by click and updates label, summary, and diagram together", async () => {
-    const user = userEvent.setup();
-    render(<ProjectShowcase projects={projects} />);
-
-    const first = projects[0];
-    const second = projects[1];
-
-    expect(
-      screen.getByRole("button", { name: new RegExp(first.name) }),
-    ).toHaveAttribute("aria-pressed", "true");
-    expectDiagramFor(first.slug);
-
-    const nextButton = screen.getByRole("button", {
-      name: new RegExp(`${second.name}.*${second.summary}`, "s"),
-    });
-    await user.click(nextButton);
-
-    expect(nextButton).toHaveAttribute("aria-pressed", "true");
-    expect(
-      screen.getByRole("button", { name: new RegExp(first.name) }),
-    ).toHaveAttribute("aria-pressed", "false");
-    expect(nextButton).toHaveTextContent(second.summary);
-    expectDiagramFor(second.slug);
-  });
-
-  it("selects a project by keyboard focus without requiring hover", async () => {
-    const user = userEvent.setup();
-    // Coarse pointer: hover must not drive selection.
-    stubMatchMedia({ mobile: false, finePointer: false });
-    render(<ProjectShowcase projects={projects} />);
-
-    const first = projects[0];
-    const third = projects[2];
-    const firstButton = screen.getByRole("button", {
-      name: new RegExp(first.name),
-    });
-    const thirdButton = screen.getByRole("button", {
-      name: new RegExp(`${third.name}.*${third.summary}`, "s"),
-    });
-
-    await user.hover(thirdButton);
-    expect(firstButton).toHaveAttribute("aria-pressed", "true");
-    expectDiagramFor(first.slug);
-
-    fireEvent.focus(thirdButton);
-    expect(thirdButton).toHaveAttribute("aria-pressed", "true");
-    expect(firstButton).toHaveAttribute("aria-pressed", "false");
-    expect(thirdButton).toHaveTextContent(third.category);
-    expect(thirdButton).toHaveTextContent(third.summary);
-    expectDiagramFor(third.slug);
-  });
-
-  it("updates the visual-effect decision and diagram for every remaining project", async () => {
-    const user = userEvent.setup();
-    render(<ProjectShowcase projects={projects} />);
-
-    for (const project of projects.slice(1)) {
-      await user.click(
-        screen.getByRole("button", {
-          name: new RegExp(`${project.name}.*${project.summary}`, "s"),
-        }),
-      );
-
-      expectDiagramFor(project.slug);
-    }
-
-    expect(screen.getByTestId("shape-blur-color")).toHaveTextContent("#8EA0FF");
-  });
-
-  it("offers the case-study link only for the active project that has a route", async () => {
-    const user = userEvent.setup();
-    render(<ProjectShowcase projects={projects} />);
-
-    const [aegis, q] = projects;
-    expect(aegis.href).toBe("/work/aegis");
-
-    // Aegis starts active, so its link is visible in both trees.
-    const links = screen.getAllByRole("link", {
-      name: `View ${aegis.name} case study`,
-    });
-    expect(links).toHaveLength(2);
-    for (const link of links) {
-      expect(link).toHaveAttribute("href", aegis.href as string);
-      // A link may never be nested inside the selector button.
-      expect(link.closest("button")).toBeNull();
-    }
-
-    await user.click(
-      screen.getByRole("button", {
-        name: new RegExp(`${q.name}.*${q.summary}`, "s"),
-      }),
-    );
-
-    // Selecting Q hides the desktop link; only the mobile article keeps one.
-    expect(
-      screen.getAllByRole("link", {
-        name: `View ${aegis.name} case study`,
-      }),
-    ).toHaveLength(1);
-  });
-
-  it("renders no link, disabled control, or placeholder for a project without a route", () => {
-    render(<ProjectShowcase projects={projects} />);
-
-    for (const project of projects.filter(({ href }) => href === null)) {
-      expect(
-        screen.queryByRole("link", {
-          name: new RegExp(project.name),
-        }),
-      ).toBeNull();
-    }
-
-    // Exactly one selector button per project, and no extra pending control.
-    expect(screen.getAllByRole("button")).toHaveLength(projects.length);
-    expect(document.querySelector("[aria-disabled]")).toBeNull();
-    expect(document.body.textContent).not.toContain("[REQUIRED:");
-  });
-
-  it("reserves the link slot whether or not the linked project is active", async () => {
-    const user = userEvent.setup();
-    render(<ProjectShowcase projects={projects} />);
-
-    // The slot survives deselection so rows below it never shift when the
-    // pointer crosses the column.
-    const aegisRow = () =>
-      screen
-        .getByRole("button", { name: new RegExp(projects[0].name) })
-        .parentElement as HTMLElement;
-
-    expect(aegisRow().children).toHaveLength(2);
-
-    await user.click(
-      screen.getByRole("button", {
-        name: new RegExp(`${projects[1].name}.*${projects[1].summary}`, "s"),
-      }),
-    );
-
-    const row = aegisRow();
-    expect(row.children).toHaveLength(2);
-    expect(row.querySelector("a")).toBeNull();
-  });
-
-  it("exposes all four projects in source order for the mobile presentation", () => {
-    // Explicit mobile mode via matchMedia — do not infer from layout metrics.
-    stubMatchMedia({ mobile: true, finePointer: false });
-    expect(window.matchMedia("(max-width: 767px)").matches).toBe(true);
-
+  it("renders every project's index, category, name, and summary verbatim, always in source order", () => {
     render(<ProjectShowcase projects={projects} />);
 
     const articles = screen.getAllByRole("article");
@@ -265,5 +86,133 @@ describe("ProjectShowcase", () => {
       expect(article).toHaveTextContent(project.category);
       expect(article).toHaveTextContent(project.index);
     });
+  });
+
+  it("renders a link only for projects with a route, with the derived label, never nested in a button", () => {
+    render(<ProjectShowcase projects={projects} />);
+
+    expect(document.querySelectorAll("button")).toHaveLength(0);
+
+    for (const project of projects) {
+      const link = screen.queryByRole("link", {
+        name: `View ${project.name} case study`,
+      });
+
+      if (project.href === null) {
+        expect(link).toBeNull();
+      } else {
+        expect(link).not.toBeNull();
+        expect(link).toHaveAttribute("href", project.href);
+        expect(link!.closest("button")).toBeNull();
+      }
+    }
+
+    expect(document.querySelector("[aria-disabled]")).toBeNull();
+    expect(document.body.textContent).not.toContain("[REQUIRED:");
+  });
+
+  it("gives every project — media or placeholder — the same aperture slot shape", () => {
+    render(<ProjectShowcase projects={projects} />);
+
+    projects.forEach((project, index) => {
+      const image = document.querySelector(
+        `[data-aperture-own-image="${project.slug}"]`,
+      ) as HTMLImageElement | null;
+      const media = projectMedia[project.slug];
+
+      expect(image).not.toBeNull();
+      expect(image).toHaveAttribute("src", media.src);
+      expect(image).toHaveAttribute("alt", media.alt);
+      expect(image).toHaveAttribute("loading", index === 0 ? "eager" : "lazy");
+
+      const slot = image!.closest("[data-aperture-slot]");
+      expect(slot).not.toBeNull();
+    });
+  });
+
+  it("keeps the shared aperture decorative and hidden until the motion enhancement runs", () => {
+    render(<ProjectShowcase projects={projects} />);
+
+    const aperture = document.querySelector(
+      '[aria-hidden="true"].pointer-events-none.absolute',
+    );
+    expect(aperture).not.toBeNull();
+    expect(aperture).toHaveClass("opacity-0");
+    expect(aperture!.textContent).toBe("");
+  });
+
+  it("registers a desktop-only pinned scene through useSceneTimeline", () => {
+    render(<ProjectShowcase projects={projects} />);
+
+    const { create, matchMediaAdd, registerPlugin } = runDesktopEnhancement();
+
+    expect(matchMediaAdd).toHaveBeenCalledWith(
+      "(min-width: 1024px)",
+      expect.any(Function),
+    );
+    expect(registerPlugin).toHaveBeenCalled();
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(create.mock.calls[0][0]).toMatchObject({ pin: true });
+  });
+
+  it("advances the pinned scroll position when a project's link is focused via keyboard", () => {
+    render(<ProjectShowcase projects={projects} />);
+    const { trigger } = runDesktopEnhancement();
+
+    // Quant has a case-study link; focusing it should be enough to bring it
+    // into view even though it isn't the rail (index 0, Aegis, starts active
+    // and would be a no-op jump).
+    const link = screen.getAllByRole("link", {
+      name: `View ${projects[1].name} case study`,
+    })[0];
+    link.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
+
+    const stops = projects.length - 1;
+    const expectedScroll =
+      trigger.start + (1 / stops) * (trigger.end - trigger.start);
+    expect(trigger.scroll).toHaveBeenCalledWith(expectedScroll);
+  });
+
+  it("gives every project — including ones without a case-study link — a keyboard-reachable rail control", () => {
+    render(<ProjectShowcase projects={projects} />);
+    const { trigger } = runDesktopEnhancement();
+
+    const noRouteProject = projects.find((project) => project.href === null);
+    expect(noRouteProject).toBeDefined();
+
+    // Nothing else in gosigapp's/Nexo Dental's panel is focusable, so the
+    // rail is what makes every project reachable while the section is pinned.
+    const railLink = document.querySelector(
+      `[data-project-jump="${noRouteProject!.slug}"]`,
+    ) as HTMLElement;
+    expect(railLink).not.toBeNull();
+    expect(railLink.tagName).toBe("A");
+
+    railLink.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
+
+    const stops = projects.length - 1;
+    const index = projects.findIndex(
+      (project) => project.slug === noRouteProject!.slug,
+    );
+    const expectedScroll =
+      trigger.start + (index / stops) * (trigger.end - trigger.start);
+    expect(trigger.scroll).toHaveBeenCalledWith(expectedScroll);
+  });
+
+  it("intercepts a rail click during the pinned enhancement instead of a native hash jump", () => {
+    render(<ProjectShowcase projects={projects} />);
+    const { trigger } = runDesktopEnhancement();
+
+    const railLink = document.querySelector(
+      `[data-project-jump="${projects[3].slug}"]`,
+    ) as HTMLAnchorElement;
+    const clickEvent = new MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+    });
+    railLink.dispatchEvent(clickEvent);
+
+    expect(clickEvent.defaultPrevented).toBe(true);
+    expect(trigger.scroll).toHaveBeenCalled();
   });
 });
