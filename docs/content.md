@@ -87,9 +87,9 @@ Positioning → problem → goal → why difficult → system → 2–4 decision
 | Final | Email me / LinkedIn / GitHub (Résumé when verified) |
 | State | Live / Private source / Case study / Backend system |
 
-**DECISION (2026-07-28):** Project repositories are private and will not be linked publicly. Staging/live environment links are planned for Aegis, Q, and Nexo Dental when those environments exist; gosigapp has no UI (CLI/backend only) and will not receive a live-environment action. Until staging URLs are verified, keep `[REQUIRED: live environment URL]` markers.
+**DECISION (2026-07-28):** Project repositories are private and will not be linked publicly. Staging/live environment links are planned for Aegis and Nexo Dental when those environments exist; gosigapp has no UI (CLI/backend only) and will not receive a live-environment action. Quant is a native desktop application and omits the control entirely (see Quant chapter). Until staging URLs are verified for routes that use them, keep `[REQUIRED: live environment URL]` markers in documentation only.
 
-**DECISION (2026-07-31):** On a case-study page whose live environment is still unverified, the live-environment action renders as a visibly disabled, non-interactive control reading `Live environment — coming soon` (`aria-disabled="true"`, no `href`). It must never render a `[REQUIRED: …]` marker as visible text. Applies to Aegis now; extend to Q and Nexo Dental when those case studies are built.
+**DECISION (2026-07-31):** On a case-study page whose live environment is still unverified, the live-environment action renders as a visibly disabled, non-interactive control reading `Live environment — coming soon` (`aria-disabled="true"`, no `href`). It must never render a `[REQUIRED: …]` marker as visible text. Applies to Aegis now; extend to Nexo Dental when that case study is built. Does **not** apply to Quant (DEC-02 in the Quant evidence register).
 
 ## Aegis case study
 
@@ -195,6 +195,90 @@ the visible copy entirely.
 Screenshots/intro media and the regulatory-wording and cases-workflow questions
 are resolved above; no other Aegis input is outstanding.
 
+## Quant case study
+
+**Status:** accepted facts from WO-024 (handoff `REVIEW`). The claim-level
+evidence register and public disclosure boundary is
+[`q-case-study-evidence.md`](./q-case-study-evidence.md); it is authoritative
+for every publishable Quant claim and its classification. Media (WO-025) and
+exact visible copy (WO-026) are not yet accepted.
+
+### Accepted facts
+
+- **FACT (owner):** Public name is **Quant** (category **Quantitative
+  systems**). `Q` was the working shorthand and repository prefix; the route
+  slug stays `q` (`/work/q`) unless the owner chooses `/work/quant` before
+  WO-025 writes assets.
+- **FACT (owner):** Quant is the owner's own product — not client or employer
+  work. Role: **founder and sole developer**, with AI assistance (Cursor was a
+  development tool; extra git author names are tooling/duplicates).
+- **FACT (owner):** Two timelines that must not be conflated. The **idea** is
+  roughly six years old (≈2020) and led the owner to learn programming, with
+  many rebuilt versions since. The **current implementation** lives in these
+  repositories only: backend from 2026-04-20 through 2026-08-02; frontend from
+  2026-05-30 through 2026-08-03. The six-year lineage has no repository
+  evidence here; this codebase is not six years old.
+- **FACT (owner):** A research, backtesting, and (in future) execution tool for
+  the **Brazilian futures market**. Execution is a future capability; the tool
+  is used today for research and backtesting.
+- **FACT (source):** Verified system — Tauri 2 desktop shell around a React SPA,
+  FastAPI service, Dramatiq workers on Redis, PostgreSQL with Alembic,
+  MetaTrader 5 integration plus a read-only market-data gateway (no order API),
+  Optuna optimization, market-data ingestion, and an MSW mock path
+  (`./dev.sh --mocks`) that needs no backend, Postgres, Redis, or MT5.
+- **FACT (source):** Default instruments include B3 equities and BMF futures
+  `WIN$` / `WDO$`; additional symbols may come from local store or MT5.
+- **FACT (source):** Live trading is locked in UI and backend (paper-only
+  validation, live-capability defaults, dry-run gates). The Execution workspace
+  is paper execution with a Live locked badge.
+- **FACT (source):** Shipped workspaces — Launcher, Market Data, Storage,
+  Backtests (with Optimize/Validate modes), Strategy Builder, Discover,
+  Research (including Neural Features), Execution (paper), System, and News
+  (secondary window). `/strategy` redirects to Strategy Builder. The
+  `strategy/` directory is shared helpers, not a routed workspace.
+  Walk-forward UI exists but is not router-mounted.
+- **DECISION:** No strategy/parameter/feature/market-data restriction on
+  screenshot content; capture from mocks as the interface is. Credentials,
+  broker/account details remain confidential.
+- **DECISION:** Omit the live-environment hero control for Quant (desktop app;
+  no live URL). Confirm or overrule before WO-026.
+
+### Disclosure boundary
+
+- **Confidential — never published:** credentials, `.env` values, broker names,
+  account numbers, balances, MT5 login/server details, API keys, private
+  deployment identifiers, and private source repository links.
+- **Mock-path media:** portfolio captures use `./dev.sh --mocks` fixtures, not
+  a live broker session.
+- **No invented outcomes:** no trading profit/loss, returns, Sharpe or other
+  risk-adjusted ratio, win rate, alpha, edge, strategy effectiveness,
+  prediction accuracy, users/adopters, uptime, or ingestion throughput.
+- **No promotional README authority:** do not publish `state-of-the-art`,
+  `high-performance`, `real-time`, `high-frequency`, or `production-ready` on
+  README wording alone.
+
+### Known gaps (state honestly)
+
+- Frontend README still claims `/strategy` → Backtests and that Neural Features
+  is deferred; code redirects `/strategy` → Strategy Builder and ships Neural
+  Features.
+- Walk-forward workspace directory is an unmounted shell relative to the router.
+- Performance budgets exist and have a smoke script but are not CI-enforced.
+- Homepage `projects[1].name` is still `Q` in `src/content/projects.ts`; display
+  rename to `Quant` is tracked for WO-027 (out of WO-024 write scope).
+
+### Approved media
+
+None yet. WO-025 produces the high-resolution capture set.
+
+### Missing inputs
+
+- Owner confirmation of slug `/work/q` vs `/work/quant` before WO-025 assets.
+- Owner confirmation of omitted live-environment control before WO-026.
+- Display-name update `Q` → `Quant` in `src/content/projects.ts` (WO-027).
+- Approved media manifest (WO-025).
+- Owner-approved narrative and exact visible copy (WO-026).
+
 ## Metadata
 
 The validated route metadata registry is shared by the client router and the static route-shell generator. Every route requires a unique title, description, canonical URL, `og:url`, `og:title`, and `og:description`. An approved project-specific social image SHOULD be used; routes without one use the approved global 1200×630 default.
@@ -205,7 +289,7 @@ The validated route metadata registry is shared by the client router and the sta
 | `/process` | `Engineering Process — Guilherme` | `How I move from difficult ideas through architecture, AI-agent execution, implementation, testing, and deployment.` |
 | `/about` | `About Guilherme — Software Developer` | `A product-minded software developer working across interfaces, architecture, data, automation, and infrastructure.` |
 | `/work/aegis` | `Aegis — Fraud Intelligence Case Study` | `Fraud intelligence and investigation software for the iGaming industry, presented through verified engineering decisions and evidence.` |
-| `/work/q` | `Q — Quantitative Research and Execution` | `A quantitative research and execution system covering backtesting, optimization, data pipelines, and execution architecture.` |
+| `/work/q` | `Quant — Quantitative Research and Execution` | `A quantitative research and execution system covering backtesting, optimization, data pipelines, and execution architecture.` |
 | `/work/gosigapp` | `gosigapp — Reliable SIGAP Submission Pipeline` | `A Go backend pipeline for file validation, processing, retries, auditability, and submission to SIGAP.` |
 | `/work/nexo-dental` | `Nexo Dental — AI-First Clinic Software` | `An AI-first, multi-tenant product for dental clinics spanning workflows, CRM, operations, and premium interface engineering.` |
 | `/contact` | `Contact Guilherme — Build Something Difficult` | `Contact Guilherme about remote software engineering, ambitious product development, and difficult systems.` |
@@ -235,5 +319,5 @@ Never invent metrics, users, revenue, employers, clients, dates, production usag
   `https://www.linkedin.com/in/guilherme-fortuna-dos-santos/`, and email
   `guilhermefortuna1000@gmail.com`.
 - Per project: dates, role, contribution, verified stack/architecture, challenges, evidence/results, source/live status, confidentiality, approved media.
-- Staging/live URLs for Aegis, Q, and Nexo Dental (gosigapp: no live UI). **DECISION:** private source; three staging links planned, not ready yet.
+- Staging/live URLs for Aegis and Nexo Dental (gosigapp: no live UI; Quant: native desktop app, live-environment control omitted). **DECISION:** private source; Aegis/Nexo staging links planned, not ready yet.
 - Social image, analytics consent choice, license, and portfolio-source visibility.
