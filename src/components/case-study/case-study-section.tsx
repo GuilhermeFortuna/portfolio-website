@@ -16,6 +16,23 @@ const proseClassName =
 const actionClassName =
   "inline-flex min-h-11 items-center [font-family:var(--font-geist-mono)] text-[0.6875rem] font-semibold tracking-[0.14em] uppercase";
 
+const badgeListClassName = "flex flex-wrap gap-3";
+
+const badgeClassName =
+  "inline-flex items-center rounded-[var(--radius-pill)] border border-[var(--color-line)] px-4 py-2 [font-family:var(--font-geist-mono)] text-[0.75rem] text-[var(--color-text-muted)]";
+
+function BadgeList({ badges }: { badges: readonly string[] }) {
+  return (
+    <ul className={badgeListClassName} style={{ margin: 0, padding: 0 }}>
+      {badges.map((badge) => (
+        <li key={badge} className={badgeClassName}>
+          {badge}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function Prose({ paragraphs }: { paragraphs: readonly string[] }) {
   return (
     <div className={proseClassName} style={readingColumnStyle}>
@@ -50,7 +67,11 @@ export function CaseStudySection({
         {section.heading}
       </h2>
 
-      <Prose paragraphs={section.paragraphs} />
+      {section.paragraphs.length > 0 ? (
+        <Prose paragraphs={section.paragraphs} />
+      ) : null}
+
+      {section.badges ? <BadgeList badges={section.badges} /> : null}
 
       {children}
 

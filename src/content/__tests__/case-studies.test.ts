@@ -26,13 +26,20 @@ const AEGIS_APPROVED_ASSETS = [
   "/work/aegis/risk-constellation.webp",
 ] as const;
 
-/** The five placed assets from WO-026. Reserved captures stay off this page. */
+/** Every asset placed by the owner-revised visual contract. */
 const Q_PLACED_ASSETS = [
+  "/work/q/launcher.webp",
+  "/work/q/identity-placeholder.svg",
+  "/work/q/market-data.webp",
+  "/work/q/system.webp",
+  "/work/q/backtest-studio.webp",
+  "/work/q/backtest-results.webp",
+  "/work/q/optimize-pareto.webp",
+  "/work/q/discover-leaderboard.webp",
+  "/work/q/research-features.webp",
+  "/work/q/walkforward.webp",
   "/work/q/dock.webp",
   "/work/q/execution.webp",
-  "/work/q/launcher.webp",
-  "/work/q/system.webp",
-  "/work/q/walkforward.webp",
 ] as const;
 
 /** Prohibited by the Batch 03/04 editorial rules. */
@@ -65,16 +72,21 @@ const AEGIS_EXPECTED_BODY_HEADINGS = [
 ] as const;
 
 const Q_EXPECTED_BODY_HEADINGS = [
-  "The context",
-  "The problem",
+  "Designing Q as a product, not just a tool",
+  "Built from a real research problem",
+  "Inside the product",
+  "Market data and system awareness",
+  "Strategy construction and backtesting",
+  "Optimization and discovery",
+  "Research features and validation",
+  "Execution and background work",
   "How the system fits together",
-  "Decision 1 — Ship a desktop application, not a website",
-  "Decision 2 — Push heavy work onto a queued worker pool",
-  "Decision 3 — Force validation between backtest and deployment",
-  "Decision 4 — Build the interface against fixtures first",
-  "What I did",
-  "Delivered",
-  "Technology, in context",
+  "Native desktop instead of public SaaS",
+  "Queued research jobs",
+  "Validation before deployment",
+  "Fixture-first product development",
+  "My contribution",
+  "Technology",
 ] as const;
 
 function collectStrings(value: unknown, found: string[] = []): string[] {
@@ -91,6 +103,7 @@ function collectStrings(value: unknown, found: string[] = []): string[] {
 function collectImages(caseStudy: CaseStudy): readonly CaseStudyImage[] {
   return [
     caseStudy.hero.media,
+    ...(caseStudy.hero.identityMedia ? [caseStudy.hero.identityMedia] : []),
     ...caseStudyBodySections(caseStudy).flatMap(
       (section) => section.images ?? [],
     ),
@@ -118,7 +131,7 @@ describe("case-study registry", () => {
     expect(qCaseStudy.metadata).toEqual({
       title: "Quant — Quantitative Research and Execution",
       description:
-        "A quantitative research and execution system covering backtesting, optimization, data pipelines, and execution architecture.",
+        "A native quantitative research platform for the Brazilian futures market, covering backtesting, optimization, data pipelines, and execution architecture.",
     });
   });
 });
@@ -190,18 +203,21 @@ describe("Quant authored copy", () => {
 
   it("keeps the hero facts and omits the live-environment control", () => {
     expect(qCaseStudy.hero.facts).toEqual([
-      { label: "Role", value: "Founder and sole developer" },
+      { label: "Role", value: "Founder, designer, and sole developer" },
       { label: "Period", value: "April 2026–present" },
-      { label: "State", value: "Research and backtesting" },
+      { label: "Platform", value: "Native desktop" },
+      { label: "Market", value: "Brazilian futures and equities" },
+      { label: "State", value: "Active research and backtesting" },
       { label: "Source", value: "Private" },
     ]);
-    expect(qCaseStudy.hero.support).toContain("with AI assistance");
+    expect(qCaseStudy.hero.support).toContain("built Quant end to end");
     expect("liveEnvironment" in qCaseStudy.hero).toBe(false);
   });
 
-  it("states paper execution and locked live trading in delivered copy", () => {
-    expect(qCaseStudy.delivered.paragraphs.join(" ")).toMatch(/paper/i);
-    expect(qCaseStudy.delivered.paragraphs.join(" ")).toMatch(/locked/i);
+  it("states paper execution and locked live trading somewhere in the copy", () => {
+    const allCopy = qStrings.join(" ");
+    expect(allCopy).toMatch(/paper/i);
+    expect(allCopy).toMatch(/locked/i);
   });
 });
 
@@ -254,11 +270,11 @@ describe("Quant section structure", () => {
     expect(
       caseStudyBodySections(qCaseStudy).map((section) => section.heading),
     ).toEqual(Q_EXPECTED_BODY_HEADINGS);
-    expect(qCaseStudy.confidentiality.heading).toBe("A note on disclosure");
-    expect(qCaseStudy.confidentiality.id).toBe("disclosure");
+    expect(qCaseStudy.confidentiality.heading).toBe("Current status");
+    expect(qCaseStudy.confidentiality.id).toBe("status");
   });
 
-  it("gives every section a unique id and at least one paragraph", () => {
+  it("gives every section a unique id, and prose or badges", () => {
     const sections = [
       ...caseStudyBodySections(qCaseStudy),
       qCaseStudy.confidentiality,
@@ -268,7 +284,8 @@ describe("Quant section structure", () => {
     expect(new Set(ids).size).toBe(ids.length);
 
     for (const section of sections) {
-      expect(section.paragraphs.length).toBeGreaterThan(0);
+      const badges = "badges" in section ? (section.badges ?? []) : [];
+      expect(section.paragraphs.length > 0 || badges.length > 0).toBe(true);
       expect(section.heading.trim()).not.toBe("");
     }
   });
@@ -332,7 +349,7 @@ describe("Aegis media references", () => {
 });
 
 describe("Quant media references", () => {
-  it("references only the five placed assets that exist on disk", () => {
+  it("references only the placed assets that exist on disk", () => {
     const referenced = collectImages(qCaseStudy).map((image) => image.src);
 
     for (const src of referenced) {
@@ -357,7 +374,7 @@ describe("Quant media references", () => {
     const bodyImages = caseStudyBodySections(qCaseStudy).flatMap(
       (section) => section.images ?? [],
     );
-    expect(bodyImages).toHaveLength(4);
+    expect(bodyImages).toHaveLength(11);
     for (const image of bodyImages) {
       expect(image.caption?.trim().length ?? 0).toBeGreaterThan(0);
     }

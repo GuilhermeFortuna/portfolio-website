@@ -66,6 +66,8 @@ of trading outcomes, performance, correctness, or production usage.
 | OWN-05 | `FACT — OWNER` | Guilherme designed and built the product as sole owner, with AI assistance (Cursor was a development tool). | `BATCH-04-README.md` Locked Owner Fact 5; closes authorship for GIT-02. | State "with AI assistance" honestly; do not imply additional human contributors. |
 | OWN-06 | `FACT — OWNER` | A research, backtesting, and (in future) execution tool for the **Brazilian futures market**. | `BATCH-04-README.md` Locked Owner Fact 2; instrument defaults corroborated by SYS-09. | Domain framing is owner fact; concrete default symbols come from source (SYS-09). |
 | OWN-07 | `FACT — OWNER` | Execution is a future capability; the tool is used today for research and backtesting. | `BATCH-04-README.md` Locked Owner Fact 6; reconciled with SYS-11. | Plain factual description of what the product does today — not a disclaimer. |
+| OWN-08 | `FACT — OWNER` | An earlier generation of the owner's research tooling supported a personally traded strategy that grew approximately R$3,000 into R$90,000 over roughly one year. | Owner's direct statement when requesting the WO-026 visual revision, 2026-08-03. | Historical result predates the current implementation (GIT-01). Not a forecast or a claim that this implementation produced those returns; the attribution and qualification in `q-case-study-content.md` section 3 must be preserved verbatim. |
+| OWN-09 | `FACT — OWNER` | The owner created the Q emblem in Blender and its cinematic presentation scene in Unreal Engine 5. | Owner's direct statement when requesting the WO-026 visual revision, 2026-08-03. | Visual-production tooling, not a runtime dependency of the desktop application. No approved render/still/loop has been captured yet — sections referencing it use a placeholder asset until one is provided. |
 
 ## Git-derived facts (dates and authorship only)
 
@@ -183,3 +185,7 @@ the metric vocabulary this domain uses.
   tracked for WO-027; not modified in this order.
 - Approved high-resolution media set from the mock path (WO-025).
 - Owner-approved narrative and exact visible copy (WO-026).
+- **Still open:** an approved Q-emblem render, Unreal Engine scene still, or
+  short muted scene loop (OWN-09). The 2026-08-03 visual revision ships with
+  `public/work/q/identity-placeholder.svg` standing in for this asset in the
+  hero and in section 2 of `q-case-study-content.md`.

@@ -221,3 +221,17 @@ repository was written to by this capture's own tooling or script.
 `system.webp` — eleven assets in `public/work/q/`, all uncropped 2560×1440,
 ready for the twelve-part narrative's at-most-one-image-per-section budget.
 No desktop-shell image exists; WO-026 should not place one.
+
+## Placeholder identity asset (2026-08-03 visual revision)
+
+The visual revision requires a Q-emblem / Unreal Engine scene image for the
+hero and for the "Designing the identity" section, but no such subject was
+ever captured by this order (see [Subject 12](#subject-12-native-desktop-shell)
+for the closest analogue — a different, still-deferred subject). Rather than
+block the rest of the revision on it, `public/work/q/identity-placeholder.svg`
+was added: a small inline SVG, clearly labelled "Placeholder — Q emblem /
+Unreal Engine scene / Pending final render", at 2560×1440 to match every other
+asset's intrinsic dimensions. It is referenced from `src/content/case-studies/q.ts`
+via a single `IDENTITY_MEDIA_SRC` constant — replace that one path with the
+approved render, still, or muted loop once it exists, and both placements
+(hero + section 2) update together.

@@ -19,7 +19,7 @@ describe("/work/q metadata", () => {
   it("exports the approved static title and description", () => {
     expect(metadata.title).toBe("Quant — Quantitative Research and Execution");
     expect(metadata.description).toBe(
-      "A quantitative research and execution system covering backtesting, optimization, data pipelines, and execution architecture.",
+      "A native quantitative research platform for the Brazilian futures market, covering backtesting, optimization, data pipelines, and execution architecture.",
     );
   });
 });
@@ -173,14 +173,9 @@ describe("/work/q system map", () => {
 
     const prose = section.querySelector("p");
     const firstList = lists[0];
-    const figure = section.querySelector("figure");
     expect(prose).not.toBeNull();
     expect(
       prose!.compareDocumentPosition(firstList) &
-        Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
-    expect(
-      firstList.compareDocumentPosition(figure as Node) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
   });
@@ -204,7 +199,7 @@ describe("/work/q system map", () => {
 
     expect(section.querySelector("canvas")).toBeNull();
     expect(section.querySelector("svg")).toBeNull();
-    expect(section.querySelectorAll("img")).toHaveLength(1);
+    expect(section.querySelectorAll("img")).toHaveLength(0);
   });
 
   it("names the nested paths so the lists are distinguishable", () => {
@@ -230,10 +225,10 @@ describe("/work/q system map", () => {
 
   it("exposes the verified execution status and no confidential identifiers", () => {
     render(<QuantCaseStudyPage />);
-    const text = systemSection().textContent ?? "";
+    const text = document.body.textContent ?? "";
 
     expect(text.toLowerCase()).toContain("paper");
-    expect(text.toLowerCase()).toContain("live trading locked");
+    expect(text.toLowerCase()).toContain("live trading is rejected");
 
     for (const forbidden of [
       "localhost",
@@ -255,7 +250,7 @@ describe("/work/q media", () => {
     render(<QuantCaseStudyPage />);
 
     const images = Array.from(document.querySelectorAll("img"));
-    expect(images).toHaveLength(5);
+    expect(images).toHaveLength(13);
 
     for (const image of images) {
       expect(image.getAttribute("alt")?.trim()).toBeTruthy();

@@ -61,6 +61,8 @@ export type CaseStudyHero = {
    */
   liveEnvironment?: CaseStudyPendingAction;
   media: CaseStudyImage;
+  /** Optional secondary hero showcase image (e.g. a visual-identity still). */
+  identityMedia?: CaseStudyImage;
 };
 
 export type CaseStudySection = {
@@ -70,6 +72,11 @@ export type CaseStudySection = {
   paragraphs: readonly string[];
   images?: readonly CaseStudyImage[];
   video?: CaseStudyVideo;
+  /**
+   * Optional compact metadata/badge list (e.g. a technology summary),
+   * rendered as pills instead of, or in addition to, prose paragraphs.
+   */
+  badges?: readonly string[];
 };
 
 export type CaseStudyClosing = {
@@ -88,12 +95,25 @@ export type CaseStudy = {
   slug: string;
   metadata: CaseStudyMetadata;
   hero: CaseStudyHero;
-  context: CaseStudySection;
-  problem: CaseStudySection;
+  /**
+   * Legacy narrative sections (Aegis's shape). Optional so a chapter can use
+   * the newer `identity` / `origin` / `tour*` fields below instead.
+   */
+  context?: CaseStudySection;
+  problem?: CaseStudySection;
   system: CaseStudySection;
   decisions: readonly CaseStudySection[];
   contribution: CaseStudySection;
-  delivered: CaseStudySection;
+  delivered?: CaseStudySection;
   technology: CaseStudySection;
   confidentiality: CaseStudyClosing;
+
+  /** Visual-identity chapter (product design / brand origin story). */
+  identity?: CaseStudySection;
+  /** "Why I built this" origin story, replacing `context` + `problem`. */
+  origin?: CaseStudySection;
+  /** Intro prose for a workspace-by-workspace product tour. */
+  tourIntro?: CaseStudySection;
+  /** One section per workspace/feature group in the product tour. */
+  tourGroups?: readonly CaseStudySection[];
 };

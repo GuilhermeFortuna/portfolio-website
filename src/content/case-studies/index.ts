@@ -18,12 +18,16 @@ export function caseStudyBodySections(
   caseStudy: CaseStudy,
 ): readonly CaseStudySection[] {
   return [
+    caseStudy.identity,
+    caseStudy.origin,
     caseStudy.context,
     caseStudy.problem,
+    caseStudy.tourIntro,
+    ...(caseStudy.tourGroups ?? []),
     caseStudy.system,
     ...caseStudy.decisions,
     caseStudy.contribution,
     caseStudy.delivered,
     caseStudy.technology,
-  ];
+  ].filter((section): section is CaseStudySection => section !== undefined);
 }

@@ -109,6 +109,10 @@ export function CaseStudyHero({ hero }: { hero: CaseStudyHeroContent }) {
       ) : null}
 
       <CaseStudyFigure image={hero.media} eager />
+
+      {hero.identityMedia ? (
+        <CaseStudyFigure image={hero.identityMedia} />
+      ) : null}
     </section>
   );
 }

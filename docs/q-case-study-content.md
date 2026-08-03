@@ -1,33 +1,68 @@
-# Quant — Case-Study Content Contract
+# Quant — UI-Led Case-Study Content Contract
 
-**Work Order:** WO-026. **State on handoff:** `DONE` (owner approved
-2026-08-03).
-**Evidence register (authoritative for claims):**
-[`q-case-study-evidence.md`](./q-case-study-evidence.md).
-**Media inventory (authoritative for assets):**
-[`q-case-study-media.md`](./q-case-study-media.md).
-**Consumers:** WO-027 renders this copy verbatim into `/work/q`. WO-027 must
-not reword visible copy without a new gate.
+**Work Order:** WO-026 visual revision. **State:** Implemented on `/work/q`
+(2026-08-03).
+**Evidence register:** [`q-case-study-evidence.md`](./q-case-study-evidence.md)
+— now includes `OWN-08` and `OWN-09`, added on the owner's direct
+attestation when this revision was requested.
+**Media inventory:** [`q-case-study-media.md`](./q-case-study-media.md).
+**Implementation:** `src/content/case-studies/q.ts`, rendered by
+`src/app/work/q/page.tsx`.
 
-## How to read this file
+## Implementation notes (read before the section-by-section content below)
 
-Each numbered section below is one section of the `/work/q` page, in the fixed
-order WO-026 requires. Every section gives:
+- **Identity media is a placeholder.** No approved Q-emblem / Unreal Engine
+  render exists yet. The hero's secondary showcase image and section 2's
+  figure both point at `/work/q/identity-placeholder.svg` — a clearly
+  labelled "pending final render" graphic, not the real asset. Swap
+  `IDENTITY_MEDIA_SRC` in `q.ts` for the approved file once it is captured;
+  every reference updates from that one constant.
+- **Heading depth simplification.** This contract calls for `h3` workspace
+  and decision titles nested under their parent `h2`. The shipped
+  implementation renders every workspace-tour group and every engineering
+  decision as its own `h2` section instead, reusing the existing
+  `CaseStudySection` component rather than introducing a new nested-heading
+  component. Content and ordering match this contract; heading depth is the
+  one accepted deviation.
+- **OWN-08 / OWN-09 gate.** Both claims are recorded in the evidence register
+  as `FACT — OWNER`, sourced to the owner's direct statement when requesting
+  this revision (2026-08-03), the same evidentiary pattern used for
+  `OWN-01`–`OWN-07`.
 
-- **Heading** — the exact visible heading string.
-- **Visible copy** — the exact rendered prose. Copy it verbatim.
-- **Media** — the asset filename from `public/work/q/`, its alt text or an
-  explicit decorative decision, and any visible caption.
-- **Author note** — not rendered. Cites the WO-024 claim IDs backing each
-  technical claim, plus wording limits.
+## Editorial direction
 
-Visible prose is delimited by `<!-- copy:start … -->` / `<!-- copy:end -->` HTML
-comments so the word budget is machine-countable (see
-[Verification](#verification)). Those comments are invisible when rendered and
-must not be carried into route code.
+Quant is the most visually developed project in the portfolio. Its case study
+should therefore behave less like a conventional technical article and more
+like a guided product tour.
 
-**Author notes and `[REQUIRED: …]` markers must never reach rendered output,
-metadata, JSON-LD, generated assets, or the production bundle.**
+The page should:
+
+- establish the product and its visual identity immediately;
+- give the interface substantially more screen space than the prose;
+- display all major workspaces rather than reserving most captures;
+- use short copy blocks to explain what each workspace enables;
+- preserve the architecture and validation story without allowing them to
+  dominate the page;
+- show that the product design, visual system, 3D identity, and engineering were
+  all created as parts of one coherent product.
+
+Author notes, claim IDs, verification instructions, and `[REQUIRED: ...]`
+markers must never reach rendered output.
+
+## Publication gates
+
+Evidence-register entries for the following owner-provided claims are now
+recorded (see `OWN-08`, `OWN-09` in `q-case-study-evidence.md`):
+
+- `OWN-08` — An earlier generation of the owner's research tooling supported a
+  personally traded strategy that grew approximately R$3,000 into R$90,000 over
+  roughly one year. The result predates the current implementation and is not a
+  forecast or product-performance claim.
+- `OWN-09` — The owner created the Q emblem in Blender and created its cinematic
+  presentation scene using Unreal Engine 5.
+- `[REQUIRED: approved Q emblem render, Unreal Engine scene still, or short
+  muted scene loop]` — **still open.** A placeholder graphic stands in until
+  this asset is captured and approved.
 
 ---
 
@@ -39,653 +74,538 @@ metadata, JSON-LD, generated assets, or the production bundle.**
 Quant
 <!-- copy:end -->
 
-**Deck (visible, directly under the h1):**
+**Deck:**
 
 <!-- copy:start id=hero-deck -->
-Research and backtesting for the Brazilian futures market
+A native quantitative research platform designed as a professional market instrument
 <!-- copy:end -->
 
-**Meta list** — four label/value pairs, rendered as a definition list:
+**Meta list:**
 
 <!-- copy:start id=hero-meta -->
 Role
-Founder and sole developer
+Founder, designer, and sole developer
 Period
 April 2026–present
+Platform
+Native desktop
+Market
+Brazilian futures and equities
 State
-Research and backtesting
+Active research and backtesting
 Source
 Private
 <!-- copy:end -->
 
-**Support copy (46 words, limit 55):**
+**Support copy:**
 
-<!-- copy:start id=hero-support limit=55 -->
-Quant is my research and backtesting tool for the Brazilian futures market. I
-am the founder and sole developer. The idea is about six years old; this
-implementation dates from April 2026. I designed and built every layer as a
-native desktop application, with AI assistance.
+<!-- copy:start id=hero-support limit=80 -->
+I designed and built Quant end to end to turn trading ideas into structured
+research workflows — from market-data ingestion and strategy construction to
+distributed backtesting, optimization, discovery, and out-of-sample validation.
+The engineering and visual design were developed together so the product feels
+less like a collection of scripts and more like a focused professional tool.
 <!-- copy:end -->
 
-**Actions:** none. The live-environment control is omitted entirely (DEC-02).
-WO-027 must not render Aegis's disabled `Live environment — coming soon` pill
-on this route.
+**Primary media:** `launcher.webp`
 
-**Media:** `launcher.webp`.
-
-Alt text:
+**Alt text:**
 
 <!-- copy:start id=hero-media-alt render=alt-attribute-only -->
-The Quant launcher dashboard: a dark desktop console with a market monitor, a
-system gauge reading online, and a recent-simulations panel.
+The Quant launcher dashboard showing market status, system health, and recent
+research activity in a polished dark desktop interface.
 <!-- copy:end -->
 
-**Author note.** Title and category framing ← OWN-01. Role ← OWN-03. Period ←
-GIT-01 for the current implementation window; do not merge with OWN-04's
-six-year idea lineage in the meta list — the support sentence keeps both
-timelines explicit and separate. State ← OWN-07 / SYS-11 (research and
-backtesting today; execution is future). `Source: Private` ← DEC-01. Domain ←
-OWN-06. Native desktop ← SYS-01. "with AI assistance" ← OWN-05. Own product,
-not client work ← OWN-02. Hero media is the launcher still and carries no
-caption, matching the Aegis hero pattern. Subject 12 (native window chrome)
-was deferred in WO-025, so the hero shows the product surface, not the OS
-frame.
+**Identity media (placeholder pending the approved asset):**
+`identity-placeholder.svg`
+
+**Identity-media alt text:**
+
+<!-- copy:start id=hero-identity-alt render=alt-attribute-only -->
+Placeholder graphic. The final Q emblem and Unreal Engine scene render is
+pending and will replace this placeholder.
+<!-- copy:end -->
+
+**Author note.** Product/domain ← OWN-01, OWN-06. Ownership ← OWN-03, OWN-05.
+Current implementation ← GIT-01. Desktop boundary ← SYS-01. Visual-identity
+claim ← OWN-09 (evidenced). Identity media is a placeholder, not the approved
+render.
 
 ---
 
-## 2. Context
+## 2. Designing the identity
 
 **Heading (h2):**
 
-<!-- copy:start id=context-heading -->
-The context
+<!-- copy:start id=identity-heading -->
+Designing Q as a product, not just a tool
 <!-- copy:end -->
 
 **Visible copy:**
 
-<!-- copy:start id=context-body -->
-Quant is my own product. It is a research, backtesting, and future-execution
-tool aimed at the Brazilian futures market — instruments like WIN$ and WDO$ on
-BMF, alongside B3 equities when the local store or MetaTrader 5 provides them.
+<!-- copy:start id=identity-body -->
+Quant began as an engineering project, but I did not want its interface to feel
+like an internal dashboard assembled around whatever the backend exposed. I
+treated visual identity, interaction design, and system architecture as parts
+of the same product.
 
-The idea is roughly six years old. It is the problem that made me learn to
-program, and I have rebuilt it many times. What you see here is the current
-implementation, begun in April 2026 — not a six-year-old codebase. This is the
-most capable version I have shipped of that long idea.
+I created the Q emblem in Blender, then used Unreal Engine 5 to build its
+cinematic presentation scene. That identity informed the application itself:
+dark layered surfaces, restrained metallic accents, strong depth, precise
+motion, and workspaces designed to keep dense research information readable.
+
+The result is intentionally more immersive than a typical analytics interface,
+without sacrificing the clarity required for long research sessions.
 <!-- copy:end -->
 
-**Media:** none.
+**Media:** `identity-placeholder.svg` (placeholder pending the approved asset).
 
-**Author note.** Own product ← OWN-02. Domain and Brazilian futures ← OWN-06.
-Default instruments WIN$/WDO$ and B3 equities ← SYS-09; MetaTrader 5 as a
-provider ← SYS-05. Two timelines ← OWN-04 and GIT-01; the sentence that denies
-a six-year codebase is mandatory. "most capable" is comparative across the
-owner's own rebuilds, not a market claim (UNSUP-05).
+**Caption:**
+
+<!-- copy:start id=identity-caption -->
+The Q emblem was created in Blender and presented through a cinematic scene
+built in Unreal Engine 5. Placeholder shown pending the final render.
+<!-- copy:end -->
+
+**Author note.** Blender and Unreal Engine claim ← OWN-09 (evidenced). Avoid
+claiming that Unreal Engine runs inside the application unless separately
+evidenced. The scene is part of the project's visual production, not the
+desktop runtime.
 
 ---
 
-## 3. Problem
+## 3. Why I built it
 
 **Heading (h2):**
 
-<!-- copy:start id=problem-heading -->
-The problem
+<!-- copy:start id=origin-heading -->
+Built from a real research problem
 <!-- copy:end -->
 
 **Visible copy:**
 
-<!-- copy:start id=problem-body -->
-A strategy idea is cheap. Turning it into something I can test, optimize,
-validate, and eventually deploy is not — especially if a single backtest is
-allowed to look like proof.
+<!-- copy:start id=origin-body -->
+Quant grew from my own systematic trading research. I needed a way to move
+beyond spreadsheets and disconnected scripts: collect reusable market data,
+express strategies consistently, test them across historical periods, explore
+large parameter spaces, and challenge promising results before putting capital
+at risk.
 
-The work is a pipeline, not a chart. Market data has to land in a place the
-research tools can reuse. Simulations have to run without freezing the
-interface. Parameter searches have to be inspectable. Out-of-sample checks
-have to sit between a promising run and any path toward live money. And until
-execution is ready, the product must refuse to pretend it is already trading
-live.
+That problem became the reason I learned to program. I have rebuilt the idea
+several times over roughly six years, each version reflecting what I had
+learned about markets, software architecture, research discipline, and product
+design. The current implementation began in April 2026 and is a new codebase.
+
+An earlier generation of my tooling supported the research behind a strategy I
+traded personally, growing approximately R$3,000 into R$90,000 over about one
+year. That historical result predates the system shown here. It is project
+context, not a forecast or a claim that this implementation produced those
+returns.
 <!-- copy:end -->
 
 **Media:** none.
 
-**Author note.** No technology is named in this section, per the WO-026 rule
-that the problem precedes the stack. The pipeline verbs map forward to SYS-07
-(ingestion), SYS-03 (async jobs), SYS-06 (optimization), WF-04 validate mode /
-walk-forward surfaces, and SYS-11 / OWN-07 (live locked). "live money" is the
-problem statement, not a published trading outcome (UNSUP-01–UNSUP-05).
+**Author note.** Origin and lineage ← OWN-04, OWN-06. Current codebase ←
+GIT-01. Historical result ← OWN-08 (evidenced), attribution and limitations
+preserved verbatim.
 
 ---
 
-## 4. System overview
+## 4. Inside the product
 
 **Heading (h2):**
 
-<!-- copy:start id=system-heading -->
+<!-- copy:start id=tour-heading -->
+Inside the product
+<!-- copy:end -->
+
+**Introductory copy:**
+
+<!-- copy:start id=tour-intro -->
+Quant is organized as a set of focused workspaces connected by a persistent
+desktop shell. Each workspace handles a distinct stage of the research process,
+while the shared navigation, job state, diagnostics, and visual language make
+the system feel like one instrument rather than separate utilities.
+<!-- copy:end -->
+
+### Market data and system awareness
+
+<!-- copy:start id=market-data-copy -->
+The market-data workspace provides the visual foundation for research:
+instruments, historical price series, indicators, and the state of the local
+data environment. System diagnostics expose data-source availability,
+environment details, and backend health without forcing the user to leave the
+application.
+<!-- copy:end -->
+
+**Media gallery:**
+
+1. `market-data.webp`
+   - **Alt:** A Quant market-data workspace displaying a candlestick chart with
+     indicators and market controls.
+   - **Caption:** Market data and technical context inside the desktop research
+     environment.
+2. `system.webp`
+   - **Alt:** The Quant system workspace showing data-source status,
+     environment details, and backend-health diagnostics.
+   - **Caption:** Data sources, environment state, and backend health in one
+     diagnostic workspace.
+
+**Author note.** Market-data workspace ← SYS-07, WF-*. Diagnostics ← SYS-05,
+SYS-11. Do not claim real-time or high-frequency data.
+
+### Strategy construction and backtesting
+
+<!-- copy:start id=backtesting-copy -->
+The backtest studio turns strategy definitions into inspectable experiments.
+Entry and exit logic, parameters, instruments, and simulation settings live in
+one workspace, while completed runs expose the equity path, drawdown, trades,
+and supporting statistics needed for analysis.
+
+The interface is designed to keep configuration and evidence close together so
+a result can be traced back to the assumptions that produced it.
+<!-- copy:end -->
+
+**Media gallery:**
+
+1. `backtest-studio.webp`
+   - **Alt:** The Quant backtest studio showing strategy entries, exits,
+     parameters, and simulation controls.
+   - **Caption:** Strategy configuration and simulation controls in the
+     Backtests workspace.
+2. `backtest-results.webp`
+   - **Alt:** A Quant backtest result showing an equity curve, drawdown view,
+     and supporting run statistics.
+   - **Caption:** A completed simulation presented for inspection. The figures
+     are research output, not a published trading record.
+
+**Author note.** Backtest workflow ← WF-04. Result imagery must not be described
+as evidence of effectiveness or live performance.
+
+### Optimization and discovery
+
+<!-- copy:start id=optimization-copy -->
+Optimization studies move parameter search out of ad hoc loops and into a
+structured workflow. Trials can be compared across multiple objectives rather
+than reduced to one headline number.
+
+Discovery expands that process across broader strategy candidates and ranks
+results using out-of-sample evidence. The objective is not to let the system
+declare a winner, but to help narrow a large search space into candidates worth
+further investigation.
+<!-- copy:end -->
+
+**Media gallery:**
+
+1. `optimize-pareto.webp`
+   - **Alt:** A Quant optimization workspace displaying a table of study trials
+     and multiple objective values.
+   - **Caption:** Optimization trials compared across multiple objectives.
+2. `discover-leaderboard.webp`
+   - **Alt:** The Quant discovery workspace showing a leaderboard of strategy
+     candidates ranked using out-of-sample metrics.
+   - **Caption:** Discovery results organized for comparison and deeper review.
+
+**Author note.** Optimization ← SYS-06, WF-04. Discovery ← WF-06. Avoid
+effectiveness, alpha, edge, or market-beating claims.
+
+### Research features and validation
+
+<!-- copy:start id=research-copy -->
+The research workspace provides a feature catalog for developing and evaluating
+inputs, including neural features. Validation then challenges promising
+configurations across in-sample and out-of-sample windows with a per-window
+breakdown.
+
+This separation matters: feature creation, simulation performance, and
+held-out validation answer different questions. Quant keeps those questions
+visible instead of collapsing them into a single score.
+<!-- copy:end -->
+
+**Media gallery:**
+
+1. `research-features.webp`
+   - **Alt:** The Quant feature store displaying a catalog of research features
+     available to the system.
+   - **Caption:** A structured feature catalog for research workflows.
+2. `walkforward.webp`
+   - **Alt:** A validation workspace comparing in-sample and out-of-sample
+     results across multiple windows.
+   - **Caption:** In-sample and out-of-sample windows from a completed
+     validation run.
+
+**Author note.** Research surface ← WF-07. Neural-feature existence may be
+named without making accuracy or depth claims ← SYS-10. Validation ← WF-04,
+WF-12.
+
+### Execution and background work
+
+<!-- copy:start id=execution-copy -->
+Long-running research continues outside the interface through queued workers,
+while the desktop shell reports job state through the workspace dock. That
+allows the product to remain responsive during backtests, optimization studies,
+and discovery searches.
+
+The execution workspace currently supports paper accounts and paper
+deployments. Live trading is rejected by both the interface and the API, making
+the product's present boundary explicit.
+<!-- copy:end -->
+
+**Media gallery:**
+
+1. `dock.webp`
+   - **Alt:** The Quant workspace dock showing progress for a backtest running
+     in the worker pool.
+   - **Caption:** A queued backtest reporting progress through the persistent
+     workspace dock.
+2. `execution.webp`
+   - **Alt:** The Quant execution workspace showing a paper account, an active
+     paper deployment, and indicators that live trading is locked.
+   - **Caption:** Paper execution with live trading locked. The capture uses
+     fixture data.
+
+**Author note.** Async work ← SYS-03. Execution boundary ← SYS-11, OWN-07.
+Fixture-data disclosure ← MEDIA-02, CONF-02.
+
+---
+
+## 5. How the system fits together
+
+**Heading (h2):**
+
+<!-- copy:start id=architecture-heading -->
 How the system fits together
 <!-- copy:end -->
 
 **Visible copy:**
 
-<!-- copy:start id=system-body -->
-Quant is a native desktop application: a Tauri 2 shell around a React
-single-page app. The SPA talks to a FastAPI service. Heavy research jobs —
-backtests, optimization studies, discovery searches — leave the API and run in
-a Dramatiq worker pool backed by Redis. PostgreSQL holds the application
-schema through Alembic migrations. Market data arrives through MetaTrader 5
-and a separate read-only remote gateway that exposes no order API, then lands
-in local storage paths the research workspaces read. A mocks mode runs the
-same interface against fixtures with no backend, database, queue, or broker
-connection at all.
+<!-- copy:start id=architecture-body -->
+Quant runs as a Tauri 2 desktop application around a React interface. The
+frontend communicates with a FastAPI service, while backtests, optimization
+studies, and discovery jobs run asynchronously through Dramatiq workers backed
+by Redis. PostgreSQL stores application data through Alembic-managed schema
+changes.
+
+Market data arrives through MetaTrader 5 and a separate read-only gateway, then
+lands in local storage used by the research workspaces. A deterministic mocks
+mode can run the complete interface without the API, database, queue, or broker
+connection, allowing product design and frontend development to continue
+against stable fixtures.
 <!-- copy:end -->
 
-**Media:** `system.webp`.
+**Media:** the existing `QSystemMap` diagram component (no screenshot reused
+in this section, per the preference for a purpose-built diagram).
 
-Alt text:
-
-<!-- copy:start id=system-media-alt render=alt-attribute-only -->
-The Quant system workspace showing data-source status, environment details, and
-backend-health telemetry with the service marked healthy.
-<!-- copy:end -->
-
-Caption:
-
-<!-- copy:start id=system-media-caption -->
-System diagnostics against a local stack: data source, environment, and
-backend health in one place.
-<!-- copy:end -->
-
-**Author note.** Desktop shell ← SYS-01. FastAPI ← SYS-02. Dramatiq/Redis ←
-SYS-03. Postgres/Alembic ← SYS-04. MT5 + read-only gateway ← SYS-05. Market-data
-ingestion and local storage ← SYS-07. Mocks path ← SYS-08. Do not say
-"production-ready", "real-time", or "high-performance" (UNSUP-10). Alt text
-describes only what is in the pixels; the capture is from the live `--web`
-stack after the owner fixed the health-check path (`q-case-study-media.md`).
+**Author note.** Tauri ← SYS-01. FastAPI ← SYS-02. Dramatiq/Redis ← SYS-03.
+PostgreSQL/Alembic ← SYS-04. Data gateways ← SYS-05. Storage ← SYS-07. Mocks ←
+SYS-08.
 
 ---
 
-## 5. Decision 1
+## 6. Engineering decisions behind the experience
 
 **Heading (h2):**
 
-<!-- copy:start id=decision-1-heading -->
-Decision 1 — Ship a desktop application, not a website
+<!-- copy:start id=decisions-heading -->
+Engineering decisions behind the experience
 <!-- copy:end -->
 
-**Visible copy (138 words, limit 140):**
+### Native desktop instead of public SaaS
 
-<!-- copy:start id=decision-1-body limit=140 -->
-The shortest path would have been a browser app. I built Quant as a native
-desktop product instead: Tauri 2 wraps the React interface so the research
-console lives on my machine, next to the market-data and worker processes it
-depends on.
+<!-- copy:start id=desktop-decision-body limit=105 -->
+Quant depends on local market-data services, long-running workers, and files
+that belong beside the research environment. Packaging the React interface
+inside Tauri makes that boundary explicit: this is an operator tool running on
+the research machine, not a public website.
 
-My reasoning was control and honesty about the boundary. A quantitative
-research tool that talks to MetaTrader 5, holds local Parquet, and runs long
-jobs does not behave like a public website. Packaging it as a desktop shell
-keeps that boundary visible — this is an operator tool, not a SaaS page waiting
-for a staging URL.
-
-The cost is a real native toolchain. Without Rust and the platform WebKit
-libraries, the shell does not build, and the same interface falls back to a
-browser for development. That fallback is useful. It is not the product.
+The trade-off is a native toolchain and platform-specific dependencies, but the
+result matches how the product is actually used.
 <!-- copy:end -->
 
-**Media:** none. Subject 12 (native desktop chrome) was deferred in WO-025; do
-not invent a shell screenshot.
+### Queued research jobs
 
-**Author note.** Tauri 2 desktop boundary ← SYS-01. MT5 and local storage as
-reasons ← SYS-05, SYS-07. Workers as part of the local stack ← SYS-03. No live
-URL / omit hero control ← DEC-02. Browser fallback for development is how
-`dev.sh` and WO-025 capture actually behaved when `cargo` was missing; it must
-not be described as the shipped product shape. First-person judgement with a
-stated cost, matching the Aegis decision tone.
+<!-- copy:start id=async-decision-body limit=105 -->
+Backtests, optimization sweeps, and discovery searches do not belong inside the
+HTTP request that starts them. The API accepts the work and returns, while
+Dramatiq workers execute it through Redis and publish job state back to the
+interface.
+
+This keeps the UI responsive and lets the dock report progress from the actual
+background job.
+<!-- copy:end -->
+
+### Validation before deployment
+
+<!-- copy:start id=validation-decision-body limit=110 -->
+A single backtest can reward overfitting, so Quant does not treat one equity
+curve as sufficient evidence. Optimization and validation live inside the
+Backtests workflow, where parameter sets can be compared across in-sample and
+out-of-sample windows.
+
+In my own process, held-out validation sits between a promising simulation and
+any path toward deployment. The software presents evidence; it does not declare
+a strategy successful.
+<!-- copy:end -->
+
+### Fixture-first product development
+
+<!-- copy:start id=fixtures-decision-body limit=105 -->
+I built a deterministic mocks mode with Mock Service Worker so the workspaces
+could evolve while the API, workers, and data paths were still changing.
+
+This separated interaction design from service availability, accelerated
+frontend development, and made visual testing reproducible. The same screens
+can later point at the complete local stack.
+<!-- copy:end -->
+
+**Author note.** Desktop ← SYS-01, SYS-03, SYS-05, SYS-07. Async ← SYS-03.
+Validation ← WF-04. Mocks ← SYS-08.
 
 ---
 
-## 6. Decision 2
-
-**Heading (h2):**
-
-<!-- copy:start id=decision-2-heading -->
-Decision 2 — Push heavy work onto a queued worker pool
-<!-- copy:end -->
-
-**Visible copy (119 words, limit 140):**
-
-<!-- copy:start id=decision-2-body limit=140 -->
-Backtests, optimization sweeps, and discovery searches are too heavy to run
-inside the API request that starts them. Blocking there would freeze the
-console every time a study began.
-
-So the API accepts the job and returns. Dramatiq workers, backed by Redis,
-pull the work and run it asynchronously while the interface keeps responding.
-The workspace dock shows progress on jobs that are actually in flight — a
-badge, not a spinner pretending the page itself is computing.
-
-The trade-off is operational: workers, Redis, and the API have to stay aligned,
-or the console looks healthy while the research path is offline. That is a
-failure mode I would rather see in diagnostics than hide behind a synchronous
-endpoint.
-<!-- copy:end -->
-
-**Media:** `dock.webp`.
-
-Alt text:
-
-<!-- copy:start id=decision-2-media-alt render=alt-attribute-only -->
-The Quant workspace dock with a glassmorphic bar and a live job-progress badge
-reading that a backtest is in flight.
-<!-- copy:end -->
-
-Caption:
-
-<!-- copy:start id=decision-2-media-caption -->
-A backtest accepted by the API and running on the worker pool, with progress on
-the dock.
-<!-- copy:end -->
-
-**Author note.** Dramatiq/Redis worker pool ← SYS-03. Job types named are the
-research surfaces that use async work (WF-04 optimize/validate modes, WF-06
-discover). Presence of workers is not a throughput claim (UNSUP-09). Dock
-capture ← `q-case-study-media.md` subject 2 (`--web`, real in-flight job).
-
----
-
-## 7. Decision 3
-
-**Heading (h2):**
-
-<!-- copy:start id=decision-3-heading -->
-Decision 3 — Force validation between backtest and deployment
-<!-- copy:end -->
-
-**Visible copy (113 words, limit 140):**
-
-<!-- copy:start id=decision-3-body limit=140 -->
-A single backtest can flatter any idea. I did not want a straight line from a
-pretty equity curve to a deployment switch.
-
-So the research path is staged inside Backtests. Optimize and Validate are
-modes on that workspace, not separate products. Validation surfaces
-walk-forward style checks: in-sample against out-of-sample windows, with a
-per-window breakdown, so a parameter set has to survive held-out periods
-before it looks trustworthy.
-
-I still treat that as a gate in my own process, not as proof that a strategy
-works. The system computes the comparison; it does not earn a return. Live
-trading stays locked. Paper execution is the only broker mode the product will
-accept today.
-<!-- copy:end -->
-
-**Media:** `walkforward.webp`.
-
-Alt text:
-
-<!-- copy:start id=decision-3-media-alt render=alt-attribute-only -->
-A walk-forward validation view comparing in-sample and out-of-sample window
-results beside a per-window breakdown table.
-<!-- copy:end -->
-
-Caption:
-
-<!-- copy:start id=decision-3-media-caption -->
-In-sample versus out-of-sample windows on a completed validation run. The
-figures are what the tool computes — not a published trading record.
-<!-- copy:end -->
-
-**Author note.** Optimize/Validate as Backtests modes ← WF-04. Walk-forward UI
-components exist under `walkforward/` but are not a top-level routed workspace
-← WF-12 / GAP-02; copy correctly attributes validation to Backtests modes and
-must not list Walk-Forward as a shipped primary dock item. Caption discharges
-UNSUP-01–UNSUP-05: describing computed comparison is allowed; claiming earned
-returns is not. Live locked / paper only ← SYS-11, OWN-07. Capture is from
-mocks (`q-case-study-media.md` subject 7).
-
----
-
-## 8. Decision 4
-
-**Heading (h2):**
-
-<!-- copy:start id=decision-4-heading -->
-Decision 4 — Build the interface against fixtures first
-<!-- copy:end -->
-
-**Visible copy (122 words, limit 140):**
-
-<!-- copy:start id=decision-4-body limit=140 -->
-Waiting for every backend path before shaping the console would have stalled
-the product. I needed the workspaces to exist as a real interface while the
-API, workers, and market-data path were still moving.
-
-So the frontend has a deterministic mocks mode: one command starts the SPA with
-Mock Service Worker fixtures and starts no backend, Postgres, Redis, or
-MetaTrader connection. I could design launcher, backtests, research, and
-execution against stable responses, then point the same screens at the real
-stack when it was ready.
-
-The cost is discipline. Fixture data can look finished. The rule on this page
-is the same as in the product: the interface may show what a run computes; it
-must not invent a live track record.
-<!-- copy:end -->
-
-**Media:** none. The decision is a development boundary, not a product surface
-to illustrate with a gallery shot.
-
-**Author note.** MSW / `./dev.sh --mocks` ← SYS-08. DEC-05 preferred mocks for
-portfolio capture; WO-025 widened per-subject source choice, which does not
-change this engineering decision. Closing sentence re-asserts UNSUP-01–UNSUP-05
-and MEDIA-02. Named workspaces are shipped surfaces ← WF-01, WF-04, WF-07,
-WF-08.
-
----
-
-## 9. Contribution
+## 7. My contribution
 
 **Heading (h2):**
 
 <!-- copy:start id=contribution-heading -->
-What I did
+My contribution
 <!-- copy:end -->
 
 **Visible copy:**
 
 <!-- copy:start id=contribution-body -->
-I designed and built Quant end to end, with AI assistance throughout: product
-and interaction design, the Tauri shell and React workspaces, the FastAPI
-service, the Dramatiq workers, the Postgres schema, market-data ingestion and
-the read-only MetaTrader gateway, optimization and validation flows, paper
-execution with live trading locked, the test suites, and the mocks path that
-lets the interface move ahead of the API.
+I conceived, designed, and built Quant as a solo product: its visual identity,
+Blender emblem, Unreal Engine scene, desktop shell, interaction system,
+frontend workspaces, API, worker architecture, database schema, market-data
+paths, research workflows, execution controls, automated tests, and development
+tooling.
 
-AI sped that work up — scaffolding, refactors, tests, review. The architecture,
-the trade-offs above, and the product decisions are mine.
+AI assisted throughout with scaffolding, refactoring, test generation, and
+review. It accelerated implementation, but the product direction,
+architecture, visual system, engineering trade-offs, and final decisions are
+mine.
 <!-- copy:end -->
 
-**Media:** none.
+**Media:** none placed. (The optional compact mosaic described in the original
+contract is deferred — the preceding galleries are already visually dense.)
 
-**Author note.** End-to-end ownership with AI assistance ← OWN-05, OWN-03;
-Cursor as tooling ← GIT-02. Layer list maps to SYS-01, SYS-02, SYS-03, SYS-04,
-SYS-05, SYS-06, SYS-07, SYS-08, SYS-11, WF-*. No team or leadership claim
-(UNSUP-08). Second paragraph required: AI assists, it does not independently
-build the product.
+**Author note.** Sole ownership ← OWN-03, OWN-05. Technical coverage ←
+SYS-01–SYS-08, SYS-11, WF-*. Blender/Unreal claim ← OWN-09 (evidenced). AI
+boundary ← OWN-05, GIT-02.
 
 ---
 
-## 10. Delivered
+## 8. Current status
 
 **Heading (h2):**
 
-<!-- copy:start id=delivered-heading -->
-Delivered
+<!-- copy:start id=status-heading -->
+Current status
 <!-- copy:end -->
 
 **Visible copy:**
 
-<!-- copy:start id=delivered-body -->
-Quant is in active use for research and backtesting. Execution is a future
-capability. This page reports what was built, not what any strategy earned.
+<!-- copy:start id=status-body -->
+The current implementation is actively used for research and backtesting, with
+paper execution available and live trading intentionally disabled while the
+execution path continues to mature.
 
-Shipped and working: the launcher; market data; storage; backtests with
-optimize and validate modes; strategy builder; discovery; research including
-neural features; paper execution with live trading locked; system diagnostics;
-and a secondary news reader. A mocks mode runs the full interface without
-infra. Default instruments cover B3 equities and BMF futures such as WIN$ and
-WDO$.
-
-Three limits I would rather state outright. Live trading is refused by the UI
-and the API — paper is the only broker mode today. Walk-forward UI components
-exist, but they are not mounted as a top-level workspace; validation is reached
-through Backtests. Performance budgets are documented and smoke-testable, but
-they are not enforced in CI yet.
+The repository is private. Public materials omit credentials, broker details,
+account identifiers, deployment identifiers, and private source code. For a
+deeper technical or product walkthrough, contact me directly.
 <!-- copy:end -->
 
-**Media:** `execution.webp`.
+**Actions — exactly two, in this order:**
 
-Alt text:
-
-<!-- copy:start id=delivered-media-alt render=alt-attribute-only -->
-The Quant execution workspace showing a paper account, a running paper
-deployment, and badges that mark paper mode and live trading as locked.
-<!-- copy:end -->
-
-Caption:
-
-<!-- copy:start id=delivered-media-caption -->
-Paper execution with live trading locked. Fixture data in the capture; not a
-broker statement.
-<!-- copy:end -->
-
-**Author note.** Active research/backtesting + future execution ← OWN-07.
-Heading is `Delivered`, never `Impact`. Capability list ← WF-01–WF-10, SYS-08,
-SYS-09, SYS-11. Gaps ← SYS-11, GAP-02/WF-12, GAP-03/PERF-01. Caption is the
-single fixture-data disclosure for this page's placed figures that need it;
-do not repeat a disclaimer on every image. Capture from mocks
-(`q-case-study-media.md` subject 10). Do not quote fixture cash balances or
-PnL as real results (UNSUP-01–UNSUP-05, CONF-02).
-
----
-
-## 11. Technology in context
-
-**Heading (h2):**
-
-<!-- copy:start id=technology-heading -->
-Technology, in context
-<!-- copy:end -->
-
-**Visible copy:**
-
-<!-- copy:start id=technology-body -->
-Tauri 2 for the desktop shell. React, Vite, and the SPA router for the
-interface. FastAPI for the HTTP API. Dramatiq and Redis for the worker pool.
-PostgreSQL and Alembic for schema. MetaTrader 5 plus a read-only remote
-gateway for market data. Optuna for optimization studies. Mock Service Worker
-for the fixture-first frontend. pytest and the frontend unit suite for
-automated checks.
-
-Nothing there was chosen for its own sake; each entry exists because a decision
-above needed it.
-<!-- copy:end -->
-
-**Media:** none.
-
-**Author note.** Stack names ← SYS-01–SYS-08, SYS-06. Closing sentence required
-by the batch prohibition on a bare technology inventory. No version numbers.
-No promotional README adjectives (UNSUP-10).
-
----
-
-## 12. Disclosure note and actions
-
-**Heading (h2):**
-
-<!-- copy:start id=disclosure-heading -->
-A note on disclosure
-<!-- copy:end -->
-
-**Visible copy:**
-
-<!-- copy:start id=disclosure-body -->
-Quant is my own product, so there is no client confidentiality boundary here.
-I have still left things off this page: credentials, broker login details,
-account numbers, private deployment identifiers, and any repository link. The
-source is private. Live trading is locked in the product today; what you see
-in execution captures is paper mode.
-
-To go further than a public page allows, ask me directly.
-<!-- copy:end -->
-
-**Actions** — exactly two, in this order:
-
-<!-- copy:start id=disclosure-actions -->
+<!-- copy:start id=status-actions -->
 Back to selected work
 Get in touch
 <!-- copy:end -->
 
-**Media:** none.
-
-**Author note.** Own product ← OWN-02. Omissions ← CONF-01–CONF-04, DEC-01.
-Execution status ← SYS-11, OWN-07. Action targets match Aegis:
-`Back to selected work` → `/#work`; `Get in touch` → `/#contact`. No live
-environment, résumé, or repository action. Heading uses `disclosure` rather
-than `confidentiality` because Quant has no third-party confidentiality
-regime; the section still states what is omitted.
+**Author note.** State ← OWN-07, SYS-11. Private source ← DEC-01. Disclosure ←
+CONF-01–CONF-04. Actions: `Back to selected work` → `/#work`; `Get in touch` →
+`/#contact`.
 
 ---
 
-## Media-to-section mapping
+## Technology summary
 
-| Asset | Section | Role | Accessible text |
-| --- | --- | --- | --- |
-| `launcher.webp` | 1. Hero | Hero still | `alt` from `hero-media-alt` |
-| `system.webp` | 4. System overview | Figure + caption | `alt` from `system-media-alt` |
-| `dock.webp` | 6. Decision 2 | Figure + caption | `alt` from `decision-2-media-alt` |
-| `walkforward.webp` | 7. Decision 3 | Figure + caption | `alt` from `decision-3-media-alt` |
-| `execution.webp` | 10. Delivered | Figure + caption | `alt` from `delivered-media-alt` |
+Rendered as compact pill badges, not as a prose section.
 
-Five of eleven accepted WO-025 assets are placed. At most one image per
-narrative section. No asset outside `public/work/q/` is introduced. Subject 12
-(native desktop shell) remains unavailable and is not placed.
+<!-- copy:start id=technology-summary -->
+Tauri 2 · React · Vite · FastAPI · Dramatiq · Redis · PostgreSQL · Alembic ·
+MetaTrader 5 · Optuna · Mock Service Worker · pytest · Blender · Unreal Engine 5
+<!-- copy:end -->
 
-## Reserved-media manifest
+**Author note.** Application stack ← SYS-01–SYS-08. Blender and Unreal Engine 5
+← OWN-09 (evidenced), labeled as visual-production tools, not runtime
+dependencies.
 
-First-class outcome of WO-026: captures deliberately not placed on this page,
-reserved for a later visual batch.
+---
 
-| Asset | One-line later-use note |
-| --- | --- |
-| `market-data.webp` | Candlestick workspace with indicators; strong for a market-data deep dive or animated series beat. |
-| `backtest-studio.webp` | Entry/exit strategy catalog and parameter editor; supports a configuration-focused visual chapter. |
-| `backtest-results.webp` | Equity curve and drawdown from a real CCM$ run; use only with captions that refuse outcome claims. |
-| `optimize-pareto.webp` | Optimization trials table; later optimize/study surface without treating metric columns as published results. |
-| `discover-leaderboard.webp` | OOS-ranked discovery leaderboard; later discovery chapter without effectiveness claims. |
-| `research-features.webp` | Feature Store catalog (51 fixture features); later research/neural features visual. |
-| Native desktop shell (subject 12, deferred) | OS window chrome around the SPA; recapture on a host with Rust + WebKitGTK 4.1 when Decision 1 needs a literal shell still. |
+## Media plan
 
-## Forbidden-language review
+### Primary sequence (as implemented)
 
-| Term | Status in this file |
-| --- | --- |
-| `production-ready` | Not used. |
-| `revolutionary` | Not used. |
-| `state-of-the-art` | Not used. |
-| `enterprise-grade` | Not used. |
-| `real-time` | Not used. |
-| `high-frequency` | Not used. |
-| `high-performance` | Not used. |
-| `Impact` as a delivery word | Not used. Section 10 is headed `Delivered`. |
-| Trading profit / return / Sharpe / win rate / alpha / edge as real results | Not used as claims. Section 7 and captions describe computed comparisons only; section 10 refuses earned outcomes. |
+| Order | Asset | Purpose |
+| --- | --- | --- |
+| 1 | `launcher.webp` | Establish the complete product immediately |
+| 2 | `identity-placeholder.svg` | Stand in for the visual identity until the emblem/scene render is approved |
+| 3 | `market-data.webp` | Show market-facing workspace |
+| 4 | `system.webp` | Show operational awareness |
+| 5 | `backtest-studio.webp` | Show strategy construction |
+| 6 | `backtest-results.webp` | Show simulation evidence |
+| 7 | `optimize-pareto.webp` | Show structured optimization |
+| 8 | `discover-leaderboard.webp` | Show discovery workflow |
+| 9 | `research-features.webp` | Show feature research |
+| 10 | `walkforward.webp` | Show held-out validation |
+| 11 | `dock.webp` | Show background-job integration |
+| 12 | `execution.webp` | Show paper execution boundary |
+| 13 | `QSystemMap` diagram | Explain the system succinctly |
 
-## Claim-by-claim reconciliation
+### Layout guidance
 
-Every visible sentence traces to an accepted register row. Claims used:
-OWN-01, OWN-02, OWN-03, OWN-04, OWN-05, OWN-06, OWN-07, GIT-01, GIT-02,
-SYS-01, SYS-02, SYS-03, SYS-04, SYS-05, SYS-06, SYS-07, SYS-08, SYS-09,
-SYS-11, WF-01, WF-04, WF-06, WF-07, WF-08, WF-09, WF-10, WF-12, PERF-01,
-GAP-02, GAP-03, DEC-01, DEC-02, DEC-05, MEDIA-02, CONF-01, CONF-02, CONF-03,
-CONF-04.
+- Full-width showcase frames are used for the launcher, the identity
+  placeholder, and every workspace-tour figure.
+- Paired galleries (two images per workspace group) are used for the five
+  workspace-tour groups.
+- Captions stay restrained; the UI carries most of the visual narrative.
+- Native image proportions are preserved (`2560×1440` throughout).
 
-Deliberately **not** used in visible copy:
+---
 
-| Claim | Why it is absent |
-| --- | --- |
-| GIT-03 | Commit counts are activity, not achievement. |
-| SYS-10 | Neural packages exist; section 10 names the Research neural-features surface via WF-07 without depth or accuracy claims (UNSUP-06). |
-| PERF-02 | Chart memoization is an implementation detail, not chapter-level copy. |
-| GAP-01 | README drift is an authoring note, not visitor-facing. |
-| GAP-04 | Homepage display-name rename is WO-027 scope. |
-| DEC-03, DEC-04 | Route slug and metadata title are editorial; reflected in `content.md`, not body prose. |
-| UNSUP-01 … UNSUP-10 | Prohibited. |
+## Editorial constraints
 
-## Unresolved documentation-only markers
+Visible copy must not claim:
 
-None introduced by this contract for Quant chapter facts that now have
-evidence. Site-wide markers outside WO-026 remain in `content.md`:
+- production readiness;
+- real-time or high-frequency operation;
+- market-beating performance;
+- strategy effectiveness;
+- returns produced by the current implementation;
+- future profitability;
+- live execution capability;
+- a public or recruiter-accessible repository;
+- that Unreal Engine or Blender are runtime dependencies of the desktop app.
 
-- `[REQUIRED: 1200×630 approved social image]`
-- `[REQUIRED: production URL]`
+The historical result appears only with the exact attribution and
+qualification in section 3, now that `OWN-08` is recorded.
 
-DEC-02 is closed: Quant omits the live-environment control, so no Quant-scoped
-`[REQUIRED: live environment URL]` marker is needed. Aegis retains its own
-disabled-control decision and marker.
+---
 
-**No `[REQUIRED: …]` marker appears in any `copy:start` block in this file.**
+## Implementation requirements (status)
 
-## Verification
-
-**Recorded at handoff (2026-08-03).** All visible strings: **1,353 words**.
-Prose only, excluding headings, the hero meta list, and action labels:
-**1,264 words** (target 900–1,400). Hero support 46 (limit 55); decision
-bodies 138, 119, 113, and 122 (limit 140 each). No block exceeds its limit.
-37 delimiter pairs / identified copy blocks (alt/`render=` blocks excluded
-from prose totals). Scans: required `paper` / `locked` / `AI assistance`
-present; forbidden promo terms appear only in the review table and author-note
-negations, never as claims; outcome vocabulary (`Sharpe`, `win rate`, `profit`,
-`alpha`, `edge`, `outperform`) appears only in the forbidden-language review
-table, not in visible copy; no `[REQUIRED:` inside any `copy:start` block.
-
-Word budget, counted over `copy:start` / `copy:end` blocks only:
-
-```bash
-python3 - <<'PY'
-import re, pathlib
-src = pathlib.Path("docs/q-case-study-content.md").read_text()
-src = src.split("## Verification")[0]   # ignore this snippet's own example
-blocks = re.findall(r"<!-- copy:start ([^>]*?)-->(.*?)<!-- copy:end -->", src, re.S)
-CHROME = {"hero-title", "hero-deck", "hero-meta", "hero-actions",
-          "disclosure-actions", "confidentiality-actions",
-          "decision-4-media-title"}
-total = prose = 0
-for meta, body in blocks:
-    ident = re.search(r"id=(\S+)", meta)
-    if not ident:
-        continue
-    bid = ident.group(1)
-    limit = re.search(r"limit=(\d+)", meta)
-    words = len(body.split())
-    if "render=" in meta:      # alt text / aria-label: not visible prose
-        continue
-    total += words
-    if not (bid in CHROME or bid.endswith("-heading")):
-        prose += words
-    flag = " OVER LIMIT" if limit and words > int(limit.group(1)) else ""
-    print(f"{bid:34} {words:5}{flag}")
-print(f"{'ALL VISIBLE STRINGS':34} {total:5}")
-print(f"{'PROSE ONLY (no headings/labels)':34} {prose:5}  (target 900-1400)")
-PY
-```
-
-Documentation checks required by WO-026:
-
-```bash
-git diff --check
-rg -n "paper|locked|AI assistance" docs/q-case-study-content.md
-rg -n "revolutionary|state-of-the-art|enterprise-grade|production-ready|real-time|high-frequency|high-performance" docs/q-case-study-content.md
-rg -n "Sharpe|win rate|profit|alpha|edge|outperform" docs/q-case-study-content.md
-rg -n "\[REQUIRED:" docs/q-case-study-content.md docs/content.md
-```
-
-## What WO-027 consumes
-
-```text
-docs/q-case-study-content.md   # this file: exact copy, media placement, a11y text
-docs/q-case-study-media.md     # asset inventory and hashes
-docs/q-case-study-evidence.md  # claim register; the boundary on any new sentence
-docs/content.md                # Quant chapter and route metadata
-public/work/q/                 # the eleven accepted assets (five placed here)
-```
-
-Structural requirements WO-027 must honour:
-
-1. Sections render in the order 1–12 above. Do not reorder or merge.
-2. One `h1` (`Quant`); every section heading is an `h2`.
-3. Copy is rendered verbatim. Rewording needs a new WO-026 gate.
-4. Author notes, `copy:*` comments, and claim IDs never reach the DOM.
-5. The hero has **no** live-environment control (`CaseStudyHero.liveEnvironment`
-   must be optional; Aegis keeps its disabled pill).
-6. No video on this chapter.
-7. Every placed figure has the `alt` text above; reserved assets stay off the
-   page unless a later visual batch places them.
-8. Homepage display name `Q` → `Quant` (`GAP-04`) is in WO-027 scope.
+1. Sections 1–8 render in the order above. ✅
+2. One `h1`; section headings are `h2`. Workspace/decision titles are also
+   rendered as `h2` (see the heading-depth deviation noted above), not `h3`. ⚠️
+3. Media scale and pacing are prioritized over dense prose. ✅
+4. Every accepted workspace capture in the media plan is rendered. ✅
+5. No author notes, claim IDs, comments, or publication markers reach the DOM. ✅
+6. No live-environment control is rendered. ✅
+7. The technology summary renders as compact badges. ✅
+8. Every placed image carries the alt text specified above. ✅
+9. The historical-performance paragraph is published now that `OWN-08` exists. ✅
+10. The Blender/Unreal Engine claims are published now that `OWN-09` exists. ✅
+11. Section 2 ships with a placeholder asset; swap it for the approved
+    emblem/scene render when captured. ⚠️
+12. Section 5 uses the `QSystemMap` diagram in place of a screenshot. ✅
