@@ -60,7 +60,7 @@ function apertureAccent(slug: string): string {
  * because of it.
  */
 const caseStudyLinkClassName =
-  "inline-flex min-h-11 items-center [font-family:var(--font-geist-mono)] text-[0.75rem] font-semibold tracking-[0.14em] uppercase lg:text-[0.8125rem]";
+  "inline-flex min-h-11 items-center [font-family:var(--font-geist-mono)] text-[0.875rem] font-semibold tracking-[0.14em] uppercase lg:text-[1rem]";
 
 function CaseStudyLink({ project }: { project: Project }) {
   const locale = useLocale();
@@ -88,19 +88,19 @@ function CaseStudyLink({ project }: { project: Project }) {
 function ProjectMeta({ project }: { project: Project }) {
   return (
     <div>
-      <p className="[font-family:var(--font-geist-mono)] text-[0.75rem] leading-none font-semibold tracking-[0.14em] text-[var(--color-accent-a)] uppercase lg:text-[0.8125rem]">
+      <p className="[font-family:var(--font-geist-mono)] text-[0.875rem] leading-none font-semibold tracking-[0.14em] text-[var(--color-accent-a)] uppercase lg:text-[1rem]">
         {project.index}
       </p>
-      <p className="mt-4 [font-family:var(--font-geist-mono)] text-[0.75rem] leading-none font-semibold tracking-[0.14em] text-[var(--color-text-dim)] uppercase lg:text-[0.8125rem]">
+      <p className="mt-5 [font-family:var(--font-geist-mono)] text-[0.875rem] leading-none font-semibold tracking-[0.14em] text-[var(--color-text-dim)] uppercase lg:text-[1rem]">
         {project.category}
       </p>
-      <h3 className="mt-5 text-[clamp(2.25rem,4vw,4rem)] leading-[0.95] font-[540] tracking-[-0.04em] text-[var(--color-text)]">
+      <h3 className="mt-6 text-[clamp(3rem,5.5vw,6.5rem)] leading-[0.95] font-[540] tracking-[-0.04em] text-[var(--color-text)]">
         {project.name}
       </h3>
-      <p className="mt-6 max-w-[38rem] text-[1.125rem] leading-relaxed text-[var(--color-text-muted)] lg:text-[1.25rem]">
+      <p className="mt-8 max-w-[46rem] text-[1.25rem] leading-relaxed text-[var(--color-text-muted)] lg:text-[1.5rem]">
         {project.summary}
       </p>
-      <div className="mt-8">
+      <div className="mt-10">
         <CaseStudyLink project={project} />
       </div>
     </div>
@@ -122,7 +122,7 @@ function ProjectAperture({
     <div
       ref={slotRef}
       data-aperture-slot={slug}
-      className="relative aspect-video overflow-hidden rounded-[var(--radius-lg)] border"
+      className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-lg)] border"
       style={{ borderColor: "var(--color-line)" }}
     >
       {media ? (
@@ -346,7 +346,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
 
   return (
     <div className="mt-12 lg:mx-[calc(50%-50vw)] lg:w-screen">
-      <div className="lg:mx-auto lg:max-w-[100rem] lg:px-[clamp(3rem,6vw,7rem)]">
+      <div className="lg:mx-auto lg:max-w-[120rem] lg:px-[clamp(2.5rem,5vw,5rem)]">
         {/*
           Panels use `position: absolute; inset: 0`, which resolves against
           this element's own padding box and ignores any padding declared on
@@ -415,7 +415,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
                 }}
                 data-project-panel={project.slug}
                 className={cn(
-                  "grid gap-8 border-t border-[var(--color-line)] py-10 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:items-center lg:gap-[clamp(3rem,6vw,6rem)] lg:py-16",
+                  "grid gap-8 border-t border-[var(--color-line)] py-10 lg:grid-cols-[minmax(0,6fr)_minmax(0,6fr)] lg:items-center lg:gap-[clamp(3rem,7vw,8rem)] lg:py-24",
                   index === projects.length - 1 && "border-b",
                 )}
               >

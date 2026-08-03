@@ -52,17 +52,6 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin: 0;
-  font-weight: inherit;
-  font-size: inherit;
-}
-
 p {
   margin: 0;
 }
@@ -74,10 +63,26 @@ a {
 
 /*
  * Layered so Tailwind's own `base`/`utilities` cascade order applies: utility
- * classes like `border-t`/`py-6` on a <button> must win over this reset. An
- * unlayered rule here would silently outrank them regardless of source order.
+ * classes on these elements (`border-t`/`py-6` on a <button>, `text-[...]` on
+ * a heading) must win over these resets. An unlayered rule here would
+ * silently outrank them regardless of source order — this bit both a
+ * <button> reset (border/padding never rendering) and, discovered later, the
+ * heading font-size reset (Tailwind text-size utilities on h1-h6 were
+ * silently inherited away to the body's 16px on every section that used one
+ * instead of a bespoke CSS class or inline style).
  */
 @layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    font-weight: inherit;
+    font-size: inherit;
+  }
+
   button {
     margin: 0;
     padding: 0;
