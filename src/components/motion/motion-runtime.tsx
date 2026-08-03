@@ -1,8 +1,8 @@
 "use client";
 
 import type { DependencyList, ReactNode, RefObject } from "react";
-import { createContext, useContext, useEffect, useMemo, useRef } from "react";
-import { ReactLenis, type LenisRef } from "lenis/react";
+import { createContext, useContext, useEffect, useMemo } from "react";
+import { ReactLenis, useLenis } from "lenis/react";
 import { MotionConfig, type MotionValue, useMotionValue } from "motion/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -28,29 +28,19 @@ export type SceneTimelineFactory = (
 ) => void | (() => void);
 
 /**
- * Site-level owner for smooth document scrolling and its bridges to GSAP.
- * `autoRaf` is deliberately disabled: GSAP owns the one shared ticker callback.
+ * ReactLenis publishes its instance after its own effect runs. Keeping the
+ * GSAP bridge beneath that provider means wheel input can never be intercepted
+ * by an un-ticked Lenis instance during the first mount.
  */
-export function MotionRuntime({ children }: { children: ReactNode }) {
-  const lenisRef = useRef<LenisRef>(null);
-  const scrollProgress = useMotionValue(0);
-  const prefersReducedMotion = useMotionPreference();
-  const value = useMemo(
-    () => ({ scrollProgress, prefersReducedMotion }),
-    [prefersReducedMotion, scrollProgress],
-  );
+function LenisScrollBridge({
+  scrollProgress,
+}: {
+  scrollProgress: MotionValue<number>;
+}) {
+  const lenis = useLenis();
 
   useEffect(() => {
-    const lenis = lenisRef.current?.lenis;
     if (!lenis) {
-      return;
-    }
-
-    let disposed = false;
-    let unsubscribe = () => {};
-    let removeTicker = () => {};
-
-    if (disposed) {
       return;
     }
 
@@ -61,22 +51,36 @@ export function MotionRuntime({ children }: { children: ReactNode }) {
     };
     const tick = (time: number) => lenis.raf(time * 1000);
 
-    unsubscribe = lenis.on("scroll", syncScroll);
+    const unsubscribe = lenis.on("scroll", syncScroll);
     gsap.ticker.add(tick);
-    removeTicker = () => gsap.ticker.remove(tick);
     syncScroll();
 
     return () => {
-      disposed = true;
       unsubscribe();
-      removeTicker();
+      gsap.ticker.remove(tick);
     };
-  }, [scrollProgress]);
+  }, [lenis, scrollProgress]);
+
+  return null;
+}
+
+/**
+ * Site-level owner for smooth document scrolling and its bridges to GSAP.
+ * `autoRaf` is deliberately disabled: GSAP owns the one shared ticker callback.
+ */
+export function MotionRuntime({ children }: { children: ReactNode }) {
+  const scrollProgress = useMotionValue(0);
+  const prefersReducedMotion = useMotionPreference();
+  const value = useMemo(
+    () => ({ scrollProgress, prefersReducedMotion }),
+    [prefersReducedMotion, scrollProgress],
+  );
 
   return (
     <MotionRuntimeContext.Provider value={value}>
       <MotionConfig reducedMotion="user">
-        <ReactLenis ref={lenisRef} root options={{ autoRaf: false }}>
+        <ReactLenis root autoRaf={false}>
+          <LenisScrollBridge scrollProgress={scrollProgress} />
           {children}
         </ReactLenis>
       </MotionConfig>

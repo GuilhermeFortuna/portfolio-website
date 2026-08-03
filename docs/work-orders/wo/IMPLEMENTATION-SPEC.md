@@ -216,7 +216,7 @@ Use a render-prop API so the manager controls the child:
 
 After first mount, prefer pausing over repeated shader compilation while the effect remains within the 300px near-viewport margin. Unmount after it leaves that margin.
 
-Desktop cost budget is `8`: low `1`, medium `2`, high `3`. Higher priority wins; ties use registration order. This preserves the shipped transition state in which Line Waves (`high`), two Liquid Metal CTAs (`low` each), and Shape Blur (`high`) can coexist before VIZ-003 and VIZ-005 remove the rejected effects. Mobile cost budget is `3`, admitting exactly the simplified mobile Line Waves (`high`) and no additional WebGL effect.
+Desktop cost budget is `8`: low `1`, medium `2`, high `3`. Higher priority wins; ties use registration order. This permits Line Waves (`high`), both Liquid Metal CTAs (`low` each), and Shape Blur (`high`) to coexist near the hero/project transition. Mobile cost budget is `3`, admitting exactly the simplified mobile Line Waves (`high`) and no additional WebGL effect.
 
 The desktop budget was `4` until 2026-07-30. The owner raised it because the hero effects held the entire budget while the project stage was already on screen, so Shape Blur never mounted at a normal reading position. VIZ-002 reconciled the stale documented value of `7` with the shipped manager's `8`-unit transition budget on 2026-08-03; VIZ-006 must refit the budget from measured assembled-page evidence after VIZ-003 and VIZ-005 remove the rejected effects.
 

@@ -41,6 +41,10 @@ vi.mock("@/components/ui/logo-loop", () => ({
   ),
 }));
 
+vi.mock("@/components/motion/motion-runtime", () => ({
+  useSceneTimeline: () => {},
+}));
+
 function stubMatchMedia(reducedMotion: boolean) {
   vi.stubGlobal(
     "matchMedia",
@@ -117,6 +121,13 @@ describe("homepage composition", () => {
     expect(
       screen.getByRole("link", { name: siteContent.heroCta }),
     ).toHaveAttribute("href", "/work/aegis");
+
+    const github = screen.getByRole("link", {
+      name: siteContent.heroGithubLabel,
+    });
+    expect(github).toHaveAttribute("href", siteContent.heroGithubHref);
+    expect(github).toHaveAttribute("target", "_blank");
+    expect(github).toHaveAttribute("rel", "noreferrer");
   });
 
   it("links Aegis and Quant to their case studies and leaves the rest unlinked", async () => {

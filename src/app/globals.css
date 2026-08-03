@@ -100,6 +100,138 @@ canvas {
   outline-offset: 4px;
 }
 
+.hero-scene {
+  display: grid;
+  align-items: center;
+  isolation: isolate;
+}
+
+.hero-content {
+  width: min(100% - (var(--page-gutter) * 2), var(--content-wide));
+  margin-inline: auto;
+  padding-block: clamp(8rem, 14vh, 11rem) clamp(5rem, 10vh, 8rem);
+}
+
+.hero-eyebrow,
+.hero-disciplines {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hero-eyebrow {
+  color: var(--color-text-muted);
+  line-height: 1;
+}
+
+.hero-title {
+  max-width: 9ch;
+  margin-top: 1.5rem;
+  font-size: clamp(3.35rem, 8vw, 7.5rem);
+  font-weight: 560;
+  line-height: 0.94;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
+}
+
+.hero-disciplines {
+  margin-top: 2.25rem;
+  color: var(--color-text);
+  line-height: 1.45;
+}
+
+.hero-body {
+  max-width: 42rem;
+  margin-top: 2rem;
+  color: var(--color-text);
+  font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+  line-height: 1.65;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 2rem;
+  margin-top: 2.5rem;
+}
+
+.hero-kinetic-field {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-kinetic-word {
+  position: absolute;
+  color: color-mix(in srgb, var(--color-text) 13%, transparent);
+  font-size: clamp(4rem, 13vw, 14rem);
+  font-weight: 560;
+  letter-spacing: -0.075em;
+  line-height: 0.8;
+  white-space: nowrap;
+}
+
+.hero-kinetic-name {
+  top: 17%;
+  left: 42%;
+}
+
+.hero-kinetic-system {
+  right: -2%;
+  bottom: 18%;
+}
+
+.hero-kinetic-ambition {
+  top: 52%;
+  left: 54%;
+  color: color-mix(in srgb, var(--color-accent-c) 16%, transparent);
+}
+
+@media (max-width: 767px) {
+  .hero-scene::after {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      var(--color-canvas) 0%,
+      color-mix(in srgb, var(--color-canvas) 88%, transparent) 58%,
+      transparent 100%
+    );
+    content: "";
+    pointer-events: none;
+  }
+
+  .hero-content {
+    padding-block: 7.5rem 5rem;
+  }
+
+  .hero-title {
+    max-width: 8ch;
+    font-size: clamp(3.25rem, 14vw, 5rem);
+  }
+
+  .hero-kinetic-name {
+    top: 16%;
+    left: 26%;
+  }
+
+  .hero-kinetic-system {
+    right: -24%;
+    bottom: 20%;
+  }
+
+  .hero-kinetic-ambition {
+    top: 61%;
+    left: 38%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -112,5 +244,9 @@ canvas {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .hero-kinetic-field {
+    display: none;
   }
 }

@@ -50,7 +50,7 @@ the section should sell.
 | Effect | Status | Evidence and decision |
 | --- | --- | --- |
 | Line Waves | **Selected** | The owner-supplied live capture shows a strong spatial field with a premium silhouette, clear depth, and restrained purple-white light. It establishes a memorable identity while leaving usable negative space for the claim. Keep it as the hero's sole persistent dominant environment; preserve a text-safe zone and do not layer a competing background effect over it. |
-| Liquid Metal links | **Rejected** | Both hero actions resolve visually as similar outlined chrome pills. The expensive shader does not improve hierarchy, and applying it to both actions contradicts the original single-primary-CTA role. Replace them with controls integrated into the kinetic title composition. |
+| Liquid Metal links | **Selected** | Owner override, 2026-08-03: the paired dark chrome controls integrate with the Line Waves field more successfully than the bright solid/text replacement. Retain both manager-owned shader links with their static mobile fallback; preserve semantic labels, targets, and the approved destinations. |
 | Scroll Reveal | **Selected** | The About manifesto is the current page's strongest editorial composition. Keep the word-reveal capability, but subordinate its timing to the shared page choreography; it must not own an independent scroll system. |
 | Logo Loop | **Rejected** | The Process capture compresses the engineering sequence into a small horizontal ticker. It is legible but visually modest, repetitive, and disconnected from the narrative. Restage the same approved words as part of the page's scene choreography. |
 | Sparkles | **Rejected** | In Selected Work it reads as a faint separator/glow, not a meaningful transition. It adds another runtime without changing the composition. |
@@ -155,9 +155,8 @@ provider demo media as reference-only.
 | Narrative typography | Give the About manifesto editorial weight without creating a competing scroll owner. | D-012 |
 | Closing resolution | Resolve motion and atmosphere behind Contact without competing with its copy or actions. | D-013 |
 
-Primary-action styling, Process internal composition, and the exact footer
-handoff remain open roles under D-016. No component name is preselected for
-them.
+Process internal composition and the exact footer handoff remain open roles
+under D-016. The owner selected Liquid Metal for both hero actions on 2026-08-03.
 
 ## Selected Homepage Capabilities
 
@@ -297,15 +296,19 @@ The homepage has five familiar destinations and an existing site header. A
 second persistent navigation object would compete with the project aperture and
 add interface weight without solving a demonstrated homepage problem.
 
-### D-016 — Remaining visual roles
+### D-016 — Remaining visual roles and hero action treatment
 
-**Status:** Open
+**Status:** Selected for hero actions; open for Process and footer
 
-No additional component is authorized for the primary actions, Process internal
-composition, or the exact transition from Contact to the footer. Later VIZ
-orders should first compose those roles from D-008 through D-013 and the shared
-tokens. Search for another source only if the assembled result exposes a real
-gap.
+**Hero action source:** existing adapted 21st.dev Liquid Metal Button
+**Owner override:** 2026-08-03
+
+The two hero actions use the existing manager-owned Liquid Metal links, whose
+dark chrome outline supports the Line Waves field without introducing a bright
+surface. Mobile and reduced-motion use the component's static fallback. Process
+internal composition and the Contact-footer handoff remain open; later VIZ
+orders should first compose those roles from D-008 through D-013 and shared
+tokens.
 
 ## Homepage Scene Contract
 
@@ -337,8 +340,8 @@ Contact remain intact.
 
 - **VIZ-002:** implement the one-owner runtime and the BSMNT-compatible timeline,
   progress, cleanup, reduced-motion, and WebGL registration interfaces.
-- **VIZ-003:** implement D-009 over D-009A and the hero action hierarchy; retain
-  Line Waves and remove both Liquid Metal shaders.
+- **VIZ-003:** implement D-009 over D-009A and the owner-selected paired Liquid
+  Metal action treatment; retain Line Waves and both manager-owned CTA shaders.
 - **VIZ-004:** implement D-008 across the page, restage Process, integrate D-012,
   and retain D-013 as the closing state; remove Logo Loop and Sparkles.
 - **VIZ-005:** implement D-010 and D-011; remove Shape Blur and the placeholder

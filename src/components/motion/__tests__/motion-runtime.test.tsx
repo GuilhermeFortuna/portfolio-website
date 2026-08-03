@@ -36,6 +36,7 @@ const runtime = vi.hoisted(() => {
 });
 
 vi.mock("lenis/react", () => ({
+  useLenis: () => runtime.lenis,
   ReactLenis: forwardRef(function ReactLenisMock(
     { children }: { children: React.ReactNode },
     ref,
