@@ -197,18 +197,19 @@ are resolved above; no other Aegis input is outstanding.
 
 ## Quant case study
 
-**Status:** accepted facts from WO-024 (`DONE` 2026-08-03). The claim-level
-evidence register and public disclosure boundary is
-[`q-case-study-evidence.md`](./q-case-study-evidence.md); it is authoritative
-for every publishable Quant claim and its classification. Media (WO-025) and
-exact visible copy (WO-026) are not yet accepted.
+**Status:** evidence WO-024 `DONE` (2026-08-03); media WO-025 `DONE`
+(2026-08-03); content contract WO-026 `DONE` (owner approved 2026-08-03).
+Authoritative claim register:
+[`q-case-study-evidence.md`](./q-case-study-evidence.md). Authoritative media
+inventory: [`q-case-study-media.md`](./q-case-study-media.md). Exact visible
+copy and placement: [`q-case-study-content.md`](./q-case-study-content.md).
+WO-027 must render that contract verbatim.
 
 ### Accepted facts
 
 - **FACT (owner):** Public name is **Quant** (category **Quantitative
   systems**). `Q` was the working shorthand and repository prefix; the route
-  slug stays `q` (`/work/q`) unless the owner chooses `/work/quant` before
-  WO-025 writes assets.
+  slug is `q` (`/work/q`, assets under `public/work/q/`).
 - **FACT (owner):** Quant is the owner's own product — not client or employer
   work. Role: **founder and sole developer**, with AI assistance (Cursor was a
   development tool; extra git author names are tooling/duplicates).
@@ -238,18 +239,21 @@ exact visible copy (WO-026) are not yet accepted.
   `strategy/` directory is shared helpers, not a routed workspace.
   Walk-forward UI exists but is not router-mounted.
 - **DECISION:** No strategy/parameter/feature/market-data restriction on
-  screenshot content; capture from mocks as the interface is. Credentials,
-  broker/account details remain confidential.
-- **DECISION:** Omit the live-environment hero control for Quant (desktop app;
-  no live URL). Confirm or overrule before WO-026.
+  screenshot content. Credentials, broker/account details remain confidential.
+- **DECISION (closed 2026-08-03):** Omit the live-environment hero control for
+  Quant entirely (DEC-02). It is a native desktop application with no live URL;
+  do not render Aegis's disabled `Live environment — coming soon` pill on
+  `/work/q`. Owner confirmed.
 
 ### Disclosure boundary
 
 - **Confidential — never published:** credentials, `.env` values, broker names,
   account numbers, balances, MT5 login/server details, API keys, private
   deployment identifiers, and private source repository links.
-- **Mock-path media:** portfolio captures use `./dev.sh --mocks` fixtures, not
-  a live broker session.
+- **Media sources:** WO-025 chose `--mocks` or `--web` per subject on rendered
+  image quality; credentials and live broker identifiers remain prohibited in
+  every capture. Fixture figures on the page get at most one explicit fixture
+  disclosure where useful (`q-case-study-content.md`).
 - **No invented outcomes:** no trading profit/loss, returns, Sharpe or other
   risk-adjusted ratio, win rate, alpha, edge, strategy effectiveness,
   prediction accuracy, users/adopters, uptime, or ingestion throughput.
@@ -265,19 +269,28 @@ exact visible copy (WO-026) are not yet accepted.
 - Walk-forward workspace directory is an unmounted shell relative to the router.
 - Performance budgets exist and have a smoke script but are not CI-enforced.
 - Homepage `projects[1].name` is still `Q` in `src/content/projects.ts`; display
-  rename to `Quant` is tracked for WO-027 (out of WO-024 write scope).
+  rename to `Quant` is tracked for WO-027.
+- Native desktop-shell screenshot (WO-025 subject 12) remains `DEFERRED`.
 
 ### Approved media
 
-None yet. WO-025 produces the high-resolution capture set.
+Eleven WebP assets in `public/work/q/` per
+[`q-case-study-media.md`](./q-case-study-media.md). WO-026 places five on the
+chapter (`launcher`, `system`, `dock`, `walkforward`, `execution`); six plus
+the deferred shell capture are reserved for a later visual batch.
+
+### Narrative (WO-026)
+
+Exact headings, visible copy, media placement, alt text, and captions live in
+[`q-case-study-content.md`](./q-case-study-content.md). Metadata title for the
+route remains `Quant — Quantitative Research and Execution`. Hero meta uses
+Role `Founder and sole developer`, Period `April 2026–present`, State
+`Research and backtesting`, Source `Private`, and **no** hero actions.
 
 ### Missing inputs
 
-- Owner confirmation of slug `/work/q` vs `/work/quant` before WO-025 assets.
-- Owner confirmation of omitted live-environment control before WO-026.
 - Display-name update `Q` → `Quant` in `src/content/projects.ts` (WO-027).
-- Approved media manifest (WO-025).
-- Owner-approved narrative and exact visible copy (WO-026).
+- Optional later recapture of the native desktop shell.
 
 ## Metadata
 
