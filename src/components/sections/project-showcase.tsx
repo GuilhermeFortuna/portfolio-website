@@ -122,7 +122,7 @@ function ProjectAperture({
     <div
       ref={slotRef}
       data-aperture-slot={slug}
-      className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-lg)] border"
+      className="relative aspect-video overflow-hidden rounded-[var(--radius-lg)] border"
       style={{ borderColor: "var(--color-line)" }}
     >
       {media ? (
