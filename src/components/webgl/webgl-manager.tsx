@@ -19,6 +19,7 @@ import {
 export type WebGLEffectId =
   | "line-waves"
   | "liquid-metal"
+  | "liquid-metal-github"
   | "shape-blur"
   | "dotted-surface";
 
@@ -60,10 +61,11 @@ const PRIORITY_RANK: Record<WebGLEffectConfig["priority"], number> = {
 /**
  * Raised from the specification's original 4 by owner decision on 2026-07-30. At
  * 4 units the hero effects held the whole budget while the project stage was
- * already on screen, so Shape Blur never mounted at a normal reading position. 7
- * admits Line Waves (3), the Liquid Metal CTA (1), and Shape Blur (3) together.
+ * already on screen, so Shape Blur never mounted at a normal reading position.
+ * Later raised to 8 so both hero Liquid Metal links (1 each) can sit with Line
+ * Waves (3) and Shape Blur (3) when all are near the viewport.
  */
-const DESKTOP_COST_BUDGET = 7;
+const DESKTOP_COST_BUDGET = 8;
 /**
  * The specification states a mobile budget of 2 while also fixing Line Waves as
  * a `high` (3 unit) effect that runs on mobile in simplified form. The fixed

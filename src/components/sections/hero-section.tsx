@@ -55,14 +55,14 @@ export function HeroSection() {
           </h1>
 
           <p
-            className="[font-family:var(--font-geist-mono)] text-[0.6875rem] font-semibold tracking-[0.14em] text-[var(--color-text-muted)] uppercase"
+            className="[font-family:var(--font-geist-mono)] text-[0.6875rem] font-semibold tracking-[0.14em] text-[var(--color-text)] uppercase"
             style={{ marginTop: "2.25rem" }}
           >
             {siteContent.heroDisciplines}
           </p>
 
           <p
-            className="text-[clamp(1.0625rem,1.5vw,1.25rem)] leading-[1.65] text-[var(--color-text-muted)]"
+            className="text-[clamp(1.0625rem,1.5vw,1.25rem)] leading-[1.65] text-[var(--color-text)]"
             style={{ maxWidth: "42rem", marginTop: "2rem" }}
           >
             {siteContent.heroBody}
@@ -73,14 +73,14 @@ export function HeroSection() {
               {siteContent.heroCta}
             </LiquidMetalLink>
 
-            <a
+            <LiquidMetalLink
               href={siteContent.heroGithubHref}
-              className="inline-flex min-h-11 items-center [font-family:var(--font-geist-mono)] text-[0.6875rem] font-semibold tracking-[0.14em] text-[var(--color-text-muted)] uppercase"
+              effectId="liquid-metal-github"
               rel="noreferrer"
               target="_blank"
             >
               {siteContent.heroGithubLabel}
-            </a>
+            </LiquidMetalLink>
           </div>
         </div>
       </div>
