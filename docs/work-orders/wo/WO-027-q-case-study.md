@@ -23,14 +23,21 @@ src/content/case-studies/q.ts
 src/content/case-studies/index.ts
 src/app/work/q/page.tsx
 src/components/case-study/q-system-map.tsx
-src/components/sections/project-showcase.tsx
 src/content/projects.ts
 src/app/__tests__/q-page.test.tsx
 src/app/__tests__/page.test.tsx
-src/components/sections/__tests__/project-showcase.test.tsx
 docs/component-provenance.md
 docs/work-orders/wo/WO-STATUS.md
 ```
+
+**`src/components/sections/project-showcase.tsx` is deliberately not in scope.**
+It renders the case-study link generically — `project.href === null` renders no
+action, and the label is derived as `View ${project.name} case study`
+([`project-showcase.tsx`](../../../src/components/sections/project-showcase.tsx)
+lines 241–251) — so changing `projects[1]` is sufficient and no component edit
+is needed. That file belongs to the parallel VIZ line
+([`../viz/README.md`](../viz/README.md)); do not write it. If it turns out an
+edit really is required, stop and report rather than reaching across lines.
 
 Shared primitives may be modified **only** where a genuine second consumer
 requires it:
@@ -129,16 +136,18 @@ invented throughput.
   `/work/quant`. `category` and `summary` are unchanged. gosigapp and Nexo
   Dental remain `null`.
 - The derived link label becomes `View Quant case study` automatically, since
-  WO-022 built it from `project.name`. Update the test expectation accordingly.
-- The `View ${project.name} case study` link is already derived and already has a
-  reserved slot for any project with an `href` (WO-022 decisions 7 and 8).
-  Confirm both still hold with two linked projects and that no row geometry
-  shifts.
-- Keep desktop project selectors as buttons; never nest a link in a button.
-- The mobile Q article includes the same link after its summary.
+  WO-022 built it from `project.name`. Update the expectation in
+  `src/app/__tests__/page.test.tsx`. Leave `project-showcase.test.tsx` to the
+  VIZ line, which owns that component.
+- Confirm in a browser that two linked projects behave correctly and no row
+  geometry shifts — but fix nothing there yourself. A defect in that component
+  is a VIZ finding; report it.
 - Do not change the hero `Explore my work` destination; it stays `/work/aegis`
   as the first project in fixed chapter order.
-- Preserve homepage section order and all existing visual effects.
+- **The VIZ line may be redesigning this section concurrently.** Both the
+  `href: null` behavior and the derived label are contract, recorded in VIZ-005,
+  so this data change lands correctly whichever layout is live at merge time.
+  Do not assume the current two-column layout still exists.
 
 ## Procedure
 

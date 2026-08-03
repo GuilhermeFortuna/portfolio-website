@@ -7,14 +7,16 @@ See [`WO-STATUS.md`](WO-STATUS.md). Dispatch only when the WO-025 row is
 
 ## Result to Produce
 
-A large, high-resolution, fixture-driven capture set that shows Q's interface at
-enough fidelity to survive being cropped, zoomed, and animated later — plus an
-archived master set outside the repository so no future visual batch ever needs
-to recapture.
+A large, high-resolution capture set that shows Quant's interface at enough
+fidelity to survive being cropped, zoomed, and animated later — plus an archived
+master set outside the repository so no future visual batch ever needs to
+recapture.
 
-This is the batch's flagship deliverable. Q has the most polished interface in
-the portfolio, and the capture set is sized to exploit that rather than to
-minimize bytes. Every ceiling below is a ceiling, not a target.
+This is the batch's flagship deliverable. Quant has the most polished interface
+in the portfolio, and the capture set is sized to exploit that rather than to
+minimize bytes. Every ceiling below is a ceiling, not a target, and where a
+constraint in this order would produce a worse image, the constraint is the
+thing that is wrong.
 
 ## Prerequisites
 
@@ -41,23 +43,46 @@ Do not modify a Q source repository. Do not commit masters to the portfolio.
 
 ## Capture Environment
 
-Capture from the mock stack only:
+**Choose the data source per subject. Image quality decides, not the stack.**
+
+Two environments are available, both legitimate:
 
 ```bash
-cd /home/gui/projects/q && ./dev.sh --mocks
+cd /home/gui/projects/q && ./dev.sh --mocks   # SPA + MSW fixtures, no backend
+cd /home/gui/projects/q && ./dev.sh --web     # SPA + real backend, Postgres, Redis, worker
 ```
 
-That path runs the SPA on Vite with `VITE_ENABLE_MSW=true` and starts **no**
-backend, Postgres, Redis, Dramatiq worker, or MetaTrader 5 connection. Confirm
-before capturing that the process tree contains no backend or container process
-and that no request escapes to a broker or market-data vendor.
+Mock mode is the default because it is deterministic, needs no infrastructure,
+and regenerates identically when the later visual batch wants a re-crop. But
+mock mode is not automatically the better picture, and a thin fixture makes a
+worse screenshot than real data does. Where the real stack produces a
+materially better image, use it and record why.
 
-Never capture from `./dev.sh` (default) or `./dev.sh --web`. Both start the real
-backend. If a subject cannot be reached in mock mode, it is not captured; record
-it as blocked and report which fixture is missing.
+### Known fixture problems — do not rediscover these
+
+Audited 2026-08-03 in `q_frontend/src/mocks/`:
+
+| Fixture | Finding | Consequence |
+| --- | --- | --- |
+| `backtestEquity.ts` | `buildMockEquityCurve(..., points = 12)` | A 12-point equity curve renders as a near-straight line. **Subject 5 must not be captured from this fixture.** Use a real backtest run, or seed a denser curve. |
+| `data.ts` `mockSystemHealth` | `status: 'degraded'`, `dataLakeStatus: 'offline'`, `mt5_available: false`, `backendVersion: '0.1.0-mock'` | **Subject 11 must not be captured from this fixture.** It would show a degraded, offline system with the literal text `0.1.0-mock`. |
+| `data.ts` `generateOhlcv` | 5,000 bars cached, 500 default | Dense and realistic. **Subject 3 is fine on fixtures**, and mock mode is preferred for it. |
+
+Audit every other subject the same way before capturing it: open the fixture,
+judge the rendered result, and pick the source that looks better.
+
+### Security rule when running the real stack
+
+The full stack may reach a real MetaTrader 5 terminal and a real account. Before
+capturing any subject from `--web`, confirm no broker name, account number,
+balance, server, or login is visible. Subjects 10 and 11 are the likely
+offenders. If a real account is visible and cannot be avoided, capture that
+subject from fixtures instead and accept the weaker image — this is the one case
+where safety outranks quality.
 
 Drive the browser with the repository's Playwright tooling. Every capture is
-scripted so it can be reproduced exactly.
+scripted so it can be reproduced exactly, and the manifest records which
+environment produced each asset.
 
 ## Resolution and Format Contract
 
@@ -127,11 +152,9 @@ without a supporting image. A cosmetic capture is not worth stalling the chapter
 
 Applied to every pixel, per the WO-024 boundaries:
 
-- Capture from MSW fixtures. This is mostly a practical choice — fixtures are
-  deterministic, reproducible, and always populated, so the captures look their
-  best and can be regenerated identically.
 - No broker name, account number, balance, MT5 server or login, credential, API
-  key, or private deployment identifier may be legible.
+  key, or private deployment identifier may be legible. This is the only hard
+  data rule, and it applies in both environments.
 - Strategy names, parameters, features, and market data carry **no restriction**
   (locked owner fact 7). Capture the interface as it is.
 - Browser chrome, local URLs, devtools, notifications, cursors over content,
@@ -140,35 +163,41 @@ Applied to every pixel, per the WO-024 boundaries:
 - Preserve the real Q interface. Do not restyle, recolor, relabel, or
   reconstruct it.
 
-Record each asset's fixture source in the manifest so provenance is traceable
-later. No per-image disclaimer is required on the page.
+Record each asset's environment and data source in the manifest so provenance is
+traceable and the capture is reproducible. No per-image disclaimer is required
+on the page.
 
 ## Procedure
 
-1. Confirm WO-024's accepted evidence and disclosure boundaries.
+1. Confirm WO-024's accepted evidence.
 2. Record `git status --short --branch` for both Q repositories.
-3. Start the mock stack and confirm no backend, container, worker, or broker
-   process is running.
-4. Write a scripted capture routine: fixed viewport, `deviceScaleFactor: 2`,
+3. **Audit the fixtures per subject before capturing anything.** For each of the
+   twelve, open the backing fixture, render the view, and decide mock or real
+   stack on image quality. Record the decision and the reason. The table above
+   pre-answers subjects 3, 5, and 11; the other nine need judging.
+4. Start the chosen environment. When using the real stack, verify the security
+   rule above before each capture.
+5. Write a scripted capture routine: fixed viewport, `deviceScaleFactor: 2`,
    fixed navigation per subject, an explicit settle wait, and animation
    quiescence before shutter. Charts must be fully rendered — no partial paths,
    no entry transitions mid-flight.
-5. Before each shutter, inspect the live DOM and visible state against the
+6. Before each shutter, inspect the live DOM and visible state against the
    safety contract. Reject anything unsafe or ambiguous rather than editing it
    afterwards.
-6. Capture all masters to the external archive first. Inspect every master at
+7. Capture all masters to the external archive first. Inspect every master at
    original resolution before deriving anything from it.
-7. Derive the 2560×1440 WebP deliverables, then re-inspect each deliverable at
+8. Derive the 2560×1440 WebP deliverables, then re-inspect each deliverable at
    original resolution: text legible, chart lines unbroken, no resampling
    artifacts in dense chart regions.
-8. Copy only accepted deliverables into `public/work/q/`.
-9. Create `docs/q-case-study-media.md` recording, per asset: subject, route and
+9. Copy only accepted deliverables into `public/work/q/`.
+10. Create `docs/q-case-study-media.md` recording, per asset: subject, route and
    navigation steps, capture command, master path and SHA-256, deliverable
-   dimensions, byte size and SHA-256, fixture provenance (the exact
-   `src/mocks/` file), and a one-sentence approved use.
-10. Verify no broker, account, credential, host, or identifier string appears in
+   dimensions, byte size and SHA-256, the environment used (`--mocks` or
+   `--web`) with the reason it was chosen, the backing fixture or data source,
+   and a one-sentence approved use.
+11. Verify no broker, account, credential, host, or identifier string appears in
     OCR-readable pixels or in the manifest.
-11. Stop all local processes. Confirm both Q repositories retain their original
+12. Stop all local processes. Confirm both Q repositories retain their original
     status. Record the archive path; do not delete the masters.
 
 ## Automated Checks
@@ -190,13 +219,16 @@ and every file in the directory appears in the manifest and vice versa.
 
 ## Acceptance Checklist
 
-- [ ] Every capture came from the MSW mock stack with no backend running.
+- [ ] Every subject's data source was chosen on a rendered comparison, not by
+      default, and the reason is recorded.
+- [ ] Subjects 5 and 11 were **not** captured from the thin fixtures identified
+      above.
 - [ ] Eleven required subjects captured; subject 12 captured or recorded
       `DEFERRED` with its exact build error.
 - [ ] Every deliverable is 2560×1440 WebP within its byte ceiling, uncropped.
 - [ ] Masters archived outside the repository, hashed, and not committed.
 - [ ] Every asset was visually inspected at original resolution.
-- [ ] Fixture provenance is recorded per asset against `src/mocks/`.
+- [ ] Environment and data source are recorded per asset.
 - [ ] No broker, account, credential, host, or identifier is legible anywhere.
 - [ ] Directory total, file count, and per-file ceilings all pass.
 - [ ] Q source repositories are unchanged.
@@ -205,6 +237,8 @@ and every file in the directory appears in the manifest and vice versa.
 ## Handoff
 
 Include the per-file dimension/size/hash table, the master archive path with its
-hash table, the fixture-provenance mapping, rejected captures and why, subject
-12's outcome, the AVIF observation, OCR scan result, source-repository status
-before and after, and the exact set of assets available to WO-026.
+hash table, the per-subject environment and data-source decisions with their
+reasons, the fixture audit results (including any thin fixture found beyond the
+three already known), rejected captures and why, subject 12's outcome, the AVIF
+observation, OCR scan result, source-repository status before and after, and the
+exact set of assets available to WO-026.

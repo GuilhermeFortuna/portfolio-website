@@ -197,7 +197,7 @@ are resolved above; no other Aegis input is outstanding.
 
 ## Quant case study
 
-**Status:** accepted facts from WO-024 (handoff `REVIEW`). The claim-level
+**Status:** accepted facts from WO-024 (`DONE` 2026-08-03). The claim-level
 evidence register and public disclosure boundary is
 [`q-case-study-evidence.md`](./q-case-study-evidence.md); it is authoritative
 for every publishable Quant claim and its classification. Media (WO-025) and

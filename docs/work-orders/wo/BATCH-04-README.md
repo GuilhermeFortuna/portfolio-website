@@ -173,7 +173,7 @@ content model, the shared shell, and the case-study primitives, and they are
 | ID | Work Order | Primary output |
 | --- | --- | --- |
 | WO-024 | [Q Evidence and Publication Contract](./WO-024-q-evidence-publication-contract.md) | Claim-level evidence register and disclosure boundary |
-| WO-025 | [Q High-Resolution Media Capture](./WO-025-q-high-resolution-media-capture.md) | Twelve+ high-resolution fixture-driven captures, archived masters, and media manifest |
+| WO-025 | [Q High-Resolution Media Capture](./WO-025-q-high-resolution-media-capture.md) | Twelve+ high-resolution captures, archived masters, and media manifest |
 | WO-026 | [Q Case-Study Content Contract](./WO-026-q-case-study-content-contract.md) | Owner-approved narrative and exact visible copy |
 | WO-027 | [Q Case-Study Implementation](./WO-027-q-case-study.md) | Finished `/work/q` route and homepage entry point |
 | WO-028 | [Q Integration and Release Review](./WO-028-q-integration-release-review.md) | Independent truth, browser, accessibility, metadata, and performance gate |
