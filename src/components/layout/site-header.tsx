@@ -1,9 +1,17 @@
-import { siteContent, siteNavigation } from "@/content/site";
+"use client";
+
+import { useLocale } from "@/components/i18n/language-context";
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
+import { getSiteContent, getSiteNavigation } from "@/content/site";
 
 const linkClassName =
   "inline-flex min-h-11 min-w-11 items-center justify-center [font-family:var(--font-geist-mono)] text-[0.6875rem] font-semibold tracking-[0.14em] uppercase";
 
 export function SiteHeader() {
+  const locale = useLocale();
+  const siteContent = getSiteContent(locale);
+  const siteNavigation = getSiteNavigation(locale);
+
   return (
     <>
       <a
@@ -17,20 +25,23 @@ export function SiteHeader() {
           <a href={siteNavigation.wordmarkHref} className={linkClassName}>
             {siteContent.wordmark}
           </a>
-          <nav aria-label="Primary" className="hidden items-center gap-6 lg:flex">
-            {siteNavigation.desktop.map((item) => (
-              <a key={item.href} href={item.href} className={linkClassName}>
-                {item.label}
-              </a>
-            ))}
-          </nav>
-          <nav aria-label="Primary mobile" className="flex items-center gap-5 lg:hidden">
-            {siteNavigation.mobile.map((item) => (
-              <a key={item.href} href={item.href} className={linkClassName}>
-                {item.label}
-              </a>
-            ))}
-          </nav>
+          <div className="flex items-center gap-6">
+            <nav aria-label="Primary" className="hidden items-center gap-6 lg:flex">
+              {siteNavigation.desktop.map((item) => (
+                <a key={item.href} href={item.href} className={linkClassName}>
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+            <nav aria-label="Primary mobile" className="flex items-center gap-5 lg:hidden">
+              {siteNavigation.mobile.map((item) => (
+                <a key={item.href} href={item.href} className={linkClassName}>
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+            <LanguageSwitcher />
+          </div>
         </div>
       </header>
     </>

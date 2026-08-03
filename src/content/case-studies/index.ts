@@ -1,13 +1,30 @@
 import type { CaseStudy, CaseStudySection } from "@/types/case-study";
-import { aegisCaseStudy } from "./aegis";
-import { qCaseStudy } from "./q";
+import type { Locale } from "@/lib/i18n";
+import { aegisCaseStudy, getAegisCaseStudy } from "./aegis";
+import { qCaseStudy, getQCaseStudy } from "./q";
 
-export { aegisCaseStudy, qCaseStudy };
+export { aegisCaseStudy, qCaseStudy, getAegisCaseStudy, getQCaseStudy };
 
 export const caseStudies = {
   aegis: aegisCaseStudy,
   q: qCaseStudy,
 } as const;
+
+export function getCaseStudy(
+  slug: string,
+  locale: Locale = "en",
+): CaseStudy | undefined {
+  if (slug === "aegis") return getAegisCaseStudy(locale);
+  if (slug === "q") return getQCaseStudy(locale);
+  return undefined;
+}
+
+export function getCaseStudies(locale: Locale = "en"): Record<string, CaseStudy> {
+  return {
+    aegis: getAegisCaseStudy(locale),
+    q: getQCaseStudy(locale),
+  };
+}
 
 /**
  * The body sections between the hero and the closing note, in the order fixed

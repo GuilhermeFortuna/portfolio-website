@@ -314,3 +314,43 @@ export const qCaseStudy = {
     ],
   },
 } as const satisfies CaseStudy;
+
+import type { Locale } from "@/lib/i18n";
+
+export function getQCaseStudy(locale: Locale = "en"): CaseStudy {
+  if (locale === "pt-BR") {
+    return {
+      ...qCaseStudy,
+      metadata: {
+        title: "Quant — Pesquisa Quantitativa e Execução",
+        description:
+          "Uma plataforma nativa de pesquisa quantitativa para o mercado de futuros brasileiro, cobrindo backtesting, otimização, pipelines de dados e arquitetura de execução.",
+      },
+      hero: {
+        ...qCaseStudy.hero,
+        backLink: { label: "Voltar aos trabalhos selecionados", href: "/pt-BR/#work" },
+        category: "Sistemas quantitativos",
+        deck: "Uma plataforma de pesquisa quantitativa nativa projetada como um instrumento de mercado profissional",
+        facts: [
+          { label: "Papel", value: "Fundador, designer e único desenvolvedor" },
+          { label: "Período", value: "Abril de 2026–presente" },
+          { label: "Plataforma", value: "Desktop nativo" },
+          { label: "Mercado", value: "Futuros e ações brasileiras" },
+          { label: "Status", value: "Pesquisa e backtesting ativos" },
+          { label: "Fonte", value: "Privado" },
+        ],
+        support:
+          "Projetei e construí o Quant do início ao fim para transformar ideias de negociação em fluxos de pesquisa estruturados — desde a ingestão de dados de mercado e construção de estratégias até backtesting distribuído, otimização, descoberta e validação fora da amostra.",
+      },
+      confidentiality: {
+        ...qCaseStudy.confidentiality,
+        actions: [
+          { label: "Voltar aos trabalhos selecionados", href: "/pt-BR/#work" },
+          { label: "Entrar em contato", href: "/pt-BR/#contact" },
+        ],
+      },
+    };
+  }
+  return qCaseStudy;
+}
+

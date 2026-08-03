@@ -1,6 +1,9 @@
+"use client";
+
+import { useLocale } from "@/components/i18n/language-context";
 import { ScrollReveal } from "@/components/effects/scroll-reveal";
 import { SectionShell } from "@/components/layout/section-shell";
-import { siteContent } from "@/content/site";
+import { getSiteContent } from "@/content/site";
 
 const sectionTitleClassName =
   "max-w-[18rem] text-[clamp(2.25rem,5vw,4.75rem)] leading-none font-[540] tracking-[-0.04em]";
@@ -15,6 +18,8 @@ const profileLinkClassName =
   "inline-flex min-h-11 items-center [font-family:var(--font-geist-mono)] text-[0.6875rem] font-semibold tracking-[0.14em] uppercase";
 
 export function AboutSection() {
+  const locale = useLocale();
+  const siteContent = getSiteContent(locale);
   const [manifesto, secondParagraph] = siteContent.aboutBody;
 
   return (

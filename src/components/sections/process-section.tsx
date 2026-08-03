@@ -1,5 +1,8 @@
+"use client";
+
+import { useLocale } from "@/components/i18n/language-context";
 import { SectionShell } from "@/components/layout/section-shell";
-import { siteContent } from "@/content/site";
+import { getSiteContent } from "@/content/site";
 
 const PROCESS_STAGES = [
   "IDEA",
@@ -21,6 +24,9 @@ function stageAccent(index: number): string {
 }
 
 export function ProcessSection() {
+  const locale = useLocale();
+  const siteContent = getSiteContent(locale);
+
   return (
     <SectionShell
       id="process"

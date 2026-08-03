@@ -1,8 +1,14 @@
+"use client";
+
+import { useLocale } from "@/components/i18n/language-context";
 import { ContactDottedSurfaceHorizon } from "@/components/effects/dotted-surface";
 import { SectionShell } from "@/components/layout/section-shell";
-import { siteContent } from "@/content/site";
+import { getSiteContent } from "@/content/site";
 
 export function ContactSection() {
+  const locale = useLocale();
+  const siteContent = getSiteContent(locale);
+
   return (
     <SectionShell
       id="contact"
@@ -19,11 +25,6 @@ export function ContactSection() {
         className="scene-introduction relative z-[1]"
         style={{ maxWidth: "var(--content-reading)" }}
       >
-        {/*
-          Typography is inline because the unlayered heading reset in
-          globals.css (`font-size: inherit`) outranks Tailwind's layered
-          utilities, which would otherwise render these at body size.
-        */}
         <p
           className="mt-8"
           style={{

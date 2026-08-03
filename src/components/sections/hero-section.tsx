@@ -1,13 +1,16 @@
 "use client";
 
+import { useLocale } from "@/components/i18n/language-context";
 import { HeroLineWavesBackground } from "@/components/effects/line-waves";
 import { useSceneTimeline } from "@/components/motion/motion-runtime";
 import { LiquidMetalLink } from "@/components/ui/liquid-metal-link";
-import { siteContent } from "@/content/site";
+import { getSiteContent } from "@/content/site";
 import { useRef } from "react";
 
 export function HeroSection() {
   const heroRef = useRef<HTMLElement>(null);
+  const locale = useLocale();
+  const siteContent = getSiteContent(locale);
 
   useSceneTimeline(
     heroRef,

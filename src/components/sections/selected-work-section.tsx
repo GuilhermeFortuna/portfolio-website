@@ -1,9 +1,16 @@
+"use client";
+
+import { useLocale } from "@/components/i18n/language-context";
 import { SectionShell } from "@/components/layout/section-shell";
 import { ProjectShowcase } from "@/components/sections/project-showcase";
-import { projects } from "@/content/projects";
-import { siteContent } from "@/content/site";
+import { getProjects } from "@/content/projects";
+import { getSiteContent } from "@/content/site";
 
 export function SelectedWorkSection() {
+  const locale = useLocale();
+  const siteContent = getSiteContent(locale);
+  const projects = getProjects(locale);
+
   return (
     <SectionShell
       id="work"

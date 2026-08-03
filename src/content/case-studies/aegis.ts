@@ -200,3 +200,42 @@ export const aegisCaseStudy = {
     ],
   },
 } as const satisfies CaseStudy;
+
+import type { Locale } from "@/lib/i18n";
+
+export function getAegisCaseStudy(locale: Locale = "en"): CaseStudy {
+  if (locale === "pt-BR") {
+    return {
+      ...aegisCaseStudy,
+      metadata: {
+        title: "Aegis — Estudo de Caso de Inteligência contra Fraudes",
+        description:
+          "Software de inteligência e investigação de fraudes para a indústria de iGaming, apresentado por meio de decisões e evidências de engenharia verificadas.",
+      },
+      hero: {
+        ...aegisCaseStudy.hero,
+        backLink: { label: "Voltar aos trabalhos selecionados", href: "/pt-BR/#work" },
+        category: "Inteligência contra fraudes",
+        deck: "Inteligência contra fraudes para a indústria brasileira de iGaming",
+        facts: [
+          { label: "Papel", value: "Desenvolvedor de Software" },
+          { label: "Período", value: "Abril de 2026–presente" },
+          { label: "Status", value: "Implantado em produção" },
+          { label: "Fonte", value: "Privado" },
+        ],
+        support:
+          "Aegis é um console de inteligência contra fraudes construído para uma operadora de apostas no setor brasileiro de iGaming. Ele transforma dados operacionais e analíticos dispersos em informações investigáveis para analistas: pontuação de jogadores, descobertas de regras explicáveis e visualização completa da base de jogadores. Projetei e construí cada camada, com assistência de IA.",
+        liveEnvironment: { label: "Ambiente ao vivo — em breve" },
+      },
+      confidentiality: {
+        ...aegisCaseStudy.confidentiality,
+        actions: [
+          { label: "Voltar aos trabalhos selecionados", href: "/pt-BR/#work" },
+          { label: "Entrar em contato", href: "/pt-BR/#contact" },
+        ],
+      },
+    };
+  }
+  return aegisCaseStudy;
+}
+
