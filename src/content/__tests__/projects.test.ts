@@ -45,16 +45,20 @@ describe("project content contract", () => {
   });
 
   it("links only the projects whose case-study route exists", () => {
-    // Aegis is the only published chapter. The rest stay null rather than
+    // Aegis and Quant are published. The remaining two stay null rather than
     // pointing at a route that would 404.
     expect(
       projects.map(({ slug, href }) => [slug, href]),
     ).toEqual([
       ["aegis", "/work/aegis"],
-      ["q", null],
+      ["q", "/work/q"],
       ["gosigapp", null],
       ["nexo-dental", null],
     ]);
+  });
+
+  it("uses the public display name Quant for the q slug", () => {
+    expect(projects[1].name).toBe("Quant");
   });
 
   it("keeps every project destination a root-relative route", () => {

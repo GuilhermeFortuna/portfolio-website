@@ -6,8 +6,9 @@ import {
   aegisCaseStudy,
   caseStudies,
   caseStudyBodySections,
+  qCaseStudy,
 } from "@/content/case-studies";
-import type { CaseStudyImage } from "@/types/case-study";
+import type { CaseStudy, CaseStudyImage } from "@/types/case-study";
 
 /**
  * These assertions guard the authored content itself, with no rendering: the
@@ -16,7 +17,7 @@ import type { CaseStudyImage } from "@/types/case-study";
  */
 
 /** The six assets accepted at WO-019 `DONE`. Nothing else may be referenced. */
-const APPROVED_ASSETS = [
+const AEGIS_APPROVED_ASSETS = [
   "/work/aegis/alerts.webp",
   "/work/aegis/entry-intro-poster.webp",
   "/work/aegis/entry-intro.mp4",
@@ -25,7 +26,16 @@ const APPROVED_ASSETS = [
   "/work/aegis/risk-constellation.webp",
 ] as const;
 
-/** Prohibited by the Batch 03 editorial rules and the WO-020 review table. */
+/** The five placed assets from WO-026. Reserved captures stay off this page. */
+const Q_PLACED_ASSETS = [
+  "/work/q/dock.webp",
+  "/work/q/execution.webp",
+  "/work/q/launcher.webp",
+  "/work/q/system.webp",
+  "/work/q/walkforward.webp",
+] as const;
+
+/** Prohibited by the Batch 03/04 editorial rules. */
 const FORBIDDEN_TERMS = [
   "production-ready",
   "revolutionary",
@@ -33,13 +43,15 @@ const FORBIDDEN_TERMS = [
   "enterprise-grade",
   "real-time",
   "high-volume",
+  "high-frequency",
+  "high-performance",
   "fraud reduction",
   "revenue",
   "money saved",
   "client satisfaction",
 ] as const;
 
-const EXPECTED_BODY_HEADINGS = [
+const AEGIS_EXPECTED_BODY_HEADINGS = [
   "The context",
   "The problem",
   "How the system fits together",
@@ -47,6 +59,19 @@ const EXPECTED_BODY_HEADINGS = [
   "Decision 2 — Read from a curated store, not the lakehouse",
   "Decision 3 — Build for investigation, not for monitoring",
   "Decision 4 — Give the product its own identity",
+  "What I did",
+  "Delivered",
+  "Technology, in context",
+] as const;
+
+const Q_EXPECTED_BODY_HEADINGS = [
+  "The context",
+  "The problem",
+  "How the system fits together",
+  "Decision 1 — Ship a desktop application, not a website",
+  "Decision 2 — Push heavy work onto a queued worker pool",
+  "Decision 3 — Force validation between backtest and deployment",
+  "Decision 4 — Build the interface against fixtures first",
   "What I did",
   "Delivered",
   "Technology, in context",
@@ -63,22 +88,25 @@ function collectStrings(value: unknown, found: string[] = []): string[] {
   return found;
 }
 
-function collectImages(): readonly CaseStudyImage[] {
+function collectImages(caseStudy: CaseStudy): readonly CaseStudyImage[] {
   return [
-    aegisCaseStudy.hero.media,
-    ...caseStudyBodySections(aegisCaseStudy).flatMap(
+    caseStudy.hero.media,
+    ...caseStudyBodySections(caseStudy).flatMap(
       (section) => section.images ?? [],
     ),
   ];
 }
 
-const allStrings = collectStrings(aegisCaseStudy);
+const aegisStrings = collectStrings(aegisCaseStudy);
+const qStrings = collectStrings(qCaseStudy);
 
 describe("case-study registry", () => {
-  it("exposes Aegis under its slug", () => {
-    expect(Object.keys(caseStudies)).toEqual(["aegis"]);
+  it("exposes Aegis and Quant under their slugs", () => {
+    expect(Object.keys(caseStudies)).toEqual(["aegis", "q"]);
     expect(caseStudies.aegis).toBe(aegisCaseStudy);
+    expect(caseStudies.q).toBe(qCaseStudy);
     expect(aegisCaseStudy.slug).toBe("aegis");
+    expect(qCaseStudy.slug).toBe("q");
   });
 
   it("uses the approved route metadata", () => {
@@ -87,12 +115,17 @@ describe("case-study registry", () => {
       description:
         "Fraud intelligence and investigation software for the iGaming industry, presented through verified engineering decisions and evidence.",
     });
+    expect(qCaseStudy.metadata).toEqual({
+      title: "Quant — Quantitative Research and Execution",
+      description:
+        "A quantitative research and execution system covering backtesting, optimization, data pipelines, and execution architecture.",
+    });
   });
 });
 
 describe("Aegis authored copy", () => {
   it("contains no unresolved documentation markers", () => {
-    const offenders = allStrings.filter(
+    const offenders = aegisStrings.filter(
       (value) =>
         value.includes("[REQUIRED:") || value.includes("[CONFIDENTIAL:"),
     );
@@ -100,14 +133,16 @@ describe("Aegis authored copy", () => {
   });
 
   it("contains no forbidden marketing or impact language", () => {
-    const offenders = allStrings.filter((value) =>
+    const offenders = aegisStrings.filter((value) =>
       FORBIDDEN_TERMS.some((term) => value.toLowerCase().includes(term)),
     );
     expect(offenders).toEqual([]);
   });
 
   it("has no empty authored string", () => {
-    expect(allStrings.filter((value) => value.trim().length === 0)).toEqual([]);
+    expect(aegisStrings.filter((value) => value.trim().length === 0)).toEqual(
+      [],
+    );
   });
 
   it("keeps the hero facts, support copy, and disabled live action intact", () => {
@@ -122,7 +157,7 @@ describe("Aegis authored copy", () => {
       label: "Live environment — coming soon",
     });
     // The pending action must never gain an href while the URL is unverified.
-    expect("href" in aegisCaseStudy.hero.liveEnvironment).toBe(false);
+    expect("href" in (aegisCaseStudy.hero.liveEnvironment ?? {})).toBe(false);
   });
 
   it("keeps the epistemic limit on production status", () => {
@@ -133,11 +168,48 @@ describe("Aegis authored copy", () => {
   });
 });
 
+describe("Quant authored copy", () => {
+  it("contains no unresolved documentation markers", () => {
+    const offenders = qStrings.filter(
+      (value) =>
+        value.includes("[REQUIRED:") || value.includes("[CONFIDENTIAL:"),
+    );
+    expect(offenders).toEqual([]);
+  });
+
+  it("contains no forbidden marketing or outcome language", () => {
+    const offenders = qStrings.filter((value) =>
+      FORBIDDEN_TERMS.some((term) => value.toLowerCase().includes(term)),
+    );
+    expect(offenders).toEqual([]);
+  });
+
+  it("has no empty authored string", () => {
+    expect(qStrings.filter((value) => value.trim().length === 0)).toEqual([]);
+  });
+
+  it("keeps the hero facts and omits the live-environment control", () => {
+    expect(qCaseStudy.hero.facts).toEqual([
+      { label: "Role", value: "Founder and sole developer" },
+      { label: "Period", value: "April 2026–present" },
+      { label: "State", value: "Research and backtesting" },
+      { label: "Source", value: "Private" },
+    ]);
+    expect(qCaseStudy.hero.support).toContain("with AI assistance");
+    expect("liveEnvironment" in qCaseStudy.hero).toBe(false);
+  });
+
+  it("states paper execution and locked live trading in delivered copy", () => {
+    expect(qCaseStudy.delivered.paragraphs.join(" ")).toMatch(/paper/i);
+    expect(qCaseStudy.delivered.paragraphs.join(" ")).toMatch(/locked/i);
+  });
+});
+
 describe("Aegis section structure", () => {
   it("renders the twelve contract sections in the fixed order", () => {
     expect(
       caseStudyBodySections(aegisCaseStudy).map((section) => section.heading),
-    ).toEqual(EXPECTED_BODY_HEADINGS);
+    ).toEqual(AEGIS_EXPECTED_BODY_HEADINGS);
     expect(aegisCaseStudy.confidentiality.heading).toBe(
       "A note on confidentiality",
     );
@@ -177,25 +249,63 @@ describe("Aegis section structure", () => {
   });
 });
 
+describe("Quant section structure", () => {
+  it("renders the twelve contract sections in the fixed order", () => {
+    expect(
+      caseStudyBodySections(qCaseStudy).map((section) => section.heading),
+    ).toEqual(Q_EXPECTED_BODY_HEADINGS);
+    expect(qCaseStudy.confidentiality.heading).toBe("A note on disclosure");
+    expect(qCaseStudy.confidentiality.id).toBe("disclosure");
+  });
+
+  it("gives every section a unique id and at least one paragraph", () => {
+    const sections = [
+      ...caseStudyBodySections(qCaseStudy),
+      qCaseStudy.confidentiality,
+    ];
+
+    const ids = sections.map((section) => section.id);
+    expect(new Set(ids).size).toBe(ids.length);
+
+    for (const section of sections) {
+      expect(section.paragraphs.length).toBeGreaterThan(0);
+      expect(section.heading.trim()).not.toBe("");
+    }
+  });
+
+  it("keeps exactly four decisions and no video", () => {
+    const ids = qCaseStudy.decisions.map((decision) => decision.id);
+    expect(ids).toEqual([
+      "decision-1",
+      "decision-2",
+      "decision-3",
+      "decision-4",
+    ]);
+    expect(
+      caseStudyBodySections(qCaseStudy).some((section) => section.video),
+    ).toBe(false);
+  });
+});
+
 describe("Aegis media references", () => {
   it("references only approved assets that exist on disk", () => {
     const referenced = [
-      ...collectImages().map((image) => image.src),
+      ...collectImages(aegisCaseStudy).map((image) => image.src),
       aegisCaseStudy.decisions[3].video?.src,
       aegisCaseStudy.decisions[3].video?.poster,
     ].filter((src): src is string => typeof src === "string");
 
     for (const src of referenced) {
-      expect(APPROVED_ASSETS).toContain(src);
+      expect(AEGIS_APPROVED_ASSETS).toContain(src);
       expect(existsSync(join(process.cwd(), "public", src))).toBe(true);
     }
 
     // The poster is the only asset used twice, as hero still and video poster.
-    expect(new Set(referenced)).toEqual(new Set(APPROVED_ASSETS));
+    expect(new Set(referenced)).toEqual(new Set(AEGIS_APPROVED_ASSETS));
   });
 
   it("gives every image alt text and intrinsic dimensions", () => {
-    for (const image of collectImages()) {
+    for (const image of collectImages(aegisCaseStudy)) {
       expect(image.alt.trim().length).toBeGreaterThan(0);
       expect(image.width).toBeGreaterThan(0);
       expect(image.height).toBeGreaterThan(0);
@@ -221,6 +331,39 @@ describe("Aegis media references", () => {
   });
 });
 
+describe("Quant media references", () => {
+  it("references only the five placed assets that exist on disk", () => {
+    const referenced = collectImages(qCaseStudy).map((image) => image.src);
+
+    for (const src of referenced) {
+      expect(Q_PLACED_ASSETS).toContain(src);
+      expect(existsSync(join(process.cwd(), "public", src))).toBe(true);
+    }
+
+    expect(new Set(referenced)).toEqual(new Set(Q_PLACED_ASSETS));
+  });
+
+  it("gives every image alt text and 2560×1440 intrinsic dimensions", () => {
+    for (const image of collectImages(qCaseStudy)) {
+      expect(image.alt.trim().length).toBeGreaterThan(0);
+      expect(image.width).toBe(2560);
+      expect(image.height).toBe(1440);
+    }
+  });
+
+  it("captions every in-body figure and leaves the hero still uncaptioned", () => {
+    expect("caption" in qCaseStudy.hero.media).toBe(false);
+
+    const bodyImages = caseStudyBodySections(qCaseStudy).flatMap(
+      (section) => section.images ?? [],
+    );
+    expect(bodyImages).toHaveLength(4);
+    for (const image of bodyImages) {
+      expect(image.caption?.trim().length ?? 0).toBeGreaterThan(0);
+    }
+  });
+});
+
 describe("Aegis links", () => {
   it("uses only root-relative same-origin destinations", () => {
     const hrefs = [
@@ -235,7 +378,7 @@ describe("Aegis links", () => {
   });
 
   it("publishes no source repository or external environment link", () => {
-    const offenders = allStrings.filter(
+    const offenders = aegisStrings.filter(
       (value) =>
         value.includes("http://") ||
         value.includes("https://") ||
@@ -246,6 +389,37 @@ describe("Aegis links", () => {
 
   it("labels the private source in the hero facts", () => {
     expect(aegisCaseStudy.hero.facts).toContainEqual({
+      label: "Source",
+      value: "Private",
+    });
+  });
+});
+
+describe("Quant links", () => {
+  it("uses only root-relative same-origin destinations", () => {
+    const hrefs = [
+      qCaseStudy.hero.backLink.href,
+      ...qCaseStudy.confidentiality.actions.map((action) => action.href),
+    ];
+
+    expect(hrefs).toEqual(["/#work", "/#work", "/#contact"]);
+    for (const href of hrefs) {
+      expect(href.startsWith("/#")).toBe(true);
+    }
+  });
+
+  it("publishes no source repository or external environment link", () => {
+    const offenders = qStrings.filter(
+      (value) =>
+        value.includes("http://") ||
+        value.includes("https://") ||
+        value.includes("github.com"),
+    );
+    expect(offenders).toEqual([]);
+  });
+
+  it("labels the private source in the hero facts", () => {
+    expect(qCaseStudy.hero.facts).toContainEqual({
       label: "Source",
       value: "Private",
     });

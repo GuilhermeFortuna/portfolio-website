@@ -119,13 +119,14 @@ describe("homepage composition", () => {
     ).toHaveAttribute("href", "/work/aegis");
   });
 
-  it("links Aegis to its case study and leaves every other project unlinked", async () => {
+  it("links Aegis and Quant to their case studies and leaves the rest unlinked", async () => {
     const { default: Home } = await import("@/app/page");
     render(<Home />);
 
-    const [aegis, ...pending] = projects;
+    const [aegis, quant, ...pending] = projects;
 
-    // Desktop selector and mobile article each carry the link; CSS hides one.
+    // Desktop shows the link only for the active selector row (defaults to
+    // Aegis); mobile lists every linked project. CSS hides one tree.
     const aegisLinks = screen.getAllByRole("link", {
       name: `View ${aegis.name} case study`,
     });
@@ -133,6 +134,12 @@ describe("homepage composition", () => {
     for (const link of aegisLinks) {
       expect(link).toHaveAttribute("href", "/work/aegis");
     }
+
+    const quantLinks = screen.getAllByRole("link", {
+      name: `View ${quant.name} case study`,
+    });
+    expect(quantLinks).toHaveLength(1);
+    expect(quantLinks[0]).toHaveAttribute("href", "/work/q");
 
     for (const project of pending) {
       expect(project.href).toBeNull();
@@ -150,10 +157,12 @@ describe("homepage composition", () => {
       .map((anchor) => anchor.getAttribute("href") ?? "")
       .filter((href) => href.startsWith("/work/"));
 
+    // Hero CTA + desktop active Aegis + mobile Aegis + mobile Quant.
     expect(caseStudyHrefs).toEqual([
       "/work/aegis",
       "/work/aegis",
       "/work/aegis",
+      "/work/q",
     ]);
   });
 });

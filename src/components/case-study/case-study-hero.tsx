@@ -88,22 +88,25 @@ export function CaseStudyHero({ hero }: { hero: CaseStudyHeroContent }) {
         ))}
       </dl>
 
-      <div>
-        {/*
-          No verified live URL exists yet. This is a real disabled control
-          rather than a link to nowhere or a visible placeholder marker, so it
-          is out of the tab order and announced as unavailable.
-        */}
-        <button
-          type="button"
-          disabled
-          aria-disabled="true"
-          style={pendingActionStyle}
-          className="inline-flex min-h-11 items-center"
-        >
-          {hero.liveEnvironment.label}
-        </button>
-      </div>
+      {hero.liveEnvironment ? (
+        <div>
+          {/*
+            No verified live URL exists yet. This is a real disabled control
+            rather than a link to nowhere or a visible placeholder marker, so it
+            is out of the tab order and announced as unavailable. Chapters with
+            no live URL to wait for (Quant / DEC-02) omit this field entirely.
+          */}
+          <button
+            type="button"
+            disabled
+            aria-disabled="true"
+            style={pendingActionStyle}
+            className="inline-flex min-h-11 items-center"
+          >
+            {hero.liveEnvironment.label}
+          </button>
+        </div>
+      ) : null}
 
       <CaseStudyFigure image={hero.media} eager />
     </section>

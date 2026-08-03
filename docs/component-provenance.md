@@ -63,3 +63,34 @@ them without re-encoding, cropping, or adding any asset.
 | `entry-intro.mp4` | Owner-produced identity film: modelled and animated in Blender, exported as FBX, assembled, lit, and rendered in Unreal Engine 5 as a 4K image sequence, finished in DaVinci Resolve, then optimized to 1920×1080 for the portfolio (the 4K master is never shipped). | Section 8 video |
 | `entry-intro-poster.webp` | Frame from the same film. | Hero still and the video's `poster` |
 | `overview.webp`, `player-investigation.webp`, `risk-constellation.webp`, `alerts.webp` | Screenshots of the product running against its own synthetic demonstration data. No production or personal data appears in them. | Sections 4, 7, 7, and 10 |
+
+## Quant case study (Batch 04)
+
+Nothing on `/work/q` is externally sourced. WO-027 added no runtime dependency:
+`git diff package.json pnpm-lock.yaml` is empty for this order. The shared
+case-study primitives from WO-021 were reused unchanged except for one justified
+widening: `CaseStudyHero.liveEnvironment` is optional so Quant can omit the
+control (DEC-02) while Aegis keeps its disabled pill.
+
+| Component | Origin | Local file | Dependency | Notes |
+| --- | --- | --- | --- | --- |
+| Case-study shell, hero, section, and media primitives | First-party (WO-021; widened WO-027) | `src/components/case-study/case-study-{shell,hero,section,media}.tsx` | None beyond React | Hero renders the live-environment control only when `liveEnvironment` is present. Aegis rendering is unchanged. |
+| Quant system map | First-party (WO-027) | `src/components/case-study/q-system-map.tsx` | None beyond React | Nested lists and token-based CSS. No canvas, SVG, animation, or diagram library; the markup is its own accessible text equivalent. Every node label is a claim accepted in `docs/q-case-study-evidence.md`. |
+
+### Media provenance
+
+The eleven assets in `public/work/q/` were produced under WO-025 and are
+inventoried with SHA-256 hashes in
+[`q-case-study-media.md`](./q-case-study-media.md). WO-027 places five of them
+per the WO-026 media map, without re-encoding, cropping, or adding any asset.
+Six accepted captures plus the deferred native desktop shell remain reserved.
+
+| Asset | Origin | Used by |
+| --- | --- | --- |
+| `launcher.webp` | Product screenshot (WO-025 subject 1, `--web`). | Hero still |
+| `system.webp` | Product screenshot (WO-025 subject 11, `--web`). | Section 4 figure |
+| `dock.webp` | Product screenshot (WO-025 subject 2, `--web`). | Decision 2 figure |
+| `walkforward.webp` | Product screenshot (WO-025 subject 7, `--mocks`). | Decision 3 figure |
+| `execution.webp` | Product screenshot (WO-025 subject 10, `--mocks`). | Delivered figure |
+| Reserved: `market-data.webp`, `backtest-studio.webp`, `backtest-results.webp`, `optimize-pareto.webp`, `discover-leaderboard.webp`, `research-features.webp` | Accepted WO-025 captures not placed on this page. | Later visual batch |
+| Native desktop shell (subject 12) | Deferred in WO-025 (no Rust/WebKitGTK). | Not placed; desktop claim carried by prose and system map |

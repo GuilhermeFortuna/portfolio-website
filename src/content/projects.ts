@@ -18,11 +18,11 @@ export const projects = [
   {
     slug: "q",
     index: "02",
-    name: "Q",
+    name: "Quant",
     category: "Quantitative systems",
     summary:
       "A quantitative research and execution system covering backtesting, optimization, data pipelines, and execution architecture.",
-    href: null,
+    href: "/work/q",
   },
   {
     slug: "gosigapp",

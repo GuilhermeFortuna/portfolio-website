@@ -1,7 +1,6 @@
 /**
- * Authored case-study content. Every field exists because the approved Aegis
- * content contract (`docs/aegis-case-study-content.md`) needs it; nothing here
- * is generalized for a case study that has not been written yet.
+ * Authored case-study content. Shaped for the approved Aegis and Quant content
+ * contracts (`docs/aegis-case-study-content.md`, `docs/q-case-study-content.md`).
  *
  * Copy is stored as plain strings, never as markup, so no authored value can
  * introduce HTML into the route.
@@ -56,7 +55,11 @@ export type CaseStudyHero = {
   deck: string;
   facts: readonly CaseStudyFact[];
   support: string;
-  liveEnvironment: CaseStudyPendingAction;
+  /**
+   * Optional: omitted when the chapter has no live URL to wait for (Quant /
+   * DEC-02). When present, the hero renders a disabled pending control.
+   */
+  liveEnvironment?: CaseStudyPendingAction;
   media: CaseStudyImage;
 };
 
