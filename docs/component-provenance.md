@@ -12,6 +12,13 @@ Every component was normalized through the shared design tokens, wrapped behind
 the project's own interfaces (including the managed WebGL lifecycle where
 relevant), and given a reduced-motion state.
 
+## Runtime infrastructure (VIZ-002)
+
+| Runtime | Version | Local ownership | Source / license note |
+| --- | --- | --- | --- |
+| Motion | `12.43.0` | `src/components/motion/motion-runtime.tsx` mounts the one site-level `MotionConfig` and exposes the shared progress/reduced-motion contract. | https://motion.dev/ — dependency pin recorded by VIZ-002; confirm redistribution obligations before republishing package source. |
+| Lenis | `1.3.25` | The same runtime mounts the sole root `ReactLenis`; GSAP owns its single ticker bridge and `ScrollTrigger.update` receives Lenis scroll events. | https://lenis.darkroom.engineering/ — dependency pin recorded by VIZ-002; confirm redistribution obligations before republishing package source. |
+
 ## Attribution and license status
 
 The canonical URLs below are taken from the `// Adapted from …` header comment

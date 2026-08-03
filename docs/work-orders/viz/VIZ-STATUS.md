@@ -31,9 +31,10 @@ Only these exact values may appear in the Current State table.
 
 ## Line Gate
 
-VIZ is **open**. VIZ-001 is in `REVIEW`; VIZ-002 remains blocked until the owner
-approves the visual direction recorded in
-[`docs/design/viz-visual-decisions.md`](../../design/viz-visual-decisions.md).
+VIZ is **open**. The owner approved the visual direction recorded in
+[`docs/design/viz-visual-decisions.md`](../../design/viz-visual-decisions.md);
+VIZ-001 and VIZ-002 are `DONE`; VIZ-003 through VIZ-005 are ready for parallel
+implementation.
 
 This line is deliberately less constrained than the `WO` line. Owner decision,
 2026-08-03: `IMPLEMENTATION-SPEC.md` does not bind VIZ orders. A VIZ order may
@@ -59,11 +60,11 @@ actually on screen today rather than with a shortlist of new effects.
 
 | VIZ | State | Prerequisites | Owner | Branch/commit | Evidence or blocker |
 | --- | --- | --- | --- | --- | --- |
-| [VIZ-001](VIZ-001-visual-direction.md) | `REVIEW` | None | Codex | `development` | Handoff: [`viz-visual-decisions.md`](../../design/viz-visual-decisions.md). Ten accepted section captures plus the excluded automated hero capture are in [`docs/design/evidence/viz-001/`](../../design/evidence/viz-001/). The owner-supplied live hero capture supersedes the automated image that failed to render Line Waves. The ledger records per-effect verdicts, a sharpened thesis, four re-ratified premium sources mapped to homepage roles, three retained local effects, the scene contract, and §3/§5/§6/§7/§9/§11 supersessions. Awaiting explicit owner approval; no product code changed. |
-| [VIZ-002](VIZ-002-motion-runtime-foundation.md) | `BLOCKED` | VIZ-001 | Unassigned | `development` | Awaiting owner approval of the VIZ-001 ledger. The selected direction requires a BSMNT-compatible timeline registration/cleanup contract in addition to the planned Motion/Lenis/GSAP/WebGL ownership split. |
-| [VIZ-003](VIZ-003-hero.md) | `BLOCKED` | VIZ-002 | Unassigned | `development` | Awaiting VIZ-002. May run in parallel with VIZ-004 and VIZ-005. |
-| [VIZ-004](VIZ-004-scroll-choreography.md) | `BLOCKED` | VIZ-002 | Unassigned | `development` | Awaiting VIZ-002. May run in parallel with VIZ-003 and VIZ-005. |
-| [VIZ-005](VIZ-005-selected-work-stage.md) | `BLOCKED` | VIZ-002 | Unassigned | `development` | Awaiting VIZ-002. May run in parallel with VIZ-003 and VIZ-004. Owns `project-showcase.tsx`; the fixed two-column `5fr 7fr` layout in `IMPLEMENTATION-SPEC.md` §11 is explicitly open to replacement. |
+| [VIZ-001](VIZ-001-visual-direction.md) | `DONE` | None | Codex | `development` | Owner approved D-004 through D-013, the effect verdicts, scene contract, and recorded specification supersessions on 2026-08-03. The ledger remains the binding VIZ direction; no product code changed in VIZ-001. |
+| [VIZ-002](VIZ-002-motion-runtime-foundation.md) | `DONE` | VIZ-001 | Codex | `development` | Owner accepted [`VIZ-002-handoff.md`](VIZ-002-handoff.md) on 2026-08-03 and waived the outstanding independent GPU-browser evidence. Runtime, contract, pins, docs, and automated checks are complete. |
+| [VIZ-003](VIZ-003-hero.md) | `READY` | VIZ-002 | Unassigned | `development` | VIZ-002 is `DONE`. May run in parallel with VIZ-004 and VIZ-005. |
+| [VIZ-004](VIZ-004-scroll-choreography.md) | `READY` | VIZ-002 | Unassigned | `development` | VIZ-002 is `DONE`. May run in parallel with VIZ-003 and VIZ-005. |
+| [VIZ-005](VIZ-005-selected-work-stage.md) | `READY` | VIZ-002 | Unassigned | `development` | VIZ-002 is `DONE`. May run in parallel with VIZ-003 and VIZ-004. Owns `project-showcase.tsx`; the fixed two-column `5fr 7fr` layout in `IMPLEMENTATION-SPEC.md` §11 is explicitly open to replacement. |
 | [VIZ-006](VIZ-006-release-review.md) | `BLOCKED` | VIZ-003, VIZ-004, VIZ-005 | Unassigned | `development` | Awaiting all three. `GO`/`NO-GO` on the assembled page against a production build. |
 
 ## Gate Log
@@ -72,6 +73,9 @@ actually on screen today rather than with a shortlist of new effects.
 | --- | --- | --- | --- | --- |
 | 2026-08-03 | VIZ line created | `OPEN` | Owner directed a parallel line for the cinematic landing page, explicitly not restricted by `IMPLEMENTATION-SPEC.md`. Six orders created. The line exists because the `WO` line structurally cannot do this work: §3 fixes page order, §7 fixes layout, §9 fixes motion policy, and §11 fixes project presentation. This also supersedes the Batch 04 renumbering note in `../wo/WO-STATUS.md`, which deferred the cinematic scope to "a later batch" — that scope is now this line, running in parallel rather than after. Verified before writing: GSAP 3.15.0, Three 0.185.1, OGL 1.0.11, `@paper-design/shaders` 0.0.78, and tsparticles 4.3.2 are installed; `IMPLEMENTATION-SPEC.md` §9 already specifies `motion@12.43.0` and `lenis@1.3.25` with a runtime ownership split; the homepage composes five sections in `src/app/page.tsx`; and `project-showcase.tsx` renders its link generically, which is what makes parallel execution with Batch 04 safe. | Dispatch VIZ-001. It evaluates the assembled page first, per the component blueprint's own rule, rather than opening with a shortlist of new effects. |
 | 2026-08-03 | VIZ-001 implementation handoff | `REVIEW` | The assembled homepage was captured and inspected in Google Chrome at desktop and mobile widths. The original automated desktop hero capture failed to render Line Waves; the owner supplied an accurate live capture and the invalid image is explicitly excluded. The corrected ledger retains Line Waves, Scroll Reveal, and Dotted Surface; rejects both Liquid Metal links, Logo Loop, Sparkles, and Shape Blur; sharpens the thesis; re-ratifies BSMNT Scrollytelling, Codrops Kinetic Typography, Codrops One Element Scroll, and 21st.dev Story Scroll for distinct homepage roles; and leaves the prior image cylinder open for later case-study use. Source revisions and rights boundaries are recorded. No product code changed. | Owner reviews the corrected ledger. On explicit approval, mark VIZ-001 `DONE` and VIZ-002 `READY`; otherwise record the changed decisions and keep VIZ-002 blocked. |
+| 2026-08-03 | VIZ-001 owner approval and VIZ-002 dispatch | `DONE` | Owner explicitly approved D-004 through D-013, the retained/cut effect verdicts, homepage scene contract, and specification supersessions. VIZ-001 moved to `DONE`; VIZ-002 passed `READY` and is now `IMPLEMENTING` under Codex. | Build and verify VIZ-002; VIZ-003 through VIZ-005 remain blocked until VIZ-002 is independently reviewed. |
+| 2026-08-03 | VIZ-002 implementation handoff | `REVIEW` | Motion/Lenis pins, one root runtime, one GSAP ticker bridge, shared progress, BSMNT-compatible scoped timeline cleanup, motion contract, provenance, and §9 reconciliation landed. `pnpm run test` (15 files/83 tests), lint, typecheck, build, and diff checks pass. Chrome smoke verification covers normal/reduced motion, keyboard skip link, homepage/Aegis anchor return, and repeated navigation; 2-second samples measured 52 fps at 1440×900 and 375×780. Browser WebGL is unavailable, producing 0 fallback canvases/contexts before and after rather than the expected GPU baseline; homepage axe retains the pre-existing `scrollable-region-focusable` finding. | Independent reviewer must reproduce GPU context/leak and frame-rate evidence in a GPU-capable browser, assess the known axe finding, then mark VIZ-002 `DONE` and move VIZ-003 through VIZ-005 to `READY`. |
+| 2026-08-03 | VIZ-002 owner acceptance | `DONE` | Owner explicitly accepted the VIZ-002 handoff and waived the outstanding independent GPU-browser evidence. Automated checks and browser smoke evidence remain recorded in the handoff; the pre-existing homepage axe finding remains open for VIZ-004/VIZ-006. | VIZ-003, VIZ-004, and VIZ-005 move to `READY` and may be dispatched in parallel. |
 
 ## Update Rules
 

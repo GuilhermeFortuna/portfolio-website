@@ -216,9 +216,9 @@ Use a render-prop API so the manager controls the child:
 
 After first mount, prefer pausing over repeated shader compilation while the effect remains within the 300px near-viewport margin. Unmount after it leaves that margin.
 
-Desktop cost budget is `7`: low `1`, medium `2`, high `3`. Higher priority wins; ties use registration order. This permits Line Waves (`high`), the small Liquid Metal CTA (`low`), and Shape Blur (`high`) together. Mobile cost budget is `3`, admitting exactly the simplified mobile Line Waves (`high`) and no additional WebGL effect.
+Desktop cost budget is `8`: low `1`, medium `2`, high `3`. Higher priority wins; ties use registration order. This preserves the shipped transition state in which Line Waves (`high`), two Liquid Metal CTAs (`low` each), and Shape Blur (`high`) can coexist before VIZ-003 and VIZ-005 remove the rejected effects. Mobile cost budget is `3`, admitting exactly the simplified mobile Line Waves (`high`) and no additional WebGL effect.
 
-The desktop budget was `4` until 2026-07-30. The owner raised it because the hero effects held the entire budget while the project stage was already on screen, so Shape Blur never mounted at a normal reading position.
+The desktop budget was `4` until 2026-07-30. The owner raised it because the hero effects held the entire budget while the project stage was already on screen, so Shape Blur never mounted at a normal reading position. VIZ-002 reconciled the stale documented value of `7` with the shipped manager's `8`-unit transition budget on 2026-08-03; VIZ-006 must refit the budget from measured assembled-page evidence after VIZ-003 and VIZ-005 remove the rejected effects.
 
 Fixed registrations:
 
@@ -240,14 +240,18 @@ motion@12.43.0
 lenis@1.3.25
 ```
 
-- Mount exactly one site-level `MotionConfig`. It must preserve the portfolio's
-  existing reduced-motion behavior rather than overriding the operating-system
-  preference.
-- Mount exactly one root `ReactLenis`; no component may construct Lenis, create
-  another scroll container, call root Motion `useScroll`, or own a page RAF.
+- Mount exactly one site-level `MotionConfig` with `reducedMotion="user"`. It
+  preserves the portfolio's existing operating-system reduced-motion behavior.
+- Mount exactly one root `ReactLenis` with `autoRaf: false`; no component may
+  construct Lenis, create another scroll container, call root Motion `useScroll`,
+  or own a page RAF.
 - Lenis owns smooth document scrolling and feeds `ScrollTrigger.update`, one
-  shared progress `MotionValue`, and the existing GSAP ticker. Remove all
-  subscriptions and ticker callbacks during provider cleanup.
+  shared normalized progress `MotionValue`, and one GSAP ticker callback. Remove
+  all subscriptions and ticker callbacks during provider cleanup.
+- Register authored GSAP/ScrollTrigger work only through
+  `useSceneTimeline(scopeRef, createTimeline, dependencies)`. It scopes work to
+  `gsap.context()` and reverts the context, its ScrollTriggers, and optional
+  custom cleanup on unmount; this is the BSMNT-compatible scene contract.
 - Motion owns state-driven transitions, layout, presence, hover/tap, and the
   accepted Magic UI and Aceternity internals.
 - GSAP/ScrollTrigger owns authored timelines and accepted React Bits components
