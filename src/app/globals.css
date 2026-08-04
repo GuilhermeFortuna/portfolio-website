@@ -127,7 +127,7 @@ canvas {
 .hero-eyebrow,
 .hero-disciplines {
   font-family: var(--font-geist-mono), monospace;
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -158,7 +158,7 @@ canvas {
   max-width: 42rem;
   margin-top: 2rem;
   color: var(--color-text);
-  font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+  font-size: clamp(1.25rem, 1.75vw, 1.5rem);
   line-height: 1.65;
 }
 
@@ -168,6 +168,36 @@ canvas {
   align-items: center;
   gap: 1rem 2rem;
   margin-top: 2.5rem;
+}
+
+.hero-cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 54px;
+  padding-inline: 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--color-text) 45%, transparent);
+  border-radius: 100px;
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition:
+    border-color 0.2s var(--ease-standard),
+    background-color 0.2s var(--ease-standard);
+}
+
+.hero-cta-secondary:hover {
+  border-color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  background-color: color-mix(in srgb, var(--color-text) 6%, transparent);
+}
+
+.hero-cta-secondary:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
 }
 
 .hero-kinetic-field {
@@ -180,7 +210,7 @@ canvas {
 
 .hero-kinetic-word {
   position: absolute;
-  color: color-mix(in srgb, var(--color-text) 13%, transparent);
+  color: color-mix(in srgb, var(--color-text) 9%, transparent);
   font-size: clamp(4rem, 13vw, 14rem);
   font-weight: 560;
   letter-spacing: -0.075em;
@@ -201,7 +231,7 @@ canvas {
 .hero-kinetic-ambition {
   top: 52%;
   left: 54%;
-  color: color-mix(in srgb, var(--color-accent-c) 16%, transparent);
+  color: color-mix(in srgb, var(--color-accent-c) 11%, transparent);
 }
 
 .scene-section {

@@ -42,7 +42,7 @@ const RIPPLE_MS = 600;
 /** The metal only fills a pill a few hundred CSS pixels wide. */
 const SHADER_MAX_PIXEL_COUNT = 240_000;
 
-const BUTTON_HEIGHT_PX = 46;
+const BUTTON_HEIGHT_PX = 54;
 const EASE_SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
 const EASE_PRESS = "cubic-bezier(0.4, 0, 0.2, 1)";
 
@@ -262,7 +262,7 @@ export function LiquidMetalLink({
         paddingInline: "1.5rem",
         color: "var(--color-text)",
         fontFamily: "var(--font-geist-mono), monospace",
-        fontSize: "0.75rem",
+        fontSize: "0.875rem",
         fontWeight: 600,
         letterSpacing: "0.08em",
         textTransform: "uppercase",

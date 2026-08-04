@@ -21,7 +21,7 @@ Confident, precise, concise, technically literate, and evidence-led. Use first p
 - Eyebrow: `GUILHERME`
 - Headline: `I build ambitious software systems.`
 - Disciplines: `AI · Product Engineering · Data · Infrastructure`
-- Support: `Software developer creating intelligent products, complex systems, and experiences that generate leverage.`
+- Support: `Full-stack developer creating intelligent products, complex systems, and high-impact digital experiences.`
 - Actions:
   - **DECISION:** `Explore my work` → `/work/aegis` (first project in fixed chapter order)
   - **FACT:** `View GitHub` → `https://github.com/GuilhermeFortuna` (public profile; project repositories remain private)

@@ -85,14 +85,14 @@ export function HeroSection() {
             {siteContent.heroCta}
           </LiquidMetalLink>
 
-          <LiquidMetalLink
-            effectId="liquid-metal-github"
+          <a
+            className="hero-cta-secondary"
             href={siteContent.heroGithubHref}
             rel="noreferrer"
             target="_blank"
           >
             {siteContent.heroGithubLabel}
-          </LiquidMetalLink>
+          </a>
         </div>
       </div>
     </section>

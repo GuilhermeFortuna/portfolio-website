@@ -69,7 +69,7 @@ const siteContentMap: Record<Locale, SiteContent> = {
     heroTitle: "I build ambitious software systems.",
     heroDisciplines: "AI · Product Engineering · Data · Infrastructure",
     heroBody:
-      "Software developer creating intelligent products, complex systems, and experiences that generate leverage.",
+      "Full-stack developer creating intelligent products, complex systems, and high-impact digital experiences.",
     heroCta: "Explore my work",
     heroCtaHref: "/work/aegis",
     heroGithubLabel: "View GitHub",
@@ -125,7 +125,7 @@ const siteContentMap: Record<Locale, SiteContent> = {
     heroTitle: "Desenvolvo sistemas de software ambiciosos.",
     heroDisciplines: "IA · Engenharia de Produto · Dados · Infraestrutura",
     heroBody:
-      "Desenvolvedor de software criando produtos inteligentes, sistemas complexos e experiências de alto impacto.",
+      "Desenvolvedor full-stack criando produtos inteligentes, sistemas complexos e experiências digitais de alto impacto.",
     heroCta: "Explore meu trabalho",
     heroCtaHref: "/pt-BR/work/aegis",
     heroGithubLabel: "Ver GitHub",
