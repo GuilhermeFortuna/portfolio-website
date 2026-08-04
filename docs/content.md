@@ -294,9 +294,9 @@ Role `Founder and sole developer`, Period `April 2026–present`, State
 
 ## gosigapp case study
 
-**Status:** evidence WO-029 `DONE` (2026-08-03).
+**Status:** content contract WO-031 `DONE` (2026-08-03).
 Authoritative claim register: [`gosigapp-case-study-evidence.md`](./gosigapp-case-study-evidence.md).
-WO-031 must produce the content contract based on these accepted facts.
+Authoritative content contract: [`gosigapp-case-study-content.md`](./gosigapp-case-study-content.md).
 
 ### Accepted facts
 
@@ -326,7 +326,7 @@ WO-031 must produce the content contract based on these accepted facts.
 
 ### Missing inputs
 
-- System-map diagram and sanitized CLI/log captures (WO-030).
+- None. WO-030 (media captures) and WO-031 (content contract) complete. Ready for WO-032 implementation.
 
 ## Metadata
 
