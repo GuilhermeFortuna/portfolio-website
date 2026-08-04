@@ -195,8 +195,16 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
           .filter((img): img is HTMLImageElement => img !== null && img !== undefined);
 
         gsap.set(section, { minHeight: "100vh" });
-        gsap.set(panels, { position: "absolute", inset: 0, opacity: 0 });
-        gsap.set(panels[0], { opacity: 1 });
+        // Opacity alone is not enough: absolute panels stack in DOM order, so
+        // an opacity-0 sibling still intercepts clicks over earlier panels
+        // (e.g. Nexo Dental's left aperture covering Aegis's case-study link).
+        gsap.set(panels, {
+          position: "absolute",
+          inset: 0,
+          opacity: 0,
+          pointerEvents: "none",
+        });
+        gsap.set(panels[0], { opacity: 1, pointerEvents: "auto" });
         gsap.set(slotImages, { opacity: 0 });
         gsap.set(aperture, { opacity: 1 });
 
@@ -255,6 +263,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
           },
           onUpdate: (self) => {
             const raw = self.progress * stops;
+            const nextIndex = Math.min(stops, Math.round(raw));
 
             projects.forEach((project, index) => {
               const panel = panelRefs.current[project.slug];
@@ -262,10 +271,12 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
                 return;
               }
               const distance = Math.abs(raw - index);
-              gsap.set(panel, { opacity: Math.max(0, 1 - distance * 1.6) });
+              gsap.set(panel, {
+                opacity: Math.max(0, 1 - distance * 1.6),
+                pointerEvents: index === nextIndex ? "auto" : "none",
+              });
             });
 
-            const nextIndex = Math.min(stops, Math.round(raw));
             if (nextIndex !== activeIndex) {
               activeIndex = nextIndex;
               positionAperture(activeIndex, true);

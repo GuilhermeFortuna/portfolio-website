@@ -155,6 +155,56 @@ describe("ProjectShowcase", () => {
     expect(create.mock.calls[0][0]).toMatchObject({ pin: true });
   });
 
+  /*
+   * Absolute-stacked panels keep painting opacity for crossfades, but an
+   * opacity-0 panel still sits above earlier siblings in DOM order and
+   * intercepts clicks. Without pointer-events toggling, the Aegis case-study
+   * link is covered by later panels (notably Nexo Dental's left-side aperture).
+   */
+  it("disables pointer events on inactive stacked panels so the active case-study link stays clickable", () => {
+    render(<ProjectShowcase projects={projects} />);
+    const { gsapFake, create } = runDesktopEnhancement();
+
+    const articles = screen.getAllByRole("article");
+    expect(gsapFake.set).toHaveBeenCalledWith(articles, {
+      position: "absolute",
+      inset: 0,
+      opacity: 0,
+      pointerEvents: "none",
+    });
+    expect(gsapFake.set).toHaveBeenCalledWith(articles[0], {
+      opacity: 1,
+      pointerEvents: "auto",
+    });
+
+    const onUpdate = create.mock.calls[0][0].onUpdate as (self: {
+      progress: number;
+    }) => void;
+
+    // Midway between Aegis (0) and Quant (1) still rounds to Aegis.
+    onUpdate({ progress: 0.1 / (projects.length - 1) });
+    expect(gsapFake.set).toHaveBeenCalledWith(articles[0], {
+      opacity: expect.any(Number),
+      pointerEvents: "auto",
+    });
+    expect(gsapFake.set).toHaveBeenCalledWith(articles[1], {
+      opacity: expect.any(Number),
+      pointerEvents: "none",
+    });
+
+    // Snap to Quant — only its panel should accept pointer input.
+    gsapFake.set.mockClear();
+    onUpdate({ progress: 1 / (projects.length - 1) });
+    expect(gsapFake.set).toHaveBeenCalledWith(articles[0], {
+      opacity: expect.any(Number),
+      pointerEvents: "none",
+    });
+    expect(gsapFake.set).toHaveBeenCalledWith(articles[1], {
+      opacity: expect.any(Number),
+      pointerEvents: "auto",
+    });
+  });
+
   it("advances the pinned scroll position when a project's link is focused via keyboard", () => {
     render(<ProjectShowcase projects={projects} />);
     const { trigger } = runDesktopEnhancement();
