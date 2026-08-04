@@ -292,6 +292,42 @@ Role `Founder and sole developer`, Period `April 2026–present`, State
 - Display-name update `Q` → `Quant` in `src/content/projects.ts` (WO-027).
 - Optional later recapture of the native desktop shell.
 
+## gosigapp case study
+
+**Status:** evidence WO-029 `DONE` (2026-08-03).
+Authoritative claim register: [`gosigapp-case-study-evidence.md`](./gosigapp-case-study-evidence.md).
+WO-031 must produce the content contract based on these accepted facts.
+
+### Accepted facts
+
+- **FACT (owner):** Public name is **gosigapp**. Category: government compliance / backend pipeline (`Reliable SIGAP Submission Pipeline`). Route slug is `gosigapp` (`/work/gosigapp`).
+- **FACT (owner):** Built for an unnamed betting operator in the **Brazilian iGaming** sector to satisfy that operator's legal duty to submit daily and monthly regulatory files to SIGAP.
+- **FACT (owner):** Role: **Software Developer**, sole author, designed and built every layer with AI assistance.
+- **FACT (owner):** Repository history spans **2025-12-24** through **2026-06-22** (100 commits total, single author `Guilherme Fortuna dos Santos`).
+- **FACT (owner):** Deployed to AWS ECS/Fargate (`Dockerfile`, `.github/workflows/deploy.yml`, `gosigapp-task-definition.json`, `iam-policies/` present). As far as the owner knows, still active.
+- **FACT (source):** Verified pipeline — S3 fetch → ZIP extraction → XML validation/aggregation → PFX RSA-SHA256 digital signing → gzip compression → base64 encoding → mTLS SIGAP API submission.
+- **FACT (source):** Six SIGAP dataset types — `apostadores` (bettors), `carteiras` (wallets), `esportivas` (sports betting), `jogos` (online casino), `diarios` (daily operator aggregate), and `mensais` (monthly operator aggregate).
+- **FACT (source):** Primary CLI pipeline runner (`cmd/pipeline`) and HTTP API server (`cmd/server`) for service integration, plus seven supporting utility commands (`backfill`, `compliance-check`, `date-detail`, `downloader-batch`, `downloader-monthly`, `migrate-logs`, `refresh-token`).
+- **FACT (source):** `internal/impedidos` queries the official SIGAP API Impedidos v2 endpoint (`GET /impedimento/v2/condicao/{cpf}`) for bettor self-exclusion and restriction checks (SPA/MF-SIGAP-001/2026).
+- **FACT (source):** Retry & auditability mechanics — durable log storage backed by AWS DynamoDB (`internal/logstore/dynamodb.go`), asynchronous job runner with full lifecycle tracking (`queued`, `running`, `completed`, `failed`, `cancelled`), and automated cron-style scheduler (`internal/scheduler`).
+- **FACT (source):** Security boundary — PKCS#12 PFX certificate digital signing (RSA-SHA256 XML signatures `ds:Signature`) and mTLS authentication with OAuth2 token caching.
+- **DECISION:** Omit live-environment hero control (backend/CLI pipeline with no public UI).
+- **DECISION:** Media deliverables limited to an architecture system-map diagram and sanitized CLI/log text captures against fixture data (no cloud-console screenshots).
+
+### Disclosure boundary
+
+- **Confidential — never published:** employer identity, brand codes `BRX` and `RICO`, S3 bucket names, PFX certificate paths/passwords, AWS account IDs, ARNs, IAM policies, API tokens, JWT secrets, and real submission payload data/PII.
+- **No invented outcomes:** no files-processed volume, submission success rate, uptime percentage, incident count, regulator endorsement, fine avoidance figures, or SLA performance may be claimed.
+
+### Known gaps (state honestly)
+
+- gosigapp has no visual UI surface; case study relies entirely on architectural system-map diagrams and sanitized CLI/log captures.
+- Current live operational status cannot be independently verified beyond the committed cloud deployment configurations and owner knowledge.
+
+### Missing inputs
+
+- System-map diagram and sanitized CLI/log captures (WO-030).
+
 ## Metadata
 
 The validated route metadata registry is shared by the client router and the static route-shell generator. Every route requires a unique title, description, canonical URL, `og:url`, `og:title`, and `og:description`. An approved project-specific social image SHOULD be used; routes without one use the approved global 1200×630 default.
