@@ -158,3 +158,12 @@ any asset. Two accepted captures remain reserved.
 | `financial-ledger.webp` | Product screenshot (WO-035, MSW mocks). | Delivered figure |
 | Reserved: `orcamento.webp`, `reports.webp` | Accepted WO-035 captures not placed on this page. | Prose-only coverage in Decision 3 / Delivered |
 | `placeholder.svg` | Chapter wiring only. | Not a narrative figure |
+
+## Site header (sticky glass + active nav)
+
+First-party header chrome. Interaction patterns were inspired by 21st.dev motion
+and underlined navigation menus; no registry package was installed.
+
+| Component | Canonical URL (inspiration) | Local file | Dependency | Notes |
+| --- | --- | --- | --- | --- |
+| Sticky glass header + scroll-spy nav | https://21st.dev/@unlumen/components/motion-navigation-menu (layoutId active indicator); https://21st.dev/@shadcnui-blocks/components/navigation-menu-05 (hairline underline) | `src/components/layout/site-header.tsx`, `nav-active-indicator.tsx`, `src/hooks/use-active-section.ts`, `use-scrolled-past.ts` | `motion`, `lenis/react` (optional scroll sync) | Keeps the existing full-width bar. Solid `--color-canvas` fill at rest (separates nav from hero lines); glass + hairline after scroll. Active section via IntersectionObserver mid-viewport band; `aria-current` + Motion `layoutId` underline (static under reduced motion). Hover: muted → text + soft underline. Language switcher tokens aligned to `--color-line` / `--color-surface` / `--color-text`. |
