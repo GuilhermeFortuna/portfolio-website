@@ -67,6 +67,8 @@ export function SiteHeader() {
   const siteNavigation = getSiteNavigation(locale);
   const scrolled = useScrolledPast();
   const activeSection = useActiveSection(HOME_SECTION_IDS);
+  const [wordmarkFirst, ...wordmarkRest] = siteContent.wordmark.split(" ");
+  const wordmarkLast = wordmarkRest.join(" ");
 
   return (
     <>
@@ -79,25 +81,22 @@ export function SiteHeader() {
       <header
         data-scrolled={scrolled ? "true" : "false"}
         className={cn(
-          "fixed inset-x-0 top-0 z-20 px-[var(--page-gutter)] transition-all duration-[var(--duration-medium)] ease-[var(--ease-standard)]",
-          scrolled
-            ? "py-2 bg-[var(--color-canvas)]/85 backdrop-blur-md border-b border-[var(--color-line)]"
-            : "py-3 lg:py-4 bg-[var(--color-canvas)] border-b border-transparent",
+          "fixed inset-x-0 top-0 z-20 bg-transparent px-[var(--page-gutter)] border-b border-transparent transition-all duration-[var(--duration-medium)] ease-[var(--ease-standard)]",
+          scrolled ? "py-2" : "py-3 lg:py-4",
         )}
       >
         <div className="mx-auto flex h-14 max-w-[var(--content-wide)] items-center justify-between rounded-full border border-[var(--color-line-strong)] bg-[var(--color-surface)]/80 px-4 lg:px-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl transition-all duration-[var(--duration-medium)]">
           <a
             href={siteNavigation.wordmarkHref}
-            className={cn(
-              linkClassName,
-              "group flex items-center gap-2.5 text-[var(--color-text)] transition-transform duration-[var(--duration-fast)] active:scale-95",
-            )}
+            aria-label={siteContent.wordmark}
+            className="group inline-flex min-h-9 shrink-0 items-center gap-[0.35em] rounded-full [font-family:var(--font-geist-mono)] text-[0.625rem] leading-none uppercase text-[var(--color-text)] transition-transform duration-[var(--duration-fast)] ease-[var(--ease-standard)] active:scale-95 sm:gap-[0.45em] sm:text-[0.8125rem] lg:text-[0.9375rem]"
           >
-            <span className="relative flex h-2 w-2 items-center justify-center">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-accent-b)] opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-accent-b)]" />
+            <span className="font-semibold tracking-[0.08em] sm:tracking-[0.12em]">
+              {wordmarkFirst}
             </span>
-            <span>{siteContent.wordmark}</span>
+            <span className="font-light tracking-[0.14em] text-[var(--color-text-muted)] transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover:text-[var(--color-text)] sm:tracking-[0.28em]">
+              {wordmarkLast}
+            </span>
           </a>
           <div className="flex items-center gap-4 lg:gap-6">
             <LayoutGroup>

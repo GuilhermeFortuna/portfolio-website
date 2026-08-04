@@ -64,8 +64,8 @@ export interface SiteMetadata {
 
 const siteContentMap: Record<Locale, SiteContent> = {
   en: {
-    wordmark: "GUILHERME",
-    heroEyebrow: "GUILHERME",
+    wordmark: "GUILHERME FORTUNA",
+    heroEyebrow: "Full-stack Developer",
     heroTitle: "I build ambitious software systems.",
     heroDisciplines: "AI · Product Engineering · Data · Infrastructure",
     heroBody:
@@ -120,8 +120,8 @@ const siteContentMap: Record<Locale, SiteContent> = {
     ],
   },
   "pt-BR": {
-    wordmark: "GUILHERME",
-    heroEyebrow: "GUILHERME",
+    wordmark: "GUILHERME FORTUNA",
+    heroEyebrow: "Desenvolvedor Full-stack",
     heroTitle: "Desenvolvo sistemas de software ambiciosos.",
     heroDisciplines: "IA · Engenharia de Produto · Dados · Infraestrutura",
     heroBody:

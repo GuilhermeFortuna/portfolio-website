@@ -154,13 +154,14 @@ describe("SiteHeader", () => {
     expect(document.activeElement).toHaveAttribute("href");
   });
 
-  it("starts with a solid canvas fill and gains glass chrome after scroll", () => {
+  it("stays transparent around the pill and tightens padding after scroll", () => {
     createIntersectionObserverDouble();
     render(<SiteHeader />);
 
     const header = document.querySelector("header");
     expect(header).toHaveAttribute("data-scrolled", "false");
-    expect(header?.className).toContain("bg-[var(--color-canvas)]");
+    expect(header?.className).toContain("bg-transparent");
+    expect(header?.className).toContain("py-3");
 
     act(() => {
       Object.defineProperty(window, "scrollY", {
@@ -171,7 +172,9 @@ describe("SiteHeader", () => {
     });
 
     expect(header).toHaveAttribute("data-scrolled", "true");
-    expect(header?.className).toContain("backdrop-blur-md");
+    expect(header?.className).toContain("bg-transparent");
+    expect(header?.className).toContain("py-2");
+    expect(header?.className).not.toContain("backdrop-blur-md");
   });
 
   it("marks the intersecting section link with aria-current", () => {

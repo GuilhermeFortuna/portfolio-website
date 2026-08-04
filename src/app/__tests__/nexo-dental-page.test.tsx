@@ -98,7 +98,7 @@ describe("/work/nexo-dental navigation", () => {
     }
 
     expect(
-      screen.getByRole("link", { name: "GUILHERME" }),
+      screen.getByRole("link", { name: "GUILHERME FORTUNA" }),
     ).toHaveAttribute("href", "/#top");
   });
 
