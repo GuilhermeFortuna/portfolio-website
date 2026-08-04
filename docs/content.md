@@ -89,7 +89,7 @@ Positioning → problem → goal → why difficult → system → 2–4 decision
 
 **DECISION (2026-07-28):** Project repositories are private and will not be linked publicly. Staging/live environment links are planned for Aegis and Nexo Dental when those environments exist; gosigapp has no UI (CLI/backend only) and will not receive a live-environment action. Quant is a native desktop application and omits the control entirely (see Quant chapter). Until staging URLs are verified for routes that use them, keep `[REQUIRED: live environment URL]` markers in documentation only.
 
-**DECISION (2026-07-31):** On a case-study page whose live environment is still unverified, the live-environment action renders as a visibly disabled, non-interactive control reading `Live environment — coming soon` (`aria-disabled="true"`, no `href`). It must never render a `[REQUIRED: …]` marker as visible text. Applies to Aegis now; extend to Nexo Dental when that case study is built. Does **not** apply to Quant (DEC-02 in the Quant evidence register).
+**DECISION (2026-07-31):** On a case-study page whose live environment is still unverified, the live-environment action renders as a visibly disabled, non-interactive control reading `Live environment — coming soon` (`aria-disabled="true"`, no `href`). It must never render a `[REQUIRED: …]` marker as visible text. Applies to Aegis and Nexo Dental (OWN-06 / DEC-02 in the Nexo evidence register). Does **not** apply to Quant (DEC-02 in the Quant evidence register).
 
 ## Aegis case study
 
@@ -330,10 +330,14 @@ Authoritative content contract: [`gosigapp-case-study-content.md`](./gosigapp-ca
 
 ## Nexo Dental case study
 
-**Status:** evidence WO-034 `DONE` (2026-08-04). Authoritative claim
-register: [`nexo-dental-case-study-evidence.md`](./nexo-dental-case-study-evidence.md).
-Media (WO-035) is `READY`; content contract (WO-036) remains blocked on
-WO-035.
+**Status:** evidence WO-034 `DONE` (2026-08-04); media WO-035 `DONE`
+(2026-08-04); content contract WO-036 `DONE` (owner approved 2026-08-04).
+Authoritative claim register:
+[`nexo-dental-case-study-evidence.md`](./nexo-dental-case-study-evidence.md).
+Exact visible copy:
+[`nexo-dental-case-study-content.md`](./nexo-dental-case-study-content.md).
+Media manifest:
+[`nexo-dental-case-study-media.md`](./nexo-dental-case-study-media.md).
 
 ### Accepted facts
 
@@ -390,18 +394,24 @@ WO-035.
 ### Known gaps (state honestly)
 
 - Staging deployment Work Orders in the source repository are blocked;
-  live environment remains unverified.
+  live environment remains unverified — the case-study hero therefore
+  reuses Aegis's disabled `Live environment — coming soon` control.
 - Source `WO-STATUS.md` still lists core BI Work Orders as incomplete
   despite reporting code/routes existing.
 - Clinic-scale synthetic staging data Work Orders (WO96–WO97) are blocked
   in the source status board.
-- Approved media (WO-035) and exact visible copy (WO-036) are still open.
+### Approved media (WO-035)
+
+Ten uncropped 2560×1440 WebP captures in `public/work/nexo-dental/` from
+MSW mocks only. Content contract places eight
+(`shell-identity`, `agenda`, `patient-workspace`, `whatsapp-inbox`,
+`odontogram`, `clinical-timeline`, `fila`, `financial-ledger`) and reserves
+`orcamento` and `reports`.
 
 ### Missing inputs
 
-- High-resolution captures across the three role-native surfaces (WO-035;
-  now `READY`).
-- Owner-approved narrative and exact visible copy (WO-036).
+- None. WO-035 (media) and WO-036 (content contract) are complete. Ready for
+  WO-037 implementation.
 
 ## Metadata
 
