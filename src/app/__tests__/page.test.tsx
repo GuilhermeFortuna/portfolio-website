@@ -130,11 +130,11 @@ describe("homepage composition", () => {
     expect(github).toHaveAttribute("rel", "noreferrer");
   });
 
-  it("links Aegis, Quant, and gosigapp to their case studies and leaves the rest unlinked", async () => {
+  it("links all four projects to their case studies", async () => {
     const { default: Home } = await import("@/app/page");
     render(<Home />);
 
-    const [aegis, quant, gosigapp, ...pending] = projects;
+    const [aegis, quant, gosigapp, nexoDental] = projects;
 
     // Every project is always fully visible (no active/selected state), so
     // each linked project renders exactly one case-study link.
@@ -153,17 +153,10 @@ describe("homepage composition", () => {
     });
     expect(gosigappLink).toHaveAttribute("href", "/work/gosigapp");
 
-    for (const project of pending) {
-      expect(project.href).toBeNull();
-      // No case-study link, disabled control, or placeholder action — the
-      // in-page "select project" rail link (an honest same-page anchor, not
-      // a fake case-study destination) is not this.
-      expect(
-        screen.queryByRole("link", {
-          name: `View ${project.name} case study`,
-        }),
-      ).toBeNull();
-    }
+    const nexoDentalLink = screen.getByRole("link", {
+      name: `View ${nexoDental.name} case study`,
+    });
+    expect(nexoDentalLink).toHaveAttribute("href", "/work/nexo-dental");
   });
 
   it("keeps every case-study destination same-origin", async () => {
@@ -174,12 +167,13 @@ describe("homepage composition", () => {
       .map((anchor) => anchor.getAttribute("href") ?? "")
       .filter((href) => href.startsWith("/work/"));
 
-    // Hero CTA + Aegis project link + Quant project link + gosigapp project link.
+    // Hero CTA + four project case-study links.
     expect(caseStudyHrefs).toEqual([
       "/work/aegis",
       "/work/aegis",
       "/work/q",
       "/work/gosigapp",
+      "/work/nexo-dental",
     ]);
   });
 });

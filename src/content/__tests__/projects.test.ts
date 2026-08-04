@@ -44,16 +44,15 @@ describe("project content contract", () => {
     }
   });
 
-  it("links only the projects whose case-study route exists", () => {
-    // Aegis, Quant, and gosigapp are published. Nexo Dental stays null rather than
-    // pointing at a route that would 404.
+  it("links every project to its published case-study route", () => {
+    // All four chapters are published: Aegis, Quant, gosigapp, and Nexo Dental.
     expect(
       projects.map(({ slug, href }) => [slug, href]),
     ).toEqual([
       ["aegis", "/work/aegis"],
       ["q", "/work/q"],
       ["gosigapp", "/work/gosigapp"],
-      ["nexo-dental", null],
+      ["nexo-dental", "/work/nexo-dental"],
     ]);
   });
 
@@ -63,10 +62,8 @@ describe("project content contract", () => {
 
   it("keeps every project destination a root-relative route", () => {
     for (const { href } of projects) {
-      if (href === null) {
-        continue;
-      }
-      expect(href.startsWith("/work/")).toBe(true);
+      expect(href).not.toBeNull();
+      expect(href!.startsWith("/work/")).toBe(true);
     }
   });
 });

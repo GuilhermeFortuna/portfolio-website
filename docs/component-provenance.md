@@ -122,3 +122,39 @@ WO-032 places all three per the WO-031 media map, without re-encoding, cropping,
 | `system-map.svg` | Vector architecture diagram (WO-030). | Section 4 system overview figure |
 | `compliance-check-output.webp` | Terminal log capture (WO-030, high-res 2x DPR WebP). | Decision 2 figure |
 | `cli-pipeline-run.webp` | Terminal log capture (WO-030, high-res 2x DPR WebP). | Decision 3 figure |
+
+---
+
+## Batch 06 — `Nexo Dental` Case-Study Implementation (WO-037)
+
+`git diff package.json pnpm-lock.yaml` is empty for this order. The shared
+case-study primitives from WO-021/WO-027/WO-032 were reused **unchanged**: no
+type widening, no system-map component, and no new visual runtime. Aegis,
+Quant, and gosigapp rendering remain byte-identical. Hero
+`liveEnvironment` reuses Aegis’s exact disabled object
+`{ label: "Live environment — coming soon" }`.
+
+| Component | Origin | Local file | Dependency | Notes |
+| --- | --- | --- | --- | --- |
+| Case-study shell, hero, section, and media primitives | First-party (WO-021; widened WO-027, WO-032; reused WO-037) | `src/components/case-study/case-study-{shell,hero,section,media}.tsx` | None beyond React | No further changes in this order. Nexo Dental’s system overview uses section `images` (`patient-workspace.webp`) rather than a bespoke system-map component. |
+
+### Media provenance
+
+The ten WebP assets in `public/work/nexo-dental/` were produced under WO-035 and
+are inventoried with SHA-256 hashes in
+[`nexo-dental-case-study-media.md`](./nexo-dental-case-study-media.md). WO-037
+places eight per the WO-036 media map, without re-encoding, cropping, or adding
+any asset. Two accepted captures remain reserved.
+
+| Asset | Origin | Used by |
+| --- | --- | --- |
+| `shell-identity.webp` | Product screenshot (WO-035 subject 10, MSW mocks). | Hero still + caption |
+| `agenda.webp` | Product screenshot (WO-035, MSW mocks). | Context figure |
+| `patient-workspace.webp` | Product screenshot (WO-035, MSW mocks). | System overview figure |
+| `whatsapp-inbox.webp` | Product screenshot (WO-035, MSW mocks). | Decision 2 figure |
+| `odontogram.webp` | Product screenshot (WO-035, MSW mocks). | Decision 3 first figure |
+| `clinical-timeline.webp` | Product screenshot (WO-035, MSW mocks). | Decision 3 second figure |
+| `fila.webp` | Product screenshot (WO-035, MSW mocks). | Decision 4 figure |
+| `financial-ledger.webp` | Product screenshot (WO-035, MSW mocks). | Delivered figure |
+| Reserved: `orcamento.webp`, `reports.webp` | Accepted WO-035 captures not placed on this page. | Prose-only coverage in Decision 3 / Delivered |
+| `placeholder.svg` | Chapter wiring only. | Not a narrative figure |

@@ -44,7 +44,7 @@ export function getProjects(locale: Locale = "en") {
       summary: isPt
         ? "Produto multi-tenant focado em IA para clínicas odontológicas, abrangendo fluxos de trabalho, CRM, operações e engenharia de interface premium."
         : "An AI-first, multi-tenant product for dental clinics spanning workflows, CRM, operations, and premium interface engineering.",
-      href: null,
+      href: `${prefix}/work/nexo-dental`,
     },
   ] as const satisfies readonly Project[];
 }

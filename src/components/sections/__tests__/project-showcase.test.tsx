@@ -223,17 +223,17 @@ describe("ProjectShowcase", () => {
     expect(trigger.scroll).toHaveBeenCalledWith(expectedScroll);
   });
 
-  it("gives every project — including ones without a case-study link — a keyboard-reachable rail control", () => {
+  it("gives every project a keyboard-reachable rail control", () => {
     render(<ProjectShowcase projects={projects} />);
     const { trigger } = runDesktopEnhancement();
 
-    const noRouteProject = projects.find((project) => project.href === null);
-    expect(noRouteProject).toBeDefined();
+    // Every project has a published case-study route; the rail still makes
+    // each panel reachable while the section is pinned.
+    const targetProject = projects[3];
+    expect(targetProject).toBeDefined();
 
-    // Nothing else in gosigapp's/Nexo Dental's panel is focusable, so the
-    // rail is what makes every project reachable while the section is pinned.
     const railLink = document.querySelector(
-      `[data-project-jump="${noRouteProject!.slug}"]`,
+      `[data-project-jump="${targetProject.slug}"]`,
     ) as HTMLElement;
     expect(railLink).not.toBeNull();
     expect(railLink.tagName).toBe("A");
@@ -242,7 +242,7 @@ describe("ProjectShowcase", () => {
 
     const stops = projects.length - 1;
     const index = projects.findIndex(
-      (project) => project.slug === noRouteProject!.slug,
+      (project) => project.slug === targetProject.slug,
     );
     const expectedScroll =
       trigger.start + (index / stops) * (trigger.end - trigger.start);
