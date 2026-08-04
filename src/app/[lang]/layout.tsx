@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LanguageProvider } from "@/components/i18n/language-context";
 import { isPrefixedLocale, prefixedLocales, type Locale } from "@/lib/i18n";

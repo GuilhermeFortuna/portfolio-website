@@ -5,33 +5,24 @@ import { useLocale } from "@/components/i18n/language-context";
 import type { Locale } from "@/lib/i18n";
 import { locales, localizePathname } from "@/lib/i18n";
 
+const LOCALE_COOKIE_MAX_AGE_SECONDS = 31_536_000; // 1 year
+
+/** Persist locale for middleware preference (outside component to satisfy immutability lint). */
+function persistLocaleCookie(locale: Locale): void {
+  document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=${LOCALE_COOKIE_MAX_AGE_SECONDS}; SameSite=Lax`;
+}
+
 export function LanguageSwitcher() {
   const currentLocale = useLocale();
-
-  let pathname = "/";
-  let router: ReturnType<typeof useRouter> | null = null;
-
-  try {
-    pathname = usePathname() || "/";
-    router = useRouter();
-  } catch {
-    // Fallback for isolated test environments outside Next App Router context
-  }
+  const pathname = usePathname() || "/";
+  const router = useRouter();
 
   const handleSwitch = (targetLocale: Locale) => {
     if (targetLocale === currentLocale) return;
 
     const newPathname = localizePathname(pathname, targetLocale);
-
-    if (typeof document !== "undefined") {
-      document.cookie = `NEXT_LOCALE=${targetLocale}; path=/; max-age=31536000; SameSite=Lax`;
-    }
-
-    if (router) {
-      router.push(newPathname);
-    } else if (typeof window !== "undefined") {
-      window.location.href = newPathname;
-    }
+    persistLocaleCookie(targetLocale);
+    router.push(newPathname);
   };
 
   return (
