@@ -328,6 +328,81 @@ Authoritative content contract: [`gosigapp-case-study-content.md`](./gosigapp-ca
 
 - None. WO-030 (media captures) and WO-031 (content contract) complete. Ready for WO-032 implementation.
 
+## Nexo Dental case study
+
+**Status:** evidence WO-034 `DONE` (2026-08-04). Authoritative claim
+register: [`nexo-dental-case-study-evidence.md`](./nexo-dental-case-study-evidence.md).
+Media (WO-035) is `READY`; content contract (WO-036) remains blocked on
+WO-035.
+
+### Accepted facts
+
+- **FACT (owner):** Public name is **Nexo Dental**. Route slug is
+  `nexo-dental` (`/work/nexo-dental`, assets under `public/work/nexo-dental/`).
+- **FACT (owner):** Nexo Dental is the owner's own product — not client or
+  employer work. Role: **founder and sole developer**, with AI assistance
+  (Cursor was a development tool; git author-name variants resolve to one
+  person).
+- **FACT (owner):** Public period is the two repositories' Git history only —
+  no earlier unlogged lineage. Backend: 2026-07-06 through 2026-07-29 (73
+  commits). Frontend: 2026-07-06 through 2026-08-02 (224 commits).
+- **FACT (owner):** Domain — multi-tenant clinic-operations product for
+  Brazilian dental clinics spanning scheduling, patient records, odontogram,
+  finance, WhatsApp communication, CRM, TISS claims, and reporting, across
+  three primary daily roles (receptionist/operational, dentist/clinical,
+  manager/commercial-financial). Narrative frames from this scope alone.
+- **FACT (source):** Verified system — React/TypeScript Vite SPA (TanStack
+  Router), FastAPI service under `/api/v1`, PostgreSQL with Alembic (35
+  migrations), local orchestration via `nexo/dev.sh`, and an MSW mock path
+  (`VITE_USE_MOCKS=true`).
+- **FACT (source):** Multi-tenant RLS via tenant-scoped sessions
+  (`app.tenant_id`) and forced row-level security policies; LGPD-oriented
+  controls include AI PII pre-invoke rejection, claims field encryption/
+  masking, and no-PII assertions on clinic-pulse/event payloads.
+- **FACT (source):** Shipped workflow modules with backend + frontend
+  evidence — agenda/scheduling, patients, odontogram/clinical, finance/
+  orçamentos, WhatsApp/comms, CRM, TISS claims, plus reporting routes
+  present in-repo (source WO-STATUS still marks core BI WOs incomplete —
+  do not overclaim a finished BI program). Adjacent action-queue and
+  role-native AI operator surfaces exist in code.
+- **FACT (source):** Firebase Hosting staging config exists in the frontend
+  repository, but source Work Orders WO23–WO26 are `BLOCKED` / review-
+  rejected — **no verified live staging URL**.
+- **DECISION:** Reuse Aegis's exact disabled live-environment control
+  (`Live environment — coming soon`); no real link.
+- **DECISION:** Private source; no public repository link. Media from
+  seed/fixture/MSW only — never real clinic/patient data.
+- **DECISION:** No third-party product-comparison framing in Context/
+  Problem or any public claim.
+
+### Disclosure boundary
+
+- **Confidential — never published:** real clinic/patient data, credentials,
+  `.env` values, Firebase project identifiers, database connection strings,
+  API keys, private deployment identifiers, and private source repository
+  links.
+- **No invented outcomes:** no clinic count, patient volume, adoption,
+  uptime, or performance under real load.
+- **No promotional product-doc authority:** do not publish `premium`,
+  `production-ready`, `enterprise-grade`, `state-of-the-art`, or similar on
+  `PRODUCT.md` / README wording alone.
+
+### Known gaps (state honestly)
+
+- Staging deployment Work Orders in the source repository are blocked;
+  live environment remains unverified.
+- Source `WO-STATUS.md` still lists core BI Work Orders as incomplete
+  despite reporting code/routes existing.
+- Clinic-scale synthetic staging data Work Orders (WO96–WO97) are blocked
+  in the source status board.
+- Approved media (WO-035) and exact visible copy (WO-036) are still open.
+
+### Missing inputs
+
+- High-resolution captures across the three role-native surfaces (WO-035;
+  now `READY`).
+- Owner-approved narrative and exact visible copy (WO-036).
+
 ## Metadata
 
 The validated route metadata registry is shared by the client router and the static route-shell generator. Every route requires a unique title, description, canonical URL, `og:url`, `og:title`, and `og:description`. An approved project-specific social image SHOULD be used; routes without one use the approved global 1200×630 default.
@@ -340,7 +415,7 @@ The validated route metadata registry is shared by the client router and the sta
 | `/work/aegis` | `Aegis — Fraud Intelligence Case Study` | `Fraud intelligence and investigation software for the iGaming industry, presented through verified engineering decisions and evidence.` |
 | `/work/q` | `Quant — Quantitative Research and Execution` | `A quantitative research and execution system covering backtesting, optimization, data pipelines, and execution architecture.` |
 | `/work/gosigapp` | `gosigapp — Reliable SIGAP Submission Pipeline` | `A Go backend pipeline for file validation, processing, retries, auditability, and submission to SIGAP.` |
-| `/work/nexo-dental` | `Nexo Dental — AI-First Clinic Software` | `An AI-first, multi-tenant product for dental clinics spanning workflows, CRM, operations, and premium interface engineering.` |
+| `/work/nexo-dental` | `Nexo Dental — Multi-Tenant Clinic Operations` | `A multi-tenant product for Brazilian dental clinics spanning scheduling, clinical records, finance, communications, CRM, claims, and reporting across role-native surfaces.` |
 | `/contact` | `Contact Guilherme — Build Something Difficult` | `Contact Guilherme about remote software engineering, ambitious product development, and difficult systems.` |
 
 - Global OG default title: `Guilherme builds ambitious software systems.`
