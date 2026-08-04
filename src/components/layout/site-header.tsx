@@ -16,7 +16,7 @@ import { cn } from "@/lib/cn";
 const HOME_SECTION_IDS = ["work", "process", "about", "contact"] as const;
 
 const linkClassName =
-  "relative inline-flex min-h-11 min-w-11 items-center justify-center [font-family:var(--font-geist-mono)] text-[0.8125rem] font-semibold tracking-[0.14em] uppercase transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)]";
+  "relative inline-flex min-h-9 px-3 py-1.5 items-center justify-center rounded-full [font-family:var(--font-geist-mono)] text-[0.75rem] font-semibold tracking-[0.14em] uppercase transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)]";
 
 function NavLinkList({
   items,
@@ -46,16 +46,14 @@ function NavLinkList({
             className={cn(
               linkClassName,
               isActive
-                ? "text-[var(--color-text)]"
-                : "text-[var(--color-text-muted)] hover:text-[var(--color-text)]",
-              !isActive &&
-                "hover:after:absolute hover:after:inset-x-2 hover:after:-bottom-1 hover:after:h-px hover:after:bg-[var(--color-line-strong)] hover:after:content-['']",
+                ? "text-[var(--color-text)] font-semibold"
+                : "text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-line)]/30",
             )}
           >
-            <span className="relative inline-flex items-center py-0.5">
+            <span className="relative z-10 inline-flex items-center">
               {item.label}
-              {isActive ? <NavActiveIndicator layoutId={layoutId} /> : null}
             </span>
+            {isActive ? <NavActiveIndicator layoutId={layoutId} /> : null}
           </a>
         );
       })}
@@ -74,41 +72,48 @@ export function SiteHeader() {
     <>
       <a
         href="#main-content"
-        className="fixed top-4 left-[var(--page-gutter)] z-50 -translate-y-[200%] bg-[var(--color-canvas)] px-4 py-3 text-sm focus:translate-y-0"
+        className="fixed top-4 left-[var(--page-gutter)] z-50 -translate-y-[200%] rounded-full bg-[var(--color-surface-strong)] px-4 py-2.5 text-xs font-semibold tracking-wider uppercase text-[var(--color-text)] shadow-lg transition-transform focus:translate-y-0"
       >
         {siteNavigation.skipLink}
       </a>
       <header
         data-scrolled={scrolled ? "true" : "false"}
         className={cn(
-          "fixed inset-x-0 top-0 z-20 h-[4.5rem] border-b transition-[background-color,backdrop-filter,border-color] duration-[var(--duration-medium)] ease-[var(--ease-standard)]",
+          "fixed inset-x-0 top-0 z-20 px-[var(--page-gutter)] transition-all duration-[var(--duration-medium)] ease-[var(--ease-standard)]",
           scrolled
-            ? "border-[var(--color-line)] bg-[var(--color-canvas)]/85 backdrop-blur-md"
-            : "border-transparent bg-[var(--color-canvas)]",
+            ? "py-2 bg-[var(--color-canvas)]/85 backdrop-blur-md border-b border-[var(--color-line)]"
+            : "py-3 lg:py-4 bg-[var(--color-canvas)] border-b border-transparent",
         )}
       >
-        <div className="mx-auto flex h-full max-w-[var(--content-wide)] items-center justify-between px-[var(--page-gutter)]">
+        <div className="mx-auto flex h-14 max-w-[var(--content-wide)] items-center justify-between rounded-full border border-[var(--color-line-strong)] bg-[var(--color-surface)]/80 px-4 lg:px-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl transition-all duration-[var(--duration-medium)]">
           <a
             href={siteNavigation.wordmarkHref}
-            className={cn(linkClassName, "text-[var(--color-text)]")}
+            className={cn(
+              linkClassName,
+              "group flex items-center gap-2.5 text-[var(--color-text)] transition-transform duration-[var(--duration-fast)] active:scale-95",
+            )}
           >
-            {siteContent.wordmark}
+            <span className="relative flex h-2 w-2 items-center justify-center">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-accent-b)] opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-accent-b)]" />
+            </span>
+            <span>{siteContent.wordmark}</span>
           </a>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 lg:gap-6">
             <LayoutGroup>
               <NavLinkList
                 items={siteNavigation.desktop}
                 activeSection={activeSection}
                 layoutId="nav-active-desktop"
                 ariaLabel="Primary"
-                className="hidden items-center gap-6 lg:flex"
+                className="hidden items-center gap-1 lg:flex"
               />
               <NavLinkList
                 items={siteNavigation.mobile}
                 activeSection={activeSection}
                 layoutId="nav-active-mobile"
                 ariaLabel="Primary mobile"
-                className="flex items-center gap-5 lg:hidden"
+                className="flex items-center gap-1 lg:hidden"
               />
             </LayoutGroup>
             <LanguageSwitcher />

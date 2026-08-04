@@ -20,7 +20,7 @@ export function NavActiveIndicator({ layoutId }: NavActiveIndicatorProps) {
     return (
       <span
         aria-hidden
-        className="absolute inset-x-0 -bottom-1 h-px bg-[var(--color-line-strong)]"
+        className="absolute inset-0 rounded-full border border-[var(--color-line-strong)] bg-[var(--color-surface-strong)]"
       />
     );
   }
@@ -29,8 +29,10 @@ export function NavActiveIndicator({ layoutId }: NavActiveIndicatorProps) {
     <motion.span
       layoutId={layoutId}
       aria-hidden
-      className="absolute inset-x-0 -bottom-1 h-px bg-[var(--color-line-strong)]"
+      className="absolute inset-0 rounded-full border border-[var(--color-line-strong)] bg-[var(--color-surface-strong)]/80 shadow-[0_-2px_12px_rgba(142,160,255,0.25)] backdrop-blur-sm"
       transition={{ type: "spring", stiffness: 380, damping: 32 }}
-    />
+    >
+      <span className="absolute -top-px inset-x-2.5 h-[2px] rounded-full bg-gradient-to-r from-transparent via-[var(--color-accent-a)] to-transparent opacity-90" />
+    </motion.span>
   );
 }
