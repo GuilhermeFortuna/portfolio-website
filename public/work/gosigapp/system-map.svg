@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #06070a; }
+      .group-title { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 11px; font-weight: 600; fill: #7a8496; letter-spacing: 0.12em; text-transform: uppercase; }
+      .node-title { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; font-weight: 600; fill: #e1e7ec; }
+      .node-title-accent-a { fill: #8EA0FF; }
+      .node-title-accent-b { fill: #68D7C5; }
+      .node-title-accent-c { fill: #B49CFF; }
+      .node-detail { font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 12px; fill: #7a8496; line-height: 1.4; }
+      .node-badge { font-family: "Geist Mono", monospace, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 10px; font-weight: 500; fill: #7a8496; }
+      .box { fill: #0f1219; stroke: rgba(255, 255, 255, 0.08); stroke-width: 1; rx: 8px; }
+      .box-accent-a { fill: #0f1219; stroke: rgba(142, 160, 255, 0.35); stroke-width: 1; rx: 8px; }
+      .box-accent-b { fill: #0f1219; stroke: rgba(104, 215, 197, 0.35); stroke-width: 1; rx: 8px; }
+      .box-accent-c { fill: #0f1219; stroke: rgba(180, 156, 255, 0.35); stroke-width: 1; rx: 8px; }
+      .connector { stroke: rgba(255, 255, 255, 0.16); stroke-width: 1.5; fill: none; stroke-dasharray: none; }
+      .connector-accent { stroke: rgba(142, 160, 255, 0.45); stroke-width: 1.5; fill: none; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="rgba(255, 255, 255, 0.3)" />
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="rgba(142, 160, 255, 0.7)" />
+    </marker>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="1200" height="680" class="bg" rx="12" />
+
+  <!-- Title Header -->
+  <text x="40" y="44" class="group-title" style="fill: #8EA0FF;">GOSIGAP PIPELINE — SYSTEM MAP ARCHITECTURE</text>
+  <text x="1160" y="44" class="group-title" text-anchor="end" style="fill: #7a8496;">VERIFIED SOURCE BOUNDARY</text>
+  <line x1="40" y1="56" x2="1160" y2="56" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+
+  <!-- SECTION 1: INGESTION & AGGREGATION (Left Column) -->
+  <text x="40" y="90" class="group-title">1. INGESTION &amp; AGGREGATION PIPELINE</text>
+
+  <!-- Node: S3 Storage -->
+  <g transform="translate(40, 106)">
+    <rect width="340" height="88" class="box" />
+    <text x="16" y="32" class="node-title">S3 Raw Data Storage</text>
+    <text x="324" y="32" class="node-badge" text-anchor="end">SYS-01</text>
+    <text x="16" y="56" class="node-detail">Retrieves raw daily/monthly gaming &amp; transaction archives</text>
+  </g>
+
+  <!-- Connector S3 -> Extractor -->
+  <path d="M 210 194 L 210 220" class="connector" marker-end="url(#arrow)" />
+
+  <!-- Node: ZIP Extractor & Validator -->
+  <g transform="translate(40, 222)">
+    <rect width="340" height="88" class="box-accent-a" />
+    <text x="16" y="32" class="node-title node-title-accent-a">ZIP Extractor &amp; XSD Validator</text>
+    <text x="324" y="32" class="node-badge" text-anchor="end">SYS-01 / SYS-02</text>
+    <text x="16" y="56" class="node-detail">Unpacks archives and validates against 6 SIGAP dataset XSDs</text>
+  </g>
+
+  <!-- Connector Extractor -> Aggregator -->
+  <path d="M 210 310 L 210 336" class="connector" marker-end="url(#arrow)" />
+
+  <!-- Node: Dataset Aggregator -->
+  <g transform="translate(40, 338)">
+    <rect width="340" height="114" class="box" />
+    <text x="16" y="30" class="node-title">6 SIGAP Dataset Aggregator</text>
+    <text x="324" y="30" class="node-badge" text-anchor="end">SYS-02</text>
+    <text x="16" y="54" class="node-detail">Aggregates Daily &amp; Monthly report types:</text>
+    <text x="16" y="74" class="node-detail" style="fill: #e1e7ec; font-family: monospace; font-size: 11px;">apostadores · carteiras · esportivas · jogos · diarios · mensais</text>
+  </g>
+
+
+  <!-- SECTION 2: SECURITY & SUBMISSION (Center Column) -->
+  <text x="430" y="90" class="group-title">2. SECURITY &amp; REGULATOR SUBMISSION</text>
+
+  <!-- Connector Aggregator -> Digital Signer -->
+  <path d="M 380 395 L 430 395" class="connector-accent" marker-end="url(#arrow-accent)" />
+
+  <!-- Node: PFX Digital Signer -->
+  <g transform="translate(430, 338)">
+    <rect width="340" height="114" class="box-accent-b" />
+    <text x="16" y="30" class="node-title node-title-accent-b">PFX Digital Signer (RSA-SHA256)</text>
+    <text x="324" y="30" class="node-badge" text-anchor="end">SEC-01</text>
+    <text x="16" y="54" class="node-detail">Embeds XML digital signature (ds:Signature) via PKCS#12 certificate</text>
+    <text x="16" y="76" class="node-detail">gzipping &amp; base64 payload encoding for submission transport</text>
+  </g>
+
+  <!-- Connector Signer -> mTLS Sender -->
+  <path d="M 600 452 L 600 478" class="connector-accent" marker-end="url(#arrow-accent)" />
+
+  <!-- Node: mTLS & OAuth2 Sender -->
+  <g transform="translate(430, 480)">
+    <rect width="340" height="114" class="box-accent-b" />
+    <text x="16" y="30" class="node-title node-title-accent-b">mTLS &amp; OAuth2 REST Transport</text>
+    <text x="324" y="30" class="node-badge" text-anchor="end">SEC-02 / SYS-01</text>
+    <text x="16" y="54" class="node-detail">Submits encrypted payload to SIGAP REST API endpoint</text>
+    <text x="16" y="76" class="node-detail">Automated token caching, refresh cycle &amp; receipt verification</text>
+  </g>
+
+
+  <!-- SECTION 3: COMPLIANCE & AUDITABILITY (Right Column) -->
+  <text x="820" y="90" class="group-title">3. COMPLIANCE &amp; AUDITABILITY</text>
+
+  <!-- Node: SIGAP API Impedidos v2 -->
+  <g transform="translate(820, 106)">
+    <rect width="340" height="114" class="box-accent-c" />
+    <text x="16" y="30" class="node-title node-title-accent-c">SIGAP Impedidos v2 Validation</text>
+    <text x="324" y="30" class="node-badge" text-anchor="end">SYS-05</text>
+    <text x="16" y="54" class="node-detail">GET /impedimento/v2/condicao/{cpf}</text>
+    <text x="16" y="76" class="node-detail">Validates bettor self-exclusion &amp; legal restriction status</text>
+  </g>
+
+  <!-- Connector Extractor -> Impedidos -->
+  <path d="M 380 266 L 820 163" class="connector" stroke-dasharray="4 4" marker-end="url(#arrow)" />
+
+  <!-- Node: DynamoDB Log Store -->
+  <g transform="translate(820, 240)">
+    <rect width="340" height="98" class="box" />
+    <text x="16" y="30" class="node-title">DynamoDB Audit Log Store</text>
+    <text x="324" y="30" class="node-badge" text-anchor="end">OPS-01</text>
+    <text x="16" y="54" class="node-detail">Durable execution state tracking, step logs &amp; submission audit history</text>
+  </g>
+
+  <!-- Connector Pipeline -> DynamoDB -->
+  <path d="M 770 395 L 820 289" class="connector" marker-end="url(#arrow)" />
+
+  <!-- Node: Job Runner & Scheduler -->
+  <g transform="translate(820, 358)">
+    <rect width="340" height="114" class="box" />
+    <text x="16" y="30" class="node-title">Job Runner &amp; Cron Scheduler</text>
+    <text x="324" y="30" class="node-badge" text-anchor="end">OPS-02 / OPS-03</text>
+    <text x="16" y="54" class="node-detail">Job lifecycle (queued, running, completed, failed, cancelled)</text>
+    <text x="16" y="76" class="node-detail">WebSocket progress broadcasting &amp; recurring execution</text>
+  </g>
+
+
+  <!-- FOOTER: ENTRY POINTS & DEPLOYMENT -->
+  <line x1="40" y1="614" x2="1160" y2="614" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" />
+  <text x="40" y="642" class="node-badge" style="fill: #e1e7ec;">ENTRY POINTS: <tspan style="fill: #8EA0FF;">cmd/pipeline</tspan> (Batch CLI) · <tspan style="fill: #8EA0FF;">cmd/server</tspan> (HTTP API) · <tspan style="fill: #8EA0FF;">7 Utility Commands</tspan> (backfill, compliance-check, etc.)</text>
+  <text x="1160" y="642" class="node-badge" text-anchor="end" style="fill: #e1e7ec;">DEPLOYMENT: <tspan style="fill: #68D7C5;">Docker</tspan> · <tspan style="fill: #68D7C5;">GitHub Actions CI/CD</tspan> · <tspan style="fill: #68D7C5;">AWS ECS/Fargate</tspan> (OPS-04)</text>
+
+</svg>

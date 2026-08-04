@@ -89,9 +89,9 @@ Temporary captures and intermediates must live under a disposable
 
 ## CLI/Log Capture Contract
 
-- Capture terminal output as WebP at a legible fixed monospace size —
-  1600×900 or smaller, matching the byte-weight discipline the Aegis/Quant
-  screenshot ceilings used (target ≤400 KiB per image).
+- Capture terminal output as WebP at high resolution (2560×1440 or higher @ 2x DPR)
+  to ensure ultra-sharp typography and visual excellence, per owner directive
+  (2026-08-03). Do not apply artificial file-size ceilings that degrade image quality.
 - Acceptable subjects: a `pipeline` CLI run against fixture/mock
   configuration showing stage-by-stage progress (fetch, sign, compress,
   submit) with fixture data; `compliance-check` output demonstrating the
@@ -138,9 +138,7 @@ rg -n "BRX|RICO" docs/gosigapp-case-study-media.md public/work/gosigapp/system-m
 git diff --check
 ```
 
-Also verify every final asset meets its byte ceiling (≤400 KiB for captures,
-no ceiling concern for the vector diagram but keep it lean) and that no file
-under `public/work/gosigapp/` is a raster export of a cloud console.
+Also verify that no file under `public/work/gosigapp/` is a raster export of a cloud console.
 
 ## Acceptance Checklist
 
