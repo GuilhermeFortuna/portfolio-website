@@ -108,7 +108,7 @@ export function CaseStudyHero({ hero }: { hero: CaseStudyHeroContent }) {
         </div>
       ) : null}
 
-      <CaseStudyFigure image={hero.media} eager />
+      {hero.media ? <CaseStudyFigure image={hero.media} eager /> : null}
 
       {hero.identityMedia ? (
         <CaseStudyFigure image={hero.identityMedia} />

@@ -60,7 +60,8 @@ export type CaseStudyHero = {
    * DEC-02). When present, the hero renders a disabled pending control.
    */
   liveEnvironment?: CaseStudyPendingAction;
-  media: CaseStudyImage;
+  /** Optional hero image; omitted when chapter has no hero media (gosigapp / DEC-02). */
+  media?: CaseStudyImage;
   /** Optional secondary hero showcase image (e.g. a visual-identity still). */
   identityMedia?: CaseStudyImage;
 };

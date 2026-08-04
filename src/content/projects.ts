@@ -34,7 +34,7 @@ export function getProjects(locale: Locale = "en") {
       summary: isPt
         ? "Pipeline backend em Go para validação, processamento, tentativas, auditabilidade e envio de arquivos para o SIGAP."
         : "A Go backend pipeline for file validation, processing, retries, auditability, and submission to SIGAP.",
-      href: null,
+      href: `${prefix}/work/gosigapp`,
     },
     {
       slug: "nexo-dental",

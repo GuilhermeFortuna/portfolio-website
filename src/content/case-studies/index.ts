@@ -2,12 +2,21 @@ import type { CaseStudy, CaseStudySection } from "@/types/case-study";
 import type { Locale } from "@/lib/i18n";
 import { aegisCaseStudy, getAegisCaseStudy } from "./aegis";
 import { qCaseStudy, getQCaseStudy } from "./q";
+import { gosigappCaseStudy, getGosigappCaseStudy } from "./gosigapp";
 
-export { aegisCaseStudy, qCaseStudy, getAegisCaseStudy, getQCaseStudy };
+export {
+  aegisCaseStudy,
+  qCaseStudy,
+  gosigappCaseStudy,
+  getAegisCaseStudy,
+  getQCaseStudy,
+  getGosigappCaseStudy,
+};
 
 export const caseStudies = {
   aegis: aegisCaseStudy,
   q: qCaseStudy,
+  gosigapp: gosigappCaseStudy,
 } as const;
 
 export function getCaseStudy(
@@ -16,6 +25,7 @@ export function getCaseStudy(
 ): CaseStudy | undefined {
   if (slug === "aegis") return getAegisCaseStudy(locale);
   if (slug === "q") return getQCaseStudy(locale);
+  if (slug === "gosigapp") return getGosigappCaseStudy(locale);
   return undefined;
 }
 
@@ -23,6 +33,7 @@ export function getCaseStudies(locale: Locale = "en"): Record<string, CaseStudy>
   return {
     aegis: getAegisCaseStudy(locale),
     q: getQCaseStudy(locale),
+    gosigapp: getGosigappCaseStudy(locale),
   };
 }
 

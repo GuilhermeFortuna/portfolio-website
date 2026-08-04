@@ -19,10 +19,12 @@ export function CaseStudyFigure({
   image: CaseStudyImage;
   eager?: boolean;
 }) {
+  const mimeType = image.src.endsWith(".svg") ? "image/svg+xml" : "image/webp";
+
   return (
     <figure style={{ margin: 0 }}>
       <picture className={figureClassName + " block"}>
-        <source srcSet={image.src} type="image/webp" />
+        <source srcSet={image.src} type={mimeType} />
         <img
           src={image.src}
           alt={image.alt}

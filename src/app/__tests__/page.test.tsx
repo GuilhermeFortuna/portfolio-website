@@ -130,11 +130,11 @@ describe("homepage composition", () => {
     expect(github).toHaveAttribute("rel", "noreferrer");
   });
 
-  it("links Aegis and Quant to their case studies and leaves the rest unlinked", async () => {
+  it("links Aegis, Quant, and gosigapp to their case studies and leaves the rest unlinked", async () => {
     const { default: Home } = await import("@/app/page");
     render(<Home />);
 
-    const [aegis, quant, ...pending] = projects;
+    const [aegis, quant, gosigapp, ...pending] = projects;
 
     // Every project is always fully visible (no active/selected state), so
     // each linked project renders exactly one case-study link.
@@ -147,6 +147,11 @@ describe("homepage composition", () => {
       name: `View ${quant.name} case study`,
     });
     expect(quantLink).toHaveAttribute("href", "/work/q");
+
+    const gosigappLink = screen.getByRole("link", {
+      name: `View ${gosigapp.name} case study`,
+    });
+    expect(gosigappLink).toHaveAttribute("href", "/work/gosigapp");
 
     for (const project of pending) {
       expect(project.href).toBeNull();
@@ -169,7 +174,12 @@ describe("homepage composition", () => {
       .map((anchor) => anchor.getAttribute("href") ?? "")
       .filter((href) => href.startsWith("/work/"));
 
-    // Hero CTA + Aegis project link + Quant project link.
-    expect(caseStudyHrefs).toEqual(["/work/aegis", "/work/aegis", "/work/q"]);
+    // Hero CTA + Aegis project link + Quant project link + gosigapp project link.
+    expect(caseStudyHrefs).toEqual([
+      "/work/aegis",
+      "/work/aegis",
+      "/work/q",
+      "/work/gosigapp",
+    ]);
   });
 });

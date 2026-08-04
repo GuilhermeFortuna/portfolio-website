@@ -45,14 +45,14 @@ describe("project content contract", () => {
   });
 
   it("links only the projects whose case-study route exists", () => {
-    // Aegis and Quant are published. The remaining two stay null rather than
+    // Aegis, Quant, and gosigapp are published. Nexo Dental stays null rather than
     // pointing at a route that would 404.
     expect(
       projects.map(({ slug, href }) => [slug, href]),
     ).toEqual([
       ["aegis", "/work/aegis"],
       ["q", "/work/q"],
-      ["gosigapp", null],
+      ["gosigapp", "/work/gosigapp"],
       ["nexo-dental", null],
     ]);
   });

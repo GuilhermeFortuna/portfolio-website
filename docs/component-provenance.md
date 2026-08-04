@@ -94,3 +94,31 @@ Six accepted captures plus the deferred native desktop shell remain reserved.
 | `execution.webp` | Product screenshot (WO-025 subject 10, `--mocks`). | Delivered figure |
 | Reserved: `market-data.webp`, `backtest-studio.webp`, `backtest-results.webp`, `optimize-pareto.webp`, `discover-leaderboard.webp`, `research-features.webp` | Accepted WO-025 captures not placed on this page. | Later visual batch |
 | Native desktop shell (subject 12) | Deferred in WO-025 (no Rust/WebKitGTK). | Not placed; desktop claim carried by prose and system map |
+
+---
+
+## Batch 05 — `gosigapp` Case-Study Implementation (WO-032)
+
+`git diff package.json pnpm-lock.yaml` is empty for this order. The shared
+case-study primitives from WO-021/WO-027 were reused with two minimal, justified
+widenings: (1) `CaseStudyHero.media` is optional so `gosigapp` can omit the hero
+image (DEC-02 & WO-031); (2) `CaseStudyFigure` sets `<source type="...">` to
+`image/svg+xml` for SVG diagrams and `image/webp` for WebP images. Aegis and Quant
+rendering remain 100% byte-identical.
+
+| Component | Origin | Local file | Dependency | Notes |
+| --- | --- | --- | --- | --- |
+| Case-study shell, hero, section, and media primitives | First-party (WO-021; widened WO-027, WO-032) | `src/components/case-study/case-study-{shell,hero,section,media}.tsx` | None beyond React | Hero renders `media` conditionally when present. Aegis and Quant rendering unchanged. `CaseStudyFigure` supports `image/svg+xml` for SVG assets. |
+| gosigapp system map | First-party (WO-032) | `src/components/case-study/gosigapp-system-map.tsx` | None beyond React | Nested lists and token-based CSS. No canvas or JS animation; the markup is its own accessible text equivalent. Every node label is a claim accepted in `docs/gosigapp-case-study-evidence.md`. |
+
+### Media provenance
+
+The three assets in `public/work/gosigapp/` were produced under WO-030 and are
+inventoried with SHA-256 hashes in [`gosigapp-case-study-media.md`](./gosigapp-case-study-media.md).
+WO-032 places all three per the WO-031 media map, without re-encoding, cropping, or adding any asset.
+
+| Asset | Origin | Used by |
+| --- | --- | --- |
+| `system-map.svg` | Vector architecture diagram (WO-030). | Section 4 system overview figure |
+| `compliance-check-output.webp` | Terminal log capture (WO-030, high-res 2x DPR WebP). | Decision 2 figure |
+| `cli-pipeline-run.webp` | Terminal log capture (WO-030, high-res 2x DPR WebP). | Decision 3 figure |

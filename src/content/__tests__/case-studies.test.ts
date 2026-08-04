@@ -6,6 +6,7 @@ import {
   aegisCaseStudy,
   caseStudies,
   caseStudyBodySections,
+  gosigappCaseStudy,
   qCaseStudy,
 } from "@/content/case-studies";
 import type { CaseStudy, CaseStudyImage } from "@/types/case-study";
@@ -102,7 +103,7 @@ function collectStrings(value: unknown, found: string[] = []): string[] {
 
 function collectImages(caseStudy: CaseStudy): readonly CaseStudyImage[] {
   return [
-    caseStudy.hero.media,
+    ...(caseStudy.hero.media ? [caseStudy.hero.media] : []),
     ...(caseStudy.hero.identityMedia ? [caseStudy.hero.identityMedia] : []),
     ...caseStudyBodySections(caseStudy).flatMap(
       (section) => section.images ?? [],
@@ -114,12 +115,14 @@ const aegisStrings = collectStrings(aegisCaseStudy);
 const qStrings = collectStrings(qCaseStudy);
 
 describe("case-study registry", () => {
-  it("exposes Aegis and Quant under their slugs", () => {
-    expect(Object.keys(caseStudies)).toEqual(["aegis", "q"]);
+  it("exposes Aegis, Quant, and gosigapp under their slugs", () => {
+    expect(Object.keys(caseStudies)).toEqual(["aegis", "q", "gosigapp"]);
     expect(caseStudies.aegis).toBe(aegisCaseStudy);
     expect(caseStudies.q).toBe(qCaseStudy);
+    expect(caseStudies.gosigapp).toBe(gosigappCaseStudy);
     expect(aegisCaseStudy.slug).toBe("aegis");
     expect(qCaseStudy.slug).toBe("q");
+    expect(gosigappCaseStudy.slug).toBe("gosigapp");
   });
 
   it("uses the approved route metadata", () => {
@@ -132,6 +135,11 @@ describe("case-study registry", () => {
       title: "Quant — Quantitative Research and Execution",
       description:
         "A native quantitative research platform for the Brazilian futures market, covering backtesting, optimization, data pipelines, and execution architecture.",
+    });
+    expect(gosigappCaseStudy.metadata).toEqual({
+      title: "gosigapp — Reliable SIGAP Submission Pipeline",
+      description:
+        "A Go backend pipeline for file validation, processing, retries, auditability, and submission to SIGAP.",
     });
   });
 });

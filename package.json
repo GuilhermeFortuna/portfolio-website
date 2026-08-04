@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "ci:local": "bash scripts/ci.sh"
   },
   "dependencies": {
     "@paper-design/shaders": "^0.0.78",
