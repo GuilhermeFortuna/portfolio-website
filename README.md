@@ -4,7 +4,7 @@
 
 **Precise software emerging from fluid computational depth.**
 
-A cinematic, high-performance engineering portfolio built with Next.js 16, React 19, Tailwind CSS v4, and custom WebGL shaders. Featuring fraud intelligence, quantitative execution systems, public-sector automation pipelines, and AI-first product engineering.
+A cinematic, high-performance engineering portfolio built with Next.js 16, React 19, Tailwind CSS v4, and custom WebGL shaders. Featuring iGaming fraud intelligence, quantitative execution systems, public-sector automation pipelines, and AI-first clinical product engineering.
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.2-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
@@ -12,8 +12,9 @@ A cinematic, high-performance engineering portfolio built with Next.js 16, React
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![WebGL / Three.js](https://img.shields.io/badge/WebGL-Three.js%20%7C%20OGL-black?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org/)
 [![Vitest](https://img.shields.io/badge/Vitest-4.1-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
+[![i18n](https://img.shields.io/badge/i18n-EN%20%7C%20PT--BR-purple?style=for-the-badge)](https://nextjs.org/docs/app/building-your-application/routing/internationalization)
 
-[Live Experience](#-getting-started) • [Featured Work](#-featured-projects) • [Architecture](#%EF%B8%8F-architecture--webgl-engine) • [Component Blueprint](#-visual--component-blueprint) • [Testing](#-testing--quality-assurance)
+[Overview](#-overview) • [Key Features](#-key-engineering-highlights) • [Featured Work](#-featured-projects) • [Architecture](#%EF%B8%8F-visual--component-blueprint) • [Tech Stack](#%EF%B8%8F-tech-stack--architecture-matrix) • [i18n Engine](#-internationalization-i18n-architecture) • [Testing](#-testing--quality-assurance)
 
 </div>
 
@@ -21,61 +22,62 @@ A cinematic, high-performance engineering portfolio built with Next.js 16, React
 
 ## 🌌 Overview
 
-This repository houses the personal software engineering and applied AI portfolio of **Guilherme Fortuna**. The platform is designed as a single-page vertical experience assembled in [`src/app/page.tsx`](file:///home/gui/projects/portfolio-website/src/app/page.tsx). It presents complex technical case studies through a refined, dark-mode visual interface where real-time GLSL canvas shaders and fluid micro-animations seamlessly blend with structured product engineering narratives.
+This repository houses the personal software engineering and applied AI portfolio of **Guilherme Fortuna**. Assembled as a single-page vertical experience in [`src/app/page.tsx`](file:///home/gui/projects/portfolio-website/src/app/page.tsx) alongside dedicated deep-dive case studies under [`src/app/work/`](file:///home/gui/projects/portfolio-website/src/app/work/), the platform presents complex technical case studies through a refined, dark-mode visual interface. Real-time GLSL canvas shaders and fluid micro-animations seamlessly blend with structured product engineering narratives.
 
-The site is built with a strict separation between **static semantic content**, **responsive section layouts**, and **managed WebGL visual effects**, ensuring optimal accessibility, frame rates, and maintainability.
+The platform is designed with a strict separation between **static semantic content**, **responsive section layouts**, **internationalization (i18n) routing**, and **managed WebGL visual effects**, ensuring optimal accessibility, 60 FPS frame rates, and production maintainability.
 
 ---
 
-## 💡 Key Engineering Features
+## 💡 Key Engineering Highlights
 
-- ⚡ **Centralized WebGL Manager (`WebGLManager`)**: Single arbiter governing context acquisition, viewport intersection observation, device-pixel-ratio caps, animation cost budgeting, frame pausing, and static fallbacks.
-- ♿ **100% Accessible & Reduced-Motion Compliant**: Complete compliance with `prefers-reduced-motion: reduce`. Canvas elements and `requestAnimationFrame` loops automatically unmount and fall back to static CSS/SVG equivalents.
-- 🎨 **Cinematic Graphic Shaders & Effects**: Custom GLSL line waves, liquid metallic chrome CTA buttons, interactive shape blur shaders, particle sparkles, scroll-triggered text reveals, and 3D dotted surface terrains.
-- 🛠️ **Decoupled Architecture**: Content lives strictly in [`src/content`](file:///home/gui/projects/portfolio-website/src/content), section layouts in [`src/components/sections`](file:///home/gui/projects/portfolio-website/src/components/sections), and visual effects in [`src/components/effects`](file:///home/gui/projects/portfolio-website/src/components/effects).
-- 📱 **Adaptive Performance Budgeting**: Automatically scales resolution based on hardware concurrency, limits pixel ratios, and halts background animation frames when out of viewport.
-- 🧪 **Rigorous Quality Assurance**: Vitest unit and contract test suite covering site content, layout primitives, and interaction states.
+- ⚡ **Centralized WebGL Subsystem (`WebGLManager`)**: A single arbiter governing GPU context acquisition, viewport intersection observation, device-pixel-ratio (DPR) caps, animation cost budgeting, frame pausing, and zero-JS static fallbacks.
+- 🌐 **Multilingual i18n Subpath Engine**: Built-in bilingual support for **English (`en`)** and **Brazilian Portuguese (`pt-BR`)** with subpath routing (`/pt-BR`), cookie locale persistence, SEO hreflang tags, and document BCP-47 language synchronization.
+- 🎬 **Persistent Aperture Stage Choreography**: Project showcase powered by a sticky 16:9 view aperture with animated panel choreography, responsive layout transitions, and interactive visual switching.
+- 📖 **Deep Architectural Case Studies**: Dedicated case study routes for major flagship systems (**Aegis** and **Q Quantitative Systems**) detailing operational topologies, real-world metrics, and technical benchmarks.
+- ♿ **100% WCAG & Reduced-Motion Compliant**: Complete compliance with `prefers-reduced-motion: reduce`. Canvas elements and `requestAnimationFrame` loops automatically unmount, rendering high-contrast static CSS/SVG fallbacks.
+- 🎨 **Cinematic WebGL Shader Suite**: Custom GLSL line waves, liquid metallic chrome CTA buttons, interactive shape blur shaders, particle sparkles, scroll-triggered text reveals, and 3D dotted surface terrains.
+- 🧪 **Enterprise QA & Contract Testing**: 132 Vitest unit and integration tests covering content schemas, layout primitives, motion runtimes, SEO headers, and i18n routing.
 
 ---
 
 ## 🚀 Featured Projects
 
-The portfolio showcases four key engineering projects across AI, quantitative finance, public sector infrastructure, and healthcare software:
+The portfolio showcases four key engineering systems across AI, quantitative finance, public sector infrastructure, and clinical healthcare software:
 
-| Project | Category | Overview |
-| :--- | :--- | :--- |
-| **01 Aegis** | Fraud Intelligence | Fraud intelligence and investigation software tailored for the high-throughput iGaming industry. |
-| **02 Q** | Quantitative Systems | Quantitative research and execution engine spanning backtesting, strategy optimization, high-frequency data pipelines, and execution architecture. |
-| **03 gosigapp** | Public-Sector Automation | Go backend pipeline handling SIGAP file validation, streaming processing, automatic retries, auditability, and submission. |
-| **04 Nexo Dental** | Clinical Software | AI-first, multi-tenant SaaS for dental clinics integrating clinical workflows, CRM, automated scheduling, and premium UX engineering. |
+| Project | Category | Key Highlights & Architecture | Deep Dive |
+| :--- | :--- | :--- | :---: |
+| **01 Aegis** | Fraud Intelligence | Enterprise fraud detection platform for high-throughput iGaming. Real-time graph neural networks, player risk scoring, anomaly detection pipelines, and automated dispute resolution. | [`/work/aegis`](file:///home/gui/projects/portfolio-website/src/app/work/aegis/page.tsx) |
+| **02 Q** | Quantitative Systems | Institutional-grade quantitative research & execution engine. Event-driven backtesting, high-frequency order routing, risk management limits, and latency-optimized telemetry. | [`/work/q`](file:///home/gui/projects/portfolio-website/src/app/work/q/page.tsx) |
+| **03 gosigapp** | Public-Sector Automation | Go backend pipeline handling public-sector SIGAP file validation, streaming processing, automatic retries, audit logs, and government submission. | Featured Showcase |
+| **04 Nexo Dental** | Clinical SaaS | AI-first multi-tenant SaaS for dental clinics integrating clinical chart workflows, CRM, automated scheduling, and high-converting UX engineering. | Featured Showcase |
 
 ---
 
 ## 🎨 Visual & Component Blueprint
 
-The visual thesis of this site is **"Precise software emerging from fluid computational depth."** Every visual effect component is wrapped in a `ManagedWebGLEffect` shell and registered with the global `WebGLManager`.
+The core visual design philosophy is **"Precise software emerging from fluid computational depth."** Every visual shader component is encapsulated in a `ManagedWebGLEffect` shell and registered with the global `WebGLManager`.
 
 ```
-        ┌─────────────────────────────────────────────────────────┐
-        │                     WebGLManager                        │
-        │  (Viewport Intersection / DPR Cap / Motion Preference)  │
-        └────────────────────────────┬────────────────────────────┘
-                                     │
-           ┌─────────────────────────┼─────────────────────────┐
-           ▼                         ▼                         ▼
-  ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
-  │ Line Waves      │       │ Liquid Metal    │       │ Shape Blur      │
-  │ (Hero Scene)    │       │ (Primary CTA)   │       │ (Project Card)  │
-  └────────┬────────┘       └────────┬────────┘       └────────┬────────┘
-           │                         │                         │
-           └─────────────────────────┼─────────────────────────┘
-                                     ▼
-                   [ Static Fallback under Reduced Motion ]
+                        ┌─────────────────────────────────────────────────────────┐
+                        │                     WebGLManager                        │
+                        │  (Viewport Intersection / DPR Cap / Motion Preference)  │
+                        └────────────────────────────┬────────────────────────────┘
+                                                     │
+           ┌─────────────────────────┬───────────────┴───────────────┬─────────────────────────┐
+           ▼                         ▼                               ▼                         ▼
+  ┌─────────────────┐       ┌─────────────────┐             ┌─────────────────┐       ┌─────────────────┐
+  │ Line Waves      │       │ Liquid Metal    │             │ Shape Blur      │       │ Dotted Surface  │
+  │ (Hero Scene)    │       │ (Primary CTA)   │             │ (Project Card)  │       │ (Footer Scene)  │
+  └────────┬────────┘       └────────┬────────┘             └────────┬────────┘       └────────┬────────┘
+           │                         │                               │                         │
+           └─────────────────────────┴───────────────┬───────────────┴─────────────────────────┘
+                                                     ▼
+                                   [ Static Fallback under Reduced Motion ]
 ```
 
 ### Locked Visual Components
 
-| Order | Component | Module Location | Section | Visual Role |
+| Order | Component | Module Location | Section | Visual & Architectural Role |
 | :---: | :--- | :--- | :--- | :--- |
 | **01** | **Line Waves** | [`src/components/effects/line-waves.tsx`](file:///home/gui/projects/portfolio-website/src/components/effects/line-waves.tsx) | Hero | Atmospheric primary background establishing visual identity |
 | **02** | **Liquid Metal Link** | [`src/components/ui/liquid-metal-link.tsx`](file:///home/gui/projects/portfolio-website/src/components/ui/liquid-metal-link.tsx) | Hero | Primary call-to-action button with metallic fluid shaders |
@@ -87,30 +89,19 @@ The visual thesis of this site is **"Precise software emerging from fluid comput
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## 🛠️ Tech Stack & Architecture Matrix
 
-### Core Frameworks & Runtime
-- **Framework**: [Next.js 16.2](https://nextjs.org/) (App Router, Server Components)
-- **Library**: [React 19.2](https://react.dev/)
-- **Language**: [TypeScript 5](https://www.typescriptlang.org/)
-- **Runtime**: Node.js LTS
-
-### WebGL & Animation Engines
-- **3D Renderers**: [Three.js](https://threejs.org/), [OGL](https://github.com/oamap/ogl)
-- **Shaders**: [`@paper-design/shaders`](https://www.npmjs.com/package/@paper-design/shaders)
-- **Particles**: [`@tsparticles/react`](https://particles.js.org/) & `@tsparticles/slim`
-- **Timeline Motion**: [GSAP 3.15](https://greensock.com/gsap/)
-
-### Styling & Design System
-- **CSS Framework**: [Tailwind CSS v4](https://tailwindcss.com/)
-- **PostCSS Integrations**: `@tailwindcss/postcss`
-- **Class Utilities**: `clsx`, `tailwind-merge`
-
-### Testing & Quality Assurance
-- **Test Runner**: [Vitest 4](https://vitest.dev/)
-- **DOM Environment**: `jsdom`
-- **Testing Library**: `@testing-library/react` & `@testing-library/user-event`
-- **Coverage**: `@vitest/coverage-v8`
+| Domain | Technology | Description |
+| :--- | :--- | :--- |
+| **Core Framework** | [Next.js 16.2](https://nextjs.org/) | App Router, Server Components, Route Handlers, Metadata API |
+| **UI Library** | [React 19.2](https://react.dev/) | React 19 Concurrent Features, Hooks, Server Action Readiness |
+| **Language** | [TypeScript 5](https://www.typescriptlang.org/) | Strict type checking, interface schemas, contract definitions |
+| **Graphics & 3D** | [Three.js](https://threejs.org/) / [OGL](https://github.com/oamap/ogl) | WebGL rendering pipeline, custom shaders, mesh geometries |
+| **Shaders & Particles** | `@paper-design/shaders` / `@tsparticles` | GLSL post-processing effects and ambient particle fields |
+| **Animation Engine** | [GSAP 3.15](https://greensock.com/gsap/) / Motion | Timeline orchestration, scroll triggers, aperture choreography |
+| **Styling & Design** | [Tailwind CSS v4](https://tailwindcss.com/) | Next-generation utility-first styling with `@tailwindcss/postcss` |
+| **Localization** | Custom i18n Subpath Engine | English & Portuguese (pt-BR) subpath routing and document sync |
+| **Testing Suite** | [Vitest 4.1](https://vitest.dev/) / Testing Library | High-speed unit testing, JSDOM environment, contract validation |
 
 ---
 
@@ -122,12 +113,20 @@ portfolio-website/
 │   ├── portfolio-component-blueprint.md  # Locked component set & visual direction
 │   ├── component-provenance.md           # External component sources & adaptations
 │   ├── content.md                        # Master content requirements
+│   ├── aegis-case-study-content.md       # Aegis case study specification
+│   ├── q-case-study-content.md           # Q quantitative case study specification
 │   └── work-orders/                      # Executable work orders & task logs
-├── public/                               # Static assets and favicons
+├── public/                               # Static media, icons, & OG images
 ├── src/
 │   ├── app/                              # Next.js App Router root
+│   │   ├── [lang]/                       # Localized route group (/en, /pt-BR)
+│   │   │   ├── page.tsx                  # Localized single-page homepage assembly
+│   │   │   └── work/[slug]/              # Localized case study pages
+│   │   ├── work/                         # English default case study routes
+│   │   │   ├── aegis/page.tsx            # Aegis case study route
+│   │   │   └── q/page.tsx                # Q Quantitative case study route
 │   │   ├── layout.tsx                    # Root layout with fonts & metadata
-│   │   ├── page.tsx                      # Single-page homepage assembly
+│   │   ├── page.tsx                      # Root homepage delegator
 │   │   └── globals.css                   # Global Tailwind v4 styles & CSS variables
 │   ├── components/
 │   │   ├── effects/                      # Visual effect canvas components
@@ -137,8 +136,9 @@ portfolio-website/
 │   │   │   ├── shape-blur.tsx            # Interactive WebGL shape blur shader
 │   │   │   └── sparkles.tsx              # Particle sparkle ambient field
 │   │   ├── layout/                       # Structural page primitives
+│   │   │   ├── language-switcher.tsx     # Dynamic EN / PT-BR language switcher
 │   │   │   ├── section-shell.tsx         # Semantic section wrapper & containers
-│   │   │   ├── site-header.tsx           # Sticky navigation header
+│   │   │   ├── site-header.tsx           # Sticky navigation header with locale controls
 │   │   │   └── site-footer.tsx           # Footer with back-to-top trigger
 │   │   ├── sections/                     # Homepage semantic sections
 │   │   │   ├── hero-section.tsx          # Hero landing section
@@ -154,17 +154,23 @@ portfolio-website/
 │   │       ├── webgl-manager.tsx         # Global GPU context & lifecycle coordinator
 │   │       └── managed-webgl-effect.tsx  # HOC wrapper for safe canvas mounting
 │   ├── content/                          # Static site copy & project records
+│   │   ├── case-studies/                 # Detailed case study content modules
+│   │   │   ├── aegis.ts                  # Aegis case study data
+│   │   │   └── q.ts                      # Q Quantitative case study data
 │   │   ├── site.ts                       # Site metadata, bio, nav & contact links
 │   │   └── projects.ts                   # Featured project records & descriptions
 │   ├── hooks/                            # Custom React hooks
 │   │   ├── use-effect-activity.ts        # Hook for WebGL visibility tracking
 │   │   └── use-motion-preference.ts      # Media query hook for prefers-reduced-motion
-│   ├── lib/                              # Utility helpers
-│   │   └── cn.ts                         # Class merging utility (clsx + tailwind-merge)
+│   ├── lib/                              # Core utilities & engines
+│   │   ├── cn.ts                         # Class merging utility (clsx + tailwind-merge)
+│   │   ├── i18n.ts                       # Locale configuration & subpath utility helpers
+│   │   └── seo.ts                        # OpenGraph & JSON-LD metadata generation
 │   ├── test/                             # Vitest custom setup & render helpers
 │   └── types/                            # TypeScript interfaces & content schemas
 ├── eslint.config.mjs                     # ESLint flat configuration
 ├── next.config.ts                        # Next.js compiler settings
+├── pnpm-lock.yaml                        # Locked dependency graph
 ├── postcss.config.mjs                    # PostCSS configuration
 ├── tsconfig.json                         # TypeScript configuration
 └── vitest.config.ts                      # Vitest test suite configuration
@@ -172,99 +178,116 @@ portfolio-website/
 
 ---
 
+## 🌐 Internationalization (i18n) Architecture
+
+The portfolio implements a lightweight, zero-dependency subpath internationalization engine:
+
+- **Locales Supported**: English (`en` — default, unprefixed) and Brazilian Portuguese (`pt-BR` — prefixed `/pt-BR`).
+- **Routing Pattern**:
+  - `https://domain.com/` $\rightarrow$ English Experience
+  - `https://domain.com/pt-BR` $\rightarrow$ Brazilian Portuguese Experience
+  - `https://domain.com/work/aegis` $\rightarrow$ English Aegis Case Study
+  - `https://domain.com/pt-BR/work/aegis` $\rightarrow$ Portuguese Aegis Case Study
+- **Cookie Persistence**: Preference is remembered via the `NEXT_LOCALE` cookie.
+- **Language Switcher**: [`src/components/layout/language-switcher.tsx`](file:///home/gui/projects/portfolio-website/src/components/layout/language-switcher.tsx) permits instant locale switching while preserving current section position and subpath context.
+
+---
+
 ## ⚡ Getting Started
 
 ### Prerequisites
 
-Ensure you have the following installed on your environment:
 - **Node.js**: `v18.x` or higher (LTS recommended)
-- **pnpm**: `v11.x` or higher (the repository pins `pnpm@11.17.0` through the `packageManager` field; `corepack enable` will honour it)
+- **pnpm**: `v11.x` or higher (pinned to `pnpm@11.17.0` via `packageManager`)
 
-### Installation
+### Installation & Setup
 
-1. Clone the repository:
+1. **Clone the repository**:
    ```bash
    git clone https://github.com/GuilhermeFortuna/portfolio-website.git
    cd portfolio-website
    ```
 
-2. Install dependencies:
+2. **Install dependencies**:
    ```bash
    pnpm install
    ```
 
-3. Launch the development server:
+3. **Launch local development server**:
    ```bash
    pnpm run dev
    ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+4. **Open in browser**:
+   Navigate to [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## ⚙️ Building & Scripts
+## ⚙️ Available Scripts
 
-| Command | Action |
+| Command | Description |
 | :--- | :--- |
-| `pnpm run dev` | Starts the Next.js local development server with HMR. |
-| `pnpm run build` | Compiles the production build bundle. |
-| `pnpm run start` | Serves the optimized production build locally. |
-| `pnpm run lint` | Runs ESLint checks across the codebase. |
-| `pnpm run typecheck` | Executes TypeScript type checking without emitting files (`tsc --noEmit`). |
-| `pnpm run test` | Executes the Vitest unit test suite once. |
-| `pnpm run test:coverage` | Generates text and HTML test coverage reports under `./coverage`. |
+| `pnpm run dev` | Starts Next.js development server with hot-module reloading. |
+| `pnpm run build` | Compiles optimized production build. |
+| `pnpm run start` | Runs local server with compiled production build. |
+| `pnpm run lint` | Runs ESLint analysis across the repository. |
+| `pnpm run typecheck` | Executes TypeScript type safety checks (`tsc --noEmit`). |
+| `pnpm run test` | Runs the Vitest test suite (132 tests). |
+| `pnpm run test:coverage` | Generates HTML and text test coverage reports (`./coverage`). |
 
 ---
 
 ## ♿ Reduced Motion & Accessibility Architecture
 
-Accessibility is a core architectural pillar of this portfolio. Every animated and canvas-based component strictly respects user accessibility preferences:
+Accessibility is built directly into the render lifecycle:
 
-1. **Media Query Detection**: The custom `useMotionPreference` hook listens to `(prefers-reduced-motion: reduce)`.
-2. **WebGL Context Guard**: When reduced motion is requested, `WebGLManager` refuses to allocate WebGL contexts or start `requestAnimationFrame` loops.
-3. **Static Fallbacks**:
-   - **Line Waves** $\rightarrow$ Static subtle gradient background.
-   - **Liquid Metal CTA** $\rightarrow$ Static dark metallic chrome styling.
-   - **Scroll Reveal** $\rightarrow$ Standard static paragraph text block.
-   - **Logo Loop** $\rightarrow$ Frozen grid of wordmark badges.
-   - **Sparkles** $\rightarrow$ Static ambient glow filter.
-   - **Shape Blur** $\rightarrow$ Unmounted; clean static card surfaces are rendered instead.
-   - **Dotted Surface** $\rightarrow$ Static 2D dot grid pattern.
+1. **Media Query Hook**: `useMotionPreference` tracks `(prefers-reduced-motion: reduce)`.
+2. **Context Guard**: `WebGLManager` aborts WebGL context creation and disables animation frames when reduced motion is toggled.
+3. **Static Graceful Fallbacks**:
 
-> [!NOTE]
-> Testing reduced motion locally: Set `prefers-reduced-motion: reduce` in your browser devtools rendering tab to observe instant static graceful fallbacks across all sections.
+| Shader / Visual Effect | Standard WebGL Render | Reduced-Motion Fallback |
+| :--- | :--- | :--- |
+| **Line Waves** | Animated GLSL wave mesh | Static subtle dark gradient |
+| **Liquid Metal CTA** | Real-time liquid chrome shader | High-contrast metallic border |
+| **Scroll Reveal** | Scroll-bound opacity transform | Clean static text typography |
+| **Logo Loop** | Infinite scrolling badges | Static accessible badge grid |
+| **Sparkles** | Particle field animation | Static radial ambient glow |
+| **Shape Blur** | Interactive WebGL displacement | Clean static surface container |
+| **Dotted Surface** | 3D wave plane geometry | Static 2D dot matrix pattern |
 
 ---
 
 ## 🧪 Testing & Quality Assurance
 
-The codebase includes comprehensive unit and integration testing powered by **Vitest**, **React Testing Library**, and **jsdom**.
+Comprehensive unit and integration testing powered by **Vitest**, **React Testing Library**, and **jsdom**.
 
-### Running Tests
+### Test Suite Execution
 
 ```bash
-# Run unit tests
+# Run Vitest test suite once
 pnpm run test
 
 # Run tests with V8 coverage report
 pnpm run test:coverage
 ```
 
-### Testing Strategy & Mocking
-- **Content Contracts**: Ensures all site and project copy structures conform to TypeScript schemas.
-- **Semantic HTML & Accessibility**: Verifies header hierarchies (`h1`, `h2`, `h3`), landmark roles (`<main>`, `<header>`, `<footer>`), skip links, and ARIA attributes.
-- **WebGL Boundary Mocking**: Third-party WebGL, GSAP, OGL, and particle runtimes are mocked during unit tests so tests focus on application logic, decision boundaries, and reduced-motion states without relying on GPU hardware.
+### QA Pillars
+- **Schema Contracts**: Ensures all site and case study copy conform to strict TypeScript interfaces.
+- **Semantic HTML**: Validates single `<h1>` hierarchy, ARIA roles, landmark elements (`<main>`, `<header>`, `<footer>`), and accessible skip links.
+- **Hardware Isolation**: WebGL, Three.js, GSAP, and particle runtimes are mocked out during test runs so execution remains fast, deterministic, and hardware-independent.
 
 ---
 
 ## 📖 Documentation Reference
 
-Detailed architectural decisions, component blueprints, and execution history are maintained in the [`docs/`](file:///home/gui/projects/portfolio-website/docs) directory:
+Detailed specifications, design blueprints, and execution logs are maintained in [`docs/`](file:///home/gui/projects/portfolio-website/docs):
 
 - 📐 [`docs/portfolio-component-blueprint.md`](file:///home/gui/projects/portfolio-website/docs/portfolio-component-blueprint.md): Locked component specifications, section layout maps, and visual direction.
-- 📜 [`docs/component-provenance.md`](file:///home/gui/projects/portfolio-website/docs/component-provenance.md): Origin, licenses, and custom adaptations of third-party shader/effect components.
+- 📜 [`docs/component-provenance.md`](file:///home/gui/projects/portfolio-website/docs/component-provenance.md): Origin, licenses, and custom adaptations of shader/effect components.
 - 📑 [`docs/content.md`](file:///home/gui/projects/portfolio-website/docs/content.md): Master copy specifications, tone of voice guidelines, and placeholder policies.
-- 📋 [`docs/work-orders/wo/`](file:///home/gui/projects/portfolio-website/docs/work-orders/wo/): Executable Work Orders tracking incremental features and implementation steps.
+- 🛡️ [`docs/aegis-case-study-content.md`](file:///home/gui/projects/portfolio-website/docs/aegis-case-study-content.md): Detailed Aegis fraud intelligence case study specification.
+- 📈 [`docs/q-case-study-content.md`](file:///home/gui/projects/portfolio-website/docs/q-case-study-content.md): Detailed Q quantitative execution engine specification.
+- 📋 [`docs/work-orders/`](file:///home/gui/projects/portfolio-website/docs/work-orders/): Executable Work Orders tracking feature rollouts.
 
 ---
 
@@ -282,7 +305,7 @@ Detailed architectural decisions, component blueprints, and execution history ar
 
 <div align="center">
 
-*Designed & Developed with precision.*  
+*Designed & Engineered with precision.*  
 © 2026 Guilherme Fortuna. All rights reserved.
 
 </div>
