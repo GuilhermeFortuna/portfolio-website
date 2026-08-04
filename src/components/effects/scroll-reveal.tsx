@@ -32,9 +32,9 @@ export function ScrollReveal({
   wordAnimationEnd = "bottom 65%",
 }: ScrollRevealProps) {
   const paragraphRef = useRef<HTMLParagraphElement>(null);
-  const safeBaseOpacity = Math.max(0.45, Math.min(baseOpacity, 1));
-  const safeBaseRotation = Math.max(-1, Math.min(baseRotation, 1));
-  const safeBlurStrength = Math.max(0, Math.min(blurStrength, 1.5));
+  const safeBaseOpacity = Math.max(0, Math.min(baseOpacity, 1));
+  const safeBaseRotation = Math.max(-8, Math.min(baseRotation, 8));
+  const safeBlurStrength = Math.max(0, Math.min(blurStrength, 6));
 
   const splitText = useMemo(() => {
     return children.split(/(\s+)/).map((word, index) => {
@@ -74,7 +74,7 @@ export function ScrollReveal({
             trigger: paragraph,
             start: "top bottom",
             end: rotationEnd,
-            scrub: 0.45,
+            scrub: 0.6,
             invalidateOnRefresh: true,
           },
         },
@@ -94,12 +94,12 @@ export function ScrollReveal({
           ...(animateBlur ? { filter: "blur(0px)" } : undefined),
           immediateRender: false,
           opacity: 1,
-          stagger: 0.045,
+          stagger: 0.06,
           scrollTrigger: {
             trigger: paragraph,
-            start: "top 82%",
+            start: "top 85%",
             end: wordAnimationEnd,
-            scrub: 0.45,
+            scrub: 0.6,
             invalidateOnRefresh: true,
             onLeave: () => clearWillChange(wordElements),
             onLeaveBack: () => clearWillChange(wordElements),

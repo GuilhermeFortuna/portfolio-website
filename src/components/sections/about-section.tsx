@@ -39,9 +39,9 @@ export function AboutSection() {
         <div>
           <ScrollReveal
             className={manifestoClassName}
-            baseOpacity={0.45}
-            baseRotation={1}
-            blurStrength={0}
+            baseOpacity={0.12}
+            baseRotation={3}
+            blurStrength={3}
             rotationEnd="bottom 70%"
             wordAnimationEnd="bottom 65%"
           >
