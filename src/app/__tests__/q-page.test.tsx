@@ -255,8 +255,13 @@ describe("/work/q media", () => {
     for (const image of images) {
       expect(image.getAttribute("alt")?.trim()).toBeTruthy();
       expect(image.getAttribute("src")).toMatch(/^\/work\/q\//);
-      expect(image.getAttribute("width")).toBe("2560");
-      expect(image.getAttribute("height")).toBe("1440");
+      if (image.getAttribute("src") === "/work/q/dock.webp") {
+        expect(image.getAttribute("width")).toBe("3840");
+        expect(image.getAttribute("height")).toBe("2160");
+      } else {
+        expect(image.getAttribute("width")).toBe("2560");
+        expect(image.getAttribute("height")).toBe("1440");
+      }
     }
 
     for (const section of caseStudyBodySections(qCaseStudy)) {

@@ -407,11 +407,16 @@ describe("Quant media references", () => {
     expect(new Set(referenced)).toEqual(new Set(Q_PLACED_ASSETS));
   });
 
-  it("gives every image alt text and 2560×1440 intrinsic dimensions", () => {
+  it("gives every image alt text and 16:9 intrinsic dimensions", () => {
     for (const image of collectImages(qCaseStudy)) {
       expect(image.alt.trim().length).toBeGreaterThan(0);
-      expect(image.width).toBe(2560);
-      expect(image.height).toBe(1440);
+      if (image.src === "/work/q/dock.webp") {
+        expect(image.width).toBe(3840);
+        expect(image.height).toBe(2160);
+      } else {
+        expect(image.width).toBe(2560);
+        expect(image.height).toBe(1440);
+      }
     }
   });
 
