@@ -5,12 +5,21 @@
 GitHub environment. Only a manually dispatched, expiring Firebase Hosting
 preview channel named `staging` is supported.
 
-## Prerequisites (DEPLOY-03)
+## Project identifiers (DEPLOY-03)
 
-Cloud authentication and repository variables are provisioned in DEPLOY-03.
-Until those exist, the staging workflow cannot mutate Firebase; repository
-validation uses `--project` and GitHub `vars` without requiring a local
-`.firebaserc`.
+| Identifier | Value |
+| --- | --- |
+| GCP / Firebase project ID | `portfolio-website-391bf` |
+| Hosting site ID | `portfolio-website-391bf` |
+| Default Hosting URL | `https://portfolio-website-391bf.web.app` |
+| Billing account | `015154-CE69CB-912505` (`main`) |
+| Workload Identity provider | `projects/905102385356/locations/global/workloadIdentityPools/github/providers/portfolio-website` |
+| Deployer service account | `firebase-hosting-deployer@portfolio-website-391bf.iam.gserviceaccount.com` |
+
+Cloud authentication (OIDC → WIF → deployer SA), repository variables, the
+GitHub `staging` environment, and a monthly budget alert on billing account
+`main` are provisioned. Workflows still pass an explicit `--project` even
+though [`.firebaserc`](../../.firebaserc) records the default project ID.
 
 ### Repository variables
 
@@ -24,10 +33,17 @@ validation uses `--project` and GitHub `vars` without requiring a local
 
 | Name | Scope | Purpose |
 | --- | --- | --- |
-| `SITE_URL` | Environment variable (`vars.SITE_URL`) | HTTPS production-origin URL used for staging export canonicals |
+| `SITE_URL` | Environment variable (`vars.SITE_URL`) | HTTPS production-origin URL used for staging export canonicals (`https://portfolio-website-391bf.web.app`) |
 
-Do not store long-lived `FIREBASE_TOKEN` values, service-account JSON keys, or
-other static cloud credentials in GitHub secrets.
+Deployment branch policy allows only the `staging` branch. Do not store
+long-lived `FIREBASE_TOKEN` values, service-account JSON keys, or other static
+cloud credentials in GitHub secrets.
+
+### Budget alert
+
+Monthly budget `portfolio-website-391bf-monthly`: **R$10** on project
+`portfolio-website-391bf`, thresholds **50% / 90% / 100%**, notify
+`guilhermefortuna1000@gmail.com`. Budgets alert; they are not hard spend caps.
 
 ## Manual staging deploy / destroy
 
@@ -76,16 +92,15 @@ Build a staging static export, then serve `out/` with the Hosting emulator:
 
 ```bash
 rm -rf out
-NEXT_OUTPUT=export DEPLOY_ENV=staging SITE_URL=https://example.invalid pnpm build
-pnpm exec firebase emulators:exec --project demo-portfolio --only hosting \
+NEXT_OUTPUT=export DEPLOY_ENV=staging SITE_URL=https://portfolio-website-391bf.web.app pnpm build
+pnpm exec firebase emulators:exec --project portfolio-website-391bf --only hosting \
   'test -f out/index.html && test -f out/404.html'
 ```
 
-Interactive local serve (after the export build). Pass an explicit `--project`
-because this repository does not commit `.firebaserc` until DEPLOY-03:
+Interactive local serve (after the export build):
 
 ```bash
-pnpm exec firebase emulators:start --project demo-portfolio --only hosting
+pnpm exec firebase emulators:start --project portfolio-website-391bf --only hosting
 ```
 
 Useful checks: `/`, English case studies, `/pt-BR`, Portuguese case studies,
@@ -107,5 +122,5 @@ pnpm exec firebase --version
   [`firebase.json`](../../firebase.json). The destination keeps the trailing
   `*` so the Hosting emulator and live Hosting both preserve the captured path.
 - Immutable caching applies only to `/_next/static/**`.
-- No `.firebaserc` is committed until DEPLOY-03 confirms the real project ID.
+- [`.firebaserc`](../../.firebaserc) defaults to `portfolio-website-391bf`.
   Workflows always pass an explicit `--project`.
