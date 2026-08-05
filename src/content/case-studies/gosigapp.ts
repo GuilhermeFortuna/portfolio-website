@@ -2,10 +2,11 @@ import type { CaseStudy } from "@/types/case-study";
 import type { Locale } from "@/lib/i18n";
 
 /**
- * Visible copy is transcribed from the owner-approved content contract,
- * `docs/gosigapp-case-study-content.md` (WO-031).
- * Rewording any string here requires a new content gate.
- * Section order is fixed by that contract and must not change.
+ * Visible copy follows the owner-approved content contract,
+ * `docs/gosigapp-case-study-content.md`.
+ *
+ * English and Brazilian Portuguese are complete authored objects. Neither
+ * locale may inherit visible copy from the other.
  */
 
 const CAPTURE_WIDTH = 2560;
@@ -15,57 +16,57 @@ export const gosigappCaseStudy = {
   slug: "gosigapp",
 
   metadata: {
-    title: "gosigapp — Reliable SIGAP Submission Pipeline",
+    title: "gosigapp — Regulated Submission Infrastructure in Go",
     description:
-      "A Go backend pipeline for file validation, processing, retries, auditability, and submission to SIGAP.",
+      "How I designed and deployed a Go pipeline that validates, signs, retries, audits, and submits six regulated datasets to Brazil's SIGAP.",
   },
 
   hero: {
     backLink: { label: "Back to selected work", href: "/#work" },
-    category: "Government Compliance / Backend Pipeline",
+    category: "Regulated Systems / Backend Platform",
     title: "gosigapp",
-    deck: "Reliable SIGAP Submission Pipeline",
+    deck: "From six operational datasets to signed, auditable SIGAP submissions",
     facts: [
-      { label: "Role", value: "Software Developer (Sole Author)" },
-      { label: "Period", value: "2025-12-24 – 2026-06-22" },
-      { label: "State", value: "Deployed to AWS ECS/Fargate" },
-      { label: "Source", value: "Private Repository" },
+      { label: "Role", value: "Software Developer · Sole human developer" },
+      { label: "Period", value: "December 2025 – June 2026" },
+      { label: "State", value: "Deployed via AWS ECS/Fargate" },
+      { label: "Source", value: "Private repository" },
     ],
     support:
-      "A Go backend pipeline built to fetch, validate, digitally sign, package, and submit daily and monthly regulatory files to Brazil's SIGAP API for a licensed betting operator.",
-    // DEC-02 & WO-031: Backend CLI/service pipeline with no graphic UI; hero media omitted.
+      "I designed and deployed a Go backend that turns six regulated data feeds into validated, signed, and auditable SIGAP submissions for a licensed Brazilian betting operator.",
+    // Backend CLI/service pipeline with no graphic UI; hero media omitted.
   },
 
   context: {
     id: "context",
-    heading: "Regulatory Compliance Stakes",
+    heading: "A regulatory deadline became a systems problem",
     paragraphs: [
-      "In Brazil's regulated iGaming market, operators face a mandatory legal obligation to submit daily operational logs and monthly summary files directly to the Ministry of Finance's regulatory system (SIGAP). Reporting errors, malformed data structures, or missed submission windows carry strict regulatory penalties and potential license suspension. gosigapp was engineered to convert raw betting engine data into verifiable, audit-backed regulatory filings—transforming compliance from a manual operational risk into an automated, deterministic pipeline.",
+      "Brazilian betting operators must send six categories of operational data to the Ministry of Finance's SIGAP platform on defined daily and monthly schedules. I treated that obligation as a systems problem: every run had to turn changing source data into a filing that was structurally valid, traceable, and ready within the reporting window.",
     ],
   },
 
   problem: {
     id: "problem",
-    heading: "The Regulatory Integration Challenge",
+    heading: "Six data contracts, one submission path",
     paragraphs: [
-      "Submitting data to SIGAP requires far more than posting JSON payloads. Raw operator data across six distinct dataset categories must be fetched from S3 storage, extracted from ZIP archives, and validated against rigid government XML schemas (XSD). Every submission requires PKCS#12 PFX digital signatures using RSA-SHA256, gzip compression, base64 encoding, and mutual TLS (mTLS) transport with automated OAuth2 authentication. Doing this reliably across high daily event volumes—without manual intervention or failed transmissions—demanded a resilient processing architecture.",
+      "The inputs arrived through S3 as ZIP archives covering bettors, wallets, sports betting, online games, and daily and monthly operator aggregates. Before SIGAP could accept them, the pipeline had to extract and validate XML, apply an RSA-SHA256 signature from a PKCS#12 certificate, compress and encode the result, authenticate with OAuth2, and transmit it over mutual TLS.",
     ],
   },
 
   system: {
     id: "system-overview",
-    heading: "Pipeline Architecture & End-to-End Processing",
+    heading: "From S3 input to signed SIGAP submission",
     paragraphs: [
-      "The gosigapp system operates as an end-to-end Go processing pipeline, orchestrating data extraction, validation, cryptographic signing, packaging, and mTLS transmission. Built with a dual-entry structure (cmd/pipeline CLI for batch runs and cmd/server HTTP service for real-time orchestration), the system integrates automated pre-submission compliance matrix audits, self-exclusion API lookups, and durable log storage backed by AWS DynamoDB.",
+      "I built one Go processing core for the full path from S3 retrieval to SIGAP response handling. A batch CLI runs scheduled workloads, while an HTTP service exposes job control and progress for operational use. Around that core, dedicated commands inspect compliance, query submission status, backfill missing dates, and keep execution history in DynamoDB.",
     ],
     images: [
       {
         src: "/work/gosigapp/system-map.svg",
-        alt: "Vector architecture diagram showing the gosigapp end-to-end regulatory pipeline from S3 data fetch through XSD validation, PFX signing, mTLS transport, and DynamoDB log store.",
+        alt: "Architecture diagram of the gosigapp flow from S3 retrieval through XML validation, PFX signing, mTLS submission, job execution, and DynamoDB audit storage.",
         width: 1200,
         height: 680,
         caption:
-          "End-to-end architecture diagram detailing the gosigapp pipeline, security boundary, auditability layer, and AWS ECS deployment.",
+          "One processing core serves batch and service entry points while keeping validation, signing, transport, and audit responsibilities explicit.",
       },
     ],
   },
@@ -73,42 +74,42 @@ export const gosigappCaseStudy = {
   decisions: [
     {
       id: "decision-1",
-      heading: "Regulator-Imposed Cryptographic Security & Transport",
+      heading: "Decision 1 — Fail before transmission",
       paragraphs: [
-        "Rather than treating security as optional hardening, regulatory compliance required strict cryptographic standards at the application layer. gosigapp integrates PKCS#12 PFX certificate parsing directly into the pipeline (internal/auth), executing RSA-SHA256 XML digital signatures (ds:Signature) over aggregated dataset payloads before compression. For transport, the sender module establishes mutual TLS (mTLS) connections with automated OAuth2 token lifecycle management and memory caching. Cryptographic keys and PFX secrets are injected securely via environment variables, ensuring zero credential exposure while maintaining strict regulator compliance.",
-      ],
-    },
-    {
-      id: "decision-2",
-      heading: "Pre-Submission Compliance Matrix & Self-Exclusion Verification",
-      paragraphs: [
-        "To guarantee zero rejected transmissions, gosigapp implements a comprehensive pre-submission compliance audit matrix prior to payload packaging (cmd/compliance-check). The engine validates raw records against all six mandatory SIGAP dataset schemas—Bettors (apostadores), Wallets (carteiras), Sports Betting (esportivas), Online Games (jogos), Daily Aggregates (diarios), and Monthly Aggregates (mensais). Additionally, the internal/impedidos module queries the official SIGAP API Impedidos v2 endpoint (GET /impedimento/v2/condicao/{cpf}) to verify bettor self-exclusion status and legal restrictions (SPA/MF-SIGAP-001/2026) before file generation.",
+        "I moved preventable failures ahead of the network boundary. The pipeline validates XML against the six SIGAP schemas, and a dedicated compliance command checks schema conformance, certificate integrity, and configuration before packaging. The service layer also integrates with SIGAP's official Impedidos v2 service for self-exclusion and restriction checks.",
       ],
       images: [
         {
           src: "/work/gosigapp/compliance-check-output.webp",
-          alt: "Terminal output showing the gosigapp compliance-check audit matrix passing XSD schema validation, PFX signature integrity, SIGAP Impedidos v2 checks, and multi-brand header checks.",
+          alt: "Fixture terminal output from the gosigapp compliance command showing XML schema, certificate, configuration, and SIGAP Impedidos checks.",
           width: CAPTURE_WIDTH,
           height: CAPTURE_HEIGHT,
           caption:
-            "Pre-submission compliance matrix output verifying XSD schema conformance, PFX cryptographic integrity, and SIGAP Impedidos v2 self-exclusion checks against fixture configuration.",
+            "A fixture-backed compliance run surfaces schema, signing, configuration, and restriction-check problems before a submission is assembled.",
         },
       ],
     },
     {
-      id: "decision-3",
-      heading: "Durable Auditability & Asynchronous Execution Lifecycle",
+      id: "decision-2",
+      heading: "Decision 2 — Protect signing and transport",
       paragraphs: [
-        "Regulatory reporting demands complete historical proof for every attempted submission. gosigapp combines an asynchronous job runner (internal/job) with AWS DynamoDB log storage (internal/logstore) to track full job lifecycles (queued, running, completed, failed, cancelled). Scheduled via an automated internal cron system (internal/scheduler), each pipeline run records step-by-stage timestamps, XSD validation results, cryptographic checksums, and HTTP receipt IDs. If a network interruption occurs, specialized CLI tools (cmd/backfill, cmd/date-detail) enable state inspection and deterministic re-runs without data duplication.",
+        "Signing and transport are part of the submission contract, not optional hardening. The pipeline parses PKCS#12 certificates, applies RSA-SHA256 XML signatures, and sends the packaged payload through an mTLS client with cached OAuth2 tokens. Certificate material and API credentials stay outside the source code and enter through environment-based configuration.",
+      ],
+    },
+    {
+      id: "decision-3",
+      heading: "Decision 3 — Make failures recoverable and runs auditable",
+      paragraphs: [
+        "I made retry behavior selective: network and 5xx failures receive bounded backoff, while 4xx responses return immediately for correction. Jobs move through queued, running, completed, failed, and cancelled states; structured execution records are written to DynamoDB. For recovery, the backfill tooling checks SIGAP for existing submissions before processing missing dates and treats duplicate-batch responses as already submitted rather than silently resending.",
       ],
       images: [
         {
           src: "/work/gosigapp/cli-pipeline-run.webp",
-          alt: "Terminal log capture demonstrating stage-by-stage gosigapp pipeline execution from S3 download through XSD validation, PFX signing, mTLS transmission, and DynamoDB audit recording.",
+          alt: "Fixture terminal output showing a gosigapp run progressing through retrieval, validation, signing, submission, response handling, and audit recording.",
           width: CAPTURE_WIDTH,
           height: CAPTURE_HEIGHT,
           caption:
-            "Terminal execution output of the gosigapp CLI pipeline, showing stage-by-stage validation, PFX signing, mTLS submission, receipt capture, and DynamoDB log recording.",
+            "Fixture output exposes each stage and its result so an operator can trace a run and act on a failure without relying on a black box.",
         },
       ],
     },
@@ -116,23 +117,23 @@ export const gosigappCaseStudy = {
 
   contribution: {
     id: "contribution",
-    heading: "Engineering Ownership & AI-Assisted Execution",
+    heading: "What I owned",
     paragraphs: [
-      "Guilherme designed, implemented, and delivered the entire gosigapp codebase as sole author across 100 commits (December 2025 – June 2026). Using AI-assisted software development, every layer—from Go pipeline internals and XML/XSD parsing to DynamoDB integration, CLI utility suites, and containerized deployment infrastructure—was architected and written independently to satisfy regulatory mandates.",
+      "As the sole human developer, I translated the reporting requirements into the architecture, implemented the Go pipeline and operational tooling, connected AWS storage and audit services, and delivered the container and CI/CD path to ECS/Fargate. AI assisted implementation, but the system design, tradeoffs, verification, and deployment decisions remained my responsibility.",
     ],
   },
 
   delivered: {
     id: "evidence-limits",
-    heading: "Implementation Verification & Operational Scope",
+    heading: "What shipped—and what I can verify",
     paragraphs: [
-      "The gosigapp codebase is verified through end-to-end source code inspection and containerized cloud configuration files (Dockerfile, GitHub Actions CI/CD workflows, AWS ECS/Fargate task definitions). As a specialized backend CLI and service pipeline, gosigapp has no graphic user interface. In accordance with portfolio disclosure standards, the source code repository is private, employer details and brand identifiers remain confidential, and no unverified live transaction metrics or uptime percentages are claimed.",
+      "The system was deployed via AWS ECS/Fargate, and this case study is grounded in the private codebase, Docker image, GitHub Actions workflow, task definition, and sanitized fixture captures. It has no public graphic interface, and I do not publish operational volumes, uptime, rejection rates, or business impact that I cannot independently verify.",
     ],
   },
 
   technology: {
     id: "tech-stack",
-    heading: "Technology Stack",
+    heading: "Technology in service of the pipeline",
     paragraphs: [],
     badges: [
       "Go 1.22+",
@@ -145,55 +146,175 @@ export const gosigappCaseStudy = {
       "RSA-SHA256",
       "mTLS",
       "OAuth2",
-      "XML",
-      "XSD Schemas",
+      "XML/XSD",
       "SIGAP REST API",
     ],
   },
 
   confidentiality: {
     id: "disclosure-actions",
-    heading: "Disclosure & Navigation",
+    heading: "Private source, discussable architecture",
     paragraphs: [
-      "gosigapp was built for an unnamed licensed betting operator in Brazil to meet SIGAP regulatory compliance requirements. Employer identity, brand codes, AWS resource IDs, and PFX secrets are withheld. All CLI outputs and diagrams display fixture configuration only.",
+      "The repository remains private because it implements a regulated integration for an unnamed Brazilian betting operator. The diagrams and terminal captures use fixture configuration only. I can discuss the architecture, failure handling, security boundaries, and my engineering decisions in more depth without exposing the operator, its infrastructure, or its data.",
     ],
     actions: [
+      { label: "Discuss this project", href: "/#contact" },
       { label: "Return to selected work", href: "/#work" },
-      { label: "Get in touch", href: "/#contact" },
+    ],
+  },
+} as const satisfies CaseStudy;
+
+const gosigappCaseStudyPtBr = {
+  slug: "gosigapp",
+
+  metadata: {
+    title: "gosigapp — Infraestrutura de Envios Regulatórios em Go",
+    description:
+      "Como projetei e implantei um pipeline em Go que valida, assina, faz novas tentativas de forma seletiva, audita e envia seis conjuntos de dados regulatórios ao SIGAP.",
+  },
+
+  hero: {
+    backLink: { label: "Voltar aos trabalhos selecionados", href: "/pt-BR/#work" },
+    category: "Sistemas Regulados / Plataforma Backend",
+    title: "gosigapp",
+    deck: "De seis conjuntos operacionais a envios assinados e rastreáveis ao SIGAP",
+    facts: [
+      { label: "Papel", value: "Desenvolvedor de Software · Desenvolvimento individual" },
+      { label: "Período", value: "Dezembro de 2025 – junho de 2026" },
+      { label: "Status", value: "Implantado via AWS ECS/Fargate" },
+      { label: "Código", value: "Repositório privado" },
+    ],
+    support:
+      "Projetei e implantei um backend em Go que transforma seis fluxos de dados regulatórios em envios validados, assinados e rastreáveis ao SIGAP para uma operadora brasileira de apostas licenciada.",
+  },
+
+  context: {
+    id: "context",
+    heading: "Um prazo regulatório se tornou um problema de sistemas",
+    paragraphs: [
+      "Operadoras brasileiras de apostas precisam enviar seis categorias de dados operacionais à plataforma SIGAP do Ministério da Fazenda em ciclos diários e mensais definidos. Tratei essa obrigação como um problema de sistemas: cada execução precisava transformar dados de origem sujeitos a mudanças em um envio estruturalmente válido, rastreável e pronto dentro da janela regulatória.",
+    ],
+  },
+
+  problem: {
+    id: "problem",
+    heading: "Seis contratos de dados, um único fluxo de envio",
+    paragraphs: [
+      "As entradas chegavam pelo S3 em arquivos ZIP sobre apostadores, carteiras, apostas esportivas, jogos on-line e agregados diário e mensal da operadora. Antes do aceite pelo SIGAP, o pipeline precisava extrair e validar o XML, aplicar uma assinatura RSA-SHA256 com certificado PKCS#12, compactar e codificar o resultado, autenticar via OAuth2 e transmitir por TLS mútuo.",
+    ],
+  },
+
+  system: {
+    id: "system-overview",
+    heading: "Do S3 ao envio assinado para o SIGAP",
+    paragraphs: [
+      "Construí um único núcleo de processamento em Go para todo o caminho, da leitura no S3 ao tratamento da resposta do SIGAP. Uma CLI executa os lotes agendados, enquanto um serviço HTTP expõe controle e progresso dos trabalhos para uso operacional. Ao redor desse núcleo, comandos dedicados analisam conformidade, consultam envios, reprocessam datas ausentes e mantêm o histórico no DynamoDB.",
+    ],
+    images: [
+      {
+        src: "/work/gosigapp/system-map.svg",
+        alt: "Diagrama da arquitetura do gosigapp, da leitura no S3 à validação XML, assinatura PFX, envio por mTLS, execução de trabalhos e armazenamento de auditoria no DynamoDB.",
+        width: 1200,
+        height: 680,
+        caption:
+          "Um único núcleo atende às entradas em lote e por serviço, mantendo explícitas as responsabilidades de validação, assinatura, transporte e auditoria.",
+      },
+    ],
+  },
+
+  decisions: [
+    {
+      id: "decision-1",
+      heading: "Decisão 1 — Identificar falhas antes da transmissão",
+      paragraphs: [
+        "Antecipei falhas evitáveis para antes da fronteira de rede. O pipeline valida o XML contra os seis esquemas do SIGAP, e um comando de conformidade verifica esquemas, integridade do certificado e configuração antes do empacotamento. A camada de serviço também se integra ao módulo oficial Impedidos v2 para consultas de autoexclusão e restrições.",
+      ],
+      images: [
+        {
+          src: "/work/gosigapp/compliance-check-output.webp",
+          alt: "Saída de terminal com dados fictícios do comando de conformidade do gosigapp, mostrando verificações de esquema XML, certificado, configuração e módulo Impedidos do SIGAP.",
+          width: CAPTURE_WIDTH,
+          height: CAPTURE_HEIGHT,
+          caption:
+            "Uma execução de conformidade com dados fictícios revela problemas de esquema, assinatura, configuração e restrições antes da montagem do envio.",
+        },
+      ],
+    },
+    {
+      id: "decision-2",
+      heading: "Decisão 2 — Proteger assinatura e transporte",
+      paragraphs: [
+        "Assinatura e transporte fazem parte do contrato de envio, não são reforços opcionais. O pipeline interpreta certificados PKCS#12, aplica assinaturas XML com RSA-SHA256 e envia o pacote por um cliente mTLS com tokens OAuth2 em cache. Certificados e credenciais de API permanecem fora do código-fonte e entram por configuração baseada em variáveis de ambiente.",
+      ],
+    },
+    {
+      id: "decision-3",
+      heading: "Decisão 3 — Tornar falhas recuperáveis e execuções rastreáveis",
+      paragraphs: [
+        "Tornei seletiva a política de novas tentativas: falhas de rede e respostas 5xx recebem até duas novas tentativas com intervalos progressivos, enquanto respostas 4xx retornam imediatamente para correção. As execuções passam pelos estados de fila, processamento, conclusão, falha e cancelamento, com registros estruturados no DynamoDB. No reprocessamento controlado, a ferramenta de backfill consulta envios existentes antes de processar datas ausentes e trata respostas de lote duplicado como já enviado.",
+      ],
+      images: [
+        {
+          src: "/work/gosigapp/cli-pipeline-run.webp",
+          alt: "Saída de terminal com dados fictícios mostrando uma execução do gosigapp pelas etapas de leitura, validação, assinatura, envio, tratamento da resposta e registro de auditoria.",
+          width: CAPTURE_WIDTH,
+          height: CAPTURE_HEIGHT,
+          caption:
+            "A saída fictícia expõe cada etapa e seu resultado para que a operação rastreie a execução e aja sobre uma falha sem depender de uma caixa-preta.",
+        },
+      ],
+    },
+  ],
+
+  contribution: {
+    id: "contribution",
+    heading: "O que ficou sob minha responsabilidade",
+    paragraphs: [
+      "Conduzi o desenvolvimento individualmente: traduzi os requisitos regulatórios em arquitetura, implementei o pipeline em Go e as ferramentas operacionais, conectei os serviços de armazenamento e auditoria da AWS e entreguei o contêiner e o fluxo de CI/CD para o ECS/Fargate. A IA auxiliou a implementação, mas o desenho do sistema, as decisões, a verificação e a implantação permaneceram sob minha responsabilidade.",
+    ],
+  },
+
+  delivered: {
+    id: "evidence-limits",
+    heading: "O que foi entregue — e o que posso comprovar",
+    paragraphs: [
+      "O sistema foi implantado via AWS ECS/Fargate, e este estudo de caso se apoia no código privado, na imagem Docker, no fluxo do GitHub Actions, na definição da tarefa e em capturas sanitizadas com dados fictícios. Não há interface gráfica pública, e não publico volumes operacionais, disponibilidade, taxas de rejeição ou impacto de negócio que eu não consiga verificar de forma independente.",
+    ],
+  },
+
+  technology: {
+    id: "tech-stack",
+    heading: "Tecnologia a serviço do pipeline",
+    paragraphs: [],
+    badges: [
+      "Go 1.22+",
+      "AWS ECS/Fargate",
+      "AWS DynamoDB",
+      "AWS S3",
+      "Docker",
+      "GitHub Actions",
+      "PKCS#12 PFX",
+      "RSA-SHA256",
+      "mTLS",
+      "OAuth2",
+      "XML/XSD",
+      "API REST do SIGAP",
+    ],
+  },
+
+  confidentiality: {
+    id: "disclosure-actions",
+    heading: "Código privado, arquitetura aberta à conversa",
+    paragraphs: [
+      "O repositório permanece privado porque implementa uma integração regulatória para uma operadora brasileira de apostas não identificada. Os diagramas e as capturas de terminal usam apenas configurações fictícias. Posso conversar em mais detalhes sobre a arquitetura, o tratamento de falhas, as fronteiras de segurança e minhas decisões sem expor a operadora, sua infraestrutura ou seus dados.",
+    ],
+    actions: [
+      { label: "Conversar sobre este projeto", href: "/pt-BR/#contact" },
+      { label: "Voltar aos trabalhos selecionados", href: "/pt-BR/#work" },
     ],
   },
 } as const satisfies CaseStudy;
 
 export function getGosigappCaseStudy(locale: Locale = "en"): CaseStudy {
-  if (locale === "pt-BR") {
-    return {
-      ...gosigappCaseStudy,
-      metadata: {
-        title: "gosigapp — Pipeline de Envio Confiável para o SIGAP",
-        description:
-          "Um pipeline backend em Go para validação de arquivos, processamento, tentativas, auditabilidade e envio para o SIGAP.",
-      },
-      hero: {
-        ...gosigappCaseStudy.hero,
-        backLink: { label: "Voltar aos trabalhos selecionados", href: "/pt-BR/#work" },
-        category: "Conformidade Governamental / Pipeline Backend",
-        facts: [
-          { label: "Papel", value: "Desenvolvedor de Software (Único Autor)" },
-          { label: "Período", value: "2025-12-24 – 2026-06-22" },
-          { label: "Status", value: "Implantado no AWS ECS/Fargate" },
-          { label: "Fonte", value: "Repositório Privado" },
-        ],
-        support:
-          "Um pipeline backend em Go construído para buscar, validar, assinar digitalmente, empacotar e enviar arquivos regulatórios diários e mensais para a API do SIGAP para um operador de apostas licenciado.",
-      },
-      confidentiality: {
-        ...gosigappCaseStudy.confidentiality,
-        actions: [
-          { label: "Voltar aos trabalhos selecionados", href: "/pt-BR/#work" },
-          { label: "Entrar em contato", href: "/pt-BR/#contact" },
-        ],
-      },
-    };
-  }
-  return gosigappCaseStudy;
+  return locale === "pt-BR" ? gosigappCaseStudyPtBr : gosigappCaseStudy;
 }

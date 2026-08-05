@@ -17,9 +17,11 @@ const EXPECTED_H2_ORDER = [
 
 describe("/work/gosigapp metadata", () => {
   it("exports the approved static title and description", () => {
-    expect(metadata.title).toBe("gosigapp — Reliable SIGAP Submission Pipeline");
+    expect(metadata.title).toBe(
+      "gosigapp — Regulated Submission Infrastructure in Go",
+    );
     expect(metadata.description).toBe(
-      "A Go backend pipeline for file validation, processing, retries, auditability, and submission to SIGAP.",
+      "How I designed and deployed a Go pipeline that validates, signs, retries, audits, and submits six regulated datasets to Brazil's SIGAP.",
     );
   });
 });
@@ -107,8 +109,12 @@ describe("/work/gosigapp navigation", () => {
     }
 
     expect(
-      screen.getByRole("link", { name: "Get in touch" }),
+      screen.getByRole("link", { name: "Discuss this project" }),
     ).toHaveAttribute("href", "/#contact");
+
+    expect(
+      screen.getByRole("link", { name: "Return to selected work" }),
+    ).toHaveAttribute("href", "/#work");
   });
 
   it("keeps every destination same-origin and publishes no repository link", () => {
@@ -142,11 +148,13 @@ describe("/work/gosigapp private-source & screenless backend behaviour", () => {
 
     const sourceTerm = screen.getByText("Source");
     expect(sourceTerm.tagName).toBe("DT");
-    expect(sourceTerm.parentElement?.textContent).toContain("Private Repository");
+    expect(sourceTerm.parentElement?.textContent).toContain("Private repository");
 
     const stateTerm = screen.getByText("State");
     expect(stateTerm.tagName).toBe("DT");
-    expect(stateTerm.parentElement?.textContent).toContain("Deployed to AWS ECS/Fargate");
+    expect(stateTerm.parentElement?.textContent).toContain(
+      "Deployed via AWS ECS/Fargate",
+    );
   });
 
   it("renders no confidential brand code or draft placeholder anywhere", () => {

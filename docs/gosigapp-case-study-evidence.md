@@ -25,6 +25,7 @@ The following items are strictly **CONFIDENTIAL** and MUST NEVER appear in publi
 Allowed classifications are exactly:
 - `FACT — OWNER`: Direct statement of fact provided by the owner.
 - `FACT — SOURCE`: Technical fact verified directly in the `gosigapp` source code repository (`/home/gui/projects/gosigapp`).
+- `FACT — EXTERNAL`: Regulatory fact verified against an official government source.
 - `DECISION`: Architectural, editorial, or presentation decision governing the portfolio.
 - `CONFIDENTIAL`: Non-public item that must be withheld or generalized.
 - `INFERENCE — REVIEW REQUIRED`: Safe logical inference requiring reviewer validation before publication.
@@ -43,8 +44,10 @@ Allowed classifications are exactly:
 | **CONF-05** | `CONFIDENTIAL` | Bettor PII, CPFs, wallet balances, and real submission payloads withheld. | `schemas/*.xsd`, `internal/processor/processor.go` | Schema structures described; real operational data strictly omitted. |
 | **CONF-06** | `CONFIDENTIAL` | Private source code repository link withheld. | Owner decision (2026-07-28, 2026-08-03) | Repository remains private; no source code links published. |
 | **GIT-01** | `FACT — OWNER` | Repository history spans 2025-12-24 to 2026-06-22 across 100 commits. | `git log --oneline` on `gosigapp` (commits `5c53fc4` to `7e9d25e`) | Timeline bounds exact repository commit history. |
-| **GIT-02** | `FACT — OWNER` | Role: Software Developer; sole author of the codebase, designed and built with AI assistance. | `git log` author `Guilherme Fortuna dos Santos` / `guilherme` (100/100 commits), locked owner fact | Single-author repository history; AI assistance used for execution. |
+| **GIT-02** | `FACT — OWNER` | Role: Software Developer and sole human developer; designed and built the system with AI assistance. | `git log` author identities resolve to the owner; locked owner fact | Public copy leads with human ownership and responsibility. AI is disclosed once as an implementation aid. |
 | **GIT-03** | `FACT — OWNER` | Built for a Brazilian iGaming operator to satisfy legal reporting obligations to SIGAP. | Locked owner fact (2026-08-03), `README.md` | Operator identity remains confidential per CONF-01. |
+| **REG-01** | `FACT — EXTERNAL` | Licensed operators transmit six categories of operational data to SIGAP on defined daily and monthly schedules. | [Manual SIGAP — Envio e Validação dos Dados](https://www.gov.br/fazenda/pt-br/composicao/orgaos/secretaria-de-premios-e-apostas/arquivos/arquivos-pdf/manualsigap-envioevalidacaodados-r02.pdf/%40%40download/file), accessed 2026-08-05 | Supports the reporting-duty and deadline framing. It does not support claiming that one malformed or late submission directly causes license suspension. |
+| **REG-02** | `FACT — EXTERNAL` | The official SIGAP Impedidos module supports mandatory operator checks for centralized self-exclusion and other restricted bettors. | [Módulo de Impedidos — Ministério da Fazenda](https://www.gov.br/fazenda/pt-br/composicao/orgaos/secretaria-de-premios-e-apostas/modulo-de-impedidos/modulo-de-impedidos), accessed 2026-08-05 | Public copy describes the integration generically and does not expose CPFs, responses, or operator data. |
 | **SYS-01** | `FACT — SOURCE` | Multi-stage pipeline: S3 fetch → ZIP extraction → XML validation/aggregation → PFX RSA-SHA256 signing → gzip compression → base64 encoding → mTLS SIGAP submission. | `internal/pipeline/pipeline.go`, `internal/processor/processor.go`, `internal/sender/sender.go`, `internal/auth/auth.go` | Verified end-to-end processing pipeline flow. |
 | **SYS-02** | `FACT — SOURCE` | Supports the six mandatory SIGAP dataset types: Bettors (`apostadores`), Wallets (`carteiras`), Sports Betting (`esportivas`), Online Games (`jogos`), Daily Operator Aggregate (`diarios`), and Monthly Operator Aggregate (`mensais`). | `schemas/Apostadores_v1.00.xsd`, `schemas/Carteiras_v1.00.xsd`, `schemas/ApostasEsportivas_v1.00.xsd`, `schemas/JogosOnline_v1.00.xsd`, `schemas/OperadorDiario_v1.00.xsd`, `schemas/OperadorMensal_v1.00.xsd` | Exact dataset categories mandated by Brazilian SIGAP regulations (MF/SPA). |
 | **SYS-03** | `FACT — SOURCE` | Primary execution entry points: `cmd/pipeline` CLI for batch runs and `cmd/server` HTTP API for service integration and real-time status. | `cmd/pipeline/main.go`, `cmd/server/main.go`, `internal/api/` | Serves both CLI batch execution and persistent HTTP service workflows. |
@@ -57,6 +60,8 @@ Allowed classifications are exactly:
 | **OPS-02** | `FACT — SOURCE` | Asynchronous job runner with explicit state lifecycle (`queued`, `running`, `completed`, `failed`, `cancelled`) and WebSocket progress hub. | `internal/job/runner.go`, `internal/job/hub.go`, `internal/job/types.go` | Manages job execution lifecycle with real-time WebSocket progress updates. |
 | **OPS-03** | `FACT — SOURCE` | Automated cron scheduler (`internal/scheduler`) for scheduled daily and monthly regulatory submissions. | `internal/scheduler/scheduler.go` | Periodically triggers pipeline jobs based on configured cron expressions. |
 | **OPS-04** | `FACT — SOURCE` | Containerized deployment via Docker, GitHub Actions CI/CD workflows, and AWS ECS/Fargate task definitions. | `Dockerfile`, `.github/workflows/deploy.yml`, `gosigapp-task-definition.json` | Structural proof of cloud deployment; does not claim live operational status beyond owner knowledge. |
+| **OPS-05** | `FACT — SOURCE` | Submission retries are bounded and selective: network failures and HTTP 5xx responses receive up to two retries with backoff; HTTP 4xx responses return without retry. | `internal/pipeline/pipeline.go` | Describe the policy and tradeoff. Do not convert it into a success-rate or rejection-rate claim. |
+| **OPS-06** | `FACT — SOURCE` | Backfill checks SIGAP submission status before processing missing dates, and duplicate-batch responses are handled as already submitted. | `cmd/backfill/main.go`, `internal/sender/sender.go`, `internal/pipeline/pipeline.go` | Supports status-aware recovery. Do not claim global idempotency or guaranteed duplicate-free reprocessing. |
 | **MEDIA-01** | `DECISION` | Media evidence limited to an architecture system-map diagram and sanitized CLI/log text captures against fixture data. | Locked owner fact (2026-08-03), `BATCH-05-README.md` | Cloud console screenshots strictly prohibited. |
 | **DEC-01** | `DECISION` | Public project name is `gosigapp`; route slug is `gosigapp` (`/work/gosigapp`). | Locked owner fact (2026-08-03), `docs/content.md` | Route slug `/work/gosigapp`. |
 | **DEC-02** | `DECISION` | Hero section omits the live-environment action entirely (no live UI, CLI/backend service). | Locked owner fact (2026-08-03), `docs/content.md` | Matches Quant hero decision model for non-web-app projects. |
@@ -78,8 +83,11 @@ Allowed classifications are exactly:
 - [x] All 6 SIGAP dataset types verified against `schemas/*.xsd`.
 - [x] CLI (`cmd/pipeline`), API server (`cmd/server`), and 7 utility commands verified in `cmd/`.
 - [x] `internal/impedidos` SIGAP API Impedidos v2 query (`GET /impedimento/v2/condicao/{cpf}`) verified.
-- [x] Retry and log storage mechanisms verified in `internal/logstore/dynamodb.go` and `internal/job`.
+- [x] Bounded network/5xx retry and no-retry-on-4xx behavior verified in `internal/pipeline/pipeline.go`.
+- [x] Status-aware backfill and duplicate-batch handling verified in `cmd/backfill`, `internal/sender`, and `internal/pipeline`.
+- [x] Log storage and job lifecycle verified in `internal/logstore/dynamodb.go` and `internal/job`.
 - [x] Digital signing and mTLS security verified in `internal/processor` and `internal/auth`.
 - [x] Multi-brand architecture verified in `internal/config` and `internal/pipeline`.
 - [x] Docker, GitHub Actions, and AWS ECS/Fargate deployment files verified.
+- [x] Official SIGAP reporting schedule/data-category and Impedidos framing verified against Ministry of Finance sources on 2026-08-05.
 - [x] Zero confidential brand codes (`BRX`, `RICO`), employer details, or credentials exposed.

@@ -6,6 +6,7 @@ import {
   aegisCaseStudy,
   caseStudies,
   caseStudyBodySections,
+  getGosigappCaseStudy,
   gosigappCaseStudy,
   nexoDentalCaseStudy,
   qCaseStudy,
@@ -28,19 +29,16 @@ const AEGIS_APPROVED_ASSETS = [
   "/work/aegis/risk-constellation.webp",
 ] as const;
 
-/** Every asset placed by the owner-revised visual contract. */
+/** Existing temporary assets referenced until the replacement set is reviewed. */
 const Q_PLACED_ASSETS = [
   "/work/q/launcher.webp",
-  "/work/q/identity-placeholder.svg",
   "/work/q/market-data.webp",
   "/work/q/system.webp",
   "/work/q/backtest-studio.webp",
   "/work/q/backtest-results.webp",
   "/work/q/optimize-pareto.webp",
   "/work/q/discover-leaderboard.webp",
-  "/work/q/research-features.webp",
   "/work/q/walkforward.webp",
-  "/work/q/dock.webp",
   "/work/q/execution.webp",
 ] as const;
 
@@ -86,21 +84,41 @@ const AEGIS_EXPECTED_BODY_HEADINGS = [
 ] as const;
 
 const Q_EXPECTED_BODY_HEADINGS = [
-  "Designing Q as a product, not just a tool",
-  "Built from a real research problem",
-  "Inside the product",
-  "Market data and system awareness",
-  "Strategy construction and backtesting",
-  "Optimization and discovery",
-  "Research features and validation",
-  "Execution and background work",
-  "How the system fits together",
-  "Native desktop instead of public SaaS",
-  "Queued research jobs",
-  "Validation before deployment",
-  "Fixture-first product development",
-  "My contribution",
-  "Technology",
+  "Built end to end as one product",
+  "A six-year idea, rebuilt for disciplined research",
+  "From market context to inspectable experiments",
+  "Challenge results before trusting them",
+  "Keep heavy research work off the interaction path",
+  "A native product around asynchronous services",
+  "Why desktop was the right boundary",
+  "Develop against stable fixtures",
+  "Make validation and execution safety product constraints",
+  "What I owned",
+  "Technology across the stack",
+] as const;
+
+const GOSIGAPP_EXPECTED_BODY_HEADINGS = [
+  "A regulatory deadline became a systems problem",
+  "Six data contracts, one submission path",
+  "From S3 input to signed SIGAP submission",
+  "Decision 1 — Fail before transmission",
+  "Decision 2 — Protect signing and transport",
+  "Decision 3 — Make failures recoverable and runs auditable",
+  "What I owned",
+  "What shipped—and what I can verify",
+  "Technology in service of the pipeline",
+] as const;
+
+const GOSIGAPP_PT_BR_EXPECTED_BODY_HEADINGS = [
+  "Um prazo regulatório se tornou um problema de sistemas",
+  "Seis contratos de dados, um único fluxo de envio",
+  "Do S3 ao envio assinado para o SIGAP",
+  "Decisão 1 — Identificar falhas antes da transmissão",
+  "Decisão 2 — Proteger assinatura e transporte",
+  "Decisão 3 — Tornar falhas recuperáveis e execuções rastreáveis",
+  "O que ficou sob minha responsabilidade",
+  "O que foi entregue — e o que posso comprovar",
+  "Tecnologia a serviço do pipeline",
 ] as const;
 
 const NEXO_EXPECTED_BODY_HEADINGS = [
@@ -139,6 +157,9 @@ function collectImages(caseStudy: CaseStudy): readonly CaseStudyImage[] {
 
 const aegisStrings = collectStrings(aegisCaseStudy);
 const qStrings = collectStrings(qCaseStudy);
+const gosigappStrings = collectStrings(gosigappCaseStudy);
+const gosigappCaseStudyPtBr = getGosigappCaseStudy("pt-BR");
+const gosigappPtBrStrings = collectStrings(gosigappCaseStudyPtBr);
 const nexoStrings = collectStrings(nexoDentalCaseStudy);
 
 describe("case-study registry", () => {
@@ -168,12 +189,12 @@ describe("case-study registry", () => {
     expect(qCaseStudy.metadata).toEqual({
       title: "Quant — Quantitative Research and Execution",
       description:
-        "A native quantitative research platform for the Brazilian futures market, covering backtesting, optimization, data pipelines, and execution architecture.",
+        "How I designed and built a native quantitative research platform across desktop UX, asynchronous services, market-data pipelines, validation, and paper execution.",
     });
     expect(gosigappCaseStudy.metadata).toEqual({
-      title: "gosigapp — Reliable SIGAP Submission Pipeline",
+      title: "gosigapp — Regulated Submission Infrastructure in Go",
       description:
-        "A Go backend pipeline for file validation, processing, retries, auditability, and submission to SIGAP.",
+        "How I designed and deployed a Go pipeline that validates, signs, retries, audits, and submits six regulated datasets to Brazil's SIGAP.",
     });
     expect(nexoDentalCaseStudy.metadata).toEqual({
       title: "Nexo Dental — Multi-Tenant Clinic Operations",
@@ -265,21 +286,177 @@ describe("Quant authored copy", () => {
 
   it("keeps the hero facts and omits the live-environment control", () => {
     expect(qCaseStudy.hero.facts).toEqual([
-      { label: "Role", value: "Founder, designer, and sole developer" },
+      { label: "Role", value: "Founder, Product Engineer, and sole developer" },
       { label: "Period", value: "April 2026–present" },
       { label: "Platform", value: "Native desktop" },
       { label: "Market", value: "Brazilian futures and equities" },
-      { label: "State", value: "Active research and backtesting" },
+      { label: "State", value: "Research, backtesting, and paper execution" },
       { label: "Source", value: "Private" },
     ]);
-    expect(qCaseStudy.hero.support).toContain("built Quant end to end");
+    expect(qCaseStudy.hero.support).toContain("I built Quant across");
     expect("liveEnvironment" in qCaseStudy.hero).toBe(false);
+  });
+
+  it("keeps the historical result subordinate and explicitly qualified", () => {
+    const origin = qCaseStudy.origin?.paragraphs.join(" ") ?? "";
+    expect(origin).toContain("R$3,000 into R$90,000");
+    expect(origin).toContain("predates this implementation");
+    expect(origin).toContain("not a forecast or evidence");
+    expect(qCaseStudy.hero.deck).not.toContain("R$3,000");
+  });
+
+  it("publishes no identity placeholder while the approved render is absent", () => {
+    expect("identityMedia" in qCaseStudy.hero).toBe(false);
+    expect(qStrings.join(" ")).not.toContain("placeholder");
+    expect(collectImages(qCaseStudy).map((image) => image.src)).not.toContain(
+      "/work/q/identity-placeholder.svg",
+    );
   });
 
   it("states paper execution and locked live trading somewhere in the copy", () => {
     const allCopy = qStrings.join(" ");
     expect(allCopy).toMatch(/paper/i);
     expect(allCopy).toMatch(/locked/i);
+  });
+});
+
+describe("gosigapp authored copy", () => {
+  it("keeps both locales complete, marker-free, and within the claim boundary", () => {
+    const prohibitedClaims = [
+      "zero rejected transmissions",
+      "zero credential exposure",
+      "high daily event volumes",
+      "complete historical proof",
+      "without data duplication",
+      "license suspension",
+      "sem duplicação",
+      "suspensão da licença",
+    ];
+
+    for (const strings of [gosigappStrings, gosigappPtBrStrings]) {
+      expect(strings.filter((value) => value.trim().length === 0)).toEqual([]);
+      expect(
+        strings.filter(
+          (value) =>
+            value.includes("[REQUIRED:") ||
+            value.includes("[CONFIDENTIAL:") ||
+            value.includes("github.com") ||
+            /\b(?:BRX|RICO)\b/.test(value),
+        ),
+      ).toEqual([]);
+      expect(
+        strings.filter((value) =>
+          [...FORBIDDEN_TERMS, ...prohibitedClaims].some((term) =>
+            value.toLowerCase().includes(term),
+          ),
+        ),
+      ).toEqual([]);
+    }
+  });
+
+  it("states ownership before AI assistance and preserves deployment limits", () => {
+    expect(gosigappCaseStudy.hero.support).toMatch(/^I designed and deployed/);
+    expect(gosigappCaseStudy.contribution.paragraphs.join(" ")).toContain(
+      "sole human developer",
+    );
+    expect(gosigappCaseStudy.contribution.paragraphs.join(" ")).toContain(
+      "AI assisted implementation",
+    );
+    expect(gosigappCaseStudy.hero.facts).toContainEqual({
+      label: "State",
+      value: "Deployed via AWS ECS/Fargate",
+    });
+    expect(gosigappCaseStudy.delivered?.paragraphs.join(" ")).toContain(
+      "do not publish operational volumes, uptime, rejection rates, or business impact",
+    );
+    expect("liveEnvironment" in gosigappCaseStudy.hero).toBe(false);
+    expect("media" in gosigappCaseStudy.hero).toBe(false);
+  });
+
+  it("describes the selective retry and status-aware recovery tradeoffs", () => {
+    const recovery = gosigappCaseStudy.decisions[2].paragraphs.join(" ");
+    expect(recovery).toContain("network and 5xx failures");
+    expect(recovery).toContain("4xx responses return immediately");
+    expect(recovery).toContain("checks SIGAP for existing submissions");
+    expect(recovery).toContain("already submitted");
+  });
+
+  it("provides a complete Brazilian Portuguese object instead of English fallback copy", () => {
+    const englishSections = caseStudyBodySections(gosigappCaseStudy);
+    const portugueseSections = caseStudyBodySections(gosigappCaseStudyPtBr);
+
+    expect(portugueseSections.map((section) => section.heading)).toEqual(
+      GOSIGAPP_PT_BR_EXPECTED_BODY_HEADINGS,
+    );
+    expect(portugueseSections).toHaveLength(englishSections.length);
+
+    for (let index = 0; index < englishSections.length; index += 1) {
+      const english = englishSections[index];
+      const portuguese = portugueseSections[index];
+      expect(portuguese.id).toBe(english.id);
+      expect(portuguese.heading).not.toBe(english.heading);
+      if (english.paragraphs.length > 0) {
+        expect(portuguese.paragraphs).not.toEqual(english.paragraphs);
+      } else {
+        expect(portuguese.paragraphs).toEqual([]);
+      }
+    }
+
+    const englishImages = collectImages(gosigappCaseStudy);
+    const portugueseImages = collectImages(gosigappCaseStudyPtBr);
+    expect(
+      portugueseImages.map(({ src, width, height }) => ({ src, width, height })),
+    ).toEqual(
+      englishImages.map(({ src, width, height }) => ({ src, width, height })),
+    );
+    for (let index = 0; index < englishImages.length; index += 1) {
+      expect(portugueseImages[index].alt).not.toBe(englishImages[index].alt);
+      expect(portugueseImages[index].caption).not.toBe(
+        englishImages[index].caption,
+      );
+    }
+
+    expect(gosigappCaseStudyPtBr.metadata.title).toBe(
+      "gosigapp — Infraestrutura de Envios Regulatórios em Go",
+    );
+    expect(gosigappCaseStudyPtBr.hero.support).toMatch(/^Projetei e implantei/);
+    expect(gosigappCaseStudyPtBr.confidentiality.actions).toEqual([
+      {
+        label: "Conversar sobre este projeto",
+        href: "/pt-BR/#contact",
+      },
+      {
+        label: "Voltar aos trabalhos selecionados",
+        href: "/pt-BR/#work",
+      },
+    ]);
+  });
+});
+
+describe("gosigapp section structure", () => {
+  it("renders the recruiter-focused sections in the fixed order", () => {
+    expect(
+      caseStudyBodySections(gosigappCaseStudy).map(
+        (section) => section.heading,
+      ),
+    ).toEqual(GOSIGAPP_EXPECTED_BODY_HEADINGS);
+    expect(gosigappCaseStudy.confidentiality.heading).toBe(
+      "Private source, discussable architecture",
+    );
+  });
+
+  it("preserves section ids and the three approved media placements", () => {
+    const sections = [
+      ...caseStudyBodySections(gosigappCaseStudy),
+      gosigappCaseStudy.confidentiality,
+    ];
+    const ids = sections.map((section) => section.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(collectImages(gosigappCaseStudy).map((image) => image.src)).toEqual([
+      "/work/gosigapp/system-map.svg",
+      "/work/gosigapp/compliance-check-output.webp",
+      "/work/gosigapp/cli-pipeline-run.webp",
+    ]);
   });
 });
 
@@ -332,7 +509,9 @@ describe("Quant section structure", () => {
     expect(
       caseStudyBodySections(qCaseStudy).map((section) => section.heading),
     ).toEqual(Q_EXPECTED_BODY_HEADINGS);
-    expect(qCaseStudy.confidentiality.heading).toBe("Current status");
+    expect(qCaseStudy.confidentiality.heading).toBe(
+      "Current status and technical walkthrough",
+    );
     expect(qCaseStudy.confidentiality.id).toBe("status");
   });
 
@@ -352,13 +531,12 @@ describe("Quant section structure", () => {
     }
   });
 
-  it("keeps exactly four decisions and no video", () => {
+  it("keeps exactly three decisions and no video", () => {
     const ids = qCaseStudy.decisions.map((decision) => decision.id);
     expect(ids).toEqual([
-      "decision-1",
-      "decision-2",
-      "decision-3",
-      "decision-4",
+      "decision-desktop",
+      "decision-fixtures",
+      "decision-safety",
     ]);
     expect(
       caseStudyBodySections(qCaseStudy).some((section) => section.video),
@@ -435,13 +613,8 @@ describe("Quant media references", () => {
   it("gives every image alt text and 16:9 intrinsic dimensions", () => {
     for (const image of collectImages(qCaseStudy)) {
       expect(image.alt.trim().length).toBeGreaterThan(0);
-      if (image.src === "/work/q/dock.webp") {
-        expect(image.width).toBe(3840);
-        expect(image.height).toBe(2160);
-      } else {
-        expect(image.width).toBe(2560);
-        expect(image.height).toBe(1440);
-      }
+      expect(image.width).toBe(2560);
+      expect(image.height).toBe(1440);
     }
   });
 
@@ -451,7 +624,7 @@ describe("Quant media references", () => {
     const bodyImages = caseStudyBodySections(qCaseStudy).flatMap(
       (section) => section.images ?? [],
     );
-    expect(bodyImages).toHaveLength(11);
+    expect(bodyImages).toHaveLength(8);
     for (const image of bodyImages) {
       expect(image.caption?.trim().length ?? 0).toBeGreaterThan(0);
     }

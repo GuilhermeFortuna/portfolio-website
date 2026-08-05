@@ -21,10 +21,10 @@ export const metadata: Metadata = createPageMetadata({
   type: "article",
   images: [
     {
-      url: "/work/q/launcher.webp",
-      width: 2560,
-      height: 1440,
-      alt: "The Quant launcher dashboard showing market status and research activity.",
+      url: qCaseStudy.hero.media.src,
+      width: qCaseStudy.hero.media.width,
+      height: qCaseStudy.hero.media.height,
+      alt: qCaseStudy.hero.media.alt,
     },
   ],
 });
@@ -40,7 +40,9 @@ export default function QuantCaseStudyPage() {
           {caseStudyBodySections(qCaseStudy).map((section) => (
             <CaseStudySection key={section.id} section={section}>
               {/* The map belongs to the system section only. */}
-              {section.id === qCaseStudy.system.id ? <QSystemMap /> : null}
+              {section.id === qCaseStudy.system.id ? (
+                <QSystemMap locale="en" />
+              ) : null}
             </CaseStudySection>
           ))}
 

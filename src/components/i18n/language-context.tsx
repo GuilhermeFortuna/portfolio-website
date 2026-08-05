@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import type { Locale } from "@/lib/i18n";
 import { defaultLocale } from "@/lib/i18n";
 
@@ -19,6 +19,10 @@ export function LanguageProvider({
   locale: Locale;
   children: React.ReactNode;
 }) {
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
+
   return (
     <LanguageContext.Provider value={{ locale }}>
       {children}

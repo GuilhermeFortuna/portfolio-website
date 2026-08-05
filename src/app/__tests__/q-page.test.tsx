@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import QuantCaseStudyPage, { metadata } from "@/app/work/q/page";
+import { QSystemMap } from "@/components/case-study/q-system-map";
 import { caseStudyBodySections, qCaseStudy } from "@/content/case-studies";
 import { siteNavigation } from "@/content/site";
 import { render, screen, within } from "@/test/render";
@@ -19,7 +20,7 @@ describe("/work/q metadata", () => {
   it("exports the approved static title and description", () => {
     expect(metadata.title).toBe("Quant — Quantitative Research and Execution");
     expect(metadata.description).toBe(
-      "A native quantitative research platform for the Brazilian futures market, covering backtesting, optimization, data pipelines, and execution architecture.",
+      "How I designed and built a native quantitative research platform across desktop UX, asynchronous services, market-data pipelines, validation, and paper execution.",
     );
   });
 });
@@ -107,7 +108,7 @@ describe("/work/q navigation", () => {
     }
 
     expect(
-      screen.getByRole("link", { name: "Get in touch" }),
+      screen.getByRole("link", { name: "Discuss Quant" }),
     ).toHaveAttribute("href", "/#contact");
   });
 
@@ -212,6 +213,23 @@ describe("/work/q system map", () => {
     }
   });
 
+  it("renders a complete Brazilian Portuguese system map", () => {
+    render(<QSystemMap locale="pt-BR" />);
+
+    expect(
+      screen.getByRole("list", { name: "Como a stack se organiza" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("list", { name: "Dependências da API" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Shell desktop Tauri")).toBeInTheDocument();
+    expect(screen.getByText("Pool de workers Dramatiq")).toBeInTheDocument();
+    expect(
+      screen.getByText(/trading ao vivo bloqueado/i),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("How the stack nests")).toBeNull();
+  });
+
   it("keeps the connectors decorative and out of the accessibility tree", () => {
     render(<QuantCaseStudyPage />);
     const section = systemSection();
@@ -250,18 +268,13 @@ describe("/work/q media", () => {
     render(<QuantCaseStudyPage />);
 
     const images = Array.from(document.querySelectorAll("img"));
-    expect(images).toHaveLength(13);
+    expect(images).toHaveLength(9);
 
     for (const image of images) {
       expect(image.getAttribute("alt")?.trim()).toBeTruthy();
       expect(image.getAttribute("src")).toMatch(/^\/work\/q\//);
-      if (image.getAttribute("src") === "/work/q/dock.webp") {
-        expect(image.getAttribute("width")).toBe("3840");
-        expect(image.getAttribute("height")).toBe("2160");
-      } else {
-        expect(image.getAttribute("width")).toBe("2560");
-        expect(image.getAttribute("height")).toBe("1440");
-      }
+      expect(image.getAttribute("width")).toBe("2560");
+      expect(image.getAttribute("height")).toBe("1440");
     }
 
     for (const section of caseStudyBodySections(qCaseStudy)) {

@@ -123,9 +123,71 @@ describe("i18n infrastructure & Brazilian Portuguese content", () => {
       href: "/pt-BR/#contact",
     });
 
+    const enQ = getQCaseStudy("en");
     const ptQ = getQCaseStudy("pt-BR");
     expect(ptQ.hero.category).toBe("Sistemas quantitativos");
     expect(ptQ.hero.backLink.href).toBe("/pt-BR/#work");
+    expect(ptQ.hero.deck).toContain("pesquisa disciplinada e inspecionável");
+    expect(ptQ.hero.facts).toContainEqual({
+      label: "Estado",
+      value: "Pesquisa, backtesting e execução simulada",
+    });
+    expect(caseStudyBodySections(ptQ).map((section) => section.id)).toEqual(
+      caseStudyBodySections(enQ).map((section) => section.id),
+    );
+    expect(caseStudyBodySections(ptQ).map((section) => section.heading)).toEqual([
+      "Construído de ponta a ponta como um só produto",
+      "Uma ideia de seis anos, reconstruída para pesquisa disciplinada",
+      "Do contexto de mercado a experimentos inspecionáveis",
+      "Questionar resultados antes de confiar neles",
+      "Manter o trabalho pesado fora do caminho da interação",
+      "Um produto nativo apoiado por serviços assíncronos",
+      "Por que o desktop era a fronteira certa",
+      "Desenvolver com fixtures estáveis",
+      "Transformar validação e segurança de execução em restrições do produto",
+      "O que esteve sob minha responsabilidade",
+      "Tecnologia em toda a stack",
+    ]);
+
+    const ptBody = caseStudyBodySections(ptQ);
+    for (const section of ptBody) {
+      expect(section.paragraphs.join(" ").trim() || section.badges?.length).toBeTruthy();
+      for (const image of section.images ?? []) {
+        expect(image.alt.trim()).not.toBe("");
+        expect(image.caption?.trim()).not.toBe("");
+      }
+    }
+
+    const ptVisibleCopy = [
+      ptQ.hero.deck,
+      ptQ.hero.support,
+      ...ptBody.flatMap((section) => [
+        section.heading,
+        ...section.paragraphs,
+        ...(section.images ?? []).flatMap((image) => [
+          image.alt,
+          image.caption ?? "",
+        ]),
+      ]),
+      ptQ.confidentiality.heading,
+      ...ptQ.confidentiality.paragraphs,
+      ...ptQ.confidentiality.actions.map((action) => action.label),
+    ].join(" ");
+
+    for (const englishFallback of [
+      "Built end to end as one product",
+      "Challenge results before trusting them",
+      "Current status and technical walkthrough",
+      "Back to selected work",
+      "Discuss Quant",
+    ]) {
+      expect(ptVisibleCopy).not.toContain(englishFallback);
+    }
+
+    expect(ptQ.confidentiality.actions[1]).toEqual({
+      label: "Conversar sobre o Quant",
+      href: "/pt-BR/#contact",
+    });
 
     expect(getCaseStudy("aegis", "pt-BR")).toBeDefined();
     expect(getCaseStudy("q", "pt-BR")).toBeDefined();
