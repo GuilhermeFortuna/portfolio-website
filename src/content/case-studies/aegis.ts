@@ -72,11 +72,11 @@ export const aegisCaseStudy = {
     images: [
       {
         src: "/work/aegis/overview.webp",
-        alt: "The Aegis overview screen: a dark console with a Portuguese sidebar, a risk summary panel counting 25,000 analysed players and 97 with a signal, and a field of faint points with an amber cluster to the right.",
-        width: SCREENSHOT_WIDTH,
-        height: SCREENSHOT_HEIGHT,
+        alt: "Aegis Fraud Intelligence cinematic logo featuring a glowing blue mechanical eye and metallic 3D text on a dark background.",
+        width: 3840,
+        height: 2160,
         caption:
-          "The overview on synthetic data. The product interface is in Portuguese.",
+          "Aegis Fraud Intelligence — product mark used across the case study entry.",
       },
     ],
   },

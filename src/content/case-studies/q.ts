@@ -208,11 +208,11 @@ export const qCaseStudy = {
       images: [
         {
           src: "/work/q/dock.webp",
-          alt: "The Quant workspace dock showing progress for a backtest running in the worker pool.",
-          width: SCREENSHOT_WIDTH,
-          height: SCREENSHOT_HEIGHT,
+          alt: "Quant cinematic logo featuring a metallic Q filled with topographic lines and QUANT wordmark on a dark bronze background.",
+          width: 3840,
+          height: 2160,
           caption:
-            "A queued backtest reporting progress through the persistent workspace dock.",
+            "Quant — product mark used across the case study entry.",
         },
         {
           src: "/work/q/execution.webp",

@@ -17,15 +17,15 @@ export type ProjectMedia = {
 export const projectMedia: Record<string, ProjectMedia> = {
   aegis: {
     src: "/work/aegis/overview.webp",
-    alt: "Aegis fraud intelligence dashboard overview",
-    width: 1600,
-    height: 900,
+    alt: "Aegis Fraud Intelligence cinematic logo with glowing mechanical eye",
+    width: 3840,
+    height: 2160,
   },
   q: {
     src: "/work/q/dock.webp",
-    alt: "Quant research and execution dock",
-    width: 2560,
-    height: 1440,
+    alt: "Quant cinematic logo with metallic Q mark and bronze topographic patterns",
+    width: 3840,
+    height: 2160,
   },
   gosigapp: {
     src: "/work/gosigapp/placeholder.svg",
