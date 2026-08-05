@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { getSiteContent, getSiteNavigation, getSiteMetadata, getFooterContent } from "@/content/site";
 import { getProjects } from "@/content/projects";
-import { getAegisCaseStudy, getQCaseStudy, getCaseStudy } from "@/content/case-studies";
+import {
+  caseStudyBodySections,
+  getAegisCaseStudy,
+  getQCaseStudy,
+  getCaseStudy,
+} from "@/content/case-studies";
 import {
   isValidLocale,
   isPrefixedLocale,
@@ -88,9 +93,35 @@ describe("i18n infrastructure & Brazilian Portuguese content", () => {
   });
 
   it("provides Portuguese (pt-BR) case studies", () => {
+    const enAegis = getAegisCaseStudy("en");
     const ptAegis = getAegisCaseStudy("pt-BR");
     expect(ptAegis.hero.category).toBe("Inteligência contra fraudes");
     expect(ptAegis.hero.backLink.href).toBe("/pt-BR/#work");
+    expect(ptAegis.metadata).toEqual({
+      title: "Aegis — Plataforma de Inteligência contra Fraudes em Produção",
+      description:
+        "Como projetei e construí uma plataforma de investigação de fraudes em produção para o iGaming brasileiro, de regras explicáveis e pipelines de dados a segurança e WebGL.",
+    });
+    expect(ptAegis.hero.facts).toEqual([
+      { label: "Papel", value: "Desenvolvedor de Software" },
+      { label: "Período", value: "Abril de 2026–presente" },
+      { label: "Estado", value: "Implantado em produção" },
+      { label: "Código-fonte", value: "Privado" },
+    ]);
+    expect(
+      caseStudyBodySections(ptAegis).map((section) => section.id),
+    ).toEqual(caseStudyBodySections(enAegis).map((section) => section.id));
+    expect(ptAegis.system.images?.[0].alt).toContain("Tela de visão geral");
+    expect(ptAegis.delivered?.paragraphs.join(" ")).toContain(
+      "até onde sei, continua ativo",
+    );
+    expect(ptAegis.delivered?.paragraphs.join(" ")).toContain(
+      "suíte E2E de navegador está escrita, mas ignorada",
+    );
+    expect(ptAegis.confidentiality.actions[1]).toEqual({
+      label: "Conversar sobre o Aegis",
+      href: "/pt-BR/#contact",
+    });
 
     const ptQ = getQCaseStudy("pt-BR");
     expect(ptQ.hero.category).toBe("Sistemas quantitativos");

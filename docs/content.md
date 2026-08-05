@@ -422,7 +422,7 @@ The validated route metadata registry is shared by the client router and the sta
 | `/` | `Guilherme — Software Developer | AI, Product, Data & Infrastructure` | `A cinematic engineering portfolio featuring fraud intelligence, quantitative systems, government integration, and AI-first product development.` |
 | `/process` | `Engineering Process — Guilherme` | `How I move from difficult ideas through architecture, AI-agent execution, implementation, testing, and deployment.` |
 | `/about` | `About Guilherme — Software Developer` | `A product-minded software developer working across interfaces, architecture, data, automation, and infrastructure.` |
-| `/work/aegis` | `Aegis — Fraud Intelligence Case Study` | `Fraud intelligence and investigation software for the iGaming industry, presented through verified engineering decisions and evidence.` |
+| `/work/aegis` | `Aegis — Production Fraud Intelligence Platform` | `How I designed and built a production fraud-investigation platform for Brazilian iGaming, from explainable rules and data pipelines to security and WebGL.` |
 | `/work/q` | `Quant — Quantitative Research and Execution` | `A quantitative research and execution system covering backtesting, optimization, data pipelines, and execution architecture.` |
 | `/work/gosigapp` | `gosigapp — Reliable SIGAP Submission Pipeline` | `A Go backend pipeline for file validation, processing, retries, auditability, and submission to SIGAP.` |
 | `/work/nexo-dental` | `Nexo Dental — Multi-Tenant Clinic Operations` | `A multi-tenant product for Brazilian dental clinics spanning scheduling, clinical records, finance, communications, CRM, claims, and reporting across role-native surfaces.` |

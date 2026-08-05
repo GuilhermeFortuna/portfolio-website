@@ -73,16 +73,16 @@ const FORBIDDEN_TERMS = [
 ] as const;
 
 const AEGIS_EXPECTED_BODY_HEADINGS = [
-  "The context",
-  "The problem",
-  "How the system fits together",
-  "Decision 1 — Keep Aegis a standalone product",
-  "Decision 2 — Read from a curated store, not the lakehouse",
-  "Decision 3 — Build for investigation, not for monitoring",
-  "Decision 4 — Give the product its own identity",
-  "What I did",
-  "Delivered",
-  "Technology, in context",
+  "Real system. Synthetic evidence.",
+  "Fraud investigations started as data reconstruction",
+  "A separate product built around investigative reads",
+  "01 — Separate the product and its security boundary",
+  "02 — Curate investigation data instead of querying the lakehouse live",
+  "03 — Build for investigation, not monitoring",
+  "04 — Give the product identity without blocking the work",
+  "What I owned",
+  "What shipped—and what remains limited",
+  "Technology in service of the product",
 ] as const;
 
 const Q_EXPECTED_BODY_HEADINGS = [
@@ -161,9 +161,9 @@ describe("case-study registry", () => {
 
   it("uses the approved route metadata", () => {
     expect(aegisCaseStudy.metadata).toEqual({
-      title: "Aegis — Fraud Intelligence Case Study",
+      title: "Aegis — Production Fraud Intelligence Platform",
       description:
-        "Fraud intelligence and investigation software for the iGaming industry, presented through verified engineering decisions and evidence.",
+        "How I designed and built a production fraud-investigation platform for Brazilian iGaming, from explainable rules and data pipelines to security and WebGL.",
     });
     expect(qCaseStudy.metadata).toEqual({
       title: "Quant — Quantitative Research and Execution",
@@ -226,6 +226,21 @@ describe("Aegis authored copy", () => {
       "as far as I know, remains active",
     );
   });
+
+  it("states the verified product limits without hiding them", () => {
+    const delivered = aegisCaseStudy.delivered.paragraphs.join(" ");
+    expect(delivered).toContain("browser-side login remains a shell");
+    expect(delivered).toContain("end-to-end browser suite is written but skipped");
+    expect(delivered).toContain("few hundred thousand points, not millions");
+  });
+
+  it("describes the saved-findings surface without claiming case management", () => {
+    const investigationCopy = aegisCaseStudy.decisions[2].paragraphs.join(" ");
+    expect(investigationCopy).toContain("browser-local worklist");
+    expect(investigationCopy).toContain(
+      "not a backend case-management system",
+    );
+  });
 });
 
 describe("Quant authored copy", () => {
@@ -274,7 +289,7 @@ describe("Aegis section structure", () => {
       caseStudyBodySections(aegisCaseStudy).map((section) => section.heading),
     ).toEqual(AEGIS_EXPECTED_BODY_HEADINGS);
     expect(aegisCaseStudy.confidentiality.heading).toBe(
-      "A note on confidentiality",
+      "Private by design, open to discussion",
     );
   });
 
@@ -374,6 +389,16 @@ describe("Aegis media references", () => {
       expect(image.width).toBeGreaterThan(0);
       expect(image.height).toBeGreaterThan(0);
     }
+  });
+
+  it("describes the overview asset as the product screen it contains", () => {
+    expect(aegisCaseStudy.system.images?.[0].alt).toContain(
+      "Aegis overview screen",
+    );
+    expect(aegisCaseStudy.system.images?.[0].alt).not.toMatch(/logo|wordmark/i);
+    expect(aegisCaseStudy.system.images?.[0].caption).toContain(
+      "synthetic data",
+    );
   });
 
   it("captions every in-body figure and leaves the hero still uncaptioned", () => {

@@ -17,9 +17,11 @@ const EXPECTED_H2_ORDER = [
 
 describe("/work/aegis metadata", () => {
   it("exports the approved static title and description", () => {
-    expect(metadata.title).toBe("Aegis — Fraud Intelligence Case Study");
+    expect(metadata.title).toBe(
+      "Aegis — Production Fraud Intelligence Platform",
+    );
     expect(metadata.description).toBe(
-      "Fraud intelligence and investigation software for the iGaming industry, presented through verified engineering decisions and evidence.",
+      "How I designed and built a production fraud-investigation platform for Brazilian iGaming, from explainable rules and data pipelines to security and WebGL.",
     );
   });
 });
@@ -108,7 +110,7 @@ describe("/work/aegis navigation", () => {
     }
 
     expect(
-      screen.getByRole("link", { name: "Get in touch" }),
+      screen.getByRole("link", { name: "Discuss Aegis" }),
     ).toHaveAttribute("href", "/#contact");
   });
 
