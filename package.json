@@ -52,6 +52,7 @@
     "@vitest/coverage-v8": "^4.1.10",
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
+    "firebase-tools": "^15.25.1",
     "jsdom": "^30.0.1",
     "playwright": "^1.62.1",
     "shadcn": "^4.16.0",
