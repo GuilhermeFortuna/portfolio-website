@@ -39,7 +39,7 @@ DEPLOY-04 does not become ready automatically. It requires all of:
 
 | DEPLOY | State | Prerequisites | Owner | Branch/commit | Evidence or blocker |
 | --- | --- | --- | --- | --- | --- |
-| [DEPLOY-01](DEPLOY-01-next-static-export-compatibility.md) | `READY` | Current repository inspected; overlapping VIZ orders are not `IMPLEMENTING` | Unassigned | — | Next 16 static-export incompatibilities are identified; dispatch must preserve the committed Firebase dependency baseline and coordinate VIZ-owned files. |
+| [DEPLOY-01](DEPLOY-01-next-static-export-compatibility.md) | `REVIEW` | Current repository inspected; overlapping VIZ orders are not `IMPLEMENTING` | Cursor Auto | `deploy/01-static-export-compatibility` | Handoff below. Awaiting independent acceptance. Do not self-mark `DONE`. |
 | [DEPLOY-02](DEPLOY-02-firebase-staging-repository-workflow.md) | `BLOCKED` | DEPLOY-01 `DONE` | Unassigned | — | Awaiting a verified static `out/` build contract. Commit `4465540a` added `firebase-tools` and its pnpm lock/allow-build changes; this order validates and reconciles that baseline instead of reinstalling blindly. |
 | [DEPLOY-03](DEPLOY-03-oidc-infrastructure-staging-validation.md) | `BLOCKED` | DEPLOY-02 `DONE`; owner supplies Firebase project/site identifiers and authorizes Google/GitHub administration | Unassigned | — | No project ID, Hosting site ID, WIF provider, service-account email, or repository environment variables have been confirmed. |
 | [DEPLOY-04](DEPLOY-04-production-release-enablement.md) | `BLOCKED` | DEPLOY-03 `DONE`; VIZ-006 `GO`; release blockers closed/waived; explicit owner approval for named commit | Unassigned | — | Production is intentionally disabled. Current VIZ status has VIZ-003/VIZ-005 in `REVIEW`, VIZ-004 `BLOCKED`, and VIZ-006 `BLOCKED`. |
@@ -48,12 +48,13 @@ DEPLOY-04 does not become ready automatically. It requires all of:
 
 | Date | Work Order | Owner | Branch/worktree | Scope note |
 | --- | --- | --- | --- | --- |
-| — | — | — | — | No DEPLOY order dispatched yet. |
+| 2026-08-05 | DEPLOY-01 | Cursor Auto | `deploy/01-static-export-compatibility` | Static export compatibility: gated `NEXT_OUTPUT=export`, split root layouts, remove middleware/request-time locale APIs. |
 
 ## Gate Log
 
 | Date | Gate | Verdict | Evidence | Next action |
 | --- | --- | --- | --- | --- |
+| 2026-08-05 | DEPLOY-01 implementation handoff | `REVIEW` | Branch `deploy/01-static-export-compatibility`. Gated `NEXT_OUTPUT=export` + `trailingSlash` only on export builds. Split root layouts `(en)` / `[lang]` via `RootDocument` (MotionRuntime → WebGLManager → LanguageProvider). Deleted `src/middleware.ts` and root `src/app/layout.tsx`; removed `localeHeader` and `NEXT_LOCALE` cookie. Staging `noindex,nofollow` + HTTPS `SITE_URL` required when `DEPLOY_ENV=staging\|production`. `force-static` on robots/sitemap/icon/OG; `experimental.globalNotFound` + segment not-found pages. **Moved files:** `page.tsx` and `work/{aegis,q,gosigapp,nexo-dental}/page.tsx` → `src/app/(en)/...`; `icon.tsx`/`opengraph-image.tsx` → `(en)/`. Firebase `package.json`/`pnpm-lock.yaml` untouched. **Normal build routes:** `/`, `/work/{aegis,q,gosigapp,nexo-dental}`, `/pt-BR`, `/pt-BR/work/{aegis,q}`, robots, sitemap, icon, OG, `_not-found` (all static/SSG). **Export checks:** `out/index.html`, `out/404.html`, all EN work routes, `out/pt-BR/index.html`; `lang="pt-BR"` and `noindex` present; no `localhost:3000`/`x-locale`/`NEXT_LOCALE` in `out/`. **Automated:** `pnpm test` (202), lint, typecheck, both builds, `git diff --check` pass. **`next start` smoke (port 4011):** `/`, `/work/aegis`, `/pt-BR`, `/pt-BR/work/q` → 200 with correct `lang`; PT SSR contains Desenvolvedor/Trabalho/Contato/Processo/Sobre. **Static `out/` smoke:** same routes 200; no-JS PT document has `lang="pt-BR"`. | Independent reviewer confirms acceptance checklist; then mark `DONE` and unblock DEPLOY-02. |
 | 2026-08-05 | DEPLOY line created | `STAGING OPEN / PRODUCTION CLOSED` | Repository inspection confirmed Next.js 16, normal `next build`/`next start` review requirements, request-time locale middleware/headers, CI on `development`, existing `staging`/`main` branches, and Firebase CLI dependency commit `4465540a`. The source strategy's Vite `dist/` and SPA rewrite assumptions do not match the repository. | Dispatch DEPLOY-01 only after checking for an overlapping active VIZ worker. |
 
 ## Status Update Procedure

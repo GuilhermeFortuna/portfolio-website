@@ -9,8 +9,6 @@ export const prefixedLocales: readonly PrefixedLocale[] = locales.filter(
   (locale): locale is PrefixedLocale => locale !== defaultLocale,
 );
 
-export const localeHeader = "x-locale";
-
 export function isValidLocale(locale: string): locale is Locale {
   return (locales as readonly string[]).includes(locale);
 }

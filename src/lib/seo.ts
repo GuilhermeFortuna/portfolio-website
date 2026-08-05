@@ -101,5 +101,22 @@ export function absoluteUrl(pathname: string): string {
   return new URL(pathname, getSiteUrl()).toString();
 }
 
+/**
+ * Staging previews must not be indexed. Production and local builds stay
+ * indexable (Next default). Canonicals still use the configured SITE_URL.
+ */
+export function deploymentRobotsMetadata(): Pick<Metadata, "robots"> | undefined {
+  if (process.env.DEPLOY_ENV?.trim() !== "staging") {
+    return undefined;
+  }
+
+  return {
+    robots: {
+      index: false,
+      follow: false,
+    },
+  };
+}
+
 /** Indexable routes shared by the sitemap (unprefixed paths). */
 export const sitemapPaths = ["/", "/work/aegis", "/work/q"] as const;

@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import GosigappCaseStudyPage, { metadata } from "@/app/work/gosigapp/page";
+import GosigappCaseStudyPage, { metadata } from "@/app/(en)/work/gosigapp/page";
 import { caseStudyBodySections, gosigappCaseStudy } from "@/content/case-studies";
 import { siteNavigation } from "@/content/site";
-import { render, screen, within } from "@/test/render";
+import { renderWithLocale, screen, within } from "@/test/render";
 
 /**
  * The case-study route is fully static: no effect, hook, or client runtime is
@@ -28,7 +28,7 @@ describe("/work/gosigapp metadata", () => {
 
 describe("/work/gosigapp document structure", () => {
   it("keeps one h1 and the contract heading order", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
 
     expect(
       screen.getByRole("heading", { level: 1, name: "gosigapp" }),
@@ -43,7 +43,7 @@ describe("/work/gosigapp document structure", () => {
   });
 
   it("exposes banner, main, and contentinfo landmarks", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
 
     expect(screen.getByRole("banner")).toBeInTheDocument();
     expect(screen.getByRole("contentinfo")).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe("/work/gosigapp document structure", () => {
   });
 
   it("provides the skip-link and back-to-top anchor targets", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
 
     const skipLink = screen.getByRole("link", {
       name: siteNavigation.skipLink,
@@ -66,7 +66,7 @@ describe("/work/gosigapp document structure", () => {
   });
 
   it("gives every section an id matching its labelling heading", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
 
     for (const section of [
       ...caseStudyBodySections(gosigappCaseStudy),
@@ -84,7 +84,7 @@ describe("/work/gosigapp document structure", () => {
 
 describe("/work/gosigapp navigation", () => {
   it("sends shared header navigation back to the homepage", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
 
     for (const item of siteNavigation.desktop) {
       for (const link of screen.getAllByRole("link", { name: item.label })) {
@@ -98,7 +98,7 @@ describe("/work/gosigapp navigation", () => {
   });
 
   it("offers the approved in-page return and contact actions", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
 
     const backLinks = screen.getAllByRole("link", {
       name: "Back to selected work",
@@ -118,7 +118,7 @@ describe("/work/gosigapp navigation", () => {
   });
 
   it("keeps every destination same-origin and publishes no repository link", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
 
     const hrefs = Array.from(document.querySelectorAll("a")).map(
       (anchor) => anchor.getAttribute("href") ?? "",
@@ -134,7 +134,7 @@ describe("/work/gosigapp navigation", () => {
 
 describe("/work/gosigapp private-source & screenless backend behaviour", () => {
   it("omits the live-environment control and hero media", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
 
     expect(
       screen.queryByRole("button", { name: /live environment/i }),
@@ -144,7 +144,7 @@ describe("/work/gosigapp private-source & screenless backend behaviour", () => {
   });
 
   it("states the private source and ECS/Fargate deployment in the hero facts", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
 
     const sourceTerm = screen.getByText("Source");
     expect(sourceTerm.tagName).toBe("DT");
@@ -158,7 +158,7 @@ describe("/work/gosigapp private-source & screenless backend behaviour", () => {
   });
 
   it("renders no confidential brand code or draft placeholder anywhere", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
 
     const html = document.body.innerHTML;
     expect(html).not.toContain("[REQUIRED:");
@@ -180,7 +180,7 @@ describe("/work/gosigapp system map", () => {
   }
 
   it("renders inside the system section, after the prose it explains", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
     const section = systemSection();
 
     const lists = section.querySelectorAll("ol");
@@ -196,7 +196,7 @@ describe("/work/gosigapp system map", () => {
   });
 
   it("states every node as real text rather than an image or canvas", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
     const section = systemSection();
 
     for (const label of [
@@ -215,7 +215,7 @@ describe("/work/gosigapp system map", () => {
   });
 
   it("names the flow stages so the lists are distinguishable", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
     const section = systemSection();
 
     for (const name of ["Pipeline Data & Submission Flow", "Compliance, Auditability & Cloud Infrastructure"]) {
@@ -225,7 +225,7 @@ describe("/work/gosigapp system map", () => {
   });
 
   it("keeps the connectors decorative and out of the accessibility tree", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
     const section = systemSection();
 
     const hidden = section.querySelectorAll('[aria-hidden="true"]');
@@ -238,7 +238,7 @@ describe("/work/gosigapp system map", () => {
 
 describe("/work/gosigapp media", () => {
   it("renders the 3 placed assets (system map + 2 terminal captures) with alt, dimensions, and captions", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
 
     const images = Array.from(document.querySelectorAll("img"));
     expect(images).toHaveLength(3);
@@ -261,7 +261,7 @@ describe("/work/gosigapp media", () => {
   });
 
   it("ships no video on this chapter", () => {
-    render(<GosigappCaseStudyPage />);
+    renderWithLocale(<GosigappCaseStudyPage />);
 
     expect(document.querySelector("video")).toBeNull();
     expect(

@@ -3,10 +3,11 @@ import type { MetadataRoute } from "next";
 import { localizePathname, locales } from "@/lib/i18n";
 import { absoluteUrl, sitemapPaths } from "@/lib/seo";
 
-// Resolve the site origin from env on each request so deploy hosts stay accurate.
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const lastModified = new Date();
+
   return sitemapPaths.flatMap((pathname) =>
     locales.map((locale) => {
       const localizedPath = localizePathname(pathname, locale);
@@ -19,7 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
       return {
         url: absoluteUrl(localizedPath),
-        lastModified: new Date(),
+        lastModified,
         alternates: {
           languages,
         },

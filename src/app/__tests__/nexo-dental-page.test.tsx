@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import NexoDentalCaseStudyPage, {
   metadata,
-} from "@/app/work/nexo-dental/page";
+} from "@/app/(en)/work/nexo-dental/page";
 import { CaseStudyHero } from "@/components/case-study/case-study-hero";
 import {
   CaseStudyClosingSection,
@@ -14,7 +14,7 @@ import {
   nexoDentalCaseStudy,
 } from "@/content/case-studies";
 import { siteNavigation } from "@/content/site";
-import { render, screen } from "@/test/render";
+import { render, renderWithLocale, screen } from "@/test/render";
 
 /**
  * The case-study route is fully static: no effect, hook, or client runtime is
@@ -84,7 +84,7 @@ describe("/pt-BR/work/nexo-dental localized content", () => {
 
 describe("/work/nexo-dental document structure", () => {
   it("keeps one h1 and the contract heading order", () => {
-    render(<NexoDentalCaseStudyPage />);
+    renderWithLocale(<NexoDentalCaseStudyPage />);
 
     expect(
       screen.getByRole("heading", { level: 1, name: "Nexo Dental" }),
@@ -99,7 +99,7 @@ describe("/work/nexo-dental document structure", () => {
   });
 
   it("exposes banner, main, and contentinfo landmarks", () => {
-    render(<NexoDentalCaseStudyPage />);
+    renderWithLocale(<NexoDentalCaseStudyPage />);
 
     expect(screen.getByRole("banner")).toBeInTheDocument();
     expect(screen.getByRole("contentinfo")).toBeInTheDocument();
@@ -107,7 +107,7 @@ describe("/work/nexo-dental document structure", () => {
   });
 
   it("provides the skip-link and back-to-top anchor targets", () => {
-    render(<NexoDentalCaseStudyPage />);
+    renderWithLocale(<NexoDentalCaseStudyPage />);
 
     const skipLink = screen.getByRole("link", {
       name: siteNavigation.skipLink,
@@ -122,7 +122,7 @@ describe("/work/nexo-dental document structure", () => {
   });
 
   it("gives every section an id matching its labelling heading", () => {
-    render(<NexoDentalCaseStudyPage />);
+    renderWithLocale(<NexoDentalCaseStudyPage />);
 
     for (const section of [
       ...caseStudyBodySections(nexoDentalCaseStudy),
@@ -140,7 +140,7 @@ describe("/work/nexo-dental document structure", () => {
 
 describe("/work/nexo-dental navigation", () => {
   it("sends shared header navigation back to the homepage", () => {
-    render(<NexoDentalCaseStudyPage />);
+    renderWithLocale(<NexoDentalCaseStudyPage />);
 
     for (const item of siteNavigation.desktop) {
       for (const link of screen.getAllByRole("link", { name: item.label })) {
@@ -154,7 +154,7 @@ describe("/work/nexo-dental navigation", () => {
   });
 
   it("offers the approved in-page return and contact actions", () => {
-    render(<NexoDentalCaseStudyPage />);
+    renderWithLocale(<NexoDentalCaseStudyPage />);
 
     const backLinks = screen.getAllByRole("link", {
       name: "Back to selected work",
@@ -170,7 +170,7 @@ describe("/work/nexo-dental navigation", () => {
   });
 
   it("keeps every destination same-origin and publishes no repository link", () => {
-    render(<NexoDentalCaseStudyPage />);
+    renderWithLocale(<NexoDentalCaseStudyPage />);
 
     const hrefs = Array.from(document.querySelectorAll("a")).map(
       (anchor) => anchor.getAttribute("href") ?? "",
@@ -186,7 +186,7 @@ describe("/work/nexo-dental navigation", () => {
 
 describe("/work/nexo-dental private-source behaviour", () => {
   it("renders the live environment as a disabled, non-interactive control", () => {
-    render(<NexoDentalCaseStudyPage />);
+    renderWithLocale(<NexoDentalCaseStudyPage />);
 
     const control = screen.getByRole("button", {
       name: "Live environment — coming soon",
@@ -197,7 +197,7 @@ describe("/work/nexo-dental private-source behaviour", () => {
   });
 
   it("states the private source in the hero facts", () => {
-    render(<NexoDentalCaseStudyPage />);
+    renderWithLocale(<NexoDentalCaseStudyPage />);
 
     const term = screen.getByText("Source");
     expect(term.tagName).toBe("DT");
@@ -205,7 +205,7 @@ describe("/work/nexo-dental private-source behaviour", () => {
   });
 
   it("renders no documentation placeholder anywhere in the page text", () => {
-    render(<NexoDentalCaseStudyPage />);
+    renderWithLocale(<NexoDentalCaseStudyPage />);
 
     const html = document.body.innerHTML;
     expect(html).not.toContain("[REQUIRED:");
@@ -217,7 +217,7 @@ describe("/work/nexo-dental private-source behaviour", () => {
 
 describe("/work/nexo-dental media", () => {
   it("renders eight placed assets with alt, dimensions, captions, and lazy-loading", () => {
-    render(<NexoDentalCaseStudyPage />);
+    renderWithLocale(<NexoDentalCaseStudyPage />);
 
     const images = Array.from(document.querySelectorAll("img"));
     expect(images).toHaveLength(8);
@@ -250,7 +250,7 @@ describe("/work/nexo-dental media", () => {
   });
 
   it("ships no video on this chapter", () => {
-    render(<NexoDentalCaseStudyPage />);
+    renderWithLocale(<NexoDentalCaseStudyPage />);
 
     expect(document.querySelector("video")).toBeNull();
     expect(

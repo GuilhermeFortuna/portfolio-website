@@ -32,6 +32,11 @@ describe("i18n infrastructure & Brazilian Portuguese content", () => {
     expect(isPrefixedLocale("fr")).toBe(false);
   });
 
+  it("does not expose a request-time locale header contract", async () => {
+    const i18n = await import("@/lib/i18n");
+    expect(i18n).not.toHaveProperty("localeHeader");
+  });
+
   it("maps document language tags and path locales", () => {
     expect(getHtmlLang("en")).toBe("en");
     expect(getHtmlLang("pt-BR")).toBe("pt-BR");

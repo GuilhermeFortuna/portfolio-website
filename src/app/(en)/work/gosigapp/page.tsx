@@ -7,7 +7,6 @@ import {
 } from "@/components/case-study/case-study-section";
 import { CaseStudyShell } from "@/components/case-study/case-study-shell";
 import { GosigappSystemMap } from "@/components/case-study/gosigapp-system-map";
-import { LanguageProvider } from "@/components/i18n/language-context";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { caseStudyBodySections, gosigappCaseStudy } from "@/content/case-studies";
@@ -31,7 +30,7 @@ export const metadata: Metadata = createPageMetadata({
 
 export default function GosigappCaseStudyPage() {
   return (
-    <LanguageProvider locale="en">
+    <>
       <SiteHeader />
       <main id="main-content" tabIndex={-1}>
         <CaseStudyShell>
@@ -50,6 +49,6 @@ export default function GosigappCaseStudyPage() {
         </CaseStudyShell>
       </main>
       <SiteFooter />
-    </LanguageProvider>
+    </>
   );
 }

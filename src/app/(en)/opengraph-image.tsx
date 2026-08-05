@@ -2,6 +2,8 @@ import { ImageResponse } from "next/og";
 
 import { defaultOpenGraphTitle } from "@/lib/seo";
 
+export const dynamic = "force-static";
+
 export const alt = defaultOpenGraphTitle;
 export const size = {
   width: 1200,
