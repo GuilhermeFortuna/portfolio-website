@@ -344,10 +344,13 @@ Authoritative content contract: [`gosigapp-case-study-content.md`](./gosigapp-ca
 ## Nexo Dental case study
 
 **Status:** evidence WO-034 `DONE` (2026-08-04); media WO-035 `DONE`
-(2026-08-04); content contract WO-036 `DONE` (owner approved 2026-08-04).
+(2026-08-04); historical content contract WO-036 `DONE` (owner approved
+2026-08-04); hiring-focused bilingual successor WO-039 `REVIEW` (2026-08-05).
 Authoritative claim register:
 [`nexo-dental-case-study-evidence.md`](./nexo-dental-case-study-evidence.md).
-Exact visible copy:
+Current content contract:
+[`nexo-dental-case-study-content-v2.md`](./nexo-dental-case-study-content-v2.md).
+Historical WO-036 copy:
 [`nexo-dental-case-study-content.md`](./nexo-dental-case-study-content.md).
 Media manifest:
 [`nexo-dental-case-study-media.md`](./nexo-dental-case-study-media.md).
@@ -382,6 +385,9 @@ Media manifest:
   present in-repo (source WO-STATUS still marks core BI WOs incomplete —
   do not overclaim a finished BI program). Adjacent action-queue and
   role-native AI operator surfaces exist in code.
+- **FACT (source, rechecked 2026-08-05):** Automated coverage is organized in
+  50 backend `test_*.py` files and 134 frontend `*.test.ts*` files. These are
+  test-file counts, not coverage percentages or evidence of production scale.
 - **FACT (source):** Firebase Hosting staging config exists in the frontend
   repository, but source Work Orders WO23–WO26 are `BLOCKED` / review-
   rejected — **no verified live staging URL**.
@@ -423,8 +429,8 @@ MSW mocks only. Content contract places eight
 
 ### Missing inputs
 
-- None. WO-035 (media) and WO-036 (content contract) are complete. Ready for
-  WO-037 implementation.
+- Owner acceptance of the exact English and Brazilian Portuguese WO-039 copy.
+  WO-039 remains `REVIEW`; WO-038 stays blocked until that approval is recorded.
 
 ## Metadata
 
@@ -438,7 +444,7 @@ The validated route metadata registry is shared by the client router and the sta
 | `/work/aegis` | `Aegis — Production Fraud Intelligence Platform` | `How I designed and built a production fraud-investigation platform for Brazilian iGaming, from explainable rules and data pipelines to security and WebGL.` |
 | `/work/q` | `Quant — Quantitative Research and Execution` | `How I designed and built a native quantitative research platform across desktop UX, asynchronous services, market-data pipelines, validation, and paper execution.` |
 | `/work/gosigapp` | `gosigapp — Regulated Submission Infrastructure in Go` | `How I designed and deployed a Go pipeline that validates, signs, retries, audits, and submits six regulated datasets to Brazil's SIGAP.` |
-| `/work/nexo-dental` | `Nexo Dental — Multi-Tenant Clinic Operations` | `A multi-tenant product for Brazilian dental clinics spanning scheduling, clinical records, finance, communications, CRM, claims, and reporting across role-native surfaces.` |
+| `/work/nexo-dental` | `Nexo Dental — Founder-Built Clinic Operations` | `How I designed and built a multi-tenant dental-clinic product across role-native workflows, data isolation, clinical modelling, and reviewable AI assistance.` |
 | `/contact` | `Contact Guilherme — Build Something Difficult` | `Contact Guilherme about remote software engineering, ambitious product development, and difficult systems.` |
 
 - Global OG default title: `Guilherme builds ambitious software systems.`

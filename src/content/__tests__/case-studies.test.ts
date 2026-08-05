@@ -7,6 +7,7 @@ import {
   caseStudies,
   caseStudyBodySections,
   getGosigappCaseStudy,
+  getNexoDentalCaseStudy,
   gosigappCaseStudy,
   nexoDentalCaseStudy,
   qCaseStudy,
@@ -122,16 +123,33 @@ const GOSIGAPP_PT_BR_EXPECTED_BODY_HEADINGS = [
 ] as const;
 
 const NEXO_EXPECTED_BODY_HEADINGS = [
-  "The context",
-  "The problem",
-  "How the system fits together",
-  "Decision 1 — Isolate every clinic at the database boundary",
-  "Decision 2 — Build role-native surfaces, not one generic dashboard",
-  "Decision 3 — Treat the odontogram as a clinical data model",
-  "Decision 4 — Triage the day with an action queue",
-  "What I did",
-  "Delivered",
-  "Technology, in context",
+  "One patient record. Three ways of working.",
+  "Built around the people who run the clinic",
+  "Reception — keep the day moving",
+  "Clinical care — carry truth from chart to treatment",
+  "Management — connect care to the ledger",
+  "One product, isolated at the data boundary",
+  "01 — Make tenant isolation a database guarantee",
+  "02 — Model the odontogram as a domain, not a widget",
+  "03 — Put AI behind a human decision boundary",
+  "What I owned",
+  "What the implementation proves",
+  "Technology in service of the workflow",
+] as const;
+
+const NEXO_PT_BR_EXPECTED_BODY_HEADINGS = [
+  "Um prontuário. Três formas de trabalhar.",
+  "Construído em torno de quem faz a clínica funcionar",
+  "Recepção — manter o dia em movimento",
+  "Atendimento clínico — levar a verdade do registro ao tratamento",
+  "Gestão — conectar o atendimento ao financeiro",
+  "Um produto, isolado na fronteira dos dados",
+  "01 — Tornar o isolamento entre clínicas uma garantia do banco",
+  "02 — Modelar o odontograma como domínio, não como widget",
+  "03 — Manter a IA atrás de uma decisão humana",
+  "O que esteve sob minha responsabilidade",
+  "O que a implementação comprova",
+  "Tecnologia a serviço do fluxo de trabalho",
 ] as const;
 
 function collectStrings(value: unknown, found: string[] = []): string[] {
@@ -161,6 +179,8 @@ const gosigappStrings = collectStrings(gosigappCaseStudy);
 const gosigappCaseStudyPtBr = getGosigappCaseStudy("pt-BR");
 const gosigappPtBrStrings = collectStrings(gosigappCaseStudyPtBr);
 const nexoStrings = collectStrings(nexoDentalCaseStudy);
+const nexoDentalCaseStudyPtBr = getNexoDentalCaseStudy("pt-BR");
+const nexoPtBrStrings = collectStrings(nexoDentalCaseStudyPtBr);
 
 describe("case-study registry", () => {
   it("exposes Aegis, Quant, gosigapp, and Nexo Dental under their slugs", () => {
@@ -197,9 +217,9 @@ describe("case-study registry", () => {
         "How I designed and deployed a Go pipeline that validates, signs, retries, audits, and submits six regulated datasets to Brazil's SIGAP.",
     });
     expect(nexoDentalCaseStudy.metadata).toEqual({
-      title: "Nexo Dental — Multi-Tenant Clinic Operations",
+      title: "Nexo Dental — Founder-Built Clinic Operations",
       description:
-        "A multi-tenant product for Brazilian dental clinics spanning scheduling, clinical records, finance, communications, CRM, claims, and reporting across role-native surfaces.",
+        "How I designed and built a multi-tenant dental-clinic product across role-native workflows, data isolation, clinical modelling, and reviewable AI assistance.",
     });
   });
 });
@@ -695,24 +715,28 @@ describe("Quant links", () => {
 
 describe("Nexo Dental authored copy", () => {
   it("contains no unresolved documentation markers", () => {
-    const offenders = nexoStrings.filter(
-      (value) =>
-        value.includes("[REQUIRED:") || value.includes("[CONFIDENTIAL:"),
-    );
-    expect(offenders).toEqual([]);
+    for (const strings of [nexoStrings, nexoPtBrStrings]) {
+      const offenders = strings.filter(
+        (value) =>
+          value.includes("[REQUIRED:") || value.includes("[CONFIDENTIAL:"),
+      );
+      expect(offenders).toEqual([]);
+    }
   });
 
   it("contains no forbidden marketing or impact language", () => {
-    const offenders = nexoStrings.filter((value) =>
-      FORBIDDEN_TERMS.some((term) => value.toLowerCase().includes(term)),
-    );
-    expect(offenders).toEqual([]);
+    for (const strings of [nexoStrings, nexoPtBrStrings]) {
+      const offenders = strings.filter((value) =>
+        FORBIDDEN_TERMS.some((term) => value.toLowerCase().includes(term)),
+      );
+      expect(offenders).toEqual([]);
+    }
   });
 
   it("has no empty authored string", () => {
-    expect(nexoStrings.filter((value) => value.trim().length === 0)).toEqual(
-      [],
-    );
+    for (const strings of [nexoStrings, nexoPtBrStrings]) {
+      expect(strings.filter((value) => value.trim().length === 0)).toEqual([]);
+    }
   });
 
   it("keeps the hero facts, support copy, and disabled live action intact", () => {
@@ -722,7 +746,12 @@ describe("Nexo Dental authored copy", () => {
       { label: "State", value: "Active development" },
       { label: "Source", value: "Private" },
     ]);
-    expect(nexoDentalCaseStudy.hero.support).toContain("with AI assistance");
+    expect(nexoDentalCaseStudy.hero.support).toMatch(
+      /^As founder and sole developer/,
+    );
+    expect(nexoDentalCaseStudy.hero.support).toContain(
+      "reviewable AI assistance",
+    );
     expect(nexoDentalCaseStudy.hero.liveEnvironment).toEqual({
       label: "Live environment — coming soon",
     });
@@ -731,26 +760,79 @@ describe("Nexo Dental authored copy", () => {
     );
   });
 
-  it("states the staging gap honestly in Delivered", () => {
+  it("states implementation evidence and public-environment limits precisely", () => {
     expect(nexoDentalCaseStudy.delivered?.paragraphs.join(" ")).toContain(
-      "no verified live staging URL",
+      "50 backend and 134 frontend test files",
     );
+    expect(nexoDentalCaseStudy.delivered?.paragraphs.join(" ")).toContain(
+      "there is no verified public environment",
+    );
+  });
+
+  it("provides a complete Brazilian Portuguese object instead of English fallback copy", () => {
+    const englishSections = caseStudyBodySections(nexoDentalCaseStudy);
+    const portugueseSections = caseStudyBodySections(nexoDentalCaseStudyPtBr);
+
+    expect(portugueseSections.map((section) => section.heading)).toEqual(
+      NEXO_PT_BR_EXPECTED_BODY_HEADINGS,
+    );
+    expect(portugueseSections).toHaveLength(englishSections.length);
+
+    for (let index = 0; index < englishSections.length; index += 1) {
+      const english = englishSections[index];
+      const portuguese = portugueseSections[index];
+      expect(portuguese.id).toBe(english.id);
+      expect(portuguese.heading).not.toBe(english.heading);
+      if (english.paragraphs.length > 0) {
+        expect(portuguese.paragraphs).not.toEqual(english.paragraphs);
+      } else {
+        expect(portuguese.paragraphs).toEqual([]);
+      }
+    }
+
+    const englishImages = collectImages(nexoDentalCaseStudy);
+    const portugueseImages = collectImages(nexoDentalCaseStudyPtBr);
+    expect(
+      portugueseImages.map(({ src, width, height }) => ({ src, width, height })),
+    ).toEqual(
+      englishImages.map(({ src, width, height }) => ({ src, width, height })),
+    );
+    for (let index = 0; index < englishImages.length; index += 1) {
+      expect(portugueseImages[index].alt).not.toBe(englishImages[index].alt);
+      expect(portugueseImages[index].caption).not.toBe(
+        englishImages[index].caption,
+      );
+    }
+
+    expect(nexoDentalCaseStudyPtBr.metadata.title).toBe(
+      "Nexo Dental — Operações Clínicas Construídas de Ponta a Ponta",
+    );
+    expect(nexoDentalCaseStudyPtBr.hero.support).toMatch(
+      /^Como fundador e único desenvolvedor/,
+    );
+    expect(nexoDentalCaseStudyPtBr.confidentiality.actions).toEqual([
+      {
+        label: "Voltar aos trabalhos selecionados",
+        href: "/pt-BR/#work",
+      },
+      { label: "Entrar em contato", href: "/pt-BR/#contact" },
+    ]);
   });
 });
 
 describe("Nexo Dental section structure", () => {
-  it("renders the twelve contract sections in the fixed order", () => {
+  it("renders the recruiter-focused contract sections in the fixed order", () => {
     expect(
       caseStudyBodySections(nexoDentalCaseStudy).map(
         (section) => section.heading,
       ),
     ).toEqual(NEXO_EXPECTED_BODY_HEADINGS);
     expect(nexoDentalCaseStudy.confidentiality.heading).toBe(
-      "A note on source and data",
+      "Private source. Synthetic evidence.",
     );
   });
 
-  it("gives every section a unique id and at least one paragraph", () => {
+  it("gives every section a unique id and authored prose or badges", () => {
     const sections = [
       ...caseStudyBodySections(nexoDentalCaseStudy),
       nexoDentalCaseStudy.confidentiality,
@@ -760,18 +842,20 @@ describe("Nexo Dental section structure", () => {
     expect(new Set(ids).size).toBe(ids.length);
 
     for (const section of sections) {
-      expect(section.paragraphs.length).toBeGreaterThan(0);
+      expect(
+        section.paragraphs.length > 0 ||
+          ("badges" in section && (section.badges?.length ?? 0) > 0),
+      ).toBe(true);
       expect(section.heading.trim()).not.toBe("");
     }
   });
 
-  it("keeps exactly four decisions and no video", () => {
+  it("keeps exactly three decisions and no video", () => {
     const ids = nexoDentalCaseStudy.decisions.map((decision) => decision.id);
     expect(ids).toEqual([
-      "decision-1",
-      "decision-2",
-      "decision-3",
-      "decision-4",
+      "decision-tenant-isolation",
+      "decision-clinical-model",
+      "decision-ai-boundary",
     ]);
     expect(
       caseStudyBodySections(nexoDentalCaseStudy).some(
@@ -793,6 +877,11 @@ describe("Nexo Dental media references", () => {
     }
 
     expect(new Set(referenced)).toEqual(new Set(NEXO_PLACED_ASSETS));
+
+    const portugueseReferenced = collectImages(nexoDentalCaseStudyPtBr).map(
+      (image) => image.src,
+    );
+    expect(new Set(portugueseReferenced)).toEqual(new Set(NEXO_PLACED_ASSETS));
   });
 
   it("gives every image alt text and 2560×1440 intrinsic dimensions", () => {
@@ -834,13 +923,15 @@ describe("Nexo Dental links", () => {
   });
 
   it("publishes no source repository or external environment link", () => {
-    const offenders = nexoStrings.filter(
-      (value) =>
-        value.includes("http://") ||
-        value.includes("https://") ||
-        value.includes("github.com"),
-    );
-    expect(offenders).toEqual([]);
+    for (const strings of [nexoStrings, nexoPtBrStrings]) {
+      const offenders = strings.filter(
+        (value) =>
+          value.includes("http://") ||
+          value.includes("https://") ||
+          value.includes("github.com"),
+      );
+      expect(offenders).toEqual([]);
+    }
   });
 
   it("labels the private source in the hero facts", () => {

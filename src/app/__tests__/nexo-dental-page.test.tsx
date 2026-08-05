@@ -3,8 +3,14 @@ import { describe, expect, it } from "vitest";
 import NexoDentalCaseStudyPage, {
   metadata,
 } from "@/app/work/nexo-dental/page";
+import { CaseStudyHero } from "@/components/case-study/case-study-hero";
+import {
+  CaseStudyClosingSection,
+  CaseStudySection,
+} from "@/components/case-study/case-study-section";
 import {
   caseStudyBodySections,
+  getNexoDentalCaseStudy,
   nexoDentalCaseStudy,
 } from "@/content/case-studies";
 import { siteNavigation } from "@/content/site";
@@ -24,10 +30,55 @@ const EXPECTED_H2_ORDER = [
 
 describe("/work/nexo-dental metadata", () => {
   it("exports the approved static title and description", () => {
-    expect(metadata.title).toBe("Nexo Dental — Multi-Tenant Clinic Operations");
-    expect(metadata.description).toBe(
-      "A multi-tenant product for Brazilian dental clinics spanning scheduling, clinical records, finance, communications, CRM, claims, and reporting across role-native surfaces.",
+    expect(metadata.title).toBe(
+      "Nexo Dental — Founder-Built Clinic Operations",
     );
+    expect(metadata.description).toBe(
+      "How I designed and built a multi-tenant dental-clinic product across role-native workflows, data isolation, clinical modelling, and reviewable AI assistance.",
+    );
+  });
+});
+
+describe("/pt-BR/work/nexo-dental localized content", () => {
+  it("renders Portuguese headings, media descriptions, disabled state, and actions", () => {
+    const portuguese = getNexoDentalCaseStudy("pt-BR");
+
+    render(
+      <>
+        <CaseStudyHero hero={portuguese.hero} />
+        {caseStudyBodySections(portuguese).map((section) => (
+          <CaseStudySection key={section.id} section={section} />
+        ))}
+        <CaseStudyClosingSection closing={portuguese.confidentiality} />
+      </>,
+    );
+
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Um prontuário. Três formas de trabalhar.",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Ambiente ao vivo — em breve" }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole("link", { name: "Entrar em contato" }),
+    ).toHaveAttribute("href", "/pt-BR/#contact");
+
+    const images = Array.from(document.querySelectorAll("img"));
+    expect(images).toHaveLength(8);
+    for (const image of images) {
+      expect(image.getAttribute("alt")?.trim()).toBeTruthy();
+      expect(image.getAttribute("alt")).not.toMatch(
+        /The Nexo Dental|A week-view|A patient workspace|A WhatsApp-style|An odontogram|A chronological|An operational|A patient financial/,
+      );
+    }
+    expect(
+      screen.getByText(
+        "A fila associa o trabalho priorizado ao próximo destino útil; ela não age em nome da pessoa.",
+      ),
+    ).toBeInTheDocument();
   });
 });
 
