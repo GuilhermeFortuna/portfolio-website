@@ -11,7 +11,16 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "ci:local": "bash scripts/ci.sh"
+    "ci:local": "bash scripts/ci.sh",
+    "screenshots:q": "tsx scripts/playwright/engine/capture.ts --project=q",
+    "screenshots:aegis": "node --env-file=.env.local ./node_modules/tsx/dist/cli.mjs scripts/playwright/engine/capture.ts --project=aegis",
+    "screenshots:nexo": "tsx scripts/playwright/engine/capture.ts --project=nexo",
+    "screenshots:all": "node --env-file=.env.local ./node_modules/tsx/dist/cli.mjs scripts/playwright/engine/capture.ts --project=all",
+    "screenshots:auth:aegis": "node --env-file=.env.local ./node_modules/tsx/dist/cli.mjs scripts/playwright/engine/capture.ts --project=aegis --auth-only",
+    "screenshots:auth:nexo": "tsx scripts/playwright/engine/capture.ts --project=nexo --auth-only",
+    "screenshots:promote:q": "tsx scripts/playwright/engine/promote.ts --project=q",
+    "screenshots:promote:aegis": "tsx scripts/playwright/engine/promote.ts --project=aegis",
+    "screenshots:promote:nexo": "tsx scripts/playwright/engine/promote.ts --project=nexo"
   },
   "dependencies": {
     "@paper-design/shaders": "^0.0.78",
@@ -44,8 +53,10 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
     "jsdom": "^30.0.1",
+    "playwright": "^1.62.1",
     "shadcn": "^4.16.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.5",
     "typescript": "^5",
     "vitest": "^4.1.10"
   }
