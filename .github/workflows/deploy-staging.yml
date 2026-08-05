@@ -1,0 +1,162 @@
+name: Deploy Staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: Deploy or destroy the staging preview channel
+        required: true
+        type: choice
+        options:
+          - deploy
+          - destroy
+        default: deploy
+      expires:
+        description: Preview channel expiration (deploy only)
+        required: true
+        type: choice
+        options:
+          - 12h
+          - 24h
+          - 3d
+          - 7d
+        default: 24h
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: firebase-staging
+  cancel-in-progress: false
+
+jobs:
+  staging:
+    name: Staging preview (${{ inputs.action }})
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: staging
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.17.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        if: inputs.action == 'deploy'
+        run: pnpm lint
+
+      - name: Typecheck
+        if: inputs.action == 'deploy'
+        run: pnpm typecheck
+
+      - name: Test
+        if: inputs.action == 'deploy'
+        run: pnpm test
+
+      - name: Static export build
+        if: inputs.action == 'deploy'
+        env:
+          NEXT_OUTPUT: export
+          DEPLOY_ENV: staging
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: pnpm build
+
+      - name: Assert static export output
+        if: inputs.action == 'deploy'
+        run: |
+          test -f out/index.html
+          test -f out/404.html
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+
+      - name: Deploy staging preview channel
+        if: inputs.action == 'deploy'
+        id: deploy
+        env:
+          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+          EXPIRES: ${{ inputs.expires }}
+        run: |
+          set -euo pipefail
+          OUTPUT="$(pnpm exec firebase hosting:channel:deploy staging \
+            --expires "${EXPIRES}" \
+            --project "${GCP_PROJECT_ID}" \
+            --non-interactive \
+            --json)"
+          echo "${OUTPUT}"
+          PREVIEW_URL="$(printf '%s\n' "${OUTPUT}" | node -e '
+            const chunks = [];
+            process.stdin.on("data", (c) => chunks.push(c));
+            process.stdin.on("end", () => {
+              const text = Buffer.concat(chunks).toString("utf8");
+              const start = text.indexOf("{");
+              if (start < 0) {
+                console.error("No JSON object in firebase CLI output");
+                process.exit(1);
+              }
+              const payload = JSON.parse(text.slice(start));
+              const url =
+                payload?.result?.url ||
+                payload?.result?.["hosting:channel"]?.url ||
+                Object.values(payload?.result || {}).find(
+                  (value) => value && typeof value === "object" && value.url,
+                )?.url;
+              if (!url) {
+                console.error("Could not parse preview URL from firebase CLI JSON");
+                process.exit(1);
+              }
+              process.stdout.write(String(url));
+            });
+          ')"
+          {
+            echo "action=deploy"
+            echo "commit=${GITHUB_SHA}"
+            echo "expires=${EXPIRES}"
+            echo "preview_url=${PREVIEW_URL}"
+          } >> "${GITHUB_OUTPUT}"
+          {
+            echo "## Staging preview deploy"
+            echo ""
+            echo "- Action: deploy"
+            echo "- Commit: \`${GITHUB_SHA}\`"
+            echo "- Expiration: \`${EXPIRES}\`"
+            echo "- Preview URL: ${PREVIEW_URL}"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Destroy staging preview channel
+        if: inputs.action == 'destroy'
+        env:
+          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          pnpm exec firebase hosting:channel:delete staging \
+            --project "${GCP_PROJECT_ID}" \
+            --non-interactive \
+            --force
+          {
+            echo "## Staging preview destroy"
+            echo ""
+            echo "- Action: destroy"
+            echo "- Commit: \`${GITHUB_SHA}\`"
+            echo "- Channel: \`staging\`"
+            echo "- Preview URL: (deleted)"
+          } >> "${GITHUB_STEP_SUMMARY}"
