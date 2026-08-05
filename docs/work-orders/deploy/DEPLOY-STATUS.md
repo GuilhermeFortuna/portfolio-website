@@ -2,18 +2,22 @@
 
 **Last updated:** 2026-08-05
 
-**Line index:** [`README.md`](README.md)
+**Line index:** `[README.md](README.md)`
 
 ## State Definitions
 
-| State | Meaning |
-| --- | --- |
-| `BLOCKED` | Do not dispatch; a prerequisite, owner input, or release decision is missing. |
-| `READY` | Prerequisites and inputs are present; the order may be assigned. |
-| `IMPLEMENTING` | One named worker owns the order on a named branch/worktree. |
-| `REVIEW` | Implementation is handed off; acceptance has not been independently confirmed. |
-| `DONE` | Required evidence and acceptance checks were confirmed. |
-| `CANCELLED` | The owner removed the order from scope and recorded why. |
+
+| State          | Meaning                                                                        |
+| -------------- | ------------------------------------------------------------------------------ |
+| `BLOCKED`      | Do not dispatch; a prerequisite, owner input, or release decision is missing.  |
+| `READY`        | Prerequisites and inputs are present; the order may be assigned.               |
+| `IMPLEMENTING` | One named worker owns the order on a named branch/worktree.                    |
+| `REVIEW`       | Implementation is handed off; acceptance has not been independently confirmed. |
+| `DONE`         | Required evidence and acceptance checks were confirmed.                        |
+| `CANCELLED`    | The owner removed the order from scope and recorded why.                       |
+
+
+
 
 ## Line Gate
 
@@ -28,57 +32,81 @@ custom production domain.
 DEPLOY-04 does not become ready automatically. It requires all of:
 
 1. DEPLOY-03 `DONE`;
-2. [`../viz/VIZ-006-release-review.md`](../viz/VIZ-006-release-review.md) records
-   `GO` for a frozen commit;
+2. `[../viz/VIZ-006-release-review.md](../viz/VIZ-006-release-review.md)` records
+  `GO` for a frozen commit;
 3. every release-blocking finding in the active WO/VIZ status boards is closed
-   or explicitly waived by the owner;
+  or explicitly waived by the owner;
 4. the owner records explicit production approval here with the exact commit to
-   release.
+  release.
+
+
 
 ## Current State
 
-| DEPLOY | State | Prerequisites | Owner | Branch/commit | Evidence or blocker |
-| --- | --- | --- | --- | --- | --- |
-| [DEPLOY-01](DEPLOY-01-next-static-export-compatibility.md) | `REVIEW` | Current repository inspected; overlapping VIZ orders are not `IMPLEMENTING` | Cursor Auto | `deploy/01-static-export-compatibility` @ `7fd6f3a6` | Handoff in Gate Log. Awaiting independent acceptance. Do not self-mark `DONE`. |
-| [DEPLOY-02](DEPLOY-02-firebase-staging-repository-workflow.md) | `BLOCKED` | DEPLOY-01 `DONE` | Unassigned | — | Awaiting a verified static `out/` build contract. Commit `4465540a` added `firebase-tools` and its pnpm lock/allow-build changes; this order validates and reconciles that baseline instead of reinstalling blindly. |
-| [DEPLOY-03](DEPLOY-03-oidc-infrastructure-staging-validation.md) | `BLOCKED` | DEPLOY-02 `DONE`; owner supplies Firebase project/site identifiers and authorizes Google/GitHub administration | Unassigned | — | No project ID, Hosting site ID, WIF provider, service-account email, or repository environment variables have been confirmed. |
-| [DEPLOY-04](DEPLOY-04-production-release-enablement.md) | `BLOCKED` | DEPLOY-03 `DONE`; VIZ-006 `GO`; release blockers closed/waived; explicit owner approval for named commit | Unassigned | — | Production is intentionally disabled. Current VIZ status has VIZ-003/VIZ-005 in `REVIEW`, VIZ-004 `BLOCKED`, and VIZ-006 `BLOCKED`. |
+
+| DEPLOY                                                           | State     | Prerequisites                                                                                                  | Owner       | Branch/commit                                        | Evidence or blocker                                                                                                                                                                                                  |
+| ---------------------------------------------------------------- | --------- | -------------------------------------------------------------------------------------------------------------- | ----------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [DEPLOY-01](DEPLOY-01-next-static-export-compatibility.md)       | `DONE`    | Current repository inspected; overlapping VIZ orders are not `IMPLEMENTING`                                    | Cursor Auto | `deploy/01-static-export-compatibility` @ `7fd6f3a6` | Owner accepted; static export contract verified.                                                                                                                                                                     |
+| [DEPLOY-02](DEPLOY-02-firebase-staging-repository-workflow.md)   | `REVIEW`  | DEPLOY-01 `DONE`                                                                                               | Cursor Auto | `deploy/02-firebase-staging-repository-workflow`     | Handoff in Gate Log. Awaiting independent acceptance. Do not self-mark `DONE`. Production deployment remains absent.                                                                                                |
+| [DEPLOY-03](DEPLOY-03-oidc-infrastructure-staging-validation.md) | `BLOCKED` | DEPLOY-02 `DONE`; owner supplies Firebase project/site identifiers and authorizes Google/GitHub administration | Unassigned  | —                                                    | No project ID, Hosting site ID, WIF provider, service-account email, or repository environment variables have been confirmed.                                                                                        |
+| [DEPLOY-04](DEPLOY-04-production-release-enablement.md)          | `BLOCKED` | DEPLOY-03 `DONE`; VIZ-006 `GO`; release blockers closed/waived; explicit owner approval for named commit       | Unassigned  | —                                                    | Production is intentionally disabled. Current VIZ status has VIZ-003/VIZ-005 in `REVIEW`, VIZ-004 `BLOCKED`, and VIZ-006 `BLOCKED`.                                                                                  |
+
+
+
 
 ## Dispatch Record
 
-| Date | Work Order | Owner | Branch/worktree | Scope note |
-| --- | --- | --- | --- | --- |
-| 2026-08-05 | DEPLOY-01 | Cursor Auto | `deploy/01-static-export-compatibility` | Static export compatibility: gated `NEXT_OUTPUT=export`, split root layouts, remove middleware/request-time locale APIs. |
+
+| Date       | Work Order | Owner       | Branch/worktree                         | Scope note                                                                                                               |
+| ---------- | ---------- | ----------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| 2026-08-05 | DEPLOY-01  | Cursor Auto | `deploy/01-static-export-compatibility` | Static export compatibility: gated `NEXT_OUTPUT=export`, split root layouts, remove middleware/request-time locale APIs. |
+| 2026-08-05 | DEPLOY-02  | Cursor Auto | `deploy/02-firebase-staging-repository-workflow` | Firebase Hosting config + manual OIDC staging preview deploy/destroy; no production workflow. |
+
+
+
 
 ## Gate Log
 
-| Date | Gate | Verdict | Evidence | Next action |
-| --- | --- | --- | --- | --- |
-| 2026-08-05 | DEPLOY-01 implementation handoff | `REVIEW` | Implementation commit `7fd6f3a6` (`7fd6f3a696fa4b6e9f07f60a57161d3dce0413c2`) on `deploy/01-static-export-compatibility`. Gated `NEXT_OUTPUT=export` + `trailingSlash` only on export builds. Split root layouts `(en)` / `[lang]` via `RootDocument` (MotionRuntime → WebGLManager → LanguageProvider). Deleted `src/middleware.ts` and root `src/app/layout.tsx`; removed `localeHeader` and `NEXT_LOCALE` cookie. Staging `noindex,nofollow` + HTTPS `SITE_URL` required when `DEPLOY_ENV=staging|production`. `force-static` on robots/sitemap/icon/OG; `experimental.globalNotFound` + segment not-found pages. **Moved files:** `page.tsx` and `work/{aegis,q,gosigapp,nexo-dental}/page.tsx` → `src/app/(en)/...`; `icon.tsx`/`opengraph-image.tsx` → `(en)/`. Firebase `package.json`/`pnpm-lock.yaml` untouched. **Normal build routes:** `/`, `/work/{aegis,q,gosigapp,nexo-dental}`, `/pt-BR`, `/pt-BR/work/{aegis,q}`, robots, sitemap, icon, OG, `_not-found` (all static/SSG). **Export checks:** `out/index.html`, `out/404.html`, all EN work routes, `out/pt-BR/index.html`; `lang="pt-BR"` and `noindex` present; no `localhost:3000`/`x-locale`/`NEXT_LOCALE` in `out/`. **Automated:** `pnpm test` (202), lint, typecheck, both builds, `git diff --check` pass. **`next start` smoke (port 4011):** `/`, `/work/aegis`, `/pt-BR`, `/pt-BR/work/q` → 200 with correct `lang`; PT SSR contains Desenvolvedor/Trabalho/Contato/Processo/Sobre. **Static `out/` smoke:** same routes 200; no-JS PT document has `lang="pt-BR"`. | Independent reviewer confirms acceptance checklist; then mark `DONE` and unblock DEPLOY-02. |
-| 2026-08-05 | DEPLOY line created | `STAGING OPEN / PRODUCTION CLOSED` | Repository inspection confirmed Next.js 16, normal `next build`/`next start` review requirements, request-time locale middleware/headers, CI on `development`, existing `staging`/`main` branches, and Firebase CLI dependency commit `4465540a`. The source strategy's Vite `dist/` and SPA rewrite assumptions do not match the repository. | Dispatch DEPLOY-01 only after checking for an overlapping active VIZ worker. |
+
+| Date       | Gate                             | Verdict                            | Evidence                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Next action                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ---------- | -------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-08-05 | DEPLOY-02 implementation handoff | `REVIEW`                           | Branch `deploy/02-firebase-staging-repository-workflow`. Baseline `4465540a` (`firebase-tools@^15.25.1` + lock/allowBuilds); this order pinned `firebase-tools@15.25.1`, added `firebase` script, lockfile specifier-only reconcile. Created `firebase.json` (`public: out`, `trailingSlash: true`, `/en`→`/` and `/en/:rest*`→`/:rest*` 301s, immutable `/_next/static/**` only, no rewrites, no `.firebaserc`). CI PR targets `development`/`staging`/`main`; push CI remains `development` only. Added manual `deploy-staging.yml` (`workflow_dispatch` deploy/destroy, branch guard `staging`, OIDC after gates, channel `staging` only, concurrency `firebase-staging`, env `staging`). Docs: `docs/deployment/firebase-hosting.md`. **Automated:** frozen install; CLI `15.25.1`; lint/typecheck; tests 202; staging export; emulator assert; `actionlint` 1.7.7 binary (Docker unavailable); security `rg` doc-only matches; `git diff --check`. **Emulator:** `/`, EN/PT case studies 200; `/en` and `/en/work/aegis` 301; unknown 404≠homepage. Staging `out/` has `noindex`/`nofollow`, `example.invalid` canonicals, no localhost. **Production deployment remains absent.** | Independent reviewer confirms acceptance checklist; then mark `DONE` and unblock DEPLOY-03 inputs. |
+| 2026-08-05 | DEPLOY-01 implementation handoff | `REVIEW`                           | Implementation commit `7fd6f3a6` (`7fd6f3a696fa4b6e9f07f60a57161d3dce0413c2`) on `deploy/01-static-export-compatibility`. Gated `NEXT_OUTPUT=export` + `trailingSlash` only on export builds. Split root layouts `(en)` / `[lang]` via `RootDocument` (MotionRuntime → WebGLManager → LanguageProvider). Deleted `src/middleware.ts` and root `src/app/layout.tsx`; removed `localeHeader` and `NEXT_LOCALE` cookie. Staging `noindex,nofollow` + HTTPS `SITE_URL` required when `DEPLOY_ENV=staging | production`.` force-static`on robots/sitemap/icon/OG;`experimental.globalNotFound`+ segment not-found pages. **Moved files:**`page.tsx`and`work/{aegis,q,gosigapp,nexo-dental}/page.tsx`→`src/app/(en)/...`;` icon.tsx`/`opengraph-image.tsx`→`(en)/`. Firebase` package.json`/`pnpm-lock.yaml`untouched. **Normal build routes:**`/`,` /work/{aegis,q,gosigapp,nexo-dental}`,` /pt-BR`,` /pt-BR/work/{aegis,q}`, robots, sitemap, icon, OG,` _not-found`(all static/SSG). **Export checks:**`out/index.html`,` out/404.html`, all EN work routes,` out/pt-BR/index.html`;` lang="pt-BR"`and`noindex`present; no`localhost:3000`/`x-locale`/`NEXT_LOCALE`in`out/`. **Automated:**` pnpm test`(202), lint, typecheck, both builds,`git diff --check `pass. **`next start`smoke (port 4011):**`/`,` /work/aegis`,` /pt-BR`,` /pt-BR/work/q`→ 200 with correct`lang`; PT SSR contains Desenvolvedor/Trabalho/Contato/Processo/Sobre. **Static` out/`smoke:** same routes 200; no-JS PT document has`lang="pt-BR"`. | Independent reviewer confirms acceptance checklist; then mark `DONE` and unblock DEPLOY-02. |
+| 2026-08-05 | DEPLOY line created              | `STAGING OPEN / PRODUCTION CLOSED` | Repository inspection confirmed Next.js 16, normal `next build`/`next start` review requirements, request-time locale middleware/headers, CI on `development`, existing `staging`/`main` branches, and Firebase CLI dependency commit `4465540a`. The source strategy's Vite `dist/` and SPA rewrite assumptions do not match the repository.                                                                                                                                                        | Dispatch DEPLOY-01 only after checking for an overlapping active VIZ worker.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+
+
+
 
 ## Status Update Procedure
+
+
 
 ### Dispatch
 
 1. Confirm every prerequisite from the Current State row.
 2. Confirm the intended worker has an isolated branch/worktree and no file-owner
-   collision.
+  collision.
 3. Change only that row from `READY` to `IMPLEMENTING`.
 4. Add a Dispatch Record row with owner, branch/worktree, and exact scope.
+
+
 
 ### Handoff
 
 1. Record commit, commands, generated-output checks, browser/cloud evidence, and
-   any external-state changes.
+  any external-state changes.
 2. Change `IMPLEMENTING` to `REVIEW`; do not self-approve `DONE`.
+
+
 
 ### Acceptance
 
 1. Independently confirm every acceptance checkbox.
 2. Change `REVIEW` to `DONE` and add a Gate Log row.
 3. Re-evaluate direct dependents. DEPLOY-04 remains `BLOCKED` unless the owner
-   approval condition is independently satisfied.
+  approval condition is independently satisfied.
+
+
 
 ### Blocker
 
