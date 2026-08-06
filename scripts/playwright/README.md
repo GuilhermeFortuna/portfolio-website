@@ -8,6 +8,8 @@ external repos are never written to.
 ## Commands
 
 ```bash
+pnpm screenshots:manual --url=http://localhost:5173 --name=q-launcher --profile=q
+
 pnpm screenshots:q            # capture all Q routes
 pnpm screenshots:nexo         # capture all Nexo Dental routes
 pnpm screenshots:aegis        # capture all Aegis routes
@@ -20,6 +22,31 @@ pnpm screenshots:promote:q      # copy the latest run's Q deliverables into publ
 pnpm screenshots:promote:nexo
 pnpm screenshots:promote:aegis
 ```
+
+## Manual 4K capture
+
+Use the manual command when you want to navigate and arrange a screen yourself
+instead of encoding a repeatable route and interaction sequence:
+
+```bash
+pnpm screenshots:manual \
+  --url=http://localhost:5173/research \
+  --name=q-research \
+  --profile=q
+```
+
+The command opens a headed Chromium window with a persistent project profile.
+Log in or click through the UI as needed, return to the terminal, and press
+Enter. The default 1920x1080 CSS viewport is rasterized at 2x device scale,
+producing a 3840x2160 PNG master and a quality-92 4K WebP. Both are written to
+`scripts/playwright/scratch/<run-id>/manual/<profile>/`; nothing is copied into
+`public/work/` automatically.
+
+Profiles live under `scripts/playwright/profiles/` and are gitignored because
+they may contain session cookies or other authentication state. Use a separate
+profile name for each application. Add `--full-page` when you need the entire
+document; it preserves the 4K width while allowing the height to follow the
+page.
 
 A capture run never writes into `public/work/`. It writes PNG masters and
 WebP deliverables to `scripts/playwright/scratch/<run-id>/<project>/` and

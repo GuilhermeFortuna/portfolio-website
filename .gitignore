@@ -19,6 +19,7 @@
 
 # playwright screenshot automation
 /scripts/playwright/auth/*.json
+/scripts/playwright/profiles/
 /scripts/playwright/scratch/
 
 # next.js
