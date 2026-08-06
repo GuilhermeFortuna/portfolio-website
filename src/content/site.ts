@@ -132,7 +132,7 @@ const siteContentMap: Record<Locale, SiteContent> = {
     heroGithubHref: "https://github.com/GuilhermeFortuna",
 
     processLabel: "PROCESSO",
-    processTitle: "De uma ideia complexa a um sistema em funcionamento.",
+    processTitle: "De uma ideia complexa a um sistema que funciona.",
     processSequence:
       "IDEIA → ARQUITETURA → AGENTES → IMPLEMENTAÇÃO → TESTES → IMPLANTAÇÃO",
     processBody:

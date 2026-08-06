@@ -70,6 +70,24 @@ describe("i18n infrastructure & Brazilian Portuguese content", () => {
     expect(ptSite.heroCtaHref).toBe("/pt-BR/work/aegis");
   });
 
+  // .process-title uses max-width: 12ch; a longer unbreakable word overflows
+  // the left column and paints over .process-support on the desktop grid.
+  it("keeps process title words within the display max-width budget", () => {
+    const maxWordChars = 12;
+
+    for (const locale of locales) {
+      const words = getSiteContent(locale).processTitle.split(/\s+/);
+
+      for (const word of words) {
+        const letters = word.replace(/[^\p{L}\p{M}]/gu, "");
+        expect(
+          letters.length,
+          `${locale} process title word "${word}" exceeds ${maxWordChars}ch`,
+        ).toBeLessThanOrEqual(maxWordChars);
+      }
+    }
+  });
+
   it("provides Portuguese (pt-BR) navigation and footer", () => {
     const ptNav = getSiteNavigation("pt-BR");
     expect(ptNav.wordmarkHref).toBe("/pt-BR/#top");
