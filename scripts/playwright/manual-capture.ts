@@ -13,17 +13,38 @@ import { runSafetyScan } from "./engine/safety-scan";
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "../..");
 const CSS_VIEWPORT = { width: 1920, height: 1080 };
-const DEVICE_SCALE_FACTOR = 2;
+
+type CaptureResolution = "1440p" | "2160p";
+
+const RESOLUTIONS: Record<
+  CaptureResolution,
+  { width: number; height: number; deviceScaleFactor: number; label: string }
+> = {
+  "1440p": {
+    width: 2560,
+    height: 1440,
+    deviceScaleFactor: 4 / 3,
+    label: "QHD",
+  },
+  "2160p": {
+    width: 3840,
+    height: 2160,
+    deviceScaleFactor: 2,
+    label: "4K UHD",
+  },
+};
 
 interface ManualCaptureOptions {
   url: string;
   name: string;
   profile: string;
+  resolution: CaptureResolution;
   fullPage: boolean;
 }
 
 async function main(): Promise<void> {
   const options = readOptions();
+  const resolution = RESOLUTIONS[options.resolution];
   const runId = new Date().toISOString().replaceAll(":", "-");
   const runRoot = path.join(
     REPO_ROOT,
@@ -52,7 +73,7 @@ async function main(): Promise<void> {
     headless: false,
     viewport: CSS_VIEWPORT,
     screen: CSS_VIEWPORT,
-    deviceScaleFactor: DEVICE_SCALE_FACTOR,
+    deviceScaleFactor: resolution.deviceScaleFactor,
   });
 
   const terminal = createInterface({ input: process.stdin, output: process.stdout });
@@ -63,7 +84,7 @@ async function main(): Promise<void> {
 
     console.log(`\nManual capture ready at ${options.url}`);
     console.log(
-      `Arrange the UI in Chromium, then return here. The viewport is ${CSS_VIEWPORT.width}x${CSS_VIEWPORT.height} at ${DEVICE_SCALE_FACTOR}x (${CSS_VIEWPORT.width * DEVICE_SCALE_FACTOR}x${CSS_VIEWPORT.height * DEVICE_SCALE_FACTOR} output).`,
+      `Arrange the UI in Chromium, then return here. Both outputs will be ${resolution.width}x${resolution.height} (${options.resolution} ${resolution.label}).`,
     );
     console.log(`Persistent session: ${options.profile}`);
     await terminal.question("Press Enter to capture, or Ctrl+C to cancel... ");
@@ -97,9 +118,13 @@ async function main(): Promise<void> {
     console.log(`PNG master: ${masterPath} (${formatBytes(master.size)})`);
     console.log(`WebP:       ${deliverablePath} (${formatBytes(deliverable.size)})`);
     if (options.fullPage) {
-      console.log("Full-page mode preserves the 4K width; height follows the document.");
+      console.log(
+        `Full-page mode preserves the ${resolution.width}px width; height follows the document.`,
+      );
     } else {
-      console.log("Output dimensions: 3840x2160 (4K UHD)");
+      console.log(
+        `Output dimensions: ${resolution.width}x${resolution.height} (${resolution.label})`,
+      );
     }
   } finally {
     terminal.close();
@@ -113,6 +138,7 @@ function readOptions(): ManualCaptureOptions {
       url: { type: "string", short: "u" },
       name: { type: "string", short: "n" },
       profile: { type: "string", short: "p", default: "manual" },
+      resolution: { type: "string", short: "r", default: "2160p" },
       "full-page": { type: "boolean", default: false },
       help: { type: "boolean", short: "h", default: false },
     },
@@ -136,13 +162,21 @@ function readOptions(): ManualCaptureOptions {
 
   assertSafeSegment(values.name, "--name");
   assertSafeSegment(values.profile, "--profile");
+  assertResolution(values.resolution);
 
   return {
     url: parsedUrl.toString(),
     name: values.name,
     profile: values.profile,
+    resolution: values.resolution,
     fullPage: values["full-page"],
   };
+}
+
+function assertResolution(value: string): asserts value is CaptureResolution {
+  if (value !== "1440p" && value !== "2160p") {
+    throw new Error("--resolution must be either 1440p or 2160p");
+  }
 }
 
 function assertSafeSegment(value: string, flag: string): void {
@@ -161,11 +195,12 @@ Options:
   -u, --url          Starting page (required)
   -n, --name         Output filename stem (required)
   -p, --profile      Persistent browser session name (default: manual)
+  -r, --resolution   PNG and WebP resolution: 1440p or 2160p (default: 2160p)
       --full-page    Capture the full document instead of the 16:9 viewport
   -h, --help         Show this help
 
 Example:
-  pnpm screenshots:manual --url=http://localhost:5173/research --name=q-research --profile=q`);
+  pnpm screenshots:manual --url=http://localhost:5173/research --name=q-research --profile=q --resolution=1440p`);
 }
 
 function encodeWebp(inputPath: string, outputPath: string): Promise<void> {
@@ -178,10 +213,12 @@ function encodeWebp(inputPath: string, outputPath: string): Promise<void> {
         inputPath,
         "-c:v",
         "libwebp",
+        "-lossless",
+        "1",
         "-quality",
-        "92",
-        "-preset",
-        "text",
+        "100",
+        "-pix_fmt",
+        "bgra",
         outputPath,
       ],
       { stdio: ["ignore", "ignore", "pipe"] },

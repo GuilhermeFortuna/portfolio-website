@@ -23,7 +23,7 @@ pnpm screenshots:promote:nexo
 pnpm screenshots:promote:aegis
 ```
 
-## Manual 4K capture
+## Manual 1440p or 2160p capture
 
 Use the manual command when you want to navigate and arrange a screen yourself
 instead of encoding a repeatable route and interaction sequence:
@@ -37,16 +37,19 @@ pnpm screenshots:manual \
 
 The command opens a headed Chromium window with a persistent project profile.
 Log in or click through the UI as needed, return to the terminal, and press
-Enter. The default 1920x1080 CSS viewport is rasterized at 2x device scale,
-producing a 3840x2160 PNG master and a quality-92 4K WebP. Both are written to
+Enter. By default, the 1920x1080 CSS viewport produces a 3840x2160 PNG and a
+lossless WebP (`--resolution=2160p`). Pass `--resolution=1440p` to produce both
+files at 2560x1440 instead. Changing resolution does not change the CSS viewport
+or page composition. The WebP encoder uses its maximum lossless quality setting
+and preserves RGB pixels exactly. Both files are written to
 `scripts/playwright/scratch/<run-id>/manual/<profile>/`; nothing is copied into
 `public/work/` automatically.
 
 Profiles live under `scripts/playwright/profiles/` and are gitignored because
 they may contain session cookies or other authentication state. Use a separate
 profile name for each application. Add `--full-page` when you need the entire
-document; it preserves the 4K width while allowing the height to follow the
-page.
+document; it preserves the selected output width while allowing the height to
+follow the page.
 
 A capture run never writes into `public/work/`. It writes PNG masters and
 WebP deliverables to `scripts/playwright/scratch/<run-id>/<project>/` and
