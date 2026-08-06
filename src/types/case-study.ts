@@ -82,8 +82,14 @@ export type CaseStudySection = {
 
 export type CaseStudyClosing = {
   id: string;
+  /**
+   * Visible section heading when the closing carries prose. When `paragraphs`
+   * is omitted the closing renders as bare navigation, and this becomes the
+   * accessible name of that nav rather than a rendered heading.
+   */
   heading: string;
-  paragraphs: readonly string[];
+  /** Omitted when the chapter ends on navigation alone (Aegis). */
+  paragraphs?: readonly string[];
   actions: readonly CaseStudyLink[];
 };
 

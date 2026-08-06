@@ -110,7 +110,7 @@ describe("i18n infrastructure & Brazilian Portuguese content", () => {
     expect(ptAegis.hero.facts).toEqual([
       { label: "Papel", value: "Desenvolvedor de Software" },
       { label: "Período", value: "Abril de 2026–presente" },
-      { label: "Estado", value: "Implantado em produção" },
+      { label: "Estado", value: "Em produção" },
       { label: "Código-fonte", value: "Privado" },
     ]);
     expect(
@@ -118,15 +118,42 @@ describe("i18n infrastructure & Brazilian Portuguese content", () => {
     ).toEqual(caseStudyBodySections(enAegis).map((section) => section.id));
     expect(ptAegis.system.images?.[0].alt).toContain("Tela de visão geral");
     expect(ptAegis.delivered?.paragraphs.join(" ")).toContain(
-      "até onde sei, continua ativo",
-    );
-    expect(ptAegis.delivered?.paragraphs.join(" ")).toContain(
-      "suíte E2E de navegador está escrita, mas ignorada",
+      "Coloquei o Aegis em produção",
     );
     expect(ptAegis.confidentiality.actions[1]).toEqual({
-      label: "Conversar sobre o Aegis",
-      href: "/pt-BR/#contact",
+      label: "Próximo projeto: Quant",
+      href: "/pt-BR/work/q",
     });
+
+    // The chapter is authored, not spread over the English object: no English
+    // heading or action label may survive into the Portuguese route.
+    const ptAegisVisibleCopy = [
+      ptAegis.hero.deck,
+      ptAegis.hero.support,
+      ...caseStudyBodySections(ptAegis).flatMap((section) => [
+        section.heading,
+        ...section.paragraphs,
+        ...(section.images ?? []).flatMap((image) => [
+          image.alt,
+          image.caption ?? "",
+        ]),
+      ]),
+      ...ptAegis.confidentiality.actions.map((action) => action.label),
+    ].join(" ");
+
+    for (const englishFallback of [
+      "Every investigation started from scratch",
+      "The path a request takes",
+      "I made it a separate product",
+      "I followed the analyst's actual path",
+      "What I built",
+      "What shipped",
+      "What it is built with",
+      "Back to selected work",
+      "Next project: Quant",
+    ]) {
+      expect(ptAegisVisibleCopy).not.toContain(englishFallback);
+    }
 
     const enQ = getQCaseStudy("en");
     const ptQ = getQCaseStudy("pt-BR");
@@ -175,7 +202,7 @@ describe("i18n infrastructure & Brazilian Portuguese content", () => {
         ]),
       ]),
       ptQ.confidentiality.heading,
-      ...ptQ.confidentiality.paragraphs,
+      ...(ptQ.confidentiality.paragraphs ?? []),
       ...ptQ.confidentiality.actions.map((action) => action.label),
     ].join(" ");
 

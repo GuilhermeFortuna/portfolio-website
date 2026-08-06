@@ -92,6 +92,26 @@ export function CaseStudyClosingSection({
 }) {
   const headingId = `${closing.id}-heading`;
 
+  const links = closing.actions.map((action) => (
+    <a key={action.href} href={action.href} className={actionClassName}>
+      {action.label}
+    </a>
+  ));
+
+  // A chapter that ends on navigation alone is pagination, not a content
+  // section: it gets no heading, and `heading` names the landmark instead.
+  if (!closing.paragraphs?.length) {
+    return (
+      <nav
+        id={closing.id}
+        aria-label={closing.heading}
+        className="flex flex-wrap gap-x-8"
+      >
+        {links}
+      </nav>
+    );
+  }
+
   return (
     <section
       id={closing.id}
@@ -105,11 +125,7 @@ export function CaseStudyClosingSection({
       <Prose paragraphs={closing.paragraphs} />
 
       <nav aria-label="Case study actions" className="flex flex-wrap gap-x-8">
-        {closing.actions.map((action) => (
-          <a key={action.href} href={action.href} className={actionClassName}>
-            {action.label}
-          </a>
-        ))}
+        {links}
       </nav>
     </section>
   );

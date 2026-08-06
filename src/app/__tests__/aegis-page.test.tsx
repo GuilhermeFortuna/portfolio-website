@@ -10,10 +10,13 @@ import { renderWithLocale, screen, within } from "@/test/render";
  * involved, so a plain render is a faithful stand-in for the server HTML.
  */
 
-const EXPECTED_H2_ORDER = [
-  ...caseStudyBodySections(aegisCaseStudy).map((section) => section.heading),
-  aegisCaseStudy.confidentiality.heading,
-];
+/**
+ * The closing is navigation-only: it renders as a labelled `nav`, not a
+ * heading-bearing section, so it contributes no `h2`.
+ */
+const EXPECTED_H2_ORDER = caseStudyBodySections(aegisCaseStudy).map(
+  (section) => section.heading,
+);
 
 describe("/work/aegis metadata", () => {
   it("exports the approved static title and description", () => {
@@ -69,10 +72,7 @@ describe("/work/aegis document structure", () => {
   it("gives every section an id matching its labelling heading", () => {
     renderWithLocale(<AegisCaseStudyPage />);
 
-    for (const section of [
-      ...caseStudyBodySections(aegisCaseStudy),
-      aegisCaseStudy.confidentiality,
-    ]) {
+    for (const section of caseStudyBodySections(aegisCaseStudy)) {
       const element = document.querySelector(`section#${section.id}`);
       expect(element).not.toBeNull();
       expect(element).toHaveAttribute(
@@ -80,6 +80,19 @@ describe("/work/aegis document structure", () => {
         `${section.id}-heading`,
       );
     }
+  });
+
+  it("closes on a labelled navigation landmark rather than a section", () => {
+    renderWithLocale(<AegisCaseStudyPage />);
+
+    const closing = aegisCaseStudy.confidentiality;
+    expect(document.querySelector(`section#${closing.id}`)).toBeNull();
+
+    const nav = document.querySelector(`nav#${closing.id}`);
+    expect(nav).not.toBeNull();
+    expect(nav).toHaveAttribute("aria-label", closing.heading);
+    // The landmark name must not surface as visible page copy.
+    expect(screen.queryByRole("heading", { name: closing.heading })).toBeNull();
   });
 });
 
@@ -98,7 +111,7 @@ describe("/work/aegis navigation", () => {
     ).toHaveAttribute("href", "/#top");
   });
 
-  it("offers the approved in-page return and contact actions", () => {
+  it("offers the approved in-page return and next-chapter actions", () => {
     renderWithLocale(<AegisCaseStudyPage />);
 
     const backLinks = screen.getAllByRole("link", {
@@ -109,9 +122,10 @@ describe("/work/aegis navigation", () => {
       expect(link).toHaveAttribute("href", "/#work");
     }
 
+    // The chapter paginates into Quant rather than back to the contact anchor.
     expect(
-      screen.getByRole("link", { name: "Discuss Aegis" }),
-    ).toHaveAttribute("href", "/#contact");
+      screen.getByRole("link", { name: "Next project: Quant" }),
+    ).toHaveAttribute("href", "/work/q");
   });
 
   it("keeps every destination same-origin and publishes no repository link", () => {

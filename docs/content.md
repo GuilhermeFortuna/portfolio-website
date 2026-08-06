@@ -94,6 +94,11 @@ Positioning → problem → goal → why difficult → system → 2–4 decision
 ## Aegis case study
 
 **Status:** accepted facts from WO-018, with the WO-020 content contract drafted.
+Both locales rewritten for voice 2026-08-05 (see the decisions under *Known
+gaps*). The Brazilian Portuguese chapter is now a complete authored object: the
+14 `...aegisCaseStudy` spreads are gone, so neither locale inherits visible copy
+from the other, matching Quant, gosigapp, and Nexo Dental. An i18n test asserts
+no English heading or action label survives into `/pt-BR/work/aegis`.
 The claim-level evidence register and public disclosure boundary is
 [`aegis-case-study-evidence.md`](./aegis-case-study-evidence.md); it is
 authoritative for every publishable Aegis claim and its classification.
@@ -160,8 +165,36 @@ inventoried in [`aegis-case-study-media.md`](./aegis-case-study-media.md)
 - The Playwright end-to-end suite is written but skipped.
 - The Risk Constellation is tested to ~350k points, not multi-million.
 
-All three are stated in the published copy rather than glossed over; see the
-`Delivered` section of the content contract.
+**DECISION (2026-08-05, owner-approved):** these three gaps are **no longer
+published**. They remain authoritative here as register facts and continue to
+bound what the public copy may assert. The rule is now asymmetric: the copy may
+omit a gap, but may never claim its opposite. A test
+(`never converts an unpublished gap into a positive claim`) enforces that the
+`Delivered` copy makes no login, end-to-end-coverage, or million-point claim.
+
+**DECISION (2026-08-05, owner-approved):** the Aegis copy was rewritten for voice
+and disclaimer load, bringing it into line with the recruiter-focused revisions
+already applied to Quant, gosigapp, and Nexo Dental. Removed: the standalone
+`Real system. Synthetic evidence.` context section, the
+`as far as I know, remains active` hedge on production status, the paragraph
+declining to publish client business metrics, the
+`not a backend case-management system` negation, the known-gaps paragraph, and
+the whole `Private by design, open to discussion` closing note. Accuracy is
+unchanged — no claim was added, widened, or invented.
+
+**DECISION (2026-08-05, owner-approved):** the Aegis chapter now ends on
+pagination, not prose. The closing renders as a labelled `nav` with no heading
+and no paragraphs, carrying `Back to selected work` and
+`Next project: Quant` (`/work/q`, `/pt-BR/work/q`). The old `Discuss Aegis`
+contact action is retired: it returned the reader to the homepage anchor rather
+than advancing them through the work. `CaseStudyClosing.paragraphs` is optional
+to support this; the other three chapters keep their prose closings unchanged.
+
+With the closing note gone, the **image captions are the sole carrier of the
+synthetic-data disclosure**. Every screenshot caption must continue to name its
+data as synthetic, and the `player-investigation.webp` caption must keep
+disclosing the document number per the 2026-07-31 decision below. A test
+(`keeps the synthetic-data disclosure in the published copy`) enforces both.
 
 ### Approved media
 

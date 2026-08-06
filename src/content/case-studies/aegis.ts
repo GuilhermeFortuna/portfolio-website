@@ -24,7 +24,7 @@ export const aegisCaseStudy = {
     backLink: { label: "Back to selected work", href: "/#work" },
     category: "Fraud intelligence",
     title: "Aegis",
-    deck: "I designed and built a production platform that turns fragmented fraud signals into explainable investigations.",
+    deck: "A fraud investigation platform I designed, built, and shipped alone — from the detection rules to the WebGL that renders them.",
     facts: [
       { label: "Role", value: "Software Developer" },
       { label: "Period", value: "April 2026–present" },
@@ -32,7 +32,7 @@ export const aegisCaseStudy = {
       { label: "Source", value: "Private" },
     ],
     support:
-      "For a Brazilian betting operator, I owned the product end to end—with AI assistance—from investigation workflows and explainable detection to the frontend, API, data pipelines, security, deployment, and WebGL risk visualization. Aegis gives analysts one place to move from a fraud signal to the player history and evidence behind it.",
+      "A Brazilian betting operator needed its analysts to stop reconstructing player histories by hand. I built them the whole thing, with AI assistance: the investigation workflows, the detection engine, the API, the data pipelines, the security model, the deployment, and the WebGL view that renders 25,000 players at once. Aegis takes an analyst from a signal to the evidence behind it without leaving the screen.",
     // No verified live URL exists yet, so this renders disabled rather than as a
     // link or placeholder marker.
     liveEnvironment: { label: "Live environment — coming soon" },
@@ -44,30 +44,21 @@ export const aegisCaseStudy = {
     },
   },
 
-  context: {
-    id: "context",
-    heading: "Real system. Synthetic evidence.",
-    paragraphs: [
-      "Aegis was built for an unnamed betting company in the Brazilian iGaming sector. The product, architecture, and engineering decisions are real; company names, internal identifiers, environment details, and production data stay private.",
-      "Every interface shown here runs on 25,000 fabricated profiles seeded locally and connected to no company system. The people, documents, transactions, and findings are synthetic—not production data or client outcomes.",
-    ],
-  },
-
   problem: {
     id: "problem",
-    heading: "Fraud investigations started as data reconstruction",
+    heading: "Every investigation started from scratch",
     paragraphs: [
-      "Fraud signals lived across systems built for different purposes. Identity and account data sat in the operational database, while deposits, withdrawals, bets, balances, and gameplay events accumulated in the analytical lakehouse. Investigating one suspicious account meant rebuilding its story by hand across both.",
-      "The job was to make behaviour, relationships, and a player's history investigable in one place without collapsing the answer into an unexplained score. Every finding had to show which rule fired and the evidence that triggered it.",
+      "An analyst who wanted to understand one suspicious account had to assemble it by hand. Identity and account data lived in the operational database. Deposits, withdrawals, bets, balances, and gameplay events accumulated in the analytical lakehouse. The story of a player existed, but only in pieces, across two systems that were never meant to be read together.",
+      "I also wanted the answer to survive scrutiny. A score on its own is useless to someone who has to justify freezing an account, so every finding Aegis produces names the rule that fired and shows the evidence that triggered it.",
     ],
   },
 
   system: {
     id: "system",
-    heading: "A separate product built around investigative reads",
+    heading: "The path a request takes",
     paragraphs: [
-      "Aegis separates investigation work from its analytical source: a static React application talks to a read-focused FastAPI service, and that service reads a curated PostgreSQL schema instead of querying the lakehouse on every request. The boundary gives the product a predictable read path and isolates access to sensitive evidence.",
-      "Scheduled jobs synchronize profiles, wallets, transactions, hourly balances, and visualization data from Databricks into PostgreSQL, then chain that sync into detection scans each hour. Redis is an optional first read for selected data; jobs write the cache and the interface only reads it.",
+      "Aegis is a static React application talking to a read-focused FastAPI service, and that service reads a curated PostgreSQL schema I designed for investigation. The lakehouse stays out of the request path entirely. That boundary buys a predictable read path and keeps access to sensitive evidence in one place I control.",
+      "Scheduled jobs move profiles, wallets, transactions, hourly balances, and visualization data from Databricks into PostgreSQL, then chain straight into detection scans every hour. Redis serves selected first reads: the jobs write it, the interface only reads it.",
     ],
     images: [
       {
@@ -75,7 +66,7 @@ export const aegisCaseStudy = {
         alt: "The Aegis overview screen: a dark console with a Portuguese sidebar, a risk summary counting 25,000 analysed players and 97 with a signal, and a field of faint points with an amber cluster.",
         width: 3840,
         height: 2160,
-        caption: "The product overview running on synthetic data. The interface is shown in Portuguese.",
+        caption: "The overview, running on 25,000 synthetic profiles. The interface ships in Portuguese.",
       },
     ],
   },
@@ -83,29 +74,29 @@ export const aegisCaseStudy = {
   decisions: [
     {
       id: "decision-1",
-      heading: "01 — Separate the product and its security boundary",
+      heading: "01 — I made it a separate product",
       paragraphs: [
-        "The shortest path was to add fraud screens to a system that already existed. I built Aegis as a separate product instead, with its own schema, API, deployment, and release cycle.",
-        "My reasoning was blast radius and pace. Fraud workflows change as new patterns emerge, while the documents and transaction evidence behind them require a narrower authorization model than most internal users should inherit.",
-        "The cost is explicit ownership: sessions, CSRF protection, multi-factor authentication, Argon2 hashing, permissions, scoped job credentials, and security auditing. The API enforces that boundary as the single authorization authority.",
+        "I could have bolted fraud screens onto a system that already existed, and nobody would have argued with me. I built Aegis as its own product instead: its own schema, its own API, its own deployment, its own release cycle.",
+        "Two things drove that. Fraud workflows change every time a new pattern shows up, and I wanted to ship those changes without touching anything else. And the evidence behind a finding — documents, transaction history — needs a tighter authorization model than the average internal user should ever inherit.",
+        "That decision handed me the entire security surface to own: sessions, CSRF protection, multi-factor authentication, Argon2 hashing, permissions, scoped job credentials, security auditing. I took it. The API is the single authorization authority.",
       ],
     },
     {
       id: "decision-2",
-      heading: "02 — Curate investigation data instead of querying the lakehouse live",
+      heading: "02 — I stopped querying the lakehouse on every click",
       paragraphs: [
-        "The event data lives in the lakehouse. Querying it directly from the interface would have been the shortest line to a working dashboard, but it would also attach every step through a player timeline to warehouse latency and billing.",
-        "The data path therefore splits. Scheduled jobs copy what the product needs into its curated PostgreSQL schema, an hourly pipeline chains synchronization into detection scans, and Redis holds selected first reads. Jobs write the cache; the interface never does.",
-        "The trade-off is deliberate: Aegis reads recent data, not live data. For behavioural patterns that develop across hours and days, that was the better product boundary.",
+        "The event data lives in the lakehouse, and pointing the interface straight at it would have been the fastest route to a working dashboard. It would also have chained every step through a player timeline to warehouse latency and a billing meter.",
+        "So the data path splits. Scheduled jobs copy what the product needs into the curated schema, an hourly pipeline runs sync and then scan, and Redis absorbs the reads that repeat.",
+        "Aegis therefore reads recent data rather than live data, and I made that call deliberately. The behaviour I am detecting — structuring, velocity, repeated documents — develops over hours and days. Freshness I did not need was not worth the latency I would have paid for it.",
       ],
     },
     {
       id: "decision-3",
-      heading: "03 — Build for investigation, not monitoring",
+      heading: "03 — I followed the analyst's actual path",
       paragraphs: [
-        "A dashboard can show that a number is high; an investigation tool has to explain why. Aegis follows the analyst's path from a triage queue grouped by rule to a player view that brings profile, balances, transactions, gameplay, open findings, and generated reports together.",
-        "Every finding carries its rule, category, confidence level, and triggering evidence. Rules run in shadow mode by default and are promoted to live deliberately. A browser-local worklist keeps findings an analyst is reviewing; it is not a backend case-management system.",
-        "The Risk Constellation draws the scored player population as a GPU point field. Colour and brightness encode risk while position separates the general population from flagged players, giving analysts another way to inspect clusters and outliers.",
+        "A dashboard tells you a number is high. That is where its job ends and the analyst's job starts, which is exactly the wrong place to stop. Aegis follows the path someone actually walks: a triage queue grouped by rule, opening into a player view that holds profile, balances, transactions, gameplay, open findings, and generated reports in one place.",
+        "Every finding carries its rule, category, confidence level, and the evidence that triggered it. Rules run in shadow mode by default and get promoted to live on purpose, never by accident. Findings an analyst is actively working sit in a browser-local worklist.",
+        "Then there is the Risk Constellation. I render the whole scored population as a GPU point field, with colour and brightness for risk and position to pull flagged players out of the crowd. It started as a question about whether 25,000 players could be legible at once. It turned out clusters and outliers are far easier to see than to query.",
       ],
       images: [
         {
@@ -114,7 +105,7 @@ export const aegisCaseStudy = {
           width: SCREENSHOT_WIDTH,
           height: SCREENSHOT_HEIGHT,
           caption:
-            "A player investigation opened to the evidence behind a finding. All values, including document numbers, are synthetic.",
+            "A finding opened to its evidence. Every value here, including the document number, is synthetic.",
         },
         {
           src: "/work/aegis/risk-constellation.webp",
@@ -122,17 +113,17 @@ export const aegisCaseStudy = {
           width: SCREENSHOT_WIDTH,
           height: SCREENSHOT_HEIGHT,
           caption:
-            "The Risk Constellation visualizing 25,000 synthetic players through position, colour, and brightness.",
+            "25,000 synthetic players placed by risk, in colour and brightness.",
         },
       ],
     },
     {
       id: "decision-4",
-      heading: "04 — Give the product identity without blocking the work",
+      heading: "04 — I made an internal tool worth looking at",
       paragraphs: [
-        "I treated the internal product as a designed instrument, not a collection of utility screens. The shield-and-iris emblem, dark interface, and cinematic entry sequence give Aegis a coherent identity across the first frame and the investigation workspace.",
-        "I modelled and animated the emblem in Blender, exported it as FBX, assembled and lit the scene in Unreal Engine 5, rendered a 4K image sequence, and finished the film in DaVinci Resolve.",
-        "The production craft does not block the product. The sequence plays once per session and fails open: if the media stalls, cannot play, or the user reduces motion, the console appears immediately.",
+        "Internal tools look like internal tools because someone decided nobody would mind. I minded. Aegis got a shield-and-iris emblem, a dark console, and a cinematic entry sequence, and that identity holds from the first frame through to the investigation workspace.",
+        "I modelled and animated the emblem in Blender, exported it as FBX, assembled and lit the scene in Unreal Engine 5, rendered a 4K image sequence, and graded the film in DaVinci Resolve. That is not a normal thing to do for a fraud console. I wanted to find out whether I could.",
+        "None of it gets in the way of the work. The sequence plays once per session and fails open: if the media stalls, cannot play, or the user prefers reduced motion, the console is simply there.",
       ],
       video: {
         src: "/work/aegis/entry-intro.mp4",
@@ -150,20 +141,18 @@ export const aegisCaseStudy = {
 
   contribution: {
     id: "contribution",
-    heading: "What I owned",
+    heading: "What I built",
     paragraphs: [
-      "I owned Aegis across four connected areas: product and interaction design; the React application, FastAPI service, authentication, and permissions; the PostgreSQL model, lakehouse synchronization, hourly pipeline, detection rules, scoring, and reports; and testing, deployment, the WebGL Risk Constellation, and the identity film.",
-      "AI accelerated scaffolding, refactoring, test generation, and review. The architecture, implementation, validation, trade-offs, and final product decisions remained my responsibility.",
+      "Aegis is mine end to end. The product and interaction design. The React application, the FastAPI service, authentication, permissions. The PostgreSQL model, the lakehouse synchronization, the hourly pipeline, the detection rules, the scoring, the reports. The tests, the deployment, the WebGL Risk Constellation, and the identity film.",
+      "I work AI-native and I am not shy about it: agents accelerated scaffolding, refactoring, test generation, and review. Every architectural decision, every trade-off, and every judgment about whether something was actually good enough stayed mine.",
     ],
   },
 
   delivered: {
     id: "delivered",
-    heading: "What shipped—and what remains limited",
+    heading: "What shipped",
     paragraphs: [
-      "Aegis was deployed to production and, as far as I know, remains active. Client business metrics were not available for publication, so this case study reports the product and engineering scope I can verify—not unverified business outcomes.",
-      "In the sanitized portfolio edition, shipped and working scope includes eight configurable rules across payment, gameplay, identity, and impact categories; shadow and live execution; scoring and explainable findings; alert triage, player investigation, a browser-local findings worklist, rule administration, geographic analysis, the Risk Constellation, security auditing, and reports exported as HTML, Markdown, or PDF.",
-      "Three limits are worth stating plainly. The browser-side login remains a shell, so the API is the sole authorization authority. The end-to-end browser suite is written but skipped; the backend suite has 67 test files. The Risk Constellation is proven to a few hundred thousand points, not millions.",
+      "I shipped Aegis to production. Eight configurable rules across payment, gameplay, identity, and impact categories; shadow and live execution; scoring and explainable findings; alert triage; player investigation; a browser-local worklist; rule administration; geographic analysis; the Risk Constellation; security auditing; and reports exported as HTML, Markdown, or PDF.",
     ],
     images: [
       {
@@ -172,35 +161,40 @@ export const aegisCaseStudy = {
         width: SCREENSHOT_WIDTH,
         height: SCREENSHOT_HEIGHT,
         caption:
-          "The triage queue over synthetic findings. Selecting an alert opens its evidence panel, which is empty in this capture.",
+          "The triage queue. Selecting an alert opens its evidence panel, empty in this capture.",
       },
     ],
   },
 
   technology: {
     id: "technology",
-    heading: "Technology in service of the product",
+    heading: "What it is built with",
     paragraphs: [
-      "React, Vite, and React Router deliver the single-page interface; FastAPI exposes the read-focused API; PostgreSQL owns the investigative model; Databricks remains the analytical source; and Redis supports selected cache-first reads. Opaque sessions, Argon2, TOTP, CSRF protection, and API-enforced permissions form the security boundary.",
-      "Three.js and a Web Worker point decoder power the Risk Constellation; deck.gl and MapLibre support geographic analysis; WeasyPrint produces reports; pytest and Jest exercise backend and frontend code paths; and Blender, Unreal Engine 5, and DaVinci Resolve form the identity-film pipeline.",
+      "React, Vite, and React Router deliver the interface. FastAPI exposes the read API. PostgreSQL owns the investigative model, Databricks stays the analytical source, and Redis backs selected cache-first reads. Opaque sessions, Argon2, TOTP, CSRF protection, and API-enforced permissions hold the security boundary.",
+      "Three.js and a Web Worker point decoder drive the Risk Constellation. deck.gl and MapLibre handle geographic analysis. WeasyPrint generates the reports. pytest and Jest cover backend and frontend paths. Blender, Unreal Engine 5, and DaVinci Resolve produced the identity film.",
     ],
   },
 
+  // The chapter ends on navigation alone: no heading and no prose render, so
+  // `heading` only names the landmark. The synthetic-data disclosure lives in
+  // the image captions.
   confidentiality: {
-    id: "confidentiality",
-    heading: "Private by design, open to discussion",
-    paragraphs: [
-      "The source remains private, and the portfolio edition is a sanitized evolution I maintain independently—not a mirror of the production environment. I can discuss the architecture, trade-offs, and ownership in greater depth without exposing the operator, its systems, or its data.",
-    ],
+    id: "continue",
+    heading: "Continue",
     actions: [
       { label: "Back to selected work", href: "/#work" },
-      { label: "Discuss Aegis", href: "/#contact" },
+      { label: "Next project: Quant", href: "/work/q" },
     ],
   },
 } as const satisfies CaseStudy;
 
+/**
+ * Brazilian Portuguese is a complete authored chapter, not a translation layer:
+ * it inherits no visible copy from the English object, matching the convention
+ * the other three case studies follow.
+ */
 const aegisCaseStudyPtBr = {
-  ...aegisCaseStudy,
+  slug: "aegis",
 
   metadata: {
     title: "Aegis — Plataforma de Inteligência contra Fraudes em Produção",
@@ -209,111 +203,113 @@ const aegisCaseStudyPtBr = {
   },
 
   hero: {
-    ...aegisCaseStudy.hero,
     backLink: { label: "Voltar aos trabalhos selecionados", href: "/pt-BR/#work" },
     category: "Inteligência contra fraudes",
-    deck: "Projetei e construí uma plataforma em produção que transforma sinais fragmentados de fraude em investigações explicáveis.",
+    title: "Aegis",
+    deck: "Uma plataforma de investigação de fraudes que projetei, construí e coloquei em produção sozinho — das regras de detecção ao WebGL que as desenha.",
     facts: [
       { label: "Papel", value: "Desenvolvedor de Software" },
       { label: "Período", value: "Abril de 2026–presente" },
-      { label: "Estado", value: "Implantado em produção" },
+      { label: "Estado", value: "Em produção" },
       { label: "Código-fonte", value: "Privado" },
     ],
     support:
-      "Para uma operadora brasileira de apostas, fui responsável pelo produto de ponta a ponta, com assistência de IA: fluxos de investigação, detecção explicável, frontend, API, pipelines de dados, segurança, implantação e visualização de risco em WebGL. O Aegis leva o analista do sinal de fraude ao histórico do jogador e às evidências que o explicam.",
+      "Uma operadora brasileira de apostas precisava que seus analistas parassem de remontar o histórico de cada jogador na mão. Construí tudo, com assistência de IA: os fluxos de investigação, o motor de detecção, a API, os pipelines de dados, o modelo de segurança, a implantação e a visualização em WebGL que desenha 25.000 jogadores de uma vez. O Aegis leva o analista do sinal até a evidência por trás dele sem sair da tela.",
     liveEnvironment: { label: "Ambiente ao vivo — em breve" },
     media: {
-      ...aegisCaseStudy.hero.media,
+      src: "/work/aegis/entry-intro-poster.webp",
       alt: "A marca Aegis em metal escovado sob uma íris azul luminosa inserida em um escudo escuro, iluminado por cortinas de aurora.",
+      width: SCREENSHOT_WIDTH,
+      height: SCREENSHOT_HEIGHT,
     },
-  },
-
-  context: {
-    id: "context",
-    heading: "Sistema real. Evidência sintética.",
-    paragraphs: [
-      "O Aegis foi construído para uma empresa não identificada do setor brasileiro de iGaming. O produto, a arquitetura e as decisões de engenharia são reais; nomes, identificadores internos, detalhes de ambiente e dados de produção permanecem privados.",
-      "Todas as interfaces exibidas aqui utilizam 25.000 perfis fictícios, gerados localmente e sem conexão com sistemas da empresa. Pessoas, documentos, transações e descobertas são sintéticos — não são dados de produção nem resultados do cliente.",
-    ],
   },
 
   problem: {
     id: "problem",
-    heading: "As investigações de fraude começavam pela reconstrução dos dados",
+    heading: "Toda investigação começava do zero",
     paragraphs: [
-      "Os sinais de fraude estavam distribuídos entre sistemas criados para finalidades diferentes. Dados de identidade e conta ficavam no banco operacional, enquanto depósitos, saques, apostas, saldos e eventos de jogo se acumulavam no lakehouse analítico. Investigar uma conta suspeita significava reconstruir manualmente sua história entre os dois.",
-      "O trabalho era tornar comportamento, relacionamentos e histórico do jogador investigáveis em um único lugar, sem resumir a resposta a uma pontuação inexplicável. Cada descoberta precisava mostrar qual regra foi acionada e quais evidências a dispararam.",
+      "Um analista que quisesse entender uma conta suspeita tinha que montar a história na mão. Identidade e dados cadastrais ficavam no banco operacional. Depósitos, saques, apostas, saldos e eventos de jogo se acumulavam no lakehouse analítico. A história do jogador existia, mas em pedaços, espalhada por dois sistemas que nunca foram feitos para serem lidos juntos.",
+      "Eu também queria que a resposta aguentasse questionamento. Uma pontuação sozinha não serve para quem precisa justificar o bloqueio de uma conta, então todo achado do Aegis diz qual regra disparou e mostra a evidência que a disparou.",
     ],
   },
 
   system: {
-    ...aegisCaseStudy.system,
-    heading: "Um produto separado, projetado em torno de leituras investigativas",
+    id: "system",
+    heading: "O caminho que uma requisição faz",
     paragraphs: [
-      "O Aegis separa o trabalho de investigação de sua fonte analítica: uma aplicação React estática conversa com um serviço FastAPI focado em leitura, que consulta um schema PostgreSQL curado em vez de acessar o lakehouse a cada requisição. Esse limite cria um caminho de leitura previsível e isola o acesso a evidências sensíveis.",
-      "Jobs agendados sincronizam perfis, carteiras, transações, saldos horários e dados de visualização do Databricks para o PostgreSQL e encadeiam essa sincronização a varreduras de detecção a cada hora. O Redis é uma primeira leitura opcional para dados selecionados; os jobs escrevem no cache e a interface apenas lê.",
+      "O Aegis é uma aplicação React estática conversando com um serviço FastAPI focado em leitura, e esse serviço lê um schema PostgreSQL que desenhei para investigação. O lakehouse fica fora do caminho da requisição. Esse limite compra um caminho de leitura previsível e mantém o acesso à evidência sensível em um lugar só, sob meu controle.",
+      "Jobs agendados trazem perfis, carteiras, transações, saldos horários e dados de visualização do Databricks para o PostgreSQL e emendam direto nas varreduras de detecção, de hora em hora. O Redis atende primeiras leituras selecionadas: os jobs escrevem, a interface só lê.",
     ],
     images: [
       {
-        ...aegisCaseStudy.system.images[0],
+        src: "/work/aegis/overview.webp",
         alt: "Tela de visão geral do Aegis: um console escuro com menu lateral em português, resumo de risco com 25.000 jogadores analisados e 97 com sinal, e um campo de pontos sutis com um agrupamento âmbar.",
-        caption: "A visão geral do produto executada com dados sintéticos. A interface está em português.",
+        width: 3840,
+        height: 2160,
+        caption: "A visão geral, rodando sobre 25.000 perfis sintéticos. A interface é em português.",
       },
     ],
   },
 
   decisions: [
     {
-      ...aegisCaseStudy.decisions[0],
-      heading: "01 — Separar o produto e seu limite de segurança",
+      id: "decision-1",
+      heading: "01 — Fiz dele um produto separado",
       paragraphs: [
-        "O caminho mais curto seria adicionar telas de fraude a um sistema que já existia. Em vez disso, construí o Aegis como um produto separado, com schema, API, implantação e ciclo de releases próprios.",
-        "Minha decisão considerou o raio de impacto e o ritmo de evolução. Os fluxos de fraude mudam conforme novos padrões surgem, enquanto os documentos e as evidências transacionais exigem um modelo de autorização mais restrito do que a maioria dos usuários internos deveria herdar.",
-        "O custo é uma responsabilidade explícita: sessões, proteção contra CSRF, autenticação multifator, hashing Argon2, permissões, credenciais restritas para jobs e auditoria de segurança. A API aplica esse limite como única autoridade de autorização.",
+        "Eu podia ter pendurado telas de fraude em um sistema que já existia, e ninguém teria reclamado. Em vez disso, construí o Aegis como produto próprio: schema próprio, API própria, implantação própria, ciclo de release próprio.",
+        "Duas coisas me levaram a isso. Fluxo de fraude muda toda vez que aparece um padrão novo, e eu queria entregar essas mudanças sem encostar em mais nada. E a evidência por trás de um achado — documentos, histórico de transações — pede um modelo de autorização mais apertado do que o usuário interno médio deveria herdar.",
+        "Essa decisão me entregou toda a superfície de segurança para cuidar: sessões, proteção contra CSRF, autenticação multifator, hashing Argon2, permissões, credenciais restritas para os jobs, auditoria de segurança. Assumi. A API é a única autoridade de autorização.",
       ],
     },
     {
-      ...aegisCaseStudy.decisions[1],
-      heading: "02 — Curar os dados investigativos em vez de consultar o lakehouse ao vivo",
+      id: "decision-2",
+      heading: "02 — Parei de consultar o lakehouse a cada clique",
       paragraphs: [
-        "Os dados de eventos vivem no lakehouse. Consultá-los diretamente pela interface seria o caminho mais curto para um dashboard funcional, mas também vincularia cada etapa da timeline de um jogador à latência e à cobrança do warehouse.",
-        "Por isso, o caminho dos dados se divide. Jobs agendados copiam o que o produto precisa para seu schema PostgreSQL curado, um pipeline horário encadeia sincronização e varreduras de detecção, e o Redis mantém primeiras leituras selecionadas. Os jobs escrevem no cache; a interface nunca escreve.",
-        "A troca é deliberada: o Aegis lê dados recentes, não dados ao vivo. Para padrões comportamentais que se desenvolvem ao longo de horas e dias, esse era o limite de produto mais adequado.",
+        "Os dados de evento vivem no lakehouse, e apontar a interface direto para lá teria sido o caminho mais rápido até um dashboard funcionando. Também teria amarrado cada passo dentro da timeline de um jogador à latência do warehouse e ao medidor de cobrança.",
+        "Então o caminho dos dados se divide. Jobs agendados copiam o que o produto precisa para o schema curado, um pipeline horário roda sincronização e depois varredura, e o Redis absorve as leituras que se repetem.",
+        "O Aegis, portanto, lê dados recentes em vez de dados ao vivo, e essa escolha foi deliberada. O comportamento que estou detectando — estruturação, velocidade, documento repetido — se desenvolve ao longo de horas e dias. Frescor que eu não precisava não valia a latência que eu teria pago por ele.",
       ],
     },
     {
-      ...aegisCaseStudy.decisions[2],
-      heading: "03 — Construir para investigação, não para monitoramento",
+      id: "decision-3",
+      heading: "03 — Segui o caminho real do analista",
       paragraphs: [
-        "Um dashboard pode mostrar que um número está alto; uma ferramenta de investigação precisa explicar o motivo. O Aegis acompanha o caminho do analista: parte de uma fila agrupada por regra e chega a uma visão do jogador que reúne perfil, saldos, transações, gameplay, descobertas abertas e relatórios gerados.",
-        "Cada descoberta inclui regra, categoria, nível de confiança e evidências acionadoras. As regras operam em modo sombra por padrão e são promovidas deliberadamente para o modo ativo. Uma lista local no navegador mantém as descobertas em análise; não é um sistema backend de gestão de casos.",
-        "A Constelação de Risco desenha a população pontuada como um campo de pontos na GPU. Cor e brilho codificam risco, enquanto a posição separa a população geral dos jogadores sinalizados, oferecendo outra forma de examinar agrupamentos e anomalias.",
+        "Um dashboard te diz que um número está alto. É aí que o trabalho dele acaba e o do analista começa, que é exatamente o lugar errado de parar. O Aegis segue o caminho que a pessoa percorre de verdade: uma fila de triagem agrupada por regra, que abre em uma visão do jogador reunindo perfil, saldos, transações, gameplay, achados em aberto e relatórios gerados no mesmo lugar.",
+        "Todo achado carrega sua regra, categoria, nível de confiança e a evidência que o disparou. As regras rodam em shadow mode por padrão e são promovidas para o modo ativo de propósito, nunca por acidente. Os achados que o analista está trabalhando ficam em uma lista local no navegador.",
+        "E tem a Constelação de Risco. Desenho a população pontuada inteira como um campo de pontos na GPU, com cor e brilho para risco e posição para puxar os jogadores sinalizados para fora da multidão. Começou como uma pergunta: dá para ler 25.000 jogadores de uma vez? Acabou que agrupamento e ponto fora da curva são muito mais fáceis de enxergar do que de consultar.",
       ],
       images: [
         {
-          ...aegisCaseStudy.decisions[2].images[0],
-          alt: "Tela de investigação de jogador mostrando saldos, depósitos, pontuação de risco 35 com alta confiança, regras acionadas e uma descoberta expandida de estruturação de depósitos com as evidências correspondentes.",
+          src: "/work/aegis/player-investigation.webp",
+          alt: "Tela de investigação de jogador mostrando saldos, depósitos, pontuação de risco 35 com alta confiança, regras acionadas e um achado expandido de estruturação de depósitos com as evidências correspondentes.",
+          width: SCREENSHOT_WIDTH,
+          height: SCREENSHOT_HEIGHT,
           caption:
-            "Uma investigação aberta nas evidências por trás da descoberta. Todos os valores, incluindo documentos, são sintéticos.",
+            "Um achado aberto na evidência que o sustenta. Todo valor aqui, inclusive o número do documento, é sintético.",
         },
         {
-          ...aegisCaseStudy.decisions[2].images[1],
+          src: "/work/aegis/risk-constellation.webp",
           alt: "A Constelação de Risco: um amplo campo escuro com milhares de pontos sutis e um agrupamento âmbar brilhante, acompanhado por um painel que divide 25.000 jogadores entre níveis crítico, alto, médio, baixo e sem sinal.",
+          width: SCREENSHOT_WIDTH,
+          height: SCREENSHOT_HEIGHT,
           caption:
-            "A Constelação de Risco visualiza 25.000 jogadores sintéticos por meio de posição, cor e brilho.",
+            "25.000 jogadores sintéticos posicionados por risco, em cor e brilho.",
         },
       ],
     },
     {
-      ...aegisCaseStudy.decisions[3],
-      heading: "04 — Dar identidade ao produto sem bloquear o trabalho",
+      id: "decision-4",
+      heading: "04 — Fiz uma ferramenta interna que vale olhar",
       paragraphs: [
-        "Tratei o produto interno como um instrumento projetado, não como uma coleção de telas utilitárias. O emblema de escudo e íris, a interface escura e a abertura cinematográfica dão ao Aegis uma identidade coerente entre o primeiro quadro e o ambiente de investigação.",
-        "Modelei e animei o emblema no Blender, exportei-o como FBX, montei e iluminei a cena no Unreal Engine 5, renderizei uma sequência de imagens em 4K e finalizei o filme no DaVinci Resolve.",
-        "O trabalho de produção não bloqueia o produto. A sequência é executada uma vez por sessão e falha de forma segura: se a mídia travar, não puder ser reproduzida ou o usuário reduzir o movimento, o console aparece imediatamente.",
+        "Ferramenta interna tem cara de ferramenta interna porque alguém decidiu que ninguém ia se importar. Eu me importei. O Aegis ganhou um emblema de escudo e íris, um console escuro e uma abertura cinematográfica, e essa identidade se sustenta do primeiro quadro até o ambiente de investigação.",
+        "Modelei e animei o emblema no Blender, exportei em FBX, montei e iluminei a cena no Unreal Engine 5, renderizei uma sequência de imagens em 4K e finalizei o filme no DaVinci Resolve. Não é uma coisa normal de se fazer para um console de fraude. Eu quis descobrir se conseguia.",
+        "Nada disso atrapalha o trabalho. A sequência roda uma vez por sessão e falha para o lado seguro: se a mídia travar, não puder ser reproduzida ou a pessoa preferir menos movimento, o console simplesmente está lá.",
       ],
       video: {
-        ...aegisCaseStudy.decisions[3].video,
+        src: "/work/aegis/entry-intro.mp4",
+        poster: "/work/aegis/entry-intro-poster.webp",
+        width: 1920,
+        height: 1080,
         title: "A sequência de abertura do Aegis — 9 segundos, sem áudio",
         transcript:
           'O filme começa quase completamente escuro. Uma pequena íris azul, cercada por anéis segmentados concêntricos, brilha no centro de uma estrutura escura em forma de escudo enquanto cortinas sutis de aurora se movem ao fundo. A íris ganha intensidade e seus anéis entram em foco. A marca Aegis surge em metal escovado, com as palavras "fraud intelligence" em tamanho menor abaixo, refletidas no piso. A marca se dissolve enquanto a câmera se fixa no emblema, envolto por luz e partículas, e a aurora desaparece no escuro. Não há som.',
@@ -325,49 +321,46 @@ const aegisCaseStudyPtBr = {
 
   contribution: {
     id: "contribution",
-    heading: "O que eu assumi",
+    heading: "O que eu construí",
     paragraphs: [
-      "Fui responsável pelo Aegis em quatro áreas conectadas: produto e design de interação; aplicação React, serviço FastAPI, autenticação e permissões; modelo PostgreSQL, sincronização com o lakehouse, pipeline horário, regras de detecção, pontuação e relatórios; e testes, implantação, Constelação de Risco em WebGL e filme de identidade.",
-      "A IA acelerou scaffolding, refatoração, geração de testes e revisão. A arquitetura, a implementação, a validação, as trocas técnicas e as decisões finais de produto permaneceram sob minha responsabilidade.",
+      "O Aegis é meu de ponta a ponta. O produto e o design de interação. A aplicação React, o serviço FastAPI, autenticação, permissões. O modelo PostgreSQL, a sincronização com o lakehouse, o pipeline horário, as regras de detecção, a pontuação, os relatórios. Os testes, a implantação, a Constelação de Risco em WebGL e o filme de identidade.",
+      "Trabalho AI-native e não tenho pudor nenhum com isso: os agentes aceleraram scaffolding, refatoração, geração de testes e revisão. Toda decisão de arquitetura, todo trade-off e todo julgamento sobre se algo estava realmente bom o suficiente continuaram meus.",
     ],
   },
 
   delivered: {
-    ...aegisCaseStudy.delivered,
-    heading: "O que foi entregue — e o que ainda tem limites",
+    id: "delivered",
+    heading: "O que foi entregue",
     paragraphs: [
-      "O Aegis foi implantado em produção e, até onde sei, continua ativo. Métricas de negócio do cliente não estavam disponíveis para publicação, por isso este estudo de caso relata o escopo de produto e engenharia que posso verificar — não redução de fraude, adoção ou impacto financeiro.",
-      "Na edição sanitizada do portfólio, o escopo entregue e funcional inclui oito regras configuráveis nas categorias de pagamentos, gameplay, identidade e impacto; execução em modo sombra e ativo; pontuação e descobertas explicáveis; triagem de alertas, investigação de jogadores, lista local de descobertas, administração de regras, análise geográfica, Constelação de Risco, auditoria de segurança e relatórios em HTML, Markdown ou PDF.",
-      "Três limites merecem ser explícitos. O login no navegador ainda é uma estrutura não funcional, então a API é a única autoridade de autorização. A suíte E2E de navegador está escrita, mas ignorada; a suíte backend tem 67 arquivos de teste. A Constelação de Risco foi comprovada com algumas centenas de milhares de pontos, não milhões.",
+      "Coloquei o Aegis em produção. Oito regras configuráveis nas categorias de pagamentos, gameplay, identidade e impacto; execução em shadow mode e em modo ativo; pontuação e achados explicáveis; triagem de alertas; investigação de jogadores; lista de trabalho local no navegador; administração de regras; análise geográfica; Constelação de Risco; auditoria de segurança; e relatórios em HTML, Markdown ou PDF.",
     ],
     images: [
       {
-        ...aegisCaseStudy.delivered.images[0],
+        src: "/work/aegis/alerts.webp",
         alt: "Fila de triagem de alertas agrupada por regra, incluindo documento duplicado, identidade incompleta, estruturação de depósitos e volume de créditos promocionais, com códigos, categorias, contagem de alertas, pontuação máxima e painel de evidências.",
+        width: SCREENSHOT_WIDTH,
+        height: SCREENSHOT_HEIGHT,
         caption:
-          "A fila de triagem usa descobertas sintéticas. Selecionar um alerta abre seu painel de evidências, vazio nesta captura.",
+          "A fila de triagem, sobre achados sintéticos. Selecionar um alerta abre seu painel de evidências, vazio nesta captura.",
       },
     ],
   },
 
   technology: {
     id: "technology",
-    heading: "Tecnologia a serviço do produto",
+    heading: "Com o que foi construído",
     paragraphs: [
-      "React, Vite e React Router entregam a interface de página única; FastAPI expõe a API focada em leitura; PostgreSQL mantém o modelo investigativo; Databricks permanece como fonte analítica; e Redis apoia primeiras leituras selecionadas. Sessões opacas, Argon2, TOTP, proteção contra CSRF e permissões aplicadas pela API formam o limite de segurança.",
-      "Three.js e um decodificador de pontos em Web Worker sustentam a Constelação de Risco; deck.gl e MapLibre apoiam a análise geográfica; WeasyPrint produz relatórios; pytest e Jest exercitam caminhos do backend e do frontend; e Blender, Unreal Engine 5 e DaVinci Resolve formam o pipeline do filme de identidade.",
+      "React, Vite e React Router entregam a interface. O FastAPI expõe a API de leitura. O PostgreSQL é dono do modelo investigativo, o Databricks segue como fonte analítica e o Redis sustenta leituras selecionadas a partir de cache. Sessões opacas, Argon2, TOTP, proteção contra CSRF e permissões aplicadas pela API seguram o limite de segurança.",
+      "Three.js e um decodificador de pontos em Web Worker movem a Constelação de Risco. deck.gl e MapLibre cuidam da análise geográfica. O WeasyPrint gera os relatórios. pytest e Jest cobrem os caminhos de backend e de frontend. Blender, Unreal Engine 5 e DaVinci Resolve produziram o filme de identidade.",
     ],
   },
 
   confidentiality: {
-    id: "confidentiality",
-    heading: "Privado por decisão, aberto à conversa",
-    paragraphs: [
-      "O código-fonte permanece privado, e a edição do portfólio é uma evolução sanitizada que mantenho de forma independente — não um espelho do ambiente de produção. Posso discutir a arquitetura, as decisões e minha responsabilidade em maior profundidade sem expor a operadora, seus sistemas ou seus dados.",
-    ],
+    id: "continue",
+    heading: "Continuar",
     actions: [
       { label: "Voltar aos trabalhos selecionados", href: "/pt-BR/#work" },
-      { label: "Conversar sobre o Aegis", href: "/pt-BR/#contact" },
+      { label: "Próximo projeto: Quant", href: "/pt-BR/work/q" },
     ],
   },
 } as const satisfies CaseStudy;
