@@ -13,6 +13,7 @@
     "test:coverage": "vitest run --coverage",
     "firebase": "firebase",
     "ci:local": "bash scripts/ci.sh",
+    "screenshots:manual": "tsx scripts/playwright/manual-capture.ts",
     "screenshots:q": "tsx scripts/playwright/engine/capture.ts --project=q",
     "screenshots:aegis": "node --env-file=.env.local ./node_modules/tsx/dist/cli.mjs scripts/playwright/engine/capture.ts --project=aegis",
     "screenshots:nexo": "tsx scripts/playwright/engine/capture.ts --project=nexo",

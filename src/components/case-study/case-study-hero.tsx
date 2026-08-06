@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 
 import type { CaseStudyHero as CaseStudyHeroContent } from "@/types/case-study";
-import { CaseStudyFigure } from "./case-study-media";
+import { CaseStudyFigure, CaseStudyVideoFigure } from "./case-study-media";
 import { eyebrowStyle, readingColumnStyle } from "./case-study-shell";
 
 const titleStyle: CSSProperties = {
@@ -108,7 +108,11 @@ export function CaseStudyHero({ hero }: { hero: CaseStudyHeroContent }) {
         </div>
       ) : null}
 
-      {hero.media ? <CaseStudyFigure image={hero.media} eager /> : null}
+      {hero.video ? <CaseStudyVideoFigure video={hero.video} /> : null}
+
+      {hero.media && !hero.video ? (
+        <CaseStudyFigure image={hero.media} eager />
+      ) : null}
 
       {hero.identityMedia ? (
         <CaseStudyFigure image={hero.identityMedia} />

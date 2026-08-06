@@ -40,7 +40,7 @@ export const qCaseStudy = {
       "I built Quant across product design, desktop UX, backend services, data infrastructure, research workflows, and testing. A Tauri and React interface coordinates FastAPI, Redis-backed workers, PostgreSQL, and market-data paths, keeping complex experiments structured and inspectable in one native product.",
     // DEC-02: native desktop app — omit the live-environment control entirely.
     media: {
-      src: "/work/q/launcher.webp",
+      src: "/work/q/launcher.png",
       alt: "The Quant launcher showing workspace navigation, system state, and recent research activity in the native desktop product.",
       width: SCREENSHOT_WIDTH,
       height: SCREENSHOT_HEIGHT,
@@ -278,7 +278,7 @@ const qCaseStudyPtBr = {
     support:
       "Construí o Quant da concepção do produto e da experiência desktop aos serviços de backend, infraestrutura de dados, fluxos de pesquisa e testes. Uma interface em Tauri e React coordena serviços FastAPI, workers apoiados por Redis, PostgreSQL e caminhos de dados de mercado para manter experimentos complexos estruturados, inspecionáveis e utilizáveis em um único produto nativo.",
     media: {
-      src: "/work/q/launcher.webp",
+      src: "/work/q/launcher.png",
       alt: "Launcher do Quant com navegação entre áreas de trabalho, estado do sistema e atividade recente de pesquisa no produto desktop nativo.",
       width: SCREENSHOT_WIDTH,
       height: SCREENSHOT_HEIGHT,

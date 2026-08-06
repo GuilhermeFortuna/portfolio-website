@@ -62,6 +62,11 @@ export type CaseStudyHero = {
   liveEnvironment?: CaseStudyPendingAction;
   /** Optional hero image; omitted when chapter has no hero media (gosigapp / DEC-02). */
   media?: CaseStudyImage;
+  /**
+   * Optional hero video (e.g. Aegis entry intro). When present it replaces
+   * `media` as the first hero figure; use the video poster for share cards.
+   */
+  video?: CaseStudyVideo;
   /** Optional secondary hero showcase image (e.g. a visual-identity still). */
   identityMedia?: CaseStudyImage;
 };
@@ -82,8 +87,14 @@ export type CaseStudySection = {
 
 export type CaseStudyClosing = {
   id: string;
+  /**
+   * Visible section heading when the closing carries prose. When `paragraphs`
+   * is omitted the closing renders as bare navigation, and this becomes the
+   * accessible name of that nav rather than a rendered heading.
+   */
   heading: string;
-  paragraphs: readonly string[];
+  /** Omitted when the chapter ends on navigation alone (Aegis). */
+  paragraphs?: readonly string[];
   actions: readonly CaseStudyLink[];
 };
 

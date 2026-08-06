@@ -32,7 +32,7 @@ const AEGIS_APPROVED_ASSETS = [
 
 /** Existing temporary assets referenced until the replacement set is reviewed. */
 const Q_PLACED_ASSETS = [
-  "/work/q/launcher.webp",
+  "/work/q/launcher.png",
   "/work/q/market-data.webp",
   "/work/q/system.webp",
   "/work/q/backtest-studio.webp",
@@ -72,16 +72,15 @@ const FORBIDDEN_TERMS = [
 ] as const;
 
 const AEGIS_EXPECTED_BODY_HEADINGS = [
-  "Real system. Synthetic evidence.",
-  "Fraud investigations started as data reconstruction",
-  "A separate product built around investigative reads",
-  "01 — Separate the product and its security boundary",
-  "02 — Curate investigation data instead of querying the lakehouse live",
-  "03 — Build for investigation, not monitoring",
-  "04 — Give the product identity without blocking the work",
-  "What I owned",
-  "What shipped—and what remains limited",
-  "Technology in service of the product",
+  "Every investigation started from scratch",
+  "The path a request takes",
+  "01 — I made it a separate product",
+  "02 — I stopped querying the lakehouse on every click",
+  "03 — I followed the analyst's actual path",
+  "04 — I made an internal tool worth looking at",
+  "What I built",
+  "What shipped",
+  "What it is built with",
 ] as const;
 
 const Q_EXPECTED_BODY_HEADINGS = [
@@ -261,26 +260,43 @@ describe("Aegis authored copy", () => {
     expect("href" in (aegisCaseStudy.hero.liveEnvironment ?? {})).toBe(false);
   });
 
-  it("keeps the epistemic limit on production status", () => {
-    // Removing this sentence would turn OWN-06 into a flat uptime claim.
-    expect(aegisCaseStudy.delivered.paragraphs[0]).toContain(
-      "as far as I know, remains active",
-    );
+  it("claims only the shipping event, never ongoing production status", () => {
+    // OWN-06: the owner can attest that he deployed it, not that it is up now.
+    // Any present-tense uptime or availability claim exceeds the evidence.
+    const delivered = aegisCaseStudy.delivered.paragraphs.join(" ");
+    expect(delivered).toContain("I shipped Aegis to production");
+    expect(delivered).not.toMatch(/remains (active|live|in production)/i);
+    expect(delivered).not.toMatch(/still (running|active|live)/i);
   });
 
-  it("states the verified product limits without hiding them", () => {
+  it("never converts an unpublished gap into a positive claim", () => {
+    // Owner decision (2026-08-05): the three known gaps are no longer published.
+    // Omitting them is permitted; asserting their opposite is not. The register
+    // in `docs/content.md` remains the authority on what is actually true.
     const delivered = aegisCaseStudy.delivered.paragraphs.join(" ");
-    expect(delivered).toContain("browser-side login remains a shell");
-    expect(delivered).toContain("end-to-end browser suite is written but skipped");
-    expect(delivered).toContain("few hundred thousand points, not millions");
+    expect(delivered).not.toMatch(/\blogin\b/i);
+    expect(delivered).not.toMatch(/end-to-end|e2e/i);
+    expect(delivered).not.toMatch(/fully tested|complete test|millions of/i);
   });
 
   it("describes the saved-findings surface without claiming case management", () => {
+    // WF-04 forbids claiming case management; it does not require the
+    // disclaimer sentence. Naming the surface accurately satisfies it.
     const investigationCopy = aegisCaseStudy.decisions[2].paragraphs.join(" ");
     expect(investigationCopy).toContain("browser-local worklist");
-    expect(investigationCopy).toContain(
-      "not a backend case-management system",
-    );
+    expect(investigationCopy.toLowerCase()).not.toContain("case management");
+    expect(investigationCopy.toLowerCase()).not.toContain("case-management");
+  });
+
+  it("keeps the synthetic-data disclosure in the published copy", () => {
+    // The `context` section and the closing note are both gone, so the image
+    // captions are now the sole carrier of the disclosure boundary. Every
+    // screenshot-bearing section must still name its data as synthetic.
+    const captions = collectImages(aegisCaseStudy)
+      .map((image) => image.caption ?? "")
+      .join(" ");
+    expect(captions).toContain("including the document number, is synthetic");
+    expect(captions).toMatch(/25,000 synthetic profiles/);
   });
 });
 
@@ -481,13 +497,13 @@ describe("gosigapp section structure", () => {
 });
 
 describe("Aegis section structure", () => {
-  it("renders the twelve contract sections in the fixed order", () => {
+  it("renders the ten contract sections in the fixed order", () => {
     expect(
       caseStudyBodySections(aegisCaseStudy).map((section) => section.heading),
     ).toEqual(AEGIS_EXPECTED_BODY_HEADINGS);
-    expect(aegisCaseStudy.confidentiality.heading).toBe(
-      "Private by design, open to discussion",
-    );
+    // Navigation-only closing: `heading` names the landmark, never an <h2>.
+    expect(aegisCaseStudy.confidentiality.heading).toBe("Continue");
+    expect("paragraphs" in aegisCaseStudy.confidentiality).toBe(false);
   });
 
   it("gives every section a unique id and at least one paragraph", () => {
@@ -500,7 +516,15 @@ describe("Aegis section structure", () => {
     expect(new Set(ids).size).toBe(ids.length);
 
     for (const section of sections) {
-      expect(section.paragraphs.length).toBeGreaterThan(0);
+      // The closing is navigation-only and carries no prose; every content
+      // section still must.
+      const isClosing = section.id === aegisCaseStudy.confidentiality.id;
+      if (!isClosing) {
+        expect(
+          (section as { paragraphs?: readonly string[] }).paragraphs?.length ??
+            0,
+        ).toBeGreaterThan(0);
+      }
       expect(section.heading.trim()).not.toBe("");
     }
   });
@@ -516,11 +540,12 @@ describe("Aegis section structure", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it("attaches the intro video to the identity decision only", () => {
+  it("attaches the intro video to the hero only", () => {
+    expect(aegisCaseStudy.hero.video?.src).toBe("/work/aegis/entry-intro.mp4");
     const withVideo = caseStudyBodySections(aegisCaseStudy).filter(
       (section) => section.video,
     );
-    expect(withVideo.map((section) => section.id)).toEqual(["decision-4"]);
+    expect(withVideo).toEqual([]);
   });
 });
 
@@ -568,8 +593,8 @@ describe("Aegis media references", () => {
   it("references only approved assets that exist on disk", () => {
     const referenced = [
       ...collectImages(aegisCaseStudy).map((image) => image.src),
-      aegisCaseStudy.decisions[3].video?.src,
-      aegisCaseStudy.decisions[3].video?.poster,
+      aegisCaseStudy.hero.video?.src,
+      aegisCaseStudy.hero.video?.poster,
     ].filter((src): src is string => typeof src === "string");
 
     for (const src of referenced) {
@@ -577,7 +602,6 @@ describe("Aegis media references", () => {
       expect(existsSync(join(process.cwd(), "public", src))).toBe(true);
     }
 
-    // The poster is the only asset used twice, as hero still and video poster.
     expect(new Set(referenced)).toEqual(new Set(AEGIS_APPROVED_ASSETS));
   });
 
@@ -594,13 +618,12 @@ describe("Aegis media references", () => {
       "Aegis overview screen",
     );
     expect(aegisCaseStudy.system.images?.[0].alt).not.toMatch(/logo|wordmark/i);
-    expect(aegisCaseStudy.system.images?.[0].caption).toContain(
-      "synthetic data",
-    );
+    expect(aegisCaseStudy.system.images?.[0].caption).toMatch(/synthetic/i);
   });
 
-  it("captions every in-body figure and leaves the hero still uncaptioned", () => {
-    expect("caption" in aegisCaseStudy.hero.media).toBe(false);
+  it("captions every in-body figure and leaves the hero without a still", () => {
+    expect("media" in aegisCaseStudy.hero).toBe(false);
+    expect(aegisCaseStudy.hero.video).toBeDefined();
 
     const bodyImages = caseStudyBodySections(aegisCaseStudy).flatMap(
       (section) => section.images ?? [],
@@ -612,7 +635,7 @@ describe("Aegis media references", () => {
   });
 
   it("describes the silent film in visible text", () => {
-    const video = aegisCaseStudy.decisions[3].video;
+    const video = aegisCaseStudy.hero.video;
     expect(video?.transcript).toContain("There is no sound.");
     expect(video?.ariaLabel.trim().length ?? 0).toBeGreaterThan(0);
   });
@@ -658,9 +681,12 @@ describe("Aegis links", () => {
       ...aegisCaseStudy.confidentiality.actions.map((action) => action.href),
     ];
 
-    expect(hrefs).toEqual(["/#work", "/#work", "/#contact"]);
+    // The chapter ends on pagination into the next case study, so the closing
+    // now carries a route path alongside the homepage fragments.
+    expect(hrefs).toEqual(["/#work", "/#work", "/work/q"]);
     for (const href of hrefs) {
-      expect(href.startsWith("/#")).toBe(true);
+      expect(href.startsWith("/")).toBe(true);
+      expect(href).not.toMatch(/^\/\//);
     }
   });
 

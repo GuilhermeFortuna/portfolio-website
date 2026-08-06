@@ -23,8 +23,9 @@ export async function waitForFontsAndImages(page: Page): Promise<void> {
 /**
  * Freezes the current frame for a stable shutter without disabling motion as
  * a feature: zeroes animation/transition durations (the page still runs in
- * its normal motion-enabled mode otherwise), hides the caret, and force-hides
- * any project-specified overlay/toast/tooltip selectors.
+ * its normal motion-enabled mode otherwise), hides the caret, suppresses
+ * scrollbars (pair with Chromium `--hide-scrollbars`), and force-hides any
+ * project-specified overlay/toast/tooltip selectors.
  */
 export async function injectStabilizationCss(
   page: Page,
@@ -44,6 +45,13 @@ export async function injectStabilizationCss(
       }
       * {
         caret-color: transparent !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+      }
+      *::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
       }
       ${hideRules}
     `,

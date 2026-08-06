@@ -19,7 +19,9 @@ export interface CaptureSession {
 
 /** Launches a fresh browser/context/page for one project run, with tracing enabled. */
 export async function openCaptureSession(project: ScreenshotProject): Promise<CaptureSession> {
-  const browser = await chromium.launch();
+  // --hide-scrollbars keeps Chromium's native scrollbars out of published
+  // masters; injectStabilizationCss also zeros webkit/Firefox scrollbars.
+  const browser = await chromium.launch({ args: ["--hide-scrollbars"] });
   const context = await browser.newContext({
     viewport: { width: project.viewport.width, height: project.viewport.height },
     deviceScaleFactor: project.viewport.deviceScaleFactor,

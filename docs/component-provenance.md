@@ -113,15 +113,19 @@ rendering remain 100% byte-identical.
 
 ### Media provenance
 
-The three assets in `public/work/gosigapp/` were produced under WO-030 and are
-inventoried with SHA-256 hashes in [`gosigapp-case-study-media.md`](./gosigapp-case-study-media.md).
-WO-032 places all three per the WO-031 media map, without re-encoding, cropping, or adding any asset.
+The three case-study evidence assets in `public/work/gosigapp/` were produced
+under WO-030. The homepage Work cover was generated through Creative Production
+on 2026-08-06. All four shipped media assets are inventoried with SHA-256 hashes
+in [`gosigapp-case-study-media.md`](./gosigapp-case-study-media.md). WO-032 places
+the three evidence assets per the WO-031 media map; the generated cover is used
+only by the homepage project aperture.
 
 | Asset | Origin | Used by |
 | --- | --- | --- |
 | `system-map.svg` | Vector architecture diagram (WO-030). | Section 4 system overview figure |
 | `compliance-check-output.webp` | Terminal log capture (WO-030, high-res 2x DPR WebP). | Decision 2 figure |
 | `cli-pipeline-run.webp` | Terminal log capture (WO-030, high-res 2x DPR WebP). | Decision 3 figure |
+| `gosigapp-portfolio.webp` | AI-generated architectural illustration (Creative Production, 2026-08-06); derived from the verified pipeline and explicitly not evidence. | Homepage Work cover |
 
 ---
 
