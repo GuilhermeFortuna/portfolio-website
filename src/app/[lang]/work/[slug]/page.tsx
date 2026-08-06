@@ -58,7 +58,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         height: caseStudy.hero.media.height,
         alt: caseStudy.hero.media.alt,
       }
-    : undefined;
+    : caseStudy.hero.video
+      ? {
+          url: caseStudy.hero.video.poster,
+          width: caseStudy.hero.video.width,
+          height: caseStudy.hero.video.height,
+          alt: caseStudy.hero.video.ariaLabel,
+        }
+      : undefined;
 
   return createPageMetadata({
     locale,

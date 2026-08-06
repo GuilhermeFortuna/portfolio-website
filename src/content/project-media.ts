@@ -16,13 +16,13 @@ export type ProjectMedia = {
  */
 export const projectMedia: Record<string, ProjectMedia> = {
   aegis: {
-    src: "/work/aegis/overview.webp",
+    src: "/work/aegis/aegis-portfolio.png",
     alt: "Aegis Fraud Intelligence cinematic logo with glowing mechanical eye",
     width: 3840,
     height: 2160,
   },
   q: {
-    src: "/work/q/dock.webp",
+    src: "/work/q/quant-portfolio.png",
     alt: "Quant cinematic logo with metallic Q mark and bronze topographic patterns",
     width: 3840,
     height: 2160,

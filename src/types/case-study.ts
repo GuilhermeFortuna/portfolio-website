@@ -62,6 +62,11 @@ export type CaseStudyHero = {
   liveEnvironment?: CaseStudyPendingAction;
   /** Optional hero image; omitted when chapter has no hero media (gosigapp / DEC-02). */
   media?: CaseStudyImage;
+  /**
+   * Optional hero video (e.g. Aegis entry intro). When present it replaces
+   * `media` as the first hero figure; use the video poster for share cards.
+   */
+  video?: CaseStudyVideo;
   /** Optional secondary hero showcase image (e.g. a visual-identity still). */
   identityMedia?: CaseStudyImage;
 };

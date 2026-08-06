@@ -540,11 +540,12 @@ describe("Aegis section structure", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it("attaches the intro video to the identity decision only", () => {
+  it("attaches the intro video to the hero only", () => {
+    expect(aegisCaseStudy.hero.video?.src).toBe("/work/aegis/entry-intro.mp4");
     const withVideo = caseStudyBodySections(aegisCaseStudy).filter(
       (section) => section.video,
     );
-    expect(withVideo.map((section) => section.id)).toEqual(["decision-4"]);
+    expect(withVideo).toEqual([]);
   });
 });
 
@@ -592,8 +593,8 @@ describe("Aegis media references", () => {
   it("references only approved assets that exist on disk", () => {
     const referenced = [
       ...collectImages(aegisCaseStudy).map((image) => image.src),
-      aegisCaseStudy.decisions[3].video?.src,
-      aegisCaseStudy.decisions[3].video?.poster,
+      aegisCaseStudy.hero.video?.src,
+      aegisCaseStudy.hero.video?.poster,
     ].filter((src): src is string => typeof src === "string");
 
     for (const src of referenced) {
@@ -601,7 +602,6 @@ describe("Aegis media references", () => {
       expect(existsSync(join(process.cwd(), "public", src))).toBe(true);
     }
 
-    // The poster is the only asset used twice, as hero still and video poster.
     expect(new Set(referenced)).toEqual(new Set(AEGIS_APPROVED_ASSETS));
   });
 
@@ -621,8 +621,9 @@ describe("Aegis media references", () => {
     expect(aegisCaseStudy.system.images?.[0].caption).toMatch(/synthetic/i);
   });
 
-  it("captions every in-body figure and leaves the hero still uncaptioned", () => {
-    expect("caption" in aegisCaseStudy.hero.media).toBe(false);
+  it("captions every in-body figure and leaves the hero without a still", () => {
+    expect(aegisCaseStudy.hero.media).toBeUndefined();
+    expect(aegisCaseStudy.hero.video).toBeDefined();
 
     const bodyImages = caseStudyBodySections(aegisCaseStudy).flatMap(
       (section) => section.images ?? [],
@@ -634,7 +635,7 @@ describe("Aegis media references", () => {
   });
 
   it("describes the silent film in visible text", () => {
-    const video = aegisCaseStudy.decisions[3].video;
+    const video = aegisCaseStudy.hero.video;
     expect(video?.transcript).toContain("There is no sound.");
     expect(video?.ariaLabel.trim().length ?? 0).toBeGreaterThan(0);
   });

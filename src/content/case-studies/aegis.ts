@@ -36,11 +36,16 @@ export const aegisCaseStudy = {
     // No verified live URL exists yet, so this renders disabled rather than as a
     // link or placeholder marker.
     liveEnvironment: { label: "Live environment — coming soon" },
-    media: {
-      src: "/work/aegis/entry-intro-poster.webp",
-      alt: "The Aegis wordmark in brushed metal beneath a glowing blue iris set into a dark shield, lit by aurora curtains.",
-      width: SCREENSHOT_WIDTH,
-      height: SCREENSHOT_HEIGHT,
+    video: {
+      src: "/work/aegis/entry-intro.mp4",
+      poster: "/work/aegis/entry-intro-poster.webp",
+      width: 1920,
+      height: 1080,
+      title: "The Aegis entry sequence — 9 seconds, silent",
+      transcript:
+        'The film opens almost black. A small blue iris, ringed by concentric dashed segments, glows at the centre of a dark shield-shaped dome while faint aurora curtains drift behind it. The iris brightens and its rings pull into focus. The Aegis wordmark rises in brushed metal, the words "fraud intelligence" set smaller beneath it, reflected in the floor. The wordmark dissolves as the camera settles on the emblem, wreathed in light and drifting dust, and the aurora fades to black. There is no sound.',
+      ariaLabel:
+        "Silent nine-second title sequence for Aegis, described in the accompanying transcript.",
     },
   },
 
@@ -125,17 +130,6 @@ export const aegisCaseStudy = {
         "I modelled and animated the emblem in Blender, exported it as FBX, assembled and lit the scene in Unreal Engine 5, rendered a 4K image sequence, and graded the film in DaVinci Resolve. That is not a normal thing to do for a fraud console. I wanted to find out whether I could.",
         "None of it gets in the way of the work. The sequence plays once per session and fails open: if the media stalls, cannot play, or the user prefers reduced motion, the console is simply there.",
       ],
-      video: {
-        src: "/work/aegis/entry-intro.mp4",
-        poster: "/work/aegis/entry-intro-poster.webp",
-        width: 1920,
-        height: 1080,
-        title: "The Aegis entry sequence — 9 seconds, silent",
-        transcript:
-          'The film opens almost black. A small blue iris, ringed by concentric dashed segments, glows at the centre of a dark shield-shaped dome while faint aurora curtains drift behind it. The iris brightens and its rings pull into focus. The Aegis wordmark rises in brushed metal, the words "fraud intelligence" set smaller beneath it, reflected in the floor. The wordmark dissolves as the camera settles on the emblem, wreathed in light and drifting dust, and the aurora fades to black. There is no sound.',
-        ariaLabel:
-          "Silent nine-second title sequence for Aegis, described in the accompanying transcript.",
-      },
     },
   ],
 
@@ -216,11 +210,16 @@ const aegisCaseStudyPtBr = {
     support:
       "Uma operadora brasileira de apostas precisava que seus analistas parassem de remontar o histórico de cada jogador na mão. Construí tudo, com assistência de IA: os fluxos de investigação, o motor de detecção, a API, os pipelines de dados, o modelo de segurança, a implantação e a visualização em WebGL que desenha 25.000 jogadores de uma vez. O Aegis leva o analista do sinal até a evidência por trás dele sem sair da tela.",
     liveEnvironment: { label: "Ambiente ao vivo — em breve" },
-    media: {
-      src: "/work/aegis/entry-intro-poster.webp",
-      alt: "A marca Aegis em metal escovado sob uma íris azul luminosa inserida em um escudo escuro, iluminado por cortinas de aurora.",
-      width: SCREENSHOT_WIDTH,
-      height: SCREENSHOT_HEIGHT,
+    video: {
+      src: "/work/aegis/entry-intro.mp4",
+      poster: "/work/aegis/entry-intro-poster.webp",
+      width: 1920,
+      height: 1080,
+      title: "A sequência de abertura do Aegis — 9 segundos, sem áudio",
+      transcript:
+        'O filme começa quase completamente escuro. Uma pequena íris azul, cercada por anéis segmentados concêntricos, brilha no centro de uma estrutura escura em forma de escudo enquanto cortinas sutis de aurora se movem ao fundo. A íris ganha intensidade e seus anéis entram em foco. A marca Aegis surge em metal escovado, com as palavras "fraud intelligence" em tamanho menor abaixo, refletidas no piso. A marca se dissolve enquanto a câmera se fixa no emblema, envolto por luz e partículas, e a aurora desaparece no escuro. Não há som.',
+      ariaLabel:
+        "Sequência silenciosa de nove segundos do Aegis, descrita na transcrição correspondente.",
     },
   },
 
@@ -305,17 +304,6 @@ const aegisCaseStudyPtBr = {
         "Modelei e animei o emblema no Blender, exportei em FBX, montei e iluminei a cena no Unreal Engine 5, renderizei uma sequência de imagens em 4K e finalizei o filme no DaVinci Resolve. Não é uma coisa normal de se fazer para um console de fraude. Eu quis descobrir se conseguia.",
         "Nada disso atrapalha o trabalho. A sequência roda uma vez por sessão e falha para o lado seguro: se a mídia travar, não puder ser reproduzida ou a pessoa preferir menos movimento, o console simplesmente está lá.",
       ],
-      video: {
-        src: "/work/aegis/entry-intro.mp4",
-        poster: "/work/aegis/entry-intro-poster.webp",
-        width: 1920,
-        height: 1080,
-        title: "A sequência de abertura do Aegis — 9 segundos, sem áudio",
-        transcript:
-          'O filme começa quase completamente escuro. Uma pequena íris azul, cercada por anéis segmentados concêntricos, brilha no centro de uma estrutura escura em forma de escudo enquanto cortinas sutis de aurora se movem ao fundo. A íris ganha intensidade e seus anéis entram em foco. A marca Aegis surge em metal escovado, com as palavras "fraud intelligence" em tamanho menor abaixo, refletidas no piso. A marca se dissolve enquanto a câmera se fixa no emblema, envolto por luz e partículas, e a aurora desaparece no escuro. Não há som.',
-        ariaLabel:
-          "Sequência silenciosa de nove segundos do Aegis, descrita na transcrição correspondente.",
-      },
     },
   ],
 

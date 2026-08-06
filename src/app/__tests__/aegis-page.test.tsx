@@ -281,7 +281,7 @@ describe("/work/aegis media", () => {
     renderWithLocale(<AegisCaseStudyPage />);
 
     const images = Array.from(document.querySelectorAll("img"));
-    expect(images).toHaveLength(5);
+    expect(images).toHaveLength(4);
 
     for (const image of images) {
       expect(image.getAttribute("alt")?.trim()).toBeTruthy();
@@ -318,7 +318,7 @@ describe("/work/aegis media", () => {
   it("renders the silent film's transcript as visible text", () => {
     renderWithLocale(<AegisCaseStudyPage />);
 
-    const { video } = aegisCaseStudy.decisions[3];
+    const { video } = aegisCaseStudy.hero;
     expect(screen.getByText(video?.title as string)).toBeInTheDocument();
     expect(
       screen.getByText(video?.transcript as string),

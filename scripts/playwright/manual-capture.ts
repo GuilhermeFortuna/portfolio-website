@@ -71,6 +71,8 @@ async function main(): Promise<void> {
 
   const context = await chromium.launchPersistentContext(profileDir, {
     headless: false,
+    // Match automated captures: native Chromium scrollbars stay out of the frame.
+    args: ["--hide-scrollbars"],
     viewport: CSS_VIEWPORT,
     screen: CSS_VIEWPORT,
     deviceScaleFactor: resolution.deviceScaleFactor,
