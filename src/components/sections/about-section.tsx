@@ -6,7 +6,7 @@ import { SectionShell } from "@/components/layout/section-shell";
 import { getSiteContent } from "@/content/site";
 
 const sectionTitleClassName =
-  "max-w-[18rem] text-[clamp(2.25rem,5vw,4.75rem)] leading-none font-[540] tracking-[-0.04em]";
+  "max-w-full text-[clamp(2.25rem,5vw,4.75rem)] leading-none font-[540] tracking-[-0.04em]";
 
 const manifestoClassName =
   "max-w-[var(--content-reading)] text-[clamp(2rem,4.5vw,4rem)] leading-[1.12] font-[450] tracking-[-0.035em]";
@@ -29,14 +29,14 @@ export function AboutSection() {
       labelledBy="about-title"
       className="scene-section about-scene"
     >
-      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[4fr_8fr] lg:gap-[clamp(2rem,6vw,6rem)]">
-        <div data-scene-intro className="scene-introduction">
+      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-[clamp(3rem,8vw,10rem)]">
+        <div data-scene-intro className="scene-introduction min-w-0">
           <h2 id="about-title" className={sectionTitleClassName}>
             {siteContent.aboutTitle}
           </h2>
         </div>
 
-        <div>
+        <div className="min-w-0">
           <ScrollReveal
             className={manifestoClassName}
             baseOpacity={0.12}

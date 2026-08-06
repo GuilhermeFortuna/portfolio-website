@@ -83,7 +83,7 @@ const siteContentMap: Record<Locale, SiteContent> = {
       "I combine system design, AI-native execution, and rigorous validation to turn ambitious product ideas into dependable software.",
 
     aboutLabel: "ABOUT",
-    aboutTitle: "Software Engineer · AI, Data & Product Systems",
+    aboutTitle: "Full-stack Software Developer · AI, Data & Product Systems",
     aboutBody: [
       "I’m a software developer focused on building ambitious, intelligent systems that solve complex problems. My work spans AI-powered products, data-intensive applications, quantitative research, backend infrastructure, and polished frontend experiences.",
       "I combine strong engineering fundamentals with product thinking and a relentless drive to turn difficult ideas into reliable, usable software. I don’t just write code—I design and build complete systems from concept to deployment.",
@@ -139,7 +139,7 @@ const siteContentMap: Record<Locale, SiteContent> = {
       "Combino design de sistemas, execução nativa em IA e validação rigorosa para transformar ideias ambiciosas em software confiável.",
 
     aboutLabel: "SOBRE",
-    aboutTitle: "Engenheiro de Software · Sistemas de IA, Dados e Produto",
+    aboutTitle: "Desenvolvedor Full-stack · Sistemas de IA, Dados e Produto",
     aboutBody: [
       "Sou um desenvolvedor de software focado em construir sistemas inteligentes e ambiciosos para resolver problemas complexos. Meu trabalho abrange produtos alimentados por IA, aplicações com uso intensivo de dados, pesquisa quantitativa, infraestrutura backend e experiências frontend refinadas.",
       "Combino sólidas bases de engenharia com visão de produto e um impulso incessante para transformar ideias desafiadoras em software confiável e funcional. Não apenas escrevo código—projeto e construo sistemas completos, do conceito à implantação.",
@@ -155,7 +155,7 @@ const siteContentMap: Record<Locale, SiteContent> = {
     workTitle: "Trabalho",
 
     contactLabel: "CONTATO",
-    contactTitle: "Vamos construir algo desafiador.",
+    contactTitle: "Vamos construir algo desafiador?",
     contactManifesto:
       "Não apenas crio código. Construo sistemas que transformam ideias ambiciosas em realidade.",
     contactLocation: "Brasil",
