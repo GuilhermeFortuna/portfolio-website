@@ -32,7 +32,7 @@ const AEGIS_APPROVED_ASSETS = [
 
 /** Existing temporary assets referenced until the replacement set is reviewed. */
 const Q_PLACED_ASSETS = [
-  "/work/q/launcher.webp",
+  "/work/q/launcher.png",
   "/work/q/market-data.webp",
   "/work/q/system.webp",
   "/work/q/backtest-studio.webp",
