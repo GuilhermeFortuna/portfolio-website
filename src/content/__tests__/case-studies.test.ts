@@ -622,7 +622,7 @@ describe("Aegis media references", () => {
   });
 
   it("captions every in-body figure and leaves the hero without a still", () => {
-    expect(aegisCaseStudy.hero.media).toBeUndefined();
+    expect("media" in aegisCaseStudy.hero).toBe(false);
     expect(aegisCaseStudy.hero.video).toBeDefined();
 
     const bodyImages = caseStudyBodySections(aegisCaseStudy).flatMap(
