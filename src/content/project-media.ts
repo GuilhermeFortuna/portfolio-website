@@ -11,8 +11,8 @@ export type ProjectMedia = {
  * `projects.ts` belongs to Batch 04; this file is VIZ-005's own so the
  * persistent aperture can carry media without writing to that scope. Every
  * project gets an entry so the aperture renders through one code path.
- * Remaining placeholders sit at the exact public/work path a real capture
- * will later replace, so swapping media is a file change, not a code change.
+ * Project media stays separate from project copy so the persistent aperture
+ * can swap or optimize a visual without changing the content registry.
  */
 export const projectMedia: Record<string, ProjectMedia> = {
   aegis: {
@@ -28,11 +28,10 @@ export const projectMedia: Record<string, ProjectMedia> = {
     height: 2160,
   },
   gosigapp: {
-    src: "/work/gosigapp/placeholder.svg",
-    alt: "Placeholder visual for gosigapp",
-    width: 800,
-    height: 450,
-    placeholder: true,
+    src: "/work/gosigapp/gosigapp-portfolio.webp",
+    alt: "Cinematic gosigapp pipeline sculpture transforming archive data into a secure API submission",
+    width: 1600,
+    height: 900,
   },
   "nexo-dental": {
     src: "/work/nexo-dental/nexo-entry-final.webp",
