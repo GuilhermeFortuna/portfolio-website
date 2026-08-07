@@ -55,6 +55,16 @@ jobs:
           set -euo pipefail
           test -f out/index.html
           test -f out/404.html
+          test -f out/robots.txt
+          test -f out/sitemap.xml
+          test -f out/work/aegis/index.html
+          test -f out/work/q/index.html
+          test -f out/work/gosigapp/index.html
+          test -f out/work/nexo-dental/index.html
+          test -f out/pt-BR/index.html
+          test -f out/pt-BR/work/aegis/index.html
+          test -f out/pt-BR/work/q/index.html
+          grep -q 'lang="pt-BR"' out/pt-BR/index.html
           if grep -nE 'noindex|localhost:3000' out/index.html out/robots.txt out/sitemap.xml; then
             echo "Production export must be indexable and must not embed localhost." >&2
             exit 1
