@@ -1,0 +1,121 @@
+name: Deploy Production
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: firebase-production
+  cancel-in-progress: false
+
+jobs:
+  ci:
+    name: Shared CI
+    uses: ./.github/workflows/ci.yml
+
+  deploy:
+    name: Deploy production hosting
+    needs: ci
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.17.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Static export build
+        env:
+          NEXT_OUTPUT: export
+          DEPLOY_ENV: production
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: pnpm build
+
+      - name: Assert static export output
+        run: |
+          set -euo pipefail
+          test -f out/index.html
+          test -f out/404.html
+          if grep -nE 'noindex|localhost:3000' out/index.html out/robots.txt out/sitemap.xml; then
+            echo "Production export must be indexable and must not embed localhost." >&2
+            exit 1
+          fi
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+
+      - name: Deploy production hosting
+        id: deploy
+        env:
+          GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          set -euo pipefail
+          OUTPUT="$(pnpm exec firebase deploy --only hosting \
+            --project "${GCP_PROJECT_ID}" \
+            --non-interactive \
+            --json)"
+          echo "${OUTPUT}"
+          HOSTING_URL="$(printf '%s\n' "${OUTPUT}" | node -e '
+            const chunks = [];
+            process.stdin.on("data", (c) => chunks.push(c));
+            process.stdin.on("end", () => {
+              const text = Buffer.concat(chunks).toString("utf8");
+              const start = text.indexOf("{");
+              if (start < 0) {
+                console.error("No JSON object in firebase CLI output");
+                process.exit(1);
+              }
+              const payload = JSON.parse(text.slice(start));
+              const hosting = payload?.result?.hosting;
+              let url;
+              if (typeof hosting === "string") {
+                url = hosting;
+              } else if (Array.isArray(hosting)) {
+                url = hosting[0];
+              } else if (hosting && typeof hosting === "object") {
+                url = hosting.url || Object.values(hosting)[0];
+              }
+              if (!url) {
+                url = `https://${process.env.GCP_PROJECT_ID}.web.app`;
+              }
+              process.stdout.write(String(url));
+            });
+          ')"
+          {
+            echo "commit=${GITHUB_SHA}"
+            echo "hosting_url=${HOSTING_URL}"
+            echo "canonical_url=${SITE_URL}"
+          } >> "${GITHUB_OUTPUT}"
+          {
+            echo "## Production deploy"
+            echo ""
+            echo "- Commit: \`${GITHUB_SHA}\`"
+            echo "- Firebase Hosting URL: ${HOSTING_URL}"
+            echo "- Canonical SITE_URL: ${SITE_URL}"
+            echo "- Rollback: Firebase Console → Hosting → Release history → Roll back"
+            echo "- Console: https://console.firebase.google.com/project/${GCP_PROJECT_ID}/hosting"
+          } >> "${GITHUB_STEP_SUMMARY}"
