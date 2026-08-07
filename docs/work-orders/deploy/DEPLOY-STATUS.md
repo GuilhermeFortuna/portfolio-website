@@ -37,7 +37,7 @@ Canonical production domain: `https://guilhermefortuna.dev`.
 | [DEPLOY-01](DEPLOY-01-next-static-export-compatibility.md)       | `DONE`    | Current repository inspected; overlapping VIZ orders are not `IMPLEMENTING`                                    | Cursor Auto | `deploy/01-static-export-compatibility` @ `7fd6f3a6` | Owner accepted; static export contract verified.                                                                                    |
 | [DEPLOY-02](DEPLOY-02-firebase-staging-repository-workflow.md)   | `DONE`    | DEPLOY-01 `DONE`                                                                                               | Cursor Auto | `deploy/02-firebase-staging-repository-workflow`     | Handoff in Gate Log. Awaiting independent acceptance. Do not self-mark `DONE`. Production deployment remains absent.                |
 | [DEPLOY-03](DEPLOY-03-oidc-infrastructure-staging-validation.md) | `REVIEW` | DEPLOY-02 `DONE`; owner supplies Firebase project/site identifiers and authorizes Google/GitHub administration | Cursor Auto | `deploy/03-oidc-infrastructure-staging-validation` @ `eeb90bfe` | Handoff in Gate Log. Staging preview active. Do not self-mark `DONE`. Production remains absent. |
-| [DEPLOY-04](DEPLOY-04-production-release-enablement.md)          | `IMPLEMENTING` | Owner waived DEPLOY-03 `DONE` / VIZ-006 `GO`; explicit production approval for `guilhermefortuna.dev` | Cursor Auto | `deploy/04-production-release-enablement` (from `staging` @ `999f2709`) | Owner waiver + domain approval recorded. Production workflow and GitHub `production` env in progress. Final release SHA recorded after merge to `main`. |
+| [DEPLOY-04](DEPLOY-04-production-release-enablement.md)          | `IMPLEMENTING` | Owner waived DEPLOY-03 `DONE` / VIZ-006 `GO`; explicit production approval for `guilhermefortuna.dev` | Cursor Auto | `deploy/04-production-ladder` → `development` (PR #4) | Climbing ladder: feature → development → staging → main. Direct-to-main PR #2 closed. Final release SHA recorded after merge to `main`. |
 
 
 
@@ -50,7 +50,7 @@ Canonical production domain: `https://guilhermefortuna.dev`.
 | 2026-08-05 | DEPLOY-01  | Cursor Auto | `deploy/01-static-export-compatibility`          | Static export compatibility: gated `NEXT_OUTPUT=export`, split root layouts, remove middleware/request-time locale APIs. |
 | 2026-08-05 | DEPLOY-02  | Cursor Auto | `deploy/02-firebase-staging-repository-workflow` | Firebase Hosting config + manual OIDC staging preview deploy/destroy; no production workflow.                            |
 | 2026-08-05 | DEPLOY-03  | Cursor Auto | `deploy/03-oidc-infrastructure-staging-validation` | OIDC/WIF + GitHub staging env + hosted staging channel validation; production remains forbidden.                       |
-| 2026-08-07 | DEPLOY-04  | Cursor Auto | `deploy/04-production-release-enablement`            | Production workflow, GitHub `production` env, live Hosting, custom domain `guilhermefortuna.dev` (Porkbun DNS). Owner waived DEPLOY-03/VIZ-006 gates. |
+| 2026-08-07 | DEPLOY-04  | Cursor Auto | `deploy/04-production-ladder`                         | Production workflow via promotion ladder (development → staging → main). GitHub `production` env + domain `guilhermefortuna.dev`. Owner waived DEPLOY-03/VIZ-006 gates. |
 
 
 
