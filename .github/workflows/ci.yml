@@ -5,6 +5,7 @@ on:
     branches: [development]
   pull_request:
     branches: [development, staging, main]
+  workflow_call:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
