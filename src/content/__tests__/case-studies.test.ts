@@ -6,6 +6,8 @@ import {
   aegisCaseStudy,
   caseStudies,
   caseStudyBodySections,
+  getGosigappCaseStudy,
+  getNexoDentalCaseStudy,
   gosigappCaseStudy,
   nexoDentalCaseStudy,
   qCaseStudy,
@@ -28,19 +30,16 @@ const AEGIS_APPROVED_ASSETS = [
   "/work/aegis/risk-constellation.webp",
 ] as const;
 
-/** Every asset placed by the owner-revised visual contract. */
+/** Existing temporary assets referenced until the replacement set is reviewed. */
 const Q_PLACED_ASSETS = [
-  "/work/q/launcher.webp",
-  "/work/q/identity-placeholder.svg",
+  "/work/q/launcher.png",
   "/work/q/market-data.webp",
   "/work/q/system.webp",
   "/work/q/backtest-studio.webp",
   "/work/q/backtest-results.webp",
   "/work/q/optimize-pareto.webp",
   "/work/q/discover-leaderboard.webp",
-  "/work/q/research-features.webp",
   "/work/q/walkforward.webp",
-  "/work/q/dock.webp",
   "/work/q/execution.webp",
 ] as const;
 
@@ -73,47 +72,83 @@ const FORBIDDEN_TERMS = [
 ] as const;
 
 const AEGIS_EXPECTED_BODY_HEADINGS = [
-  "The context",
-  "The problem",
-  "How the system fits together",
-  "Decision 1 — Keep Aegis a standalone product",
-  "Decision 2 — Read from a curated store, not the lakehouse",
-  "Decision 3 — Build for investigation, not for monitoring",
-  "Decision 4 — Give the product its own identity",
-  "What I did",
-  "Delivered",
-  "Technology, in context",
+  "Every investigation started from scratch",
+  "The path a request takes",
+  "01 — I made it a separate product",
+  "02 — I stopped querying the lakehouse on every click",
+  "03 — I followed the analyst's actual path",
+  "04 — I made an internal tool worth looking at",
+  "What I built",
+  "What shipped",
+  "What it is built with",
 ] as const;
 
 const Q_EXPECTED_BODY_HEADINGS = [
-  "Designing Q as a product, not just a tool",
-  "Built from a real research problem",
-  "Inside the product",
-  "Market data and system awareness",
-  "Strategy construction and backtesting",
-  "Optimization and discovery",
-  "Research features and validation",
-  "Execution and background work",
-  "How the system fits together",
-  "Native desktop instead of public SaaS",
-  "Queued research jobs",
-  "Validation before deployment",
-  "Fixture-first product development",
-  "My contribution",
-  "Technology",
+  "Built end to end as one product",
+  "A six-year idea, rebuilt for disciplined research",
+  "From market context to inspectable experiments",
+  "Challenge results before trusting them",
+  "Keep heavy research work off the interaction path",
+  "A native product around asynchronous services",
+  "Why desktop was the right boundary",
+  "Develop against stable fixtures",
+  "Make validation and execution safety product constraints",
+  "What I owned",
+  "Technology across the stack",
+] as const;
+
+const GOSIGAPP_EXPECTED_BODY_HEADINGS = [
+  "A regulatory deadline became a systems problem",
+  "Six data contracts, one submission path",
+  "From S3 input to signed SIGAP submission",
+  "Decision 1 — Fail before transmission",
+  "Decision 2 — Protect signing and transport",
+  "Decision 3 — Make failures recoverable and runs auditable",
+  "What I owned",
+  "What shipped—and what I can verify",
+  "Technology in service of the pipeline",
+] as const;
+
+const GOSIGAPP_PT_BR_EXPECTED_BODY_HEADINGS = [
+  "Um prazo regulatório se tornou um problema de sistemas",
+  "Seis contratos de dados, um único fluxo de envio",
+  "Do S3 ao envio assinado para o SIGAP",
+  "Decisão 1 — Identificar falhas antes da transmissão",
+  "Decisão 2 — Proteger assinatura e transporte",
+  "Decisão 3 — Tornar falhas recuperáveis e execuções rastreáveis",
+  "O que ficou sob minha responsabilidade",
+  "O que foi entregue — e o que posso comprovar",
+  "Tecnologia a serviço do pipeline",
 ] as const;
 
 const NEXO_EXPECTED_BODY_HEADINGS = [
-  "The context",
-  "The problem",
-  "How the system fits together",
-  "Decision 1 — Isolate every clinic at the database boundary",
-  "Decision 2 — Build role-native surfaces, not one generic dashboard",
-  "Decision 3 — Treat the odontogram as a clinical data model",
-  "Decision 4 — Triage the day with an action queue",
-  "What I did",
-  "Delivered",
-  "Technology, in context",
+  "One patient record. Three ways of working.",
+  "Built around the people who run the clinic",
+  "Reception — keep the day moving",
+  "Clinical care — carry truth from chart to treatment",
+  "Management — connect care to the ledger",
+  "One product, isolated at the data boundary",
+  "01 — Make tenant isolation a database guarantee",
+  "02 — Model the odontogram as a domain, not a widget",
+  "03 — Put AI behind a human decision boundary",
+  "What I owned",
+  "What the implementation proves",
+  "Technology in service of the workflow",
+] as const;
+
+const NEXO_PT_BR_EXPECTED_BODY_HEADINGS = [
+  "Um prontuário. Três formas de trabalhar.",
+  "Construído em torno de quem faz a clínica funcionar",
+  "Recepção — manter o dia em movimento",
+  "Atendimento clínico — levar a verdade do registro ao tratamento",
+  "Gestão — conectar o atendimento ao financeiro",
+  "Um produto, isolado na fronteira dos dados",
+  "01 — Tornar o isolamento entre clínicas uma garantia do banco",
+  "02 — Modelar o odontograma como domínio, não como widget",
+  "03 — Manter a IA atrás de uma decisão humana",
+  "O que esteve sob minha responsabilidade",
+  "O que a implementação comprova",
+  "Tecnologia a serviço do fluxo de trabalho",
 ] as const;
 
 function collectStrings(value: unknown, found: string[] = []): string[] {
@@ -139,7 +174,12 @@ function collectImages(caseStudy: CaseStudy): readonly CaseStudyImage[] {
 
 const aegisStrings = collectStrings(aegisCaseStudy);
 const qStrings = collectStrings(qCaseStudy);
+const gosigappStrings = collectStrings(gosigappCaseStudy);
+const gosigappCaseStudyPtBr = getGosigappCaseStudy("pt-BR");
+const gosigappPtBrStrings = collectStrings(gosigappCaseStudyPtBr);
 const nexoStrings = collectStrings(nexoDentalCaseStudy);
+const nexoDentalCaseStudyPtBr = getNexoDentalCaseStudy("pt-BR");
+const nexoPtBrStrings = collectStrings(nexoDentalCaseStudyPtBr);
 
 describe("case-study registry", () => {
   it("exposes Aegis, Quant, gosigapp, and Nexo Dental under their slugs", () => {
@@ -161,24 +201,24 @@ describe("case-study registry", () => {
 
   it("uses the approved route metadata", () => {
     expect(aegisCaseStudy.metadata).toEqual({
-      title: "Aegis — Fraud Intelligence Case Study",
+      title: "Aegis — Production Fraud Intelligence Platform",
       description:
-        "Fraud intelligence and investigation software for the iGaming industry, presented through verified engineering decisions and evidence.",
+        "How I designed and built a production fraud-investigation platform for Brazilian iGaming, from explainable rules and data pipelines to security and WebGL.",
     });
     expect(qCaseStudy.metadata).toEqual({
       title: "Quant — Quantitative Research and Execution",
       description:
-        "A native quantitative research platform for the Brazilian futures market, covering backtesting, optimization, data pipelines, and execution architecture.",
+        "How I designed and built a native quantitative research platform across desktop UX, asynchronous services, market-data pipelines, validation, and paper execution.",
     });
     expect(gosigappCaseStudy.metadata).toEqual({
-      title: "gosigapp — Reliable SIGAP Submission Pipeline",
+      title: "gosigapp — Regulated Submission Infrastructure in Go",
       description:
-        "A Go backend pipeline for file validation, processing, retries, auditability, and submission to SIGAP.",
+        "How I designed and deployed a Go pipeline that validates, signs, retries, audits, and submits six regulated datasets to Brazil's SIGAP.",
     });
     expect(nexoDentalCaseStudy.metadata).toEqual({
-      title: "Nexo Dental — Multi-Tenant Clinic Operations",
+      title: "Nexo Dental — Founder-Built Clinic Operations",
       description:
-        "A multi-tenant product for Brazilian dental clinics spanning scheduling, clinical records, finance, communications, CRM, claims, and reporting across role-native surfaces.",
+        "How I designed and built a multi-tenant dental-clinic product across role-native workflows, data isolation, clinical modelling, and reviewable AI assistance.",
     });
   });
 });
@@ -220,11 +260,43 @@ describe("Aegis authored copy", () => {
     expect("href" in (aegisCaseStudy.hero.liveEnvironment ?? {})).toBe(false);
   });
 
-  it("keeps the epistemic limit on production status", () => {
-    // Removing this sentence would turn OWN-06 into a flat uptime claim.
-    expect(aegisCaseStudy.delivered.paragraphs[0]).toContain(
-      "as far as I know, remains active",
-    );
+  it("claims only the shipping event, never ongoing production status", () => {
+    // OWN-06: the owner can attest that he deployed it, not that it is up now.
+    // Any present-tense uptime or availability claim exceeds the evidence.
+    const delivered = aegisCaseStudy.delivered.paragraphs.join(" ");
+    expect(delivered).toContain("I shipped Aegis to production");
+    expect(delivered).not.toMatch(/remains (active|live|in production)/i);
+    expect(delivered).not.toMatch(/still (running|active|live)/i);
+  });
+
+  it("never converts an unpublished gap into a positive claim", () => {
+    // Owner decision (2026-08-05): the three known gaps are no longer published.
+    // Omitting them is permitted; asserting their opposite is not. The register
+    // in `docs/content.md` remains the authority on what is actually true.
+    const delivered = aegisCaseStudy.delivered.paragraphs.join(" ");
+    expect(delivered).not.toMatch(/\blogin\b/i);
+    expect(delivered).not.toMatch(/end-to-end|e2e/i);
+    expect(delivered).not.toMatch(/fully tested|complete test|millions of/i);
+  });
+
+  it("describes the saved-findings surface without claiming case management", () => {
+    // WF-04 forbids claiming case management; it does not require the
+    // disclaimer sentence. Naming the surface accurately satisfies it.
+    const investigationCopy = aegisCaseStudy.decisions[2].paragraphs.join(" ");
+    expect(investigationCopy).toContain("browser-local worklist");
+    expect(investigationCopy.toLowerCase()).not.toContain("case management");
+    expect(investigationCopy.toLowerCase()).not.toContain("case-management");
+  });
+
+  it("keeps the synthetic-data disclosure in the published copy", () => {
+    // The `context` section and the closing note are both gone, so the image
+    // captions are now the sole carrier of the disclosure boundary. Every
+    // screenshot-bearing section must still name its data as synthetic.
+    const captions = collectImages(aegisCaseStudy)
+      .map((image) => image.caption ?? "")
+      .join(" ");
+    expect(captions).toContain("including the document number, is synthetic");
+    expect(captions).toMatch(/25,000 synthetic profiles/);
   });
 });
 
@@ -250,15 +322,31 @@ describe("Quant authored copy", () => {
 
   it("keeps the hero facts and omits the live-environment control", () => {
     expect(qCaseStudy.hero.facts).toEqual([
-      { label: "Role", value: "Founder, designer, and sole developer" },
+      { label: "Role", value: "Founder, Product Engineer, and sole developer" },
       { label: "Period", value: "April 2026–present" },
       { label: "Platform", value: "Native desktop" },
       { label: "Market", value: "Brazilian futures and equities" },
-      { label: "State", value: "Active research and backtesting" },
+      { label: "State", value: "Research, backtesting, and paper execution" },
       { label: "Source", value: "Private" },
     ]);
-    expect(qCaseStudy.hero.support).toContain("built Quant end to end");
+    expect(qCaseStudy.hero.support).toContain("I built Quant across");
     expect("liveEnvironment" in qCaseStudy.hero).toBe(false);
+  });
+
+  it("keeps the historical result subordinate and explicitly qualified", () => {
+    const origin = qCaseStudy.origin?.paragraphs.join(" ") ?? "";
+    expect(origin).toContain("R$3,000 into R$90,000");
+    expect(origin).toContain("predates this implementation");
+    expect(origin).toContain("not a forecast or evidence");
+    expect(qCaseStudy.hero.deck).not.toContain("R$3,000");
+  });
+
+  it("publishes no identity placeholder while the approved render is absent", () => {
+    expect("identityMedia" in qCaseStudy.hero).toBe(false);
+    expect(qStrings.join(" ")).not.toContain("placeholder");
+    expect(collectImages(qCaseStudy).map((image) => image.src)).not.toContain(
+      "/work/q/identity-placeholder.svg",
+    );
   });
 
   it("states paper execution and locked live trading somewhere in the copy", () => {
@@ -268,14 +356,154 @@ describe("Quant authored copy", () => {
   });
 });
 
+describe("gosigapp authored copy", () => {
+  it("keeps both locales complete, marker-free, and within the claim boundary", () => {
+    const prohibitedClaims = [
+      "zero rejected transmissions",
+      "zero credential exposure",
+      "high daily event volumes",
+      "complete historical proof",
+      "without data duplication",
+      "license suspension",
+      "sem duplicação",
+      "suspensão da licença",
+    ];
+
+    for (const strings of [gosigappStrings, gosigappPtBrStrings]) {
+      expect(strings.filter((value) => value.trim().length === 0)).toEqual([]);
+      expect(
+        strings.filter(
+          (value) =>
+            value.includes("[REQUIRED:") ||
+            value.includes("[CONFIDENTIAL:") ||
+            value.includes("github.com") ||
+            /\b(?:BRX|RICO)\b/.test(value),
+        ),
+      ).toEqual([]);
+      expect(
+        strings.filter((value) =>
+          [...FORBIDDEN_TERMS, ...prohibitedClaims].some((term) =>
+            value.toLowerCase().includes(term),
+          ),
+        ),
+      ).toEqual([]);
+    }
+  });
+
+  it("states ownership before AI assistance and preserves deployment limits", () => {
+    expect(gosigappCaseStudy.hero.support).toMatch(/^I designed and deployed/);
+    expect(gosigappCaseStudy.contribution.paragraphs.join(" ")).toContain(
+      "sole human developer",
+    );
+    expect(gosigappCaseStudy.contribution.paragraphs.join(" ")).toContain(
+      "AI assisted implementation",
+    );
+    expect(gosigappCaseStudy.hero.facts).toContainEqual({
+      label: "State",
+      value: "Deployed via AWS ECS/Fargate",
+    });
+    expect(gosigappCaseStudy.delivered?.paragraphs.join(" ")).toContain(
+      "do not publish operational volumes, uptime, rejection rates, or business impact",
+    );
+    expect("liveEnvironment" in gosigappCaseStudy.hero).toBe(false);
+    expect("media" in gosigappCaseStudy.hero).toBe(false);
+  });
+
+  it("describes the selective retry and status-aware recovery tradeoffs", () => {
+    const recovery = gosigappCaseStudy.decisions[2].paragraphs.join(" ");
+    expect(recovery).toContain("network and 5xx failures");
+    expect(recovery).toContain("4xx responses return immediately");
+    expect(recovery).toContain("checks SIGAP for existing submissions");
+    expect(recovery).toContain("already submitted");
+  });
+
+  it("provides a complete Brazilian Portuguese object instead of English fallback copy", () => {
+    const englishSections = caseStudyBodySections(gosigappCaseStudy);
+    const portugueseSections = caseStudyBodySections(gosigappCaseStudyPtBr);
+
+    expect(portugueseSections.map((section) => section.heading)).toEqual(
+      GOSIGAPP_PT_BR_EXPECTED_BODY_HEADINGS,
+    );
+    expect(portugueseSections).toHaveLength(englishSections.length);
+
+    for (let index = 0; index < englishSections.length; index += 1) {
+      const english = englishSections[index];
+      const portuguese = portugueseSections[index];
+      expect(portuguese.id).toBe(english.id);
+      expect(portuguese.heading).not.toBe(english.heading);
+      if (english.paragraphs.length > 0) {
+        expect(portuguese.paragraphs).not.toEqual(english.paragraphs);
+      } else {
+        expect(portuguese.paragraphs).toEqual([]);
+      }
+    }
+
+    const englishImages = collectImages(gosigappCaseStudy);
+    const portugueseImages = collectImages(gosigappCaseStudyPtBr);
+    expect(
+      portugueseImages.map(({ src, width, height }) => ({ src, width, height })),
+    ).toEqual(
+      englishImages.map(({ src, width, height }) => ({ src, width, height })),
+    );
+    for (let index = 0; index < englishImages.length; index += 1) {
+      expect(portugueseImages[index].alt).not.toBe(englishImages[index].alt);
+      expect(portugueseImages[index].caption).not.toBe(
+        englishImages[index].caption,
+      );
+    }
+
+    expect(gosigappCaseStudyPtBr.metadata.title).toBe(
+      "gosigapp — Infraestrutura de Envios Regulatórios em Go",
+    );
+    expect(gosigappCaseStudyPtBr.hero.support).toMatch(/^Projetei e implantei/);
+    expect(gosigappCaseStudyPtBr.confidentiality.actions).toEqual([
+      {
+        label: "Conversar sobre este projeto",
+        href: "/pt-BR/#contact",
+      },
+      {
+        label: "Voltar aos trabalhos selecionados",
+        href: "/pt-BR/#work",
+      },
+    ]);
+  });
+});
+
+describe("gosigapp section structure", () => {
+  it("renders the recruiter-focused sections in the fixed order", () => {
+    expect(
+      caseStudyBodySections(gosigappCaseStudy).map(
+        (section) => section.heading,
+      ),
+    ).toEqual(GOSIGAPP_EXPECTED_BODY_HEADINGS);
+    expect(gosigappCaseStudy.confidentiality.heading).toBe(
+      "Private source, discussable architecture",
+    );
+  });
+
+  it("preserves section ids and the three approved media placements", () => {
+    const sections = [
+      ...caseStudyBodySections(gosigappCaseStudy),
+      gosigappCaseStudy.confidentiality,
+    ];
+    const ids = sections.map((section) => section.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(collectImages(gosigappCaseStudy).map((image) => image.src)).toEqual([
+      "/work/gosigapp/system-map.svg",
+      "/work/gosigapp/compliance-check-output.webp",
+      "/work/gosigapp/cli-pipeline-run.webp",
+    ]);
+  });
+});
+
 describe("Aegis section structure", () => {
-  it("renders the twelve contract sections in the fixed order", () => {
+  it("renders the ten contract sections in the fixed order", () => {
     expect(
       caseStudyBodySections(aegisCaseStudy).map((section) => section.heading),
     ).toEqual(AEGIS_EXPECTED_BODY_HEADINGS);
-    expect(aegisCaseStudy.confidentiality.heading).toBe(
-      "A note on confidentiality",
-    );
+    // Navigation-only closing: `heading` names the landmark, never an <h2>.
+    expect(aegisCaseStudy.confidentiality.heading).toBe("Continue");
+    expect("paragraphs" in aegisCaseStudy.confidentiality).toBe(false);
   });
 
   it("gives every section a unique id and at least one paragraph", () => {
@@ -288,7 +516,15 @@ describe("Aegis section structure", () => {
     expect(new Set(ids).size).toBe(ids.length);
 
     for (const section of sections) {
-      expect(section.paragraphs.length).toBeGreaterThan(0);
+      // The closing is navigation-only and carries no prose; every content
+      // section still must.
+      const isClosing = section.id === aegisCaseStudy.confidentiality.id;
+      if (!isClosing) {
+        expect(
+          (section as { paragraphs?: readonly string[] }).paragraphs?.length ??
+            0,
+        ).toBeGreaterThan(0);
+      }
       expect(section.heading.trim()).not.toBe("");
     }
   });
@@ -304,11 +540,12 @@ describe("Aegis section structure", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it("attaches the intro video to the identity decision only", () => {
+  it("attaches the intro video to the hero only", () => {
+    expect(aegisCaseStudy.hero.video?.src).toBe("/work/aegis/entry-intro.mp4");
     const withVideo = caseStudyBodySections(aegisCaseStudy).filter(
       (section) => section.video,
     );
-    expect(withVideo.map((section) => section.id)).toEqual(["decision-4"]);
+    expect(withVideo).toEqual([]);
   });
 });
 
@@ -317,7 +554,9 @@ describe("Quant section structure", () => {
     expect(
       caseStudyBodySections(qCaseStudy).map((section) => section.heading),
     ).toEqual(Q_EXPECTED_BODY_HEADINGS);
-    expect(qCaseStudy.confidentiality.heading).toBe("Current status");
+    expect(qCaseStudy.confidentiality.heading).toBe(
+      "Current status and technical walkthrough",
+    );
     expect(qCaseStudy.confidentiality.id).toBe("status");
   });
 
@@ -337,13 +576,12 @@ describe("Quant section structure", () => {
     }
   });
 
-  it("keeps exactly four decisions and no video", () => {
+  it("keeps exactly three decisions and no video", () => {
     const ids = qCaseStudy.decisions.map((decision) => decision.id);
     expect(ids).toEqual([
-      "decision-1",
-      "decision-2",
-      "decision-3",
-      "decision-4",
+      "decision-desktop",
+      "decision-fixtures",
+      "decision-safety",
     ]);
     expect(
       caseStudyBodySections(qCaseStudy).some((section) => section.video),
@@ -355,8 +593,8 @@ describe("Aegis media references", () => {
   it("references only approved assets that exist on disk", () => {
     const referenced = [
       ...collectImages(aegisCaseStudy).map((image) => image.src),
-      aegisCaseStudy.decisions[3].video?.src,
-      aegisCaseStudy.decisions[3].video?.poster,
+      aegisCaseStudy.hero.video?.src,
+      aegisCaseStudy.hero.video?.poster,
     ].filter((src): src is string => typeof src === "string");
 
     for (const src of referenced) {
@@ -364,7 +602,6 @@ describe("Aegis media references", () => {
       expect(existsSync(join(process.cwd(), "public", src))).toBe(true);
     }
 
-    // The poster is the only asset used twice, as hero still and video poster.
     expect(new Set(referenced)).toEqual(new Set(AEGIS_APPROVED_ASSETS));
   });
 
@@ -376,8 +613,17 @@ describe("Aegis media references", () => {
     }
   });
 
-  it("captions every in-body figure and leaves the hero still uncaptioned", () => {
-    expect("caption" in aegisCaseStudy.hero.media).toBe(false);
+  it("describes the overview asset as the product screen it contains", () => {
+    expect(aegisCaseStudy.system.images?.[0].alt).toContain(
+      "Aegis overview screen",
+    );
+    expect(aegisCaseStudy.system.images?.[0].alt).not.toMatch(/logo|wordmark/i);
+    expect(aegisCaseStudy.system.images?.[0].caption).toMatch(/synthetic/i);
+  });
+
+  it("captions every in-body figure and leaves the hero without a still", () => {
+    expect("media" in aegisCaseStudy.hero).toBe(false);
+    expect(aegisCaseStudy.hero.video).toBeDefined();
 
     const bodyImages = caseStudyBodySections(aegisCaseStudy).flatMap(
       (section) => section.images ?? [],
@@ -389,7 +635,7 @@ describe("Aegis media references", () => {
   });
 
   it("describes the silent film in visible text", () => {
-    const video = aegisCaseStudy.decisions[3].video;
+    const video = aegisCaseStudy.hero.video;
     expect(video?.transcript).toContain("There is no sound.");
     expect(video?.ariaLabel.trim().length ?? 0).toBeGreaterThan(0);
   });
@@ -407,7 +653,7 @@ describe("Quant media references", () => {
     expect(new Set(referenced)).toEqual(new Set(Q_PLACED_ASSETS));
   });
 
-  it("gives every image alt text and 2560×1440 intrinsic dimensions", () => {
+  it("gives every image alt text and 16:9 intrinsic dimensions", () => {
     for (const image of collectImages(qCaseStudy)) {
       expect(image.alt.trim().length).toBeGreaterThan(0);
       expect(image.width).toBe(2560);
@@ -421,7 +667,7 @@ describe("Quant media references", () => {
     const bodyImages = caseStudyBodySections(qCaseStudy).flatMap(
       (section) => section.images ?? [],
     );
-    expect(bodyImages).toHaveLength(11);
+    expect(bodyImages).toHaveLength(8);
     for (const image of bodyImages) {
       expect(image.caption?.trim().length ?? 0).toBeGreaterThan(0);
     }
@@ -435,9 +681,12 @@ describe("Aegis links", () => {
       ...aegisCaseStudy.confidentiality.actions.map((action) => action.href),
     ];
 
-    expect(hrefs).toEqual(["/#work", "/#work", "/#contact"]);
+    // The chapter ends on pagination into the next case study, so the closing
+    // now carries a route path alongside the homepage fragments.
+    expect(hrefs).toEqual(["/#work", "/#work", "/work/q"]);
     for (const href of hrefs) {
-      expect(href.startsWith("/#")).toBe(true);
+      expect(href.startsWith("/")).toBe(true);
+      expect(href).not.toMatch(/^\/\//);
     }
   });
 
@@ -492,24 +741,28 @@ describe("Quant links", () => {
 
 describe("Nexo Dental authored copy", () => {
   it("contains no unresolved documentation markers", () => {
-    const offenders = nexoStrings.filter(
-      (value) =>
-        value.includes("[REQUIRED:") || value.includes("[CONFIDENTIAL:"),
-    );
-    expect(offenders).toEqual([]);
+    for (const strings of [nexoStrings, nexoPtBrStrings]) {
+      const offenders = strings.filter(
+        (value) =>
+          value.includes("[REQUIRED:") || value.includes("[CONFIDENTIAL:"),
+      );
+      expect(offenders).toEqual([]);
+    }
   });
 
   it("contains no forbidden marketing or impact language", () => {
-    const offenders = nexoStrings.filter((value) =>
-      FORBIDDEN_TERMS.some((term) => value.toLowerCase().includes(term)),
-    );
-    expect(offenders).toEqual([]);
+    for (const strings of [nexoStrings, nexoPtBrStrings]) {
+      const offenders = strings.filter((value) =>
+        FORBIDDEN_TERMS.some((term) => value.toLowerCase().includes(term)),
+      );
+      expect(offenders).toEqual([]);
+    }
   });
 
   it("has no empty authored string", () => {
-    expect(nexoStrings.filter((value) => value.trim().length === 0)).toEqual(
-      [],
-    );
+    for (const strings of [nexoStrings, nexoPtBrStrings]) {
+      expect(strings.filter((value) => value.trim().length === 0)).toEqual([]);
+    }
   });
 
   it("keeps the hero facts, support copy, and disabled live action intact", () => {
@@ -519,7 +772,12 @@ describe("Nexo Dental authored copy", () => {
       { label: "State", value: "Active development" },
       { label: "Source", value: "Private" },
     ]);
-    expect(nexoDentalCaseStudy.hero.support).toContain("with AI assistance");
+    expect(nexoDentalCaseStudy.hero.support).toMatch(
+      /^As founder and sole developer/,
+    );
+    expect(nexoDentalCaseStudy.hero.support).toContain(
+      "reviewable AI assistance",
+    );
     expect(nexoDentalCaseStudy.hero.liveEnvironment).toEqual({
       label: "Live environment — coming soon",
     });
@@ -528,26 +786,79 @@ describe("Nexo Dental authored copy", () => {
     );
   });
 
-  it("states the staging gap honestly in Delivered", () => {
+  it("states implementation evidence and public-environment limits precisely", () => {
     expect(nexoDentalCaseStudy.delivered?.paragraphs.join(" ")).toContain(
-      "no verified live staging URL",
+      "50 backend and 134 frontend test files",
     );
+    expect(nexoDentalCaseStudy.delivered?.paragraphs.join(" ")).toContain(
+      "there is no verified public environment",
+    );
+  });
+
+  it("provides a complete Brazilian Portuguese object instead of English fallback copy", () => {
+    const englishSections = caseStudyBodySections(nexoDentalCaseStudy);
+    const portugueseSections = caseStudyBodySections(nexoDentalCaseStudyPtBr);
+
+    expect(portugueseSections.map((section) => section.heading)).toEqual(
+      NEXO_PT_BR_EXPECTED_BODY_HEADINGS,
+    );
+    expect(portugueseSections).toHaveLength(englishSections.length);
+
+    for (let index = 0; index < englishSections.length; index += 1) {
+      const english = englishSections[index];
+      const portuguese = portugueseSections[index];
+      expect(portuguese.id).toBe(english.id);
+      expect(portuguese.heading).not.toBe(english.heading);
+      if (english.paragraphs.length > 0) {
+        expect(portuguese.paragraphs).not.toEqual(english.paragraphs);
+      } else {
+        expect(portuguese.paragraphs).toEqual([]);
+      }
+    }
+
+    const englishImages = collectImages(nexoDentalCaseStudy);
+    const portugueseImages = collectImages(nexoDentalCaseStudyPtBr);
+    expect(
+      portugueseImages.map(({ src, width, height }) => ({ src, width, height })),
+    ).toEqual(
+      englishImages.map(({ src, width, height }) => ({ src, width, height })),
+    );
+    for (let index = 0; index < englishImages.length; index += 1) {
+      expect(portugueseImages[index].alt).not.toBe(englishImages[index].alt);
+      expect(portugueseImages[index].caption).not.toBe(
+        englishImages[index].caption,
+      );
+    }
+
+    expect(nexoDentalCaseStudyPtBr.metadata.title).toBe(
+      "Nexo Dental — Operações Clínicas Construídas de Ponta a Ponta",
+    );
+    expect(nexoDentalCaseStudyPtBr.hero.support).toMatch(
+      /^Como fundador e único desenvolvedor/,
+    );
+    expect(nexoDentalCaseStudyPtBr.confidentiality.actions).toEqual([
+      {
+        label: "Voltar aos trabalhos selecionados",
+        href: "/pt-BR/#work",
+      },
+      { label: "Entrar em contato", href: "/pt-BR/#contact" },
+    ]);
   });
 });
 
 describe("Nexo Dental section structure", () => {
-  it("renders the twelve contract sections in the fixed order", () => {
+  it("renders the recruiter-focused contract sections in the fixed order", () => {
     expect(
       caseStudyBodySections(nexoDentalCaseStudy).map(
         (section) => section.heading,
       ),
     ).toEqual(NEXO_EXPECTED_BODY_HEADINGS);
     expect(nexoDentalCaseStudy.confidentiality.heading).toBe(
-      "A note on source and data",
+      "Private source. Synthetic evidence.",
     );
   });
 
-  it("gives every section a unique id and at least one paragraph", () => {
+  it("gives every section a unique id and authored prose or badges", () => {
     const sections = [
       ...caseStudyBodySections(nexoDentalCaseStudy),
       nexoDentalCaseStudy.confidentiality,
@@ -557,18 +868,20 @@ describe("Nexo Dental section structure", () => {
     expect(new Set(ids).size).toBe(ids.length);
 
     for (const section of sections) {
-      expect(section.paragraphs.length).toBeGreaterThan(0);
+      expect(
+        section.paragraphs.length > 0 ||
+          ("badges" in section && (section.badges?.length ?? 0) > 0),
+      ).toBe(true);
       expect(section.heading.trim()).not.toBe("");
     }
   });
 
-  it("keeps exactly four decisions and no video", () => {
+  it("keeps exactly three decisions and no video", () => {
     const ids = nexoDentalCaseStudy.decisions.map((decision) => decision.id);
     expect(ids).toEqual([
-      "decision-1",
-      "decision-2",
-      "decision-3",
-      "decision-4",
+      "decision-tenant-isolation",
+      "decision-clinical-model",
+      "decision-ai-boundary",
     ]);
     expect(
       caseStudyBodySections(nexoDentalCaseStudy).some(
@@ -590,6 +903,11 @@ describe("Nexo Dental media references", () => {
     }
 
     expect(new Set(referenced)).toEqual(new Set(NEXO_PLACED_ASSETS));
+
+    const portugueseReferenced = collectImages(nexoDentalCaseStudyPtBr).map(
+      (image) => image.src,
+    );
+    expect(new Set(portugueseReferenced)).toEqual(new Set(NEXO_PLACED_ASSETS));
   });
 
   it("gives every image alt text and 2560×1440 intrinsic dimensions", () => {
@@ -631,13 +949,15 @@ describe("Nexo Dental links", () => {
   });
 
   it("publishes no source repository or external environment link", () => {
-    const offenders = nexoStrings.filter(
-      (value) =>
-        value.includes("http://") ||
-        value.includes("https://") ||
-        value.includes("github.com"),
-    );
-    expect(offenders).toEqual([]);
+    for (const strings of [nexoStrings, nexoPtBrStrings]) {
+      const offenders = strings.filter(
+        (value) =>
+          value.includes("http://") ||
+          value.includes("https://") ||
+          value.includes("github.com"),
+      );
+      expect(offenders).toEqual([]);
+    }
   });
 
   it("labels the private source in the hero facts", () => {

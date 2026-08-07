@@ -1,53 +1,54 @@
 import type { Metadata } from "next";
 
+import { AegisSystemMap } from "@/components/case-study/aegis-system-map";
 import { CaseStudyHero } from "@/components/case-study/case-study-hero";
 import {
   CaseStudyClosingSection,
   CaseStudySection,
 } from "@/components/case-study/case-study-section";
 import { CaseStudyShell } from "@/components/case-study/case-study-shell";
-import { QSystemMap } from "@/components/case-study/q-system-map";
-import { LanguageProvider } from "@/components/i18n/language-context";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
-import { caseStudyBodySections, qCaseStudy } from "@/content/case-studies";
+import { aegisCaseStudy, caseStudyBodySections } from "@/content/case-studies";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
   locale: "en",
-  pathname: "/work/q",
-  title: qCaseStudy.metadata.title,
-  description: qCaseStudy.metadata.description,
+  pathname: "/work/aegis",
+  title: aegisCaseStudy.metadata.title,
+  description: aegisCaseStudy.metadata.description,
   type: "article",
   images: [
     {
-      url: "/work/q/launcher.webp",
-      width: 2560,
-      height: 1440,
-      alt: "The Quant launcher dashboard showing market status and research activity.",
+      url: "/work/aegis/overview.webp",
+      width: 1600,
+      height: 900,
+      alt: "The Aegis overview screen with risk summary and investigation constellation.",
     },
   ],
 });
 
-export default function QuantCaseStudyPage() {
+export default function AegisCaseStudyPage() {
   return (
-    <LanguageProvider locale="en">
+    <>
       <SiteHeader />
       <main id="main-content" tabIndex={-1}>
         <CaseStudyShell>
-          <CaseStudyHero hero={qCaseStudy.hero} />
+          <CaseStudyHero hero={aegisCaseStudy.hero} />
 
-          {caseStudyBodySections(qCaseStudy).map((section) => (
+          {caseStudyBodySections(aegisCaseStudy).map((section) => (
             <CaseStudySection key={section.id} section={section}>
               {/* The map belongs to the system section only. */}
-              {section.id === qCaseStudy.system.id ? <QSystemMap /> : null}
+              {section.id === aegisCaseStudy.system.id ? (
+                <AegisSystemMap />
+              ) : null}
             </CaseStudySection>
           ))}
 
-          <CaseStudyClosingSection closing={qCaseStudy.confidentiality} />
+          <CaseStudyClosingSection closing={aegisCaseStudy.confidentiality} />
         </CaseStudyShell>
       </main>
       <SiteFooter />
-    </LanguageProvider>
+    </>
   );
 }

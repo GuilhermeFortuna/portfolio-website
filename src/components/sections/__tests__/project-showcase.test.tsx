@@ -130,6 +130,15 @@ describe("ProjectShowcase", () => {
     });
   });
 
+  it("uses the finished gosigapp cover instead of its authored placeholder", () => {
+    expect(projectMedia.gosigapp).toEqual({
+      src: "/work/gosigapp/gosigapp-portfolio.webp",
+      alt: "Cinematic gosigapp pipeline sculpture transforming archive data into a secure API submission",
+      width: 1600,
+      height: 900,
+    });
+  });
+
   it("keeps the shared aperture decorative and hidden until the motion enhancement runs", () => {
     render(<ProjectShowcase projects={projects} />);
 

@@ -13,28 +13,13 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { caseStudyBodySections, getCaseStudy } from "@/content/case-studies";
 import { isPrefixedLocale, prefixedLocales, type Locale } from "@/lib/i18n";
-import { createPageMetadata, type SeoImage } from "@/lib/seo";
+import { createPageMetadata } from "@/lib/seo";
 
 type PageProps = {
   params: Promise<{
     lang: string;
     slug: string;
   }>;
-};
-
-const caseStudyImages: Record<string, SeoImage> = {
-  aegis: {
-    url: "/work/aegis/overview.webp",
-    width: 1600,
-    height: 900,
-    alt: "The Aegis overview screen with risk summary and investigation constellation.",
-  },
-  q: {
-    url: "/work/q/launcher.webp",
-    width: 2560,
-    height: 1440,
-    alt: "The Quant launcher dashboard showing market status and research activity.",
-  },
 };
 
 function resolvePrefixedLocale(lang: string | undefined): Locale {
@@ -66,7 +51,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {};
   }
 
-  const image = caseStudyImages[slug];
+  const image = caseStudy.hero.media
+    ? {
+        url: caseStudy.hero.media.src,
+        width: caseStudy.hero.media.width,
+        height: caseStudy.hero.media.height,
+        alt: caseStudy.hero.media.alt,
+      }
+    : caseStudy.hero.video
+      ? {
+          url: caseStudy.hero.video.poster,
+          width: caseStudy.hero.video.width,
+          height: caseStudy.hero.video.height,
+          alt: caseStudy.hero.video.ariaLabel,
+        }
+      : undefined;
 
   return createPageMetadata({
     locale,
@@ -100,7 +99,7 @@ export default async function DynamicCaseStudyPage({ params }: PageProps) {
                 slug === "aegis" ? (
                   <AegisSystemMap />
                 ) : slug === "q" ? (
-                  <QSystemMap />
+                  <QSystemMap locale={locale} />
                 ) : null
               ) : null}
             </CaseStudySection>

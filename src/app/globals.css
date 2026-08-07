@@ -285,16 +285,14 @@ canvas {
 }
 
 .process-introduction {
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(18rem, 4fr);
-  gap: clamp(2rem, 8vw, 8rem);
-  align-items: end;
+  display: block;
   margin-top: clamp(2rem, 5vw, 4rem);
 }
 
 .process-title {
+  min-width: 0;
   max-width: 12ch;
-  font-size: clamp(3rem, 7.25vw, 7.25rem);
+  font-size: clamp(2.75rem, 6vw, 6.5rem);
   font-weight: 540;
   line-height: 0.92;
   letter-spacing: -0.058em;
@@ -303,10 +301,24 @@ canvas {
 
 .process-support {
   max-width: 30rem;
+  margin-top: 2rem;
   padding-bottom: 0.35rem;
   color: var(--color-text-muted);
   font-size: clamp(1.0625rem, 1.45vw, 1.25rem);
   line-height: 1.65;
+}
+
+@media (min-width: 1024px) {
+  .process-introduction {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: clamp(3rem, 10vw, 10rem);
+    align-items: end;
+  }
+
+  .process-support {
+    margin-top: 0;
+  }
 }
 
 .process-rail {
@@ -430,17 +442,12 @@ canvas {
   }
 
   .process-introduction {
-    display: block;
     margin-top: 2rem;
   }
 
   .process-title {
     max-width: 10ch;
     font-size: clamp(2.75rem, 14vw, 4.5rem);
-  }
-
-  .process-support {
-    margin-top: 2rem;
   }
 
   .process-rail {

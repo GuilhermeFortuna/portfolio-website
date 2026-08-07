@@ -41,7 +41,8 @@ Aegis
 **Deck (visible, directly under the h1):**
 
 <!-- copy:start id=hero-deck -->
-Fraud intelligence for the Brazilian iGaming industry
+I designed and built a production platform that turns fragmented fraud signals
+into explainable investigations.
 <!-- copy:end -->
 
 **Meta list** — four label/value pairs, rendered as a definition list:
@@ -57,14 +58,14 @@ Source
 Private
 <!-- copy:end -->
 
-**Support copy (51 words, limit 55):**
+**Support copy (50 words, limit 55):**
 
 <!-- copy:start id=hero-support limit=55 -->
-Aegis is a fraud-intelligence console built for a betting operator in the
-Brazilian iGaming sector. It turns scattered operational and analytical data
-into something an analyst can investigate: scored players, explainable rule
-findings, and a visual field of an entire player base. I designed and built
-every layer, with AI assistance.
+For a Brazilian betting operator, I owned the product end to end—with AI
+assistance—from investigation workflows and explainable detection to the
+frontend, API, data pipelines, security, deployment, and WebGL risk
+visualization. Aegis gives analysts one place to move from a fraud signal to the
+player history and evidence behind it.
 <!-- copy:end -->
 
 **Actions:**
@@ -96,10 +97,11 @@ only place the page qualifies the claim. WO-022 must render the hero value
 exactly as written and must not restore the longer string, and must not drop or
 weaken that sentence in section 10, or the page would assert current production
 status flatly and drift into a monitored-uptime claim (UNSUP-06).
-"scored players" ← SYS-10; "explainable rule findings" ← SYS-08; "a visual
-field of an entire player base" ← WF-07. "with AI assistance" ← OWN-05: AI
-assisted my work, it did not build the product, and no team is implied
-(UNSUP-08).
+The investigation workflow and explainable detection ← WF-02, WF-03, SYS-08,
+and SYS-10. Frontend, API, pipelines, security, deployment, and WebGL ownership
+← SYS-01, SYS-02, SYS-06, SYS-07, SYS-12, SYS-14, and WF-07. "with AI
+assistance" ← OWN-05: AI assisted my work, it did not build the product, and no
+team is implied (UNSUP-08).
 
 The single hero action is a **visibly disabled, non-interactive** control per
 the owner's 2026-07-31 decision recorded in the WO-STATUS Gate Log, which
@@ -119,19 +121,19 @@ introduced rather than autoplayed at a visitor who has no context for it.
 **Heading (h2):**
 
 <!-- copy:start id=context-heading -->
-The context
+Real system. Synthetic evidence.
 <!-- copy:end -->
 
 **Visible copy:**
 
 <!-- copy:start id=context-body -->
-Aegis was built for a betting company in the Brazilian iGaming sector. I am not
-naming the operator, and nothing here comes from its production environment.
-Every screenshot comes from the project's own synthetic data: 25,000 fabricated
-profiles, seeded locally, connected to no company system.
+Aegis was built for an unnamed betting company in the Brazilian iGaming sector.
+The product, architecture, and engineering decisions are real; company names,
+internal identifiers, environment details, and production data stay private.
 
-So this page shows the engineering and the product decisions, not the operator's
-data, its system names, or outcomes it never shared.
+Every interface shown here runs on 25,000 fabricated profiles seeded locally and
+connected to no company system. The people, documents, transactions, and
+findings are synthetic—not production data or client outcomes.
 <!-- copy:end -->
 
 **Media:** none.
@@ -150,32 +152,31 @@ inference of UNSUP-01 through UNSUP-09.
 **Heading (h2):**
 
 <!-- copy:start id=problem-heading -->
-The problem
+Fraud investigations started as data reconstruction
 <!-- copy:end -->
 
 **Visible copy:**
 
 <!-- copy:start id=problem-body -->
-Fraud signals in an online betting operation do not sit in one place: identity
-details live in the operational database, while deposits, withdrawals, bets, and
-gameplay events accumulate in the analytical lakehouse. An analyst who suspects
-one account is structuring deposits, or that several share a document, has to
-rebuild that story by hand across systems never designed to answer the question.
+Fraud signals lived across systems built for different purposes. Identity and
+account data sat in the operational database, while deposits, withdrawals, bets,
+balances, and gameplay events accumulated in the analytical lakehouse.
+Investigating one suspicious account meant rebuilding its story by hand across
+both.
 
-The job was to make behaviour, relationships, and a player's history
-investigable in one place, and every finding explainable: which rule fired, on
-what evidence.
+The job was to make behaviour, relationships, and a player's history investigable
+in one place without collapsing the answer into an unexplained score. Every
+finding had to show which rule fired and the evidence that triggered it.
 <!-- copy:end -->
 
 **Media:** none.
 
 **Author note.** No technology is named in this section, per the WO-020 rule
-that the problem precedes the stack. The two example patterns are real
-implemented rules, not invented scenarios: deposit structuring is `PAY-003` and
-shared-document/duplicate-identity is `ACC-008`, both in SYS-08. The
-operational/analytical split is SYS-03 and SYS-04. "explainable … which rule
-fired and on what evidence" ← SYS-08 and SYS-10; this is a rule engine, never
-described as machine learning.
+that the problem precedes the stack. The operational/analytical split is SYS-03
+and SYS-04. "which rule fired" and "the evidence that triggered it" ← SYS-08
+and SYS-10; this is a rule engine, never described as machine learning.
+"rebuilding its story by hand" describes the owner-stated problem, not a
+measured investigation-speed claim (UNSUP-03).
 
 ---
 
@@ -184,21 +185,22 @@ described as machine learning.
 **Heading (h2):**
 
 <!-- copy:start id=system-heading -->
-How the system fits together
+A separate product built around investigative reads
 <!-- copy:end -->
 
 **Visible copy:**
 
 <!-- copy:start id=system-body -->
-Aegis is a standalone React single-page application, served as a static bundle,
-talking directly to a read-focused FastAPI service. That service reads a curated
-PostgreSQL schema instead of querying the lakehouse on every request. Scheduled
-jobs pull profiles, wallets, deposits, withdrawals, hourly balances, and the
-risk-constellation view out of a Databricks lakehouse into Postgres, then run
-detection scans, chained hourly. An optional Redis cache fronts the busiest
-reads: jobs write it, the interface only reads. Deployment targets Google Cloud:
-serverless containers, managed Postgres, secret storage, scheduling, and
-federated identity for CI.
+Aegis separates investigation work from its analytical source: a static React
+application talks to a read-focused FastAPI service, and that service reads a
+curated PostgreSQL schema instead of querying the lakehouse on every request.
+The boundary gives the product a predictable read path and isolates access to
+sensitive evidence.
+
+Scheduled jobs synchronize profiles, wallets, transactions, hourly balances,
+and visualization data from Databricks into PostgreSQL, then chain that sync into
+detection scans each hour. Redis is an optional first read for selected data;
+jobs write the cache and the interface only reads it.
 <!-- copy:end -->
 
 **Media:** `overview.webp`.
@@ -207,14 +209,15 @@ Alt text:
 
 <!-- copy:start id=system-media-alt render=alt-attribute-only -->
 The Aegis overview screen: a dark console with a Portuguese sidebar, a risk
-summary panel counting 25,000 analysed players and 97 with a signal, and a
-field of faint points with an amber cluster to the right.
+summary counting 25,000 analysed players and 97 with a signal, and a field of
+faint points with an amber cluster.
 <!-- copy:end -->
 
 Caption:
 
 <!-- copy:start id=system-media-caption -->
-The overview on synthetic data. The product interface is in Portuguese.
+The product overview running on synthetic data. The interface is shown in
+Portuguese.
 <!-- copy:end -->
 
 **Author note.** SPA/static-bundle boundary ← SYS-01 (no Node server or BFF at
@@ -222,8 +225,9 @@ runtime — do not imply one). Read-focused API ← SYS-02. Curated Postgres sch
 ← SYS-03. Databricks as analytical source ← SYS-04. Sync job contents ← SYS-06.
 Hourly sync-then-scan pipeline ← SYS-07; described as a configured cadence, not
 a monitored SLA. Redis cache-first reads with job-owned writes ← SYS-05.
-Deployment platform ← SYS-14, generically, with **no** project ID, region,
-hostname, or staging URL (CONF-02, CONF-03).
+The deployment platform is intentionally omitted from the visible system copy;
+SYS-14 remains available for the contribution claim without exposing project
+IDs, regions, hostnames, or staging URLs (CONF-02, CONF-03).
 
 Alt text describes only what is in the pixels. The panel reads
 `TOTAL ANALISADOS 25.000` and `COM SINAL 97`; the caption states the Portuguese
@@ -237,25 +241,24 @@ contain (`aegis-case-study-media.md`, "Limitations for WO-020").
 **Heading (h2):**
 
 <!-- copy:start id=decision-1-heading -->
-Decision 1 — Keep Aegis a standalone product
+01 — Separate the product and its security boundary
 <!-- copy:end -->
 
-**Visible copy (115 words, limit 140):**
+**Visible copy (93 words, limit 140):**
 
 <!-- copy:start id=decision-1-body limit=140 -->
-The obvious path was fraud screens inside a system that already existed. I built
-Aegis as its own product instead, with its own schema, API, and deployment.
+The shortest path was to add fraud screens to a system that already existed. I
+built Aegis as a separate product instead, with its own schema, API, deployment,
+and release cycle.
 
-My reasoning was blast radius and pace. A fraud console changes quickly as new
-patterns appear, and it needs its own authorization model, because analysts see
-documents and transaction evidence most internal users should never see.
-Coupling it to another system's release cycle and permissions would have made
-both harder.
+My reasoning was blast radius and pace. Fraud workflows change as new patterns
+emerge, while the documents and transaction evidence behind them require a
+narrower authorization model than most internal users should inherit.
 
-The cost is that Aegis owns what it would otherwise inherit: sessions, CSRF
-protection, multi-factor authentication, Argon2 hashing, permissions, scoped job
-credentials, and a security-audit log. All of it is enforced in the API, the only
-authorization authority.
+The cost is explicit ownership: sessions, CSRF protection, multi-factor
+authentication, Argon2 hashing, permissions, scoped job credentials, and
+security auditing. The API enforces that boundary as the single authorization
+authority.
 <!-- copy:end -->
 
 **Media:** none.
@@ -266,7 +269,7 @@ authorization authority" ← SYS-12 plus GAP-01, and it is deliberately the same
 phrasing used in section 10 so the browser-side login gap is not contradicted.
 The alternative ("a system that already existed") is described without naming
 any internal system (CONF-01). The rationale is first person and presented as a
-judgement with a stated cost, not as a universal best practice.
+judgement with an explicit ownership cost, not as a universal best practice.
 
 ---
 
@@ -275,24 +278,24 @@ judgement with a stated cost, not as a universal best practice.
 **Heading (h2):**
 
 <!-- copy:start id=decision-2-heading -->
-Decision 2 — Read from a curated store, not the lakehouse
+02 — Curate investigation data instead of querying the lakehouse live
 <!-- copy:end -->
 
-**Visible copy (115 words, limit 140):**
+**Visible copy (104 words, limit 140):**
 
 <!-- copy:start id=decision-2-body limit=140 -->
-The event data lives in the lakehouse. Querying it straight from the interface
-would have been the shortest line to a working dashboard, and the wrong one:
-warehouse queries are billed, and slow enough that an analyst clicking through a
-player timeline would feel every one.
+The event data lives in the lakehouse. Querying it directly from the interface
+would have been the shortest line to a working dashboard, but it would also
+attach every step through a player timeline to warehouse latency and billing.
 
-So the data path splits. Scheduled jobs copy what the product needs into the
-curated Postgres schema on a fixed cadence, an hourly pipeline chains that sync
-into detection scans, and Redis holds what the interface reads first. Jobs write
-the cache; the interface never does.
+The data path therefore splits. Scheduled jobs copy what the product needs into
+its curated PostgreSQL schema, an hourly pipeline chains synchronization into
+detection scans, and Redis holds selected first reads. Jobs write the cache; the
+interface never does.
 
-The trade-off, plainly: Aegis reads recent data, not live data. For behaviour
-that unfolds over hours and days, that was the right exchange.
+The trade-off is deliberate: Aegis reads recent data, not live data. For
+behavioural patterns that develop across hours and days, that was the better
+product boundary.
 <!-- copy:end -->
 
 **Media:** none.
@@ -312,25 +315,26 @@ claimed (UNSUP-03, UNSUP-05).
 **Heading (h2):**
 
 <!-- copy:start id=decision-3-heading -->
-Decision 3 — Build for investigation, not for monitoring
+03 — Build for investigation, not monitoring
 <!-- copy:end -->
 
-**Visible copy (122 words, limit 140):**
+**Visible copy (120 words, limit 140):**
 
 <!-- copy:start id=decision-3-body limit=140 -->
-A dashboard tells you a number is high; an investigation tool has to tell you
-why. So the interface follows the analyst's sequence: a triage queue grouped by
-which rule fired, a player view holding profile, balances, transactions,
-gameplay, and open findings on one screen, and generated reports for findings
-that leave the tool.
+A dashboard can show that a number is high; an investigation tool has to explain
+why. Aegis follows the analyst's path from a triage queue grouped by rule to a
+player view that brings profile, balances, transactions, gameplay, open findings,
+and generated reports together.
 
-Every finding carries its rule, category, confidence level, and the evidence
-fields that triggered it. Rules run in shadow mode by default, recording what
-they would have flagged, and are promoted to live deliberately.
+Every finding carries its rule, category, confidence level, and triggering
+evidence. Rules run in shadow mode by default and are promoted to live
+deliberately. A browser-local worklist keeps findings an analyst is reviewing;
+it is not a backend case-management system.
 
-The Risk Constellation is the part I would not cut. It draws the whole scored
-player base as a GPU point field, so clusters and outliers surface before you
-know what to look for.
+The Risk Constellation draws the scored player population as a GPU point field.
+Colour and brightness encode risk while position separates the general
+population from flagged players, giving analysts another way to inspect clusters
+and outliers.
 <!-- copy:end -->
 
 **Media:** `player-investigation.webp`, then `risk-constellation.webp`.
@@ -347,8 +351,8 @@ and amounts that triggered it.
 `player-investigation.webp` caption:
 
 <!-- copy:start id=decision-3-media-a-caption -->
-A finding opened down to its evidence. Every value here, document number
-included, is synthetic.
+A player investigation opened to the evidence behind a finding. All values,
+including document numbers, are synthetic.
 <!-- copy:end -->
 
 `risk-constellation.webp` alt text:
@@ -362,13 +366,14 @@ critical, high, medium, low, and no-signal tiers.
 `risk-constellation.webp` caption:
 
 <!-- copy:start id=decision-3-media-b-caption -->
-25,000 synthetic players. Colour and brightness carry risk; position separates
-the flagged from everyone else.
+The Risk Constellation visualizing 25,000 synthetic players through position,
+colour, and brightness.
 <!-- copy:end -->
 
 **Author note.** Triage queue ← WF-03. Player view contents ← WF-02. Generated
 reports ← WF-05 and SYS-10. Finding metadata (rule, category, confidence,
 evidence fields) ← SYS-08 and SYS-10. Shadow default and promotion ← SYS-09.
+The browser-local worklist and explicit non-case-management boundary ← WF-04.
 Risk Constellation ← WF-07: state the GPU point field, never "millions of
 particles" (GAP-04) — the tested envelope is stated in section 10 instead.
 "scored player base" ← SYS-10; scoring weights are configurable defaults, so no
@@ -393,25 +398,24 @@ change, so it would require a new WO-019 gate.
 **Heading (h2):**
 
 <!-- copy:start id=decision-4-heading -->
-Decision 4 — Give the product its own identity
+04 — Give the product identity without blocking the work
 <!-- copy:end -->
 
-**Visible copy (122 words, limit 140):**
+**Visible copy (102 words, limit 140):**
 
 <!-- copy:start id=decision-4-body limit=140 -->
-Internal tools usually look like internal tools. I gave Aegis a real identity
-instead: a shield-and-iris emblem, a dark instrument-panel palette, and a
-cinematic entry sequence that plays once per session before the console
-appears.
+I treated the internal product as a designed instrument, not a collection of
+utility screens. The shield-and-iris emblem, dark interface, and cinematic entry
+sequence give Aegis a coherent identity across the first frame and the
+investigation workspace.
 
-I produced that sequence myself. The emblem was modelled and animated in Blender,
-exported as FBX, and taken into Unreal Engine 5 for scene assembly, lighting, the
-aurora curtains, and the drifting dust, then rendered as a 4K image sequence and
-finished in DaVinci Resolve.
+I modelled and animated the emblem in Blender, exported it as FBX, assembled and
+lit the scene in Unreal Engine 5, rendered a 4K image sequence, and finished the
+film in DaVinci Resolve.
 
-This was not decoration for its own sake: analysts spend a whole shift inside one
-tool, and a product that feels considered gets treated as one. It also fails
-open: if the video stalls or motion is reduced, the console loads immediately.
+The production craft does not block the product. The sequence plays once per
+session and fails open: if the media stalls, cannot play, or the user reduces
+motion, the console appears immediately.
 <!-- copy:end -->
 
 **Media:** `entry-intro.mp4`, with `entry-intro-poster.webp` as its poster.
@@ -439,8 +443,8 @@ black. There is no sound.
 Video `aria-label` (screen readers; the transcript above carries the detail):
 
 <!-- copy:start id=decision-4-media-alt render=aria-label-only -->
-Silent nine-second title sequence for Aegis, described in the summary beside
-this video.
+Silent nine-second title sequence for Aegis, described in the accompanying
+transcript.
 <!-- copy:end -->
 
 **Author note.** The pipeline sentence must match OWN-08 exactly in substance:
@@ -475,20 +479,21 @@ either way; see the WO-STATUS Gate Log.
 **Heading (h2):**
 
 <!-- copy:start id=contribution-heading -->
-What I did
+What I owned
 <!-- copy:end -->
 
 **Visible copy:**
 
 <!-- copy:start id=contribution-body -->
-I designed and built Aegis end to end, with AI assistance throughout: product and
-interaction design, the React application, the FastAPI service, the Postgres
-schema, the lakehouse sync and hourly pipeline, the detection rules and scoring,
-authentication and permissions, the WebGL Risk Constellation, the test suites,
-the deployment path, and the identity film.
+I owned Aegis across four connected areas: product and interaction design; the
+React application, FastAPI service, authentication, and permissions; the
+PostgreSQL model, lakehouse synchronization, hourly pipeline, detection rules,
+scoring, and reports; and testing, deployment, the WebGL Risk Constellation, and
+the identity film.
 
-AI sped that work up — scaffolding, refactors, tests, review. The architecture,
-the trade-offs above, and the product decisions are mine.
+AI accelerated scaffolding, refactoring, test generation, and review. The
+architecture, implementation, validation, trade-offs, and final product decisions
+remained my responsibility.
 <!-- copy:end -->
 
 **Media:** none.
@@ -510,27 +515,27 @@ independently.
 **Heading (h2):**
 
 <!-- copy:start id=delivered-heading -->
-Delivered
+What shipped—and what remains limited
 <!-- copy:end -->
 
 **Visible copy:**
 
 <!-- copy:start id=delivered-body -->
-Aegis was deployed to production and, as far as I know, remains active. No
-client-provided business metrics exist, so this page reports what was built and
-shipped, not what it earned.
+Aegis was deployed to production and, as far as I know, remains active. Client
+business metrics were not available for publication, so this case study reports
+the product and engineering scope I can verify—not unverified business outcomes.
 
-Shipped and working: eight detection rules across payment, gameplay, identity,
-and impact categories, with configurable thresholds, shadow and live execution,
-and promotion; risk scoring and finding reports as HTML, Markdown, or PDF; the
-overview dashboard, player investigation, alerts triage, saved cases, and rule
-configuration; the Risk Constellation and geographic distribution; admin users
-with a security-audit view; and a synthetic dataset that runs everything locally.
+In the sanitized portfolio edition, shipped and working scope includes eight
+configurable rules across payment, gameplay, identity, and impact categories;
+shadow and live execution; scoring and explainable findings; alert triage,
+player investigation, a browser-local findings worklist, rule administration,
+geographic analysis, the Risk Constellation, security auditing, and reports
+exported as HTML, Markdown, or PDF.
 
-Three limits I would rather state outright. The browser-side login is still a
-shell, so the API remains the sole authorization authority. The end-to-end
-browser suite is written but skipped; the backend suite is 67 test files. The
-Risk Constellation is proven to a few hundred thousand points, not millions.
+Three limits are worth stating plainly. The browser-side login remains a shell,
+so the API is the sole authorization authority. The end-to-end browser suite is
+written but skipped; the backend suite has 67 test files. The Risk Constellation
+is proven to a few hundred thousand points, not millions.
 <!-- copy:end -->
 
 **Media:** `alerts.webp`.
@@ -549,26 +554,27 @@ Caption:
 
 <!-- copy:start id=delivered-media-caption -->
 The triage queue over synthetic findings. Selecting an alert opens its evidence
-panel, empty here.
+panel, which is empty in this capture.
 <!-- copy:end -->
 
 **Author note.** Production delivery ← OWN-06, worded as owner knowledge. The
-second sentence discharges the WO-020 requirement to report delivery without
+opening paragraph discharges the WO-020 requirement to report delivery without
 inventing business impact and closes off UNSUP-01 through UNSUP-09; the heading
-is `Delivered`, never `Impact`. Capability list mapping: eight rules and four
+describes shipped scope and limits, never `Impact`. Capability list mapping:
+eight rules and four
 categories ← SYS-08; thresholds/shadow-live/promotion ← SYS-09 and WF-06;
 scoring ← SYS-10; report formats ← SYS-10 (HTML, Markdown, and PDF confirmed in
 `reporting.py`); overview ← WF-01; player investigation ← WF-02; alerts queue ←
 WF-03; rule configuration ← WF-06; Risk Constellation ← WF-07; geographic
-distribution ← WF-08; admin and security audit ← WF-09; synthetic dataset ←
-SYS-13.
+distribution ← WF-08; admin and security audit ← WF-09. The synthetic dataset is
+established in section 2 from SYS-13.
 
-`saved-cases shelf` resolves WF-04, which WO-018 left open. Source inspection
+`browser-local findings worklist` resolves WF-04, which WO-018 left open. Source inspection
 on 2026-07-31 found the cases route reads and writes the browser
 `localStorage` key `aegis:cases`, populated from the alerts queue, with no
 backend cases table or router; triage status changes and report generation do go
-through the API. "shelf that keeps the findings an analyst is working through"
-is therefore accurate, and the page must **not** describe full case management.
+through the API. "browser-local findings worklist" is therefore accurate, and
+the page explicitly states that it is not a backend case-management system.
 
 Known limits ← GAP-01, GAP-02, GAP-04, and SYS-15 for the 67 test files.
 "a few hundred thousand points" reflects the ≤350,000 tested envelope in WF-07
@@ -587,22 +593,22 @@ in the caption because `aegis-case-study-media.md` flags it as a limitation.
 **Heading (h2):**
 
 <!-- copy:start id=technology-heading -->
-Technology, in context
+Technology in service of the product
 <!-- copy:end -->
 
 **Visible copy:**
 
 <!-- copy:start id=technology-body -->
-React, Vite, and React Router for the single-page bundle. FastAPI for a
-read-focused JSON API. PostgreSQL for the curated schema Aegis owns. Databricks
-as the analytical source. Redis for cache-first reads. Argon2, TOTP, and opaque
-sessions for authentication. Three.js plus a Web Worker point decoder for the
-Risk Constellation. deck.gl and MapLibre for geographic views. WeasyPrint for PDF
-reports. pytest and Jest for the tests. Blender, Unreal Engine 5, and DaVinci
-Resolve for the film.
+React, Vite, and React Router deliver the single-page interface; FastAPI exposes
+the read-focused API; PostgreSQL owns the investigative model; Databricks remains
+the analytical source; and Redis supports selected cache-first reads. Opaque
+sessions, Argon2, TOTP, CSRF protection, and API-enforced permissions form the
+security boundary.
 
-Nothing there was chosen for its own sake; each entry exists because a decision
-above needed it.
+Three.js and a Web Worker point decoder power the Risk Constellation; deck.gl
+and MapLibre support geographic analysis; WeasyPrint produces reports; pytest
+and Jest exercise backend and frontend code paths; and Blender, Unreal Engine 5,
+and DaVinci Resolve form the identity-film pipeline.
 <!-- copy:end -->
 
 **Media:** none.
@@ -616,8 +622,9 @@ deck.gl and MapLibre ← WF-08, confirmed as `@deck.gl/core`, `@deck.gl/layers`,
 `@deck.gl/react`, and `maplibre-gl` in `aegis-front/package.json`. WeasyPrint ←
 SYS-10. pytest and Jest ← SYS-15 and SYS-16.
 
-The closing sentence is required by the Batch 03 prohibition on turning the
-case study into a technology inventory. No version numbers are published.
+The grouped wording keeps the stack tied to product responsibilities rather than
+turning the section into an unstructured technology inventory. No version
+numbers are published, and test tooling is not presented as proof of correctness.
 
 ---
 
@@ -626,37 +633,33 @@ case study into a technology inventory. No version numbers are published.
 **Heading (h2):**
 
 <!-- copy:start id=confidentiality-heading -->
-A note on confidentiality
+Private by design, open to discussion
 <!-- copy:end -->
 
 **Visible copy:**
 
 <!-- copy:start id=confidentiality-body -->
-I have deliberately left things off this page: the operator's name, its internal
-system names, deployment identifiers and environment URLs, and any real player,
-document, transaction, or credential. The screenshots use synthetic data. The
-repository is private, so there is no code link, and the portfolio version of
-Aegis is a sanitized evolution I maintain independently, not a mirror of
-production.
-
-To go further than a public page allows, ask me directly.
+The source remains private, and the portfolio edition is a sanitized evolution I
+maintain independently—not a mirror of the production environment. I can discuss
+the architecture, trade-offs, and ownership in greater depth without exposing
+the operator, its systems, or its data.
 <!-- copy:end -->
 
 **Actions** — exactly two, in this order:
 
 <!-- copy:start id=confidentiality-actions -->
 Back to selected work
-Get in touch
+Discuss Aegis
 <!-- copy:end -->
 
 **Media:** none.
 
-**Author note.** Omissions enumerate CONF-01, CONF-02, CONF-03, and CONF-04
-without reproducing any value. Synthetic media ← DEC-03. Private repository ←
-DEC-01. The sanitized-evolution sentence is required by OWN-07 so no reader
+**Author note.** The confidentiality details are established once in section 2
+rather than repeated here (CONF-01 through CONF-04; DEC-03). Private repository
+← DEC-01. The sanitized-evolution sentence is required by OWN-07 so no reader
 concludes the public version is byte-identical to production.
 
-Action targets: `Back to selected work` → `/#work`; `Get in touch` → `/#contact`.
+Action targets: `Back to selected work` → `/#work`; `Discuss Aegis` → `/#contact`.
 Both are internal same-origin links, matching the approved homepage section
 anchors. No live-environment, résumé, or repository action appears here — the
 disabled live-environment control belongs to the hero only (DEC-01, DEC-02).
@@ -696,8 +699,8 @@ page, drop `overview.webp` from section 4 rather than duplicating a caption.
 | `enterprise-grade` | Not used. |
 | `real-time` | Not used. Section 6 says `recent data, not live data`, which is the accurate description of a batch pipeline (SYS-06, SYS-07). |
 | `high-volume` | Not used in visible copy. SYS-04's register wording permits it, but the batch design is described concretely instead, so no reader infers a production volume (UNSUP-05). |
-| `Impact` as a delivery word | Not used that way. Section 10 is headed `Delivered`. The word `impact` appears only as the name of a real rule category (`IMPACT-001`, `IMPACT-002` in SYS-08) and in the phrase `business-outcome data`. |
-| `revenue`, `money saved`, `fraud reduction`, `client satisfaction` | Not used. Section 10 states explicitly that no business-outcome data exists. The operator-loss rule is referred to by its category rather than by expanding `GGR`. |
+| `Impact` as a delivery word | Not used that way. Section 10 is headed `What shipped—and what remains limited`. The word `impact` appears only as the name of a real rule category (`IMPACT-001`, `IMPACT-002` in SYS-08). |
+| `revenue`, `money saved`, `fraud reduction`, `client satisfaction` | Not used in visible copy. Section 10 states that only verified product and engineering scope is reported. The operator-loss rule is referred to by its category rather than by expanding `GGR`. |
 
 ## Claim-by-claim reconciliation
 
@@ -716,7 +719,7 @@ Deliberately **not** used in visible copy:
 | SYS-11 | The owner ruled on 2026-07-31 that regulatory framing stays generic. It is therefore omitted rather than softened, since no section needed it to make sense. See the note below. |
 | GAP-03 | Placeholder analyst attribution is an internal detail with no bearing on any published claim. |
 | CONF-05 | The ~4.5M design figure is confidential and is never referenced, directly or by implication. |
-| UNSUP-01 … UNSUP-09 | Prohibited. Section 10 states outright that no business-outcome data exists. |
+| UNSUP-01 … UNSUP-09 | Prohibited. Section 10 states outright that unverified business outcomes are excluded. |
 
 **Regulatory framing (SYS-11).** The owner's 2026-07-31 decision allows generic
 mention of Brazilian anti-money-laundering obligations without naming SPA/MF
@@ -747,10 +750,10 @@ Both belong to site-wide metadata, not the Aegis chapter.
 
 ## Verification
 
-**Recorded result, re-measured after owner approval (2026-07-31).** All visible
-strings: **1,390 words**. Prose only, excluding headings, the hero meta list,
-action labels, and the video title: **1,293 words**. Hero support 51 (limit 55);
-decision bodies 115, 115, 122, and 122 (limit 140 each). No block exceeds its
+**Recorded result, re-measured for the hiring-focused rewrite (2026-08-04).** All
+visible strings: **1,294 words**. Prose only, excluding headings, the hero meta
+list, action labels, and the video title: **1,173 words**. Hero support 50 (limit
+55); decision bodies 93, 104, 120, and 102 (limit 140 each). No block exceeds its
 limit. 41 delimiter pairs balanced; 40 identified copy blocks. A scan of every
 copy block found 0 occurrences of the forbidden terms and 0 `[REQUIRED:` or
 `[CONFIDENTIAL:` markers, and all required copy facts present. Alt text and

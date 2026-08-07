@@ -1,32 +1,37 @@
 import { describe, expect, it } from "vitest";
 
-import AegisCaseStudyPage, { metadata } from "@/app/work/aegis/page";
+import AegisCaseStudyPage, { metadata } from "@/app/(en)/work/aegis/page";
 import { aegisCaseStudy, caseStudyBodySections } from "@/content/case-studies";
 import { siteNavigation } from "@/content/site";
-import { render, screen, within } from "@/test/render";
+import { renderWithLocale, screen, within } from "@/test/render";
 
 /**
  * The case-study route is fully static: no effect, hook, or client runtime is
  * involved, so a plain render is a faithful stand-in for the server HTML.
  */
 
-const EXPECTED_H2_ORDER = [
-  ...caseStudyBodySections(aegisCaseStudy).map((section) => section.heading),
-  aegisCaseStudy.confidentiality.heading,
-];
+/**
+ * The closing is navigation-only: it renders as a labelled `nav`, not a
+ * heading-bearing section, so it contributes no `h2`.
+ */
+const EXPECTED_H2_ORDER = caseStudyBodySections(aegisCaseStudy).map(
+  (section) => section.heading,
+);
 
 describe("/work/aegis metadata", () => {
   it("exports the approved static title and description", () => {
-    expect(metadata.title).toBe("Aegis — Fraud Intelligence Case Study");
+    expect(metadata.title).toBe(
+      "Aegis — Production Fraud Intelligence Platform",
+    );
     expect(metadata.description).toBe(
-      "Fraud intelligence and investigation software for the iGaming industry, presented through verified engineering decisions and evidence.",
+      "How I designed and built a production fraud-investigation platform for Brazilian iGaming, from explainable rules and data pipelines to security and WebGL.",
     );
   });
 });
 
 describe("/work/aegis document structure", () => {
   it("keeps one h1 and the contract heading order", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
 
     expect(
       screen.getByRole("heading", { level: 1, name: "Aegis" }),
@@ -41,7 +46,7 @@ describe("/work/aegis document structure", () => {
   });
 
   it("exposes banner, main, and contentinfo landmarks", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
 
     expect(screen.getByRole("banner")).toBeInTheDocument();
     expect(screen.getByRole("contentinfo")).toBeInTheDocument();
@@ -49,7 +54,7 @@ describe("/work/aegis document structure", () => {
   });
 
   it("provides the skip-link and back-to-top anchor targets", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
 
     const skipLink = screen.getByRole("link", {
       name: siteNavigation.skipLink,
@@ -65,12 +70,9 @@ describe("/work/aegis document structure", () => {
   });
 
   it("gives every section an id matching its labelling heading", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
 
-    for (const section of [
-      ...caseStudyBodySections(aegisCaseStudy),
-      aegisCaseStudy.confidentiality,
-    ]) {
+    for (const section of caseStudyBodySections(aegisCaseStudy)) {
       const element = document.querySelector(`section#${section.id}`);
       expect(element).not.toBeNull();
       expect(element).toHaveAttribute(
@@ -79,11 +81,24 @@ describe("/work/aegis document structure", () => {
       );
     }
   });
+
+  it("closes on a labelled navigation landmark rather than a section", () => {
+    renderWithLocale(<AegisCaseStudyPage />);
+
+    const closing = aegisCaseStudy.confidentiality;
+    expect(document.querySelector(`section#${closing.id}`)).toBeNull();
+
+    const nav = document.querySelector(`nav#${closing.id}`);
+    expect(nav).not.toBeNull();
+    expect(nav).toHaveAttribute("aria-label", closing.heading);
+    // The landmark name must not surface as visible page copy.
+    expect(screen.queryByRole("heading", { name: closing.heading })).toBeNull();
+  });
 });
 
 describe("/work/aegis navigation", () => {
   it("sends shared header navigation back to the homepage", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
 
     for (const item of siteNavigation.desktop) {
       for (const link of screen.getAllByRole("link", { name: item.label })) {
@@ -96,8 +111,8 @@ describe("/work/aegis navigation", () => {
     ).toHaveAttribute("href", "/#top");
   });
 
-  it("offers the approved in-page return and contact actions", () => {
-    render(<AegisCaseStudyPage />);
+  it("offers the approved in-page return and next-chapter actions", () => {
+    renderWithLocale(<AegisCaseStudyPage />);
 
     const backLinks = screen.getAllByRole("link", {
       name: "Back to selected work",
@@ -107,13 +122,14 @@ describe("/work/aegis navigation", () => {
       expect(link).toHaveAttribute("href", "/#work");
     }
 
+    // The chapter paginates into Quant rather than back to the contact anchor.
     expect(
-      screen.getByRole("link", { name: "Get in touch" }),
-    ).toHaveAttribute("href", "/#contact");
+      screen.getByRole("link", { name: "Next project: Quant" }),
+    ).toHaveAttribute("href", "/work/q");
   });
 
   it("keeps every destination same-origin and publishes no repository link", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
 
     const hrefs = Array.from(document.querySelectorAll("a")).map(
       (anchor) => anchor.getAttribute("href") ?? "",
@@ -129,7 +145,7 @@ describe("/work/aegis navigation", () => {
 
 describe("/work/aegis private-source behaviour", () => {
   it("renders the live environment as a disabled, non-interactive control", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
 
     const control = screen.getByRole("button", {
       name: "Live environment — coming soon",
@@ -140,7 +156,7 @@ describe("/work/aegis private-source behaviour", () => {
   });
 
   it("states the private source in the hero facts", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
 
     const term = screen.getByText("Source");
     expect(term.tagName).toBe("DT");
@@ -148,7 +164,7 @@ describe("/work/aegis private-source behaviour", () => {
   });
 
   it("renders no documentation placeholder anywhere in the page text", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
 
     const html = document.body.innerHTML;
     expect(html).not.toContain("[REQUIRED:");
@@ -169,7 +185,7 @@ describe("/work/aegis system map", () => {
   }
 
   it("renders inside the system section, after the prose it explains", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
     const section = systemSection();
 
     const lists = section.querySelectorAll("ol");
@@ -191,7 +207,7 @@ describe("/work/aegis system map", () => {
   });
 
   it("states every node as real text rather than an image or canvas", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
     const section = systemSection();
 
     for (const label of [
@@ -213,7 +229,7 @@ describe("/work/aegis system map", () => {
   });
 
   it("names each path so the two lists are distinguishable", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
     const section = systemSection();
 
     for (const name of [
@@ -226,7 +242,7 @@ describe("/work/aegis system map", () => {
   });
 
   it("keeps the connectors decorative and out of the accessibility tree", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
     const section = systemSection();
 
     const hidden = section.querySelectorAll('[aria-hidden="true"]');
@@ -238,7 +254,7 @@ describe("/work/aegis system map", () => {
   });
 
   it("exposes no confidential identifier, company name, or invented figure", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
     const text = systemSection().textContent ?? "";
 
     for (const forbidden of [
@@ -262,10 +278,10 @@ describe("/work/aegis system map", () => {
 
 describe("/work/aegis media", () => {
   it("renders each screenshot with alt text and a visible caption", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
 
     const images = Array.from(document.querySelectorAll("img"));
-    expect(images).toHaveLength(5);
+    expect(images).toHaveLength(4);
 
     for (const image of images) {
       expect(image.getAttribute("alt")?.trim()).toBeTruthy();
@@ -284,7 +300,7 @@ describe("/work/aegis media", () => {
   });
 
   it("keeps the intro poster-first, controlled, and never autoplaying", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
 
     const video = document.querySelector("video");
     expect(video).not.toBeNull();
@@ -300,9 +316,9 @@ describe("/work/aegis media", () => {
   });
 
   it("renders the silent film's transcript as visible text", () => {
-    render(<AegisCaseStudyPage />);
+    renderWithLocale(<AegisCaseStudyPage />);
 
-    const { video } = aegisCaseStudy.decisions[3];
+    const { video } = aegisCaseStudy.hero;
     expect(screen.getByText(video?.title as string)).toBeInTheDocument();
     expect(
       screen.getByText(video?.transcript as string),

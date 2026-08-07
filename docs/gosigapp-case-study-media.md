@@ -4,13 +4,21 @@
 
 **gosigapp** is a backend compliance pipeline with no graphic user interface. Following the owner directive (2026-08-03), no cloud-console screenshots (AWS Console, GitHub Actions UI) are included to eliminate any risk of exposing account IDs, ARNs, or private resource names.
 
-Per owner directive (2026-08-03), artificial file-size ceilings (such as 400 KiB) have been removed. Media deliverables are rendered at high resolution (2560×1440 @ 2x DPR / 5120×2880 rendering) at maximum 100% WebP quality to deliver ultra-sharp typography and terminal presentation.
+Per owner directive (2026-08-03), artificial file-size ceilings (such as 400 KiB) have been removed. Evidence-media deliverables are rendered at high resolution (2560×1440 @ 2x DPR / 5120×2880 rendering) at maximum 100% WebP quality to deliver ultra-sharp typography and terminal presentation.
 
-The media asset set for `/work/gosigapp` consists of:
+The evidence-media asset set for `/work/gosigapp` consists of:
 1. A clean, vector SVG architecture system map (`system-map.svg`) illustrating the end-to-end processing pipeline, security boundaries, and reliability components.
 2. High-resolution terminal WebP captures (`cli-pipeline-run.webp`, `compliance-check-output.webp`) demonstrating stage-by-stage execution and pre-submission compliance audit matrix output against fixture configuration.
 
-All assets are inventoried in `public/work/gosigapp/` and verified against the WO-029 evidence register (`docs/gosigapp-case-study-evidence.md`).
+The homepage Work section additionally uses `gosigapp-portfolio.webp`, an
+AI-generated architectural illustration derived from the verified pipeline.
+It is presentation artwork, not source evidence, a product screenshot, or a
+literal system diagram.
+
+All shipped media assets in `public/work/gosigapp/` are inventoried below. The
+three evidence assets are verified against the WO-029 evidence register
+(`docs/gosigapp-case-study-evidence.md`); the homepage cover is explicitly
+classified as illustrative artwork rather than evidence.
 
 ---
 
@@ -21,6 +29,7 @@ All assets are inventoried in `public/work/gosigapp/` and verified against the W
 | `system-map.svg` | Vector SVG | 1200×680 (viewBox) | 8,450 | `aee5e1fe7501507c37cceb9e6d88dd95a3d601f2392fc270a9401ab3d1bd66e8` | `SYS-01`–`05`, `SEC-01`–`02`, `OPS-01`–`04`, `MEDIA-01`, `DEC-01` | **PASSED** (0 account IDs, 0 bucket names, 0 brand codes) |
 | `cli-pipeline-run.webp` | Raster WebP (High-Res 2x DPR) | 5120×2880 | 190,326 | `dd0b7b43e0d9ffd6894e8facded5485c7c2a52d98af4a0f4192c99eb602d1c40` | `SYS-01`, `SYS-02`, `SYS-03`, `SEC-01`, `SEC-02`, `OPS-01` | **PASSED** (Generic `operator-fixture`, staging env, 0 secrets) |
 | `compliance-check-output.webp` | Raster WebP (High-Res 2x DPR) | 5120×2880 | 166,248 | `734b33981d05c6c0022b3f3f91df5cb711d0e1f4c0ab1f886d2acf2a6e715d04` | `SYS-02`, `SYS-04`, `SYS-05`, `SEC-01`, `SEC-02` | **PASSED** (Generic compliance matrix, 0 PII / CPFs, 0 brand codes) |
+| `gosigapp-portfolio.webp` | AI-generated architectural illustration | 1600×900 | 91,306 | `18ed5711923ce51ad091adf92df6694e9474ef596bdd274dfa00fa3f62c02ea5` | Visual interpretation of `SYS-01`, `SEC-01`, `SEC-02`; **not evidence** | **PASSED** (No text, customer data, credentials, operator identity, government marks, or cloud-provider logos) |
 
 ---
 
@@ -44,14 +53,27 @@ All assets are inventoried in `public/work/gosigapp/` and verified against the W
 - **Description**: Displays the 4 pre-submission audit checks: (1) XSD Schema Conformance for all 6 SIGAP dataset types, (2) Digital Signature & Cryptographic Packaging (RSA-SHA256 PKCS#12 certificate integrity), (3) SIGAP API Impedidos v2 self-exclusion registry check (`GET /impedimento/v2/condicao/{cpf}`), and (4) Multi-Brand Partitioning & Header Integrity.
 - **Leakage Inspection Result**: PASSED. Displays generic compliance matrix output against fixture dataset. Zero real bettor CPFs, confidential brand codes, PFX credentials, or internal paths.
 
+### 4. `gosigapp-portfolio.webp`
+- **Subject**: Cinematic data-processing sculpture representing archive ingestion, XML/XSD transformation, cryptographic signing, compression/encoding, mutual-TLS authentication, and API submission.
+- **Approved Use**: gosigapp cover in the homepage Work section.
+- **Origin**: Generated with OpenAI ImageGen through the Creative Production workflow on 2026-08-06, then center-cropped and exported as an exact 1600×900 WebP with metadata removed.
+- **Disclosure Boundary**: Illustrative presentation artwork only. It does not depict a real deployment, cloud console, payload, operator, or measured system outcome.
+- **Leakage Inspection Result**: PASSED. No readable text, customer data, credentials, operator identity, government marks, AWS logos, or production payloads.
+
 ---
 
-## Capture Methodology and High-Quality Standards
+## Evidence Capture Methodology and High-Quality Standards
 
 - **Quality Standard**: Rendered at **2560×1440 with 2x device scale factor (5120×2880 rendering)** via headless Chrome (`google-chrome --headless --force-device-scale-factor=2`) and converted to WebP at **100% quality** via ImageMagick (`magick convert -quality 100`).
 - **Terminal Chrome**: Minimal, generic dark window chrome (`#0c0f17` background, `#141824` titlebar, standard window buttons, generic prompt `$ gosigapp ...`).
 - **Redaction Verification**: Machine text search over SVG markup and automated inspection of HTML source templates confirmed zero occurrences of `BRX`, `RICO`, real AWS Account IDs, ARNs, real S3 bucket names, PFX passwords, or bettor PII.
 - **Unrestricted Quality**: Artificial file-size caps have been removed. File sizes (190.3 KiB and 166.2 KiB) achieve maximum crispness and zero compression artifacts.
+
+## Homepage Cover Export
+
+- **Generation**: OpenAI ImageGen, Creative Production board `266ef5ce-fc9f-4344-acab-2731dd18cb5d`.
+- **Export**: Native 1672×941 PNG center-cropped by one pixel to 1672×940, resized to 1600×900, encoded as WebP quality 82, and stripped of metadata.
+- **Visual review**: Confirmed as a dark cinematic architecture illustration with no public disclosure leakage. The composition keeps its essential subject inside the central crop-safe region used by the homepage aperture.
 
 ---
 

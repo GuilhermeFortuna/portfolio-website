@@ -94,6 +94,11 @@ Positioning → problem → goal → why difficult → system → 2–4 decision
 ## Aegis case study
 
 **Status:** accepted facts from WO-018, with the WO-020 content contract drafted.
+Both locales rewritten for voice 2026-08-05 (see the decisions under *Known
+gaps*). The Brazilian Portuguese chapter is now a complete authored object: the
+14 `...aegisCaseStudy` spreads are gone, so neither locale inherits visible copy
+from the other, matching Quant, gosigapp, and Nexo Dental. An i18n test asserts
+no English heading or action label survives into `/pt-BR/work/aegis`.
 The claim-level evidence register and public disclosure boundary is
 [`aegis-case-study-evidence.md`](./aegis-case-study-evidence.md); it is
 authoritative for every publishable Aegis claim and its classification.
@@ -160,8 +165,36 @@ inventoried in [`aegis-case-study-media.md`](./aegis-case-study-media.md)
 - The Playwright end-to-end suite is written but skipped.
 - The Risk Constellation is tested to ~350k points, not multi-million.
 
-All three are stated in the published copy rather than glossed over; see the
-`Delivered` section of the content contract.
+**DECISION (2026-08-05, owner-approved):** these three gaps are **no longer
+published**. They remain authoritative here as register facts and continue to
+bound what the public copy may assert. The rule is now asymmetric: the copy may
+omit a gap, but may never claim its opposite. A test
+(`never converts an unpublished gap into a positive claim`) enforces that the
+`Delivered` copy makes no login, end-to-end-coverage, or million-point claim.
+
+**DECISION (2026-08-05, owner-approved):** the Aegis copy was rewritten for voice
+and disclaimer load, bringing it into line with the recruiter-focused revisions
+already applied to Quant, gosigapp, and Nexo Dental. Removed: the standalone
+`Real system. Synthetic evidence.` context section, the
+`as far as I know, remains active` hedge on production status, the paragraph
+declining to publish client business metrics, the
+`not a backend case-management system` negation, the known-gaps paragraph, and
+the whole `Private by design, open to discussion` closing note. Accuracy is
+unchanged — no claim was added, widened, or invented.
+
+**DECISION (2026-08-05, owner-approved):** the Aegis chapter now ends on
+pagination, not prose. The closing renders as a labelled `nav` with no heading
+and no paragraphs, carrying `Back to selected work` and
+`Next project: Quant` (`/work/q`, `/pt-BR/work/q`). The old `Discuss Aegis`
+contact action is retired: it returned the reader to the homepage anchor rather
+than advancing them through the work. `CaseStudyClosing.paragraphs` is optional
+to support this; the other three chapters keep their prose closings unchanged.
+
+With the closing note gone, the **image captions are the sole carrier of the
+synthetic-data disclosure**. Every screenshot caption must continue to name its
+data as synthetic, and the `player-investigation.webp` caption must keep
+disclosing the document number per the 2026-07-31 decision below. A test
+(`keeps the synthetic-data disclosure in the published copy`) enforces both.
 
 ### Approved media
 
@@ -198,12 +231,15 @@ are resolved above; no other Aegis input is outstanding.
 ## Quant case study
 
 **Status:** evidence WO-024 `DONE` (2026-08-03); media WO-025 `DONE`
-(2026-08-03); content contract WO-026 `DONE` (owner approved 2026-08-03).
+(2026-08-03); content contract WO-026 `DONE` (owner approved 2026-08-03);
+recruiter-focused bilingual revision implemented 2026-08-05 and awaiting final
+owner copy review. The current screenshot set is temporary and will be replaced
+through the manifest below.
 Authoritative claim register:
 [`q-case-study-evidence.md`](./q-case-study-evidence.md). Authoritative media
 inventory: [`q-case-study-media.md`](./q-case-study-media.md). Exact visible
 copy and placement: [`q-case-study-content.md`](./q-case-study-content.md).
-WO-027 must render that contract verbatim.
+The routes must render that contract verbatim in their selected locale.
 
 ### Accepted facts
 
@@ -272,44 +308,54 @@ WO-027 must render that contract verbatim.
   rename to `Quant` is tracked for WO-027.
 - Native desktop-shell screenshot (WO-025 subject 12) remains `DEFERRED`.
 
-### Approved media
+### Media state and replacement contract
 
-Eleven WebP assets in `public/work/q/` per
-[`q-case-study-media.md`](./q-case-study-media.md). WO-026 places five on the
-chapter (`launcher`, `system`, `dock`, `walkforward`, `execution`); six plus
-the deferred shell capture are reserved for a later visual batch.
+The existing WebP assets in `public/work/q/` remain temporary and must not
+determine the new narrative. The recruiter revision currently references only
+existing files so the route never publishes missing assets. The owner will
+replace the set through the exact future paths and shot requirements in
+[`q-case-study-content.md`](./q-case-study-content.md). `identity.webp` is
+optional; omit identity media until a genuine approved render exists. Do not
+render `identity-placeholder.svg` or any pending-asset message.
 
-### Narrative (WO-026)
+### Narrative
 
 Exact headings, visible copy, media placement, alt text, and captions live in
 [`q-case-study-content.md`](./q-case-study-content.md). Metadata title for the
 route remains `Quant — Quantitative Research and Execution`. Hero meta uses
-Role `Founder and sole developer`, Period `April 2026–present`, State
-`Research and backtesting`, Source `Private`, and **no** hero actions.
+Role `Founder, Product Engineer, and sole developer`, Period
+`April 2026–present`, State `Research, backtesting, and paper execution`, Source
+`Private`, and **no** live-environment action. English is the canonical source;
+Brazilian Portuguese is a complete editorial adaptation with localized body
+copy, media descriptions, captions, and system-map labels.
 
 ### Missing inputs
 
-- Display-name update `Q` → `Quant` in `src/content/projects.ts` (WO-027).
-- Optional later recapture of the native desktop shell.
+- Owner review of the complete recruiter-focused English and Brazilian
+  Portuguese copy.
+- Owner-supplied replacement screenshots at the exact paths in the content
+  contract, followed by independent visual and disclosure review.
 
 ## gosigapp case study
 
-**Status:** content contract WO-031 `DONE` (2026-08-03).
+**Status:** content contract WO-031 `DONE` (2026-08-03); recruiter-focused bilingual revision implemented 2026-08-05.
 Authoritative claim register: [`gosigapp-case-study-evidence.md`](./gosigapp-case-study-evidence.md).
 Authoritative content contract: [`gosigapp-case-study-content.md`](./gosigapp-case-study-content.md).
 
 ### Accepted facts
 
-- **FACT (owner):** Public name is **gosigapp**. Category: government compliance / backend pipeline (`Reliable SIGAP Submission Pipeline`). Route slug is `gosigapp` (`/work/gosigapp`).
+- **FACT (owner):** Public name is **gosigapp**. Recruiter-facing category: regulated systems / backend platform (`Regulated Submission Infrastructure in Go`). Route slug is `gosigapp` (`/work/gosigapp`).
 - **FACT (owner):** Built for an unnamed betting operator in the **Brazilian iGaming** sector to satisfy that operator's legal duty to submit daily and monthly regulatory files to SIGAP.
-- **FACT (owner):** Role: **Software Developer**, sole author, designed and built every layer with AI assistance.
-- **FACT (owner):** Repository history spans **2025-12-24** through **2026-06-22** (100 commits total, single author `Guilherme Fortuna dos Santos`).
-- **FACT (owner):** Deployed to AWS ECS/Fargate (`Dockerfile`, `.github/workflows/deploy.yml`, `gosigapp-task-definition.json`, `iam-policies/` present). As far as the owner knows, still active.
+- **FACT (owner):** Role: **Software Developer** and sole human developer; designed and built every layer with AI assistance.
+- **FACT (owner):** Repository history spans **2025-12-24** through **2026-06-22** (100 commits total). The commit count remains evidence-register context and is not visible recruiter copy.
+- **FACT (owner/source):** Deployed via AWS ECS/Fargate (`Dockerfile`, `.github/workflows/deploy.yml`, `gosigapp-task-definition.json`, `iam-policies/` present). Current live operational status is not independently verified.
+- **FACT (external):** The official SIGAP technical manual defines six categories of operational data and daily/monthly reporting schedules. This supports deadline-bound regulatory framing, not a direct claim that one malformed or late submission causes license suspension.
 - **FACT (source):** Verified pipeline — S3 fetch → ZIP extraction → XML validation/aggregation → PFX RSA-SHA256 digital signing → gzip compression → base64 encoding → mTLS SIGAP API submission.
 - **FACT (source):** Six SIGAP dataset types — `apostadores` (bettors), `carteiras` (wallets), `esportivas` (sports betting), `jogos` (online casino), `diarios` (daily operator aggregate), and `mensais` (monthly operator aggregate).
 - **FACT (source):** Primary CLI pipeline runner (`cmd/pipeline`) and HTTP API server (`cmd/server`) for service integration, plus seven supporting utility commands (`backfill`, `compliance-check`, `date-detail`, `downloader-batch`, `downloader-monthly`, `migrate-logs`, `refresh-token`).
 - **FACT (source):** `internal/impedidos` queries the official SIGAP API Impedidos v2 endpoint (`GET /impedimento/v2/condicao/{cpf}`) for bettor self-exclusion and restriction checks (SPA/MF-SIGAP-001/2026).
-- **FACT (source):** Retry & auditability mechanics — durable log storage backed by AWS DynamoDB (`internal/logstore/dynamodb.go`), asynchronous job runner with full lifecycle tracking (`queued`, `running`, `completed`, `failed`, `cancelled`), and automated cron-style scheduler (`internal/scheduler`).
+- **FACT (source):** Retry & auditability mechanics — network/5xx failures receive up to two bounded retries with backoff; 4xx responses do not retry. Durable log storage uses AWS DynamoDB, and the asynchronous job runner tracks `queued`, `running`, `completed`, `failed`, and `cancelled` states.
+- **FACT (source):** Recovery mechanics — `cmd/backfill` checks SIGAP status before processing missing dates, while duplicate-batch responses are treated as already submitted. Describe this as status-aware recovery, not guaranteed idempotency.
 - **FACT (source):** Security boundary — PKCS#12 PFX certificate digital signing (RSA-SHA256 XML signatures `ds:Signature`) and mTLS authentication with OAuth2 token caching.
 - **DECISION:** Omit live-environment hero control (backend/CLI pipeline with no public UI).
 - **DECISION:** Media deliverables limited to an architecture system-map diagram and sanitized CLI/log text captures against fixture data (no cloud-console screenshots).
@@ -326,15 +372,18 @@ Authoritative content contract: [`gosigapp-case-study-content.md`](./gosigapp-ca
 
 ### Missing inputs
 
-- None. WO-030 (media captures) and WO-031 (content contract) complete. Ready for WO-032 implementation.
+- None. English and Brazilian Portuguese recruiter copy, media captures, and implementation are complete.
 
 ## Nexo Dental case study
 
 **Status:** evidence WO-034 `DONE` (2026-08-04); media WO-035 `DONE`
-(2026-08-04); content contract WO-036 `DONE` (owner approved 2026-08-04).
+(2026-08-04); historical content contract WO-036 `DONE` (owner approved
+2026-08-04); hiring-focused bilingual successor WO-039 `REVIEW` (2026-08-05).
 Authoritative claim register:
 [`nexo-dental-case-study-evidence.md`](./nexo-dental-case-study-evidence.md).
-Exact visible copy:
+Current content contract:
+[`nexo-dental-case-study-content-v2.md`](./nexo-dental-case-study-content-v2.md).
+Historical WO-036 copy:
 [`nexo-dental-case-study-content.md`](./nexo-dental-case-study-content.md).
 Media manifest:
 [`nexo-dental-case-study-media.md`](./nexo-dental-case-study-media.md).
@@ -369,6 +418,9 @@ Media manifest:
   present in-repo (source WO-STATUS still marks core BI WOs incomplete —
   do not overclaim a finished BI program). Adjacent action-queue and
   role-native AI operator surfaces exist in code.
+- **FACT (source, rechecked 2026-08-05):** Automated coverage is organized in
+  50 backend `test_*.py` files and 134 frontend `*.test.ts*` files. These are
+  test-file counts, not coverage percentages or evidence of production scale.
 - **FACT (source):** Firebase Hosting staging config exists in the frontend
   repository, but source Work Orders WO23–WO26 are `BLOCKED` / review-
   rejected — **no verified live staging URL**.
@@ -410,8 +462,8 @@ MSW mocks only. Content contract places eight
 
 ### Missing inputs
 
-- None. WO-035 (media) and WO-036 (content contract) are complete. Ready for
-  WO-037 implementation.
+- Owner acceptance of the exact English and Brazilian Portuguese WO-039 copy.
+  WO-039 remains `REVIEW`; WO-038 stays blocked until that approval is recorded.
 
 ## Metadata
 
@@ -422,10 +474,10 @@ The validated route metadata registry is shared by the client router and the sta
 | `/` | `Guilherme — Software Developer | AI, Product, Data & Infrastructure` | `A cinematic engineering portfolio featuring fraud intelligence, quantitative systems, government integration, and AI-first product development.` |
 | `/process` | `Engineering Process — Guilherme` | `How I move from difficult ideas through architecture, AI-agent execution, implementation, testing, and deployment.` |
 | `/about` | `About Guilherme — Software Developer` | `A product-minded software developer working across interfaces, architecture, data, automation, and infrastructure.` |
-| `/work/aegis` | `Aegis — Fraud Intelligence Case Study` | `Fraud intelligence and investigation software for the iGaming industry, presented through verified engineering decisions and evidence.` |
-| `/work/q` | `Quant — Quantitative Research and Execution` | `A quantitative research and execution system covering backtesting, optimization, data pipelines, and execution architecture.` |
-| `/work/gosigapp` | `gosigapp — Reliable SIGAP Submission Pipeline` | `A Go backend pipeline for file validation, processing, retries, auditability, and submission to SIGAP.` |
-| `/work/nexo-dental` | `Nexo Dental — Multi-Tenant Clinic Operations` | `A multi-tenant product for Brazilian dental clinics spanning scheduling, clinical records, finance, communications, CRM, claims, and reporting across role-native surfaces.` |
+| `/work/aegis` | `Aegis — Production Fraud Intelligence Platform` | `How I designed and built a production fraud-investigation platform for Brazilian iGaming, from explainable rules and data pipelines to security and WebGL.` |
+| `/work/q` | `Quant — Quantitative Research and Execution` | `How I designed and built a native quantitative research platform across desktop UX, asynchronous services, market-data pipelines, validation, and paper execution.` |
+| `/work/gosigapp` | `gosigapp — Regulated Submission Infrastructure in Go` | `How I designed and deployed a Go pipeline that validates, signs, retries, audits, and submits six regulated datasets to Brazil's SIGAP.` |
+| `/work/nexo-dental` | `Nexo Dental — Founder-Built Clinic Operations` | `How I designed and built a multi-tenant dental-clinic product across role-native workflows, data isolation, clinical modelling, and reviewable AI assistance.` |
 | `/contact` | `Contact Guilherme — Build Something Difficult` | `Contact Guilherme about remote software engineering, ambitious product development, and difficult systems.` |
 
 - Global OG default title: `Guilherme builds ambitious software systems.`

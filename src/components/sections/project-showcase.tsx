@@ -13,42 +13,7 @@ type ProjectShowcaseProps = {
   projects: readonly Project[];
 };
 
-type KnownProjectSlug = "aegis" | "q" | "gosigapp" | "nexo-dental";
-
 const DESKTOP_QUERY = "(min-width: 1024px)";
-
-function isKnownProjectSlug(slug: string): slug is KnownProjectSlug {
-  switch (slug) {
-    case "aegis":
-    case "q":
-    case "gosigapp":
-    case "nexo-dental":
-      return true;
-    default:
-      return false;
-  }
-}
-
-function apertureAccent(slug: string): string {
-  if (!isKnownProjectSlug(slug)) {
-    return "#8EA0FF";
-  }
-
-  switch (slug) {
-    case "aegis":
-      return "#8EA0FF";
-    case "q":
-      return "#68D7C5";
-    case "gosigapp":
-      return "#B49CFF";
-    case "nexo-dental":
-      return "#8EA0FF";
-    default: {
-      const _exhaustive: never = slug;
-      return _exhaustive;
-    }
-  }
-}
 
 /*
  * The case-study link is a real link only where a route exists. Projects
@@ -122,8 +87,7 @@ function ProjectAperture({
     <div
       ref={slotRef}
       data-aperture-slot={slug}
-      className="relative aspect-video overflow-hidden rounded-[var(--radius-lg)] border"
-      style={{ borderColor: "var(--color-line)" }}
+      className="relative aspect-video overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-line)]"
     >
       {media ? (
         <img
@@ -137,11 +101,6 @@ function ProjectAperture({
           className="h-full w-full object-cover"
         />
       ) : null}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{ boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${apertureAccent(slug)} 20%, transparent)` }}
-      />
     </div>
   );
 }
@@ -223,7 +182,6 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
             top: slotBox.top - sectionBox.top,
             width: slotBox.width,
             height: slotBox.height,
-            borderColor: apertureAccent(projects[index].slug),
           });
 
           if (state) {
@@ -369,8 +327,7 @@ export function ProjectShowcase({ projects }: ProjectShowcaseProps) {
           <div
             ref={apertureRef}
             aria-hidden="true"
-            className="pointer-events-none absolute z-10 hidden overflow-hidden rounded-[var(--radius-lg)] border opacity-0 lg:block"
-            style={{ borderColor: "var(--color-line)" }}
+            className="pointer-events-none absolute z-10 hidden overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-line)] opacity-0 lg:block"
           >
             <img
               ref={(element) => {

@@ -16,7 +16,7 @@ import { cn } from "@/lib/cn";
 const HOME_SECTION_IDS = ["work", "process", "about", "contact"] as const;
 
 const linkClassName =
-  "relative inline-flex min-h-9 px-3 py-1.5 items-center justify-center rounded-full [font-family:var(--font-geist-mono)] text-[0.75rem] font-semibold tracking-[0.14em] uppercase transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)]";
+  "relative inline-flex min-h-9 px-1.5 py-1.5 sm:px-3 items-center justify-center rounded-full [font-family:var(--font-geist-mono)] text-[0.75rem] font-semibold tracking-[0.14em] uppercase transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)]";
 
 function NavLinkList({
   items,
@@ -85,7 +85,7 @@ export function SiteHeader() {
           scrolled ? "py-2" : "py-3 lg:py-4",
         )}
       >
-        <div className="mx-auto flex h-14 max-w-[var(--content-wide)] items-center justify-between rounded-full border border-[var(--color-line-strong)] bg-[var(--color-surface)]/80 px-4 lg:px-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl transition-all duration-[var(--duration-medium)]">
+        <div className="mx-auto flex h-14 max-w-[var(--content-wide)] items-center justify-between rounded-full border border-[var(--color-line-strong)] bg-[var(--color-surface)]/80 px-2 sm:px-4 lg:px-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-xl transition-all duration-[var(--duration-medium)]">
           <a
             href={siteNavigation.wordmarkHref}
             aria-label={siteContent.wordmark}
@@ -94,11 +94,11 @@ export function SiteHeader() {
             <span className="font-semibold tracking-[0.08em] sm:tracking-[0.12em]">
               {wordmarkFirst}
             </span>
-            <span className="font-light tracking-[0.14em] text-[var(--color-text-muted)] transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover:text-[var(--color-text)] sm:tracking-[0.28em]">
+            <span className="hidden font-light tracking-[0.14em] text-[var(--color-text-muted)] transition-colors duration-[var(--duration-fast)] ease-[var(--ease-standard)] group-hover:text-[var(--color-text)] sm:inline sm:tracking-[0.28em]">
               {wordmarkLast}
             </span>
           </a>
-          <div className="flex items-center gap-4 lg:gap-6">
+          <div className="flex items-center gap-1 sm:gap-4 lg:gap-6">
             <LayoutGroup>
               <NavLinkList
                 items={siteNavigation.desktop}

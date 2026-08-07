@@ -1,4 +1,3 @@
-import { LanguageProvider } from "@/components/i18n/language-context";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ScrollChoreography } from "@/components/layout/scroll-choreography";
@@ -10,7 +9,7 @@ import { SelectedWorkSection } from "@/components/sections/selected-work-section
 
 export default function Home() {
   return (
-    <LanguageProvider locale="en">
+    <>
       <SiteHeader />
       <ScrollChoreography>
         <HeroSection />
@@ -20,6 +19,6 @@ export default function Home() {
         <ContactSection />
       </ScrollChoreography>
       <SiteFooter />
-    </LanguageProvider>
+    </>
   );
 }

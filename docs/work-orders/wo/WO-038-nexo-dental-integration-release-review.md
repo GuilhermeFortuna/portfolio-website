@@ -15,7 +15,8 @@ of the case-study series.
 
 ## Prerequisites
 
-- WO-037 `DONE`, committed and frozen at a named commit
+- WO-037 `DONE`
+- WO-039 `DONE`, owner-approved and committed at a named freeze commit
 
 ## Files to Create or Modify
 
@@ -31,13 +32,16 @@ under.
 
 ## Review Scope
 
-Review the frozen WO-037 commit against a **production build** (`next
+Review the frozen WO-039 commit against a **production build** (`next
 build` + `next start`), never a dev server.
 
 ### 1. Truth and disclosure
 
-- Every visible string matches the WO-036 contract verbatim; report the
+- Every visible string matches the WO-039 successor contract
+  `docs/nexo-dental-case-study-content-v2.md`; report the
   block count and mismatch count.
+- English and Brazilian Portuguese render complete authored content with the
+  same stable section IDs and media paths and no cross-locale prose fallback.
 - Every claim traces to an accepted WO-034 claim ID.
 - No operational-metric claim (clinic count, patient count, adoption,
   uptime) is stated as a real result.
@@ -103,7 +107,7 @@ build` + `next start`), never a dev server.
 
 ## Procedure
 
-1. Freeze the WO-037 commit and record it.
+1. Freeze the owner-approved WO-039 commit and record it.
 2. Build for production and serve it. Record versions of every engine
    used.
 3. Work the scope above in order, recording evidence per item — viewport,

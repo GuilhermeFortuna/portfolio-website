@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import QuantCaseStudyPage, { metadata } from "@/app/work/q/page";
+import QuantCaseStudyPage, { metadata } from "@/app/(en)/work/q/page";
+import { QSystemMap } from "@/components/case-study/q-system-map";
 import { caseStudyBodySections, qCaseStudy } from "@/content/case-studies";
 import { siteNavigation } from "@/content/site";
-import { render, screen, within } from "@/test/render";
+import { render, renderWithLocale, screen, within } from "@/test/render";
 
 /**
  * The case-study route is fully static: no effect, hook, or client runtime is
@@ -19,14 +20,14 @@ describe("/work/q metadata", () => {
   it("exports the approved static title and description", () => {
     expect(metadata.title).toBe("Quant — Quantitative Research and Execution");
     expect(metadata.description).toBe(
-      "A native quantitative research platform for the Brazilian futures market, covering backtesting, optimization, data pipelines, and execution architecture.",
+      "How I designed and built a native quantitative research platform across desktop UX, asynchronous services, market-data pipelines, validation, and paper execution.",
     );
   });
 });
 
 describe("/work/q document structure", () => {
   it("keeps one h1 and the contract heading order", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
 
     expect(
       screen.getByRole("heading", { level: 1, name: "Quant" }),
@@ -41,7 +42,7 @@ describe("/work/q document structure", () => {
   });
 
   it("exposes banner, main, and contentinfo landmarks", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
 
     expect(screen.getByRole("banner")).toBeInTheDocument();
     expect(screen.getByRole("contentinfo")).toBeInTheDocument();
@@ -49,7 +50,7 @@ describe("/work/q document structure", () => {
   });
 
   it("provides the skip-link and back-to-top anchor targets", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
 
     const skipLink = screen.getByRole("link", {
       name: siteNavigation.skipLink,
@@ -64,7 +65,7 @@ describe("/work/q document structure", () => {
   });
 
   it("gives every section an id matching its labelling heading", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
 
     for (const section of [
       ...caseStudyBodySections(qCaseStudy),
@@ -82,7 +83,7 @@ describe("/work/q document structure", () => {
 
 describe("/work/q navigation", () => {
   it("sends shared header navigation back to the homepage", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
 
     for (const item of siteNavigation.desktop) {
       for (const link of screen.getAllByRole("link", { name: item.label })) {
@@ -96,7 +97,7 @@ describe("/work/q navigation", () => {
   });
 
   it("offers the approved in-page return and contact actions", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
 
     const backLinks = screen.getAllByRole("link", {
       name: "Back to selected work",
@@ -107,12 +108,12 @@ describe("/work/q navigation", () => {
     }
 
     expect(
-      screen.getByRole("link", { name: "Get in touch" }),
+      screen.getByRole("link", { name: "Discuss Quant" }),
     ).toHaveAttribute("href", "/#contact");
   });
 
   it("keeps every destination same-origin and publishes no repository link", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
 
     const hrefs = Array.from(document.querySelectorAll("a")).map(
       (anchor) => anchor.getAttribute("href") ?? "",
@@ -128,7 +129,7 @@ describe("/work/q navigation", () => {
 
 describe("/work/q private-source behaviour", () => {
   it("omits the live-environment control entirely", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
 
     expect(
       screen.queryByRole("button", { name: /live environment/i }),
@@ -137,7 +138,7 @@ describe("/work/q private-source behaviour", () => {
   });
 
   it("states the private source in the hero facts", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
 
     const term = screen.getByText("Source");
     expect(term.tagName).toBe("DT");
@@ -145,7 +146,7 @@ describe("/work/q private-source behaviour", () => {
   });
 
   it("renders no documentation placeholder anywhere in the page text", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
 
     const html = document.body.innerHTML;
     expect(html).not.toContain("[REQUIRED:");
@@ -165,7 +166,7 @@ describe("/work/q system map", () => {
   }
 
   it("renders inside the system section, after the prose it explains", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
     const section = systemSection();
 
     const lists = section.querySelectorAll("ol");
@@ -181,7 +182,7 @@ describe("/work/q system map", () => {
   });
 
   it("states every node as real text rather than an image or canvas", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
     const section = systemSection();
 
     for (const label of [
@@ -203,7 +204,7 @@ describe("/work/q system map", () => {
   });
 
   it("names the nested paths so the lists are distinguishable", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
     const section = systemSection();
 
     for (const name of ["How the stack nests", "What the API depends on"]) {
@@ -212,8 +213,25 @@ describe("/work/q system map", () => {
     }
   });
 
+  it("renders a complete Brazilian Portuguese system map", () => {
+    render(<QSystemMap locale="pt-BR" />);
+
+    expect(
+      screen.getByRole("list", { name: "Como a stack se organiza" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("list", { name: "Dependências da API" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Shell desktop Tauri")).toBeInTheDocument();
+    expect(screen.getByText("Pool de workers Dramatiq")).toBeInTheDocument();
+    expect(
+      screen.getByText(/trading ao vivo bloqueado/i),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("How the stack nests")).toBeNull();
+  });
+
   it("keeps the connectors decorative and out of the accessibility tree", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
     const section = systemSection();
 
     const hidden = section.querySelectorAll('[aria-hidden="true"]');
@@ -224,7 +242,7 @@ describe("/work/q system map", () => {
   });
 
   it("exposes the verified execution status and no confidential identifiers", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
     const text = document.body.textContent ?? "";
 
     expect(text.toLowerCase()).toContain("paper");
@@ -247,10 +265,10 @@ describe("/work/q system map", () => {
 
 describe("/work/q media", () => {
   it("renders each screenshot with alt text, dimensions, and captions", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
 
     const images = Array.from(document.querySelectorAll("img"));
-    expect(images).toHaveLength(13);
+    expect(images).toHaveLength(9);
 
     for (const image of images) {
       expect(image.getAttribute("alt")?.trim()).toBeTruthy();
@@ -269,7 +287,7 @@ describe("/work/q media", () => {
   });
 
   it("eager-loads the hero still and lazy-loads every body figure", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
 
     const images = Array.from(document.querySelectorAll("img"));
     expect(images[0]?.getAttribute("loading")).toBe("eager");
@@ -279,7 +297,7 @@ describe("/work/q media", () => {
   });
 
   it("ships no video on this chapter", () => {
-    render(<QuantCaseStudyPage />);
+    renderWithLocale(<QuantCaseStudyPage />);
 
     expect(document.querySelector("video")).toBeNull();
     expect(

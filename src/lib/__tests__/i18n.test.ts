@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { getSiteContent, getSiteNavigation, getSiteMetadata, getFooterContent } from "@/content/site";
 import { getProjects } from "@/content/projects";
-import { getAegisCaseStudy, getQCaseStudy, getCaseStudy } from "@/content/case-studies";
+import {
+  caseStudyBodySections,
+  getAegisCaseStudy,
+  getQCaseStudy,
+  getCaseStudy,
+} from "@/content/case-studies";
 import {
   isValidLocale,
   isPrefixedLocale,
@@ -25,6 +30,11 @@ describe("i18n infrastructure & Brazilian Portuguese content", () => {
     expect(isPrefixedLocale("en")).toBe(false);
     expect(isPrefixedLocale("pt-BR")).toBe(true);
     expect(isPrefixedLocale("fr")).toBe(false);
+  });
+
+  it("does not expose a request-time locale header contract", async () => {
+    const i18n = await import("@/lib/i18n");
+    expect(i18n).not.toHaveProperty("localeHeader");
   });
 
   it("maps document language tags and path locales", () => {
@@ -60,6 +70,24 @@ describe("i18n infrastructure & Brazilian Portuguese content", () => {
     expect(ptSite.heroCtaHref).toBe("/pt-BR/work/aegis");
   });
 
+  // .process-title uses max-width: 12ch; a longer unbreakable word overflows
+  // the left column and paints over .process-support on the desktop grid.
+  it("keeps process title words within the display max-width budget", () => {
+    const maxWordChars = 12;
+
+    for (const locale of locales) {
+      const words = getSiteContent(locale).processTitle.split(/\s+/);
+
+      for (const word of words) {
+        const letters = word.replace(/[^\p{L}\p{M}]/gu, "");
+        expect(
+          letters.length,
+          `${locale} process title word "${word}" exceeds ${maxWordChars}ch`,
+        ).toBeLessThanOrEqual(maxWordChars);
+      }
+    }
+  });
+
   it("provides Portuguese (pt-BR) navigation and footer", () => {
     const ptNav = getSiteNavigation("pt-BR");
     expect(ptNav.wordmarkHref).toBe("/pt-BR/#top");
@@ -88,13 +116,128 @@ describe("i18n infrastructure & Brazilian Portuguese content", () => {
   });
 
   it("provides Portuguese (pt-BR) case studies", () => {
+    const enAegis = getAegisCaseStudy("en");
     const ptAegis = getAegisCaseStudy("pt-BR");
     expect(ptAegis.hero.category).toBe("Inteligência contra fraudes");
     expect(ptAegis.hero.backLink.href).toBe("/pt-BR/#work");
+    expect(ptAegis.metadata).toEqual({
+      title: "Aegis — Plataforma de Inteligência contra Fraudes em Produção",
+      description:
+        "Como projetei e construí uma plataforma de investigação de fraudes em produção para o iGaming brasileiro, de regras explicáveis e pipelines de dados a segurança e WebGL.",
+    });
+    expect(ptAegis.hero.facts).toEqual([
+      { label: "Papel", value: "Desenvolvedor de Software" },
+      { label: "Período", value: "Abril de 2026–presente" },
+      { label: "Estado", value: "Em produção" },
+      { label: "Código-fonte", value: "Privado" },
+    ]);
+    expect(
+      caseStudyBodySections(ptAegis).map((section) => section.id),
+    ).toEqual(caseStudyBodySections(enAegis).map((section) => section.id));
+    expect(ptAegis.system.images?.[0].alt).toContain("Tela de visão geral");
+    expect(ptAegis.delivered?.paragraphs.join(" ")).toContain(
+      "Coloquei o Aegis em produção",
+    );
+    expect(ptAegis.confidentiality.actions[1]).toEqual({
+      label: "Próximo projeto: Quant",
+      href: "/pt-BR/work/q",
+    });
 
+    // The chapter is authored, not spread over the English object: no English
+    // heading or action label may survive into the Portuguese route.
+    const ptAegisVisibleCopy = [
+      ptAegis.hero.deck,
+      ptAegis.hero.support,
+      ...caseStudyBodySections(ptAegis).flatMap((section) => [
+        section.heading,
+        ...section.paragraphs,
+        ...(section.images ?? []).flatMap((image) => [
+          image.alt,
+          image.caption ?? "",
+        ]),
+      ]),
+      ...ptAegis.confidentiality.actions.map((action) => action.label),
+    ].join(" ");
+
+    for (const englishFallback of [
+      "Every investigation started from scratch",
+      "The path a request takes",
+      "I made it a separate product",
+      "I followed the analyst's actual path",
+      "What I built",
+      "What shipped",
+      "What it is built with",
+      "Back to selected work",
+      "Next project: Quant",
+    ]) {
+      expect(ptAegisVisibleCopy).not.toContain(englishFallback);
+    }
+
+    const enQ = getQCaseStudy("en");
     const ptQ = getQCaseStudy("pt-BR");
     expect(ptQ.hero.category).toBe("Sistemas quantitativos");
     expect(ptQ.hero.backLink.href).toBe("/pt-BR/#work");
+    expect(ptQ.hero.deck).toContain("pesquisa disciplinada e inspecionável");
+    expect(ptQ.hero.facts).toContainEqual({
+      label: "Estado",
+      value: "Pesquisa, backtesting e execução simulada",
+    });
+    expect(caseStudyBodySections(ptQ).map((section) => section.id)).toEqual(
+      caseStudyBodySections(enQ).map((section) => section.id),
+    );
+    expect(caseStudyBodySections(ptQ).map((section) => section.heading)).toEqual([
+      "Construído de ponta a ponta como um só produto",
+      "Uma ideia de seis anos, reconstruída para pesquisa disciplinada",
+      "Do contexto de mercado a experimentos inspecionáveis",
+      "Questionar resultados antes de confiar neles",
+      "Manter o trabalho pesado fora do caminho da interação",
+      "Um produto nativo apoiado por serviços assíncronos",
+      "Por que o desktop era a fronteira certa",
+      "Desenvolver com fixtures estáveis",
+      "Transformar validação e segurança de execução em restrições do produto",
+      "O que esteve sob minha responsabilidade",
+      "Tecnologia em toda a stack",
+    ]);
+
+    const ptBody = caseStudyBodySections(ptQ);
+    for (const section of ptBody) {
+      expect(section.paragraphs.join(" ").trim() || section.badges?.length).toBeTruthy();
+      for (const image of section.images ?? []) {
+        expect(image.alt.trim()).not.toBe("");
+        expect(image.caption?.trim()).not.toBe("");
+      }
+    }
+
+    const ptVisibleCopy = [
+      ptQ.hero.deck,
+      ptQ.hero.support,
+      ...ptBody.flatMap((section) => [
+        section.heading,
+        ...section.paragraphs,
+        ...(section.images ?? []).flatMap((image) => [
+          image.alt,
+          image.caption ?? "",
+        ]),
+      ]),
+      ptQ.confidentiality.heading,
+      ...(ptQ.confidentiality.paragraphs ?? []),
+      ...ptQ.confidentiality.actions.map((action) => action.label),
+    ].join(" ");
+
+    for (const englishFallback of [
+      "Built end to end as one product",
+      "Challenge results before trusting them",
+      "Current status and technical walkthrough",
+      "Back to selected work",
+      "Discuss Quant",
+    ]) {
+      expect(ptVisibleCopy).not.toContain(englishFallback);
+    }
+
+    expect(ptQ.confidentiality.actions[1]).toEqual({
+      label: "Conversar sobre o Quant",
+      href: "/pt-BR/#contact",
+    });
 
     expect(getCaseStudy("aegis", "pt-BR")).toBeDefined();
     expect(getCaseStudy("q", "pt-BR")).toBeDefined();

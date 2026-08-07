@@ -145,7 +145,8 @@ WO-034 Nexo Dental Evidence and Publication Contract
   └─ WO-035 Nexo Dental Media Capture
        └─ WO-036 Nexo Dental Case-Study Content Contract
             └─ WO-037 Nexo Dental Case-Study Implementation
-                 └─ WO-038 Nexo Dental Integration and Release Review
+                 └─ WO-039 Nexo Dental Hiring-Focused Content Revision
+                      └─ WO-038 Nexo Dental Integration and Release Review
 ```
 
 Do not run these orders in parallel. Each order freezes inputs consumed by
@@ -167,6 +168,7 @@ hero image, non-screenshot media).
 | WO-036 | [Nexo Dental Case-Study Content Contract](./WO-036-nexo-dental-case-study-content-contract.md) | Owner-approved narrative and exact visible copy |
 | WO-037 | [Nexo Dental Case-Study Implementation](./WO-037-nexo-dental-case-study.md) | Finished `/work/nexo-dental` route and homepage entry point |
 | WO-038 | [Nexo Dental Integration and Release Review](./WO-038-nexo-dental-integration-release-review.md) | Independent truth, browser, accessibility, metadata, and performance gate |
+| WO-039 | [Nexo Dental Hiring-Focused Content Revision](./WO-039-nexo-dental-hiring-content-revision.md) | Recruiter-first bilingual successor contract and typed content revision |
 
 ## Shared Prohibitions
 
@@ -199,5 +201,6 @@ hero image, non-screenshot media).
 
 ## Batch Completion Rule
 
-Batch 06 is complete only when WO-038 records a `GO` release decision and is
-marked `DONE`. Completion of the route implementation alone is insufficient.
+Batch 06 is complete only when WO-039 is owner-approved and `DONE`, then WO-038
+records a `GO` release decision and is marked `DONE`. Completion of the route
+implementation alone is insufficient.

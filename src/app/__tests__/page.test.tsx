@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { projects } from "@/content/projects";
 import { siteContent } from "@/content/site";
-import { render, screen } from "@/test/render";
+import { renderWithLocale, screen } from "@/test/render";
 
 /*
  * Browser-incompatible visual-effect leaves are mocked locally. Each mock keeps
@@ -69,8 +69,8 @@ describe("homepage composition", () => {
   });
 
   it("keeps one h1, section order, required h2s, and four project h3s", async () => {
-    const { default: Home } = await import("@/app/page");
-    render(<Home />);
+    const { default: Home } = await import("@/app/(en)/page");
+    renderWithLocale(<Home />);
 
     expect(
       screen.getByRole("heading", { level: 1, name: siteContent.heroTitle }),
@@ -115,8 +115,8 @@ describe("homepage composition", () => {
   });
 
   it("sends the hero action to the Aegis case study", async () => {
-    const { default: Home } = await import("@/app/page");
-    render(<Home />);
+    const { default: Home } = await import("@/app/(en)/page");
+    renderWithLocale(<Home />);
 
     expect(
       screen.getByRole("link", { name: siteContent.heroCta }),
@@ -131,8 +131,8 @@ describe("homepage composition", () => {
   });
 
   it("links all four projects to their case studies", async () => {
-    const { default: Home } = await import("@/app/page");
-    render(<Home />);
+    const { default: Home } = await import("@/app/(en)/page");
+    renderWithLocale(<Home />);
 
     const [aegis, quant, gosigapp, nexoDental] = projects;
 
@@ -160,8 +160,8 @@ describe("homepage composition", () => {
   });
 
   it("keeps every case-study destination same-origin", async () => {
-    const { default: Home } = await import("@/app/page");
-    render(<Home />);
+    const { default: Home } = await import("@/app/(en)/page");
+    renderWithLocale(<Home />);
 
     const caseStudyHrefs = Array.from(document.querySelectorAll("a"))
       .map((anchor) => anchor.getAttribute("href") ?? "")

@@ -1,80 +1,118 @@
 import type { CSSProperties } from "react";
 
+import type { Locale } from "@/lib/i18n";
 import { cn } from "@/lib/cn";
 import { eyebrowStyle } from "./case-study-shell";
 
 /**
- * The system map for section 4 of the Quant case study.
- *
- * Ordinary semantic HTML styled with existing tokens — nested lists, no canvas,
- * SVG, or animation — so the map is its own accessible text equivalent. Every
- * node label is a claim accepted in `docs/q-case-study-evidence.md` (WO-024),
- * worded to match the approved section 4 copy. No internal host, schema name,
- * broker name, or throughput figure appears here, and none may be added.
+ * Semantic, localized system map for the Quant architecture section. Every
+ * node remains traceable to the accepted claims in
+ * `docs/q-case-study-evidence.md`; no confidential identifier or performance
+ * claim belongs in this component.
  */
 
 type MapNode = {
-  /** Accepted public component name. */
   label: string;
-  /** One short qualifier, traceable to the claim ID cited beside it. */
   detail: string;
   accent?: string;
 };
 
-/** SYS-01: Tauri 2 desktop shell around a web-rendered React SPA. */
-const DESKTOP_SHELL: MapNode = {
-  label: "Tauri desktop shell",
-  detail: "Native desktop host for the research console",
-  accent: "var(--color-accent-a)",
+type SystemMapCopy = {
+  stackLabel: string;
+  dependenciesLabel: string;
+  desktopShell: MapNode;
+  reactSpa: MapNode;
+  apiService: MapNode;
+  postgres: MapNode;
+  redisQueue: MapNode;
+  workerPool: MapNode;
+  marketData: MapNode;
+  mt5Boundary: MapNode;
 };
 
-/** SYS-01: React SPA rendered in the webview. */
-const REACT_SPA: MapNode = {
-  label: "React SPA",
-  detail: "Webview interface talking to the local API",
-  accent: "var(--color-accent-a)",
-};
-
-/** SYS-02: FastAPI HTTP service. */
-const API_SERVICE: MapNode = {
-  label: "FastAPI service",
-  detail: "HTTP API surface for the desktop console",
-  accent: "var(--color-accent-b)",
-};
-
-/** SYS-04: PostgreSQL with Alembic migrations. */
-const POSTGRES: MapNode = {
-  label: "PostgreSQL",
-  detail: "Application schema through Alembic migrations",
-};
-
-/** SYS-03: Redis queue feeding Dramatiq workers. */
-const REDIS_QUEUE: MapNode = {
-  label: "Redis queue",
-  detail: "Job queue for asynchronous research work",
-};
-
-/** SYS-03: Dramatiq worker pool and the job types named in section 4. */
-const WORKER_POOL: MapNode = {
-  label: "Dramatiq worker pool",
-  detail: "Backtests, optimization, walk-forward, and discovery",
-  accent: "var(--color-accent-c)",
-};
-
-/** SYS-07: market-data ingestion into local storage. */
-const MARKET_DATA: MapNode = {
-  label: "Market-data ingestion",
-  detail: "Lands in local storage the research workspaces read",
-};
-
-/**
- * SYS-05: MetaTrader 5 boundary with a read-only remote gateway that exposes
- * no order API. SYS-11 / OWN-07: live trading locked; paper only today.
- */
-const MT5_BOUNDARY: MapNode = {
-  label: "MetaTrader 5 boundary",
-  detail: "Read-only gateway; paper execution, live trading locked",
-};
+const SYSTEM_MAP_COPY = {
+  en: {
+    stackLabel: "How the stack nests",
+    dependenciesLabel: "What the API depends on",
+    desktopShell: {
+      label: "Tauri desktop shell",
+      detail: "Native desktop host for the research console",
+      accent: "var(--color-accent-a)",
+    },
+    reactSpa: {
+      label: "React SPA",
+      detail: "Webview interface talking to the local API",
+      accent: "var(--color-accent-a)",
+    },
+    apiService: {
+      label: "FastAPI service",
+      detail: "HTTP API surface for the desktop console",
+      accent: "var(--color-accent-b)",
+    },
+    postgres: {
+      label: "PostgreSQL",
+      detail: "Application schema through Alembic migrations",
+    },
+    redisQueue: {
+      label: "Redis queue",
+      detail: "Job queue for asynchronous research work",
+    },
+    workerPool: {
+      label: "Dramatiq worker pool",
+      detail: "Backtests, optimization, walk-forward, and discovery",
+      accent: "var(--color-accent-c)",
+    },
+    marketData: {
+      label: "Market-data ingestion",
+      detail: "Lands in local storage the research workspaces read",
+    },
+    mt5Boundary: {
+      label: "MetaTrader 5 boundary",
+      detail: "Read-only gateway; paper execution, live trading locked",
+    },
+  },
+  "pt-BR": {
+    stackLabel: "Como a stack se organiza",
+    dependenciesLabel: "Dependências da API",
+    desktopShell: {
+      label: "Shell desktop Tauri",
+      detail: "Host desktop nativo do console de pesquisa",
+      accent: "var(--color-accent-a)",
+    },
+    reactSpa: {
+      label: "SPA em React",
+      detail: "Interface no WebView que se comunica com a API local",
+      accent: "var(--color-accent-a)",
+    },
+    apiService: {
+      label: "Serviço FastAPI",
+      detail: "Superfície HTTP da API para o console desktop",
+      accent: "var(--color-accent-b)",
+    },
+    postgres: {
+      label: "PostgreSQL",
+      detail: "Esquema da aplicação com migrações Alembic",
+    },
+    redisQueue: {
+      label: "Fila Redis",
+      detail: "Fila de trabalhos para pesquisa assíncrona",
+    },
+    workerPool: {
+      label: "Pool de workers Dramatiq",
+      detail: "Backtests, otimização, walk-forward e descoberta",
+      accent: "var(--color-accent-c)",
+    },
+    marketData: {
+      label: "Ingestão de dados de mercado",
+      detail: "Grava no armazenamento local lido pelas áreas de pesquisa",
+    },
+    mt5Boundary: {
+      label: "Fronteira MetaTrader 5",
+      detail:
+        "Gateway somente leitura; execução simulada; trading ao vivo bloqueado",
+    },
+  },
+} as const satisfies Record<Locale, SystemMapCopy>;
 
 const nodeStyle: CSSProperties = {
   border: "1px solid var(--color-line)",
@@ -121,35 +159,32 @@ const listStyle = "m-0 flex list-none flex-col p-0";
 const STACK_PATH_LABEL_ID = "q-map-stack-path";
 const API_DEPS_LABEL_ID = "q-map-api-deps";
 
-export function QSystemMap() {
+export function QSystemMap({ locale = "en" }: { locale?: Locale }) {
+  const copy = SYSTEM_MAP_COPY[locale];
+
   return (
     <div className="flex flex-col gap-4">
-      {/*
-        One named outer list is the accessible equivalent of the nested stack
-        WO-027 sketches. The id is fixed because the map appears once on the
-        route. List order carries direction; connectors are decorative only.
-      */}
       <p id={STACK_PATH_LABEL_ID} style={groupLabelStyle}>
-        How the stack nests
+        {copy.stackLabel}
       </p>
 
       <ol aria-labelledby={STACK_PATH_LABEL_ID} className={listStyle}>
         <li className="flex flex-col">
-          <MapNodeBox node={DESKTOP_SHELL} />
+          <MapNodeBox node={copy.desktopShell} />
           <Connector className="h-6 w-px" />
         </li>
 
         <li className="flex flex-col">
-          <MapNodeBox node={REACT_SPA} />
+          <MapNodeBox node={copy.reactSpa} />
           <Connector className="h-6 w-px" />
         </li>
 
         <li className="flex flex-col">
-          <MapNodeBox node={API_SERVICE} />
+          <MapNodeBox node={copy.apiService} />
           <Connector className="h-6 w-px" />
 
           <p id={API_DEPS_LABEL_ID} style={groupLabelStyle} className="mb-4">
-            What the API depends on
+            {copy.dependenciesLabel}
           </p>
 
           <ol
@@ -158,22 +193,22 @@ export function QSystemMap() {
           >
             <li className="flex flex-col md:flex-row md:items-stretch md:gap-0">
               <div className="flex flex-1 flex-col md:flex-row md:items-stretch">
-                <MapNodeBox node={POSTGRES} />
+                <MapNodeBox node={copy.postgres} />
               </div>
             </li>
 
             <li className="flex flex-col">
-              <MapNodeBox node={REDIS_QUEUE} />
+              <MapNodeBox node={copy.redisQueue} />
               <Connector className="h-6 w-px" />
-              <MapNodeBox node={WORKER_POOL} />
+              <MapNodeBox node={copy.workerPool} />
             </li>
 
             <li className="flex flex-1">
-              <MapNodeBox node={MARKET_DATA} />
+              <MapNodeBox node={copy.marketData} />
             </li>
 
             <li className="flex flex-1">
-              <MapNodeBox node={MT5_BOUNDARY} />
+              <MapNodeBox node={copy.mt5Boundary} />
             </li>
           </ol>
         </li>

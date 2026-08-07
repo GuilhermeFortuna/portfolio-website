@@ -1,5 +1,8 @@
 allowBuilds:
   '@tsparticles/engine': true
+  esbuild: true
+  protobufjs: true
+  re2: true
   sharp: true
   unrs-resolver: true
 # Let non-interactive runs (CI, agents) rebuild node_modules without a TTY
