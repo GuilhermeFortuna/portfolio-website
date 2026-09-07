@@ -1,8 +1,8 @@
 # Portfolio Website — Work Order Status
 
-**Last updated:** 2026-08-05
+**Last updated:** 2026-09-07
 
-**Batch indexes:** `[README.md](README.md)` (Batch 01), `[BATCH-02-README.md](BATCH-02-README.md)` (Batch 02), `[BATCH-03-README.md](BATCH-03-README.md)` (Batch 03), `[BATCH-04-README.md](BATCH-04-README.md)` (Batch 04), `[BATCH-05-README.md](BATCH-05-README.md)` (Batch 05), `[BATCH-06-README.md](BATCH-06-README.md)` (Batch 06)
+**Batch indexes:** `[README.md](README.md)` (Batch 01), `[BATCH-02-README.md](BATCH-02-README.md)` (Batch 02), `[BATCH-03-README.md](BATCH-03-README.md)` (Batch 03), `[BATCH-04-README.md](BATCH-04-README.md)` (Batch 04), `[BATCH-05-README.md](BATCH-05-README.md)` (Batch 05), `[BATCH-06-README.md](BATCH-06-README.md)` (Batch 06), `[BATCH-07-README.md](BATCH-07-README.md)` (Batch 07)
 
 **Fixed implementation specification:** `[IMPLEMENTATION-SPEC.md](IMPLEMENTATION-SPEC.md)`
 
@@ -167,6 +167,25 @@ rows (automated incumbent-reference search is empty).
 Quant and gosigapp - WO-037 needs only the `src/content/projects.ts` data
 change.
 
+Batch 07 is **open and gated**. It adds a recruiter-first bilingual resume at
+`/resume` and `/pt-BR/resume`, publishes the owner-approved English and
+Portuguese PDFs, adapts the free Aceternity Timeline, integrates the route into
+the existing header, and closes with an independent release review. The batch
+is sequential: WO-040 freezes exact bilingual copy; WO-041 builds the semantic
+routes and asset/SEO contracts; WO-042 owns visual/navigation integration; and
+WO-043 records `GO` or `NO-GO` against a frozen commit.
+
+**Owner facts recorded 2026-09-07; WO-040 is `READY`.** The PDFs in `docs/`
+are public as-is, including employer names, phone, and
+`guilhermefortuna.dev@gmail.com`. The employer/brand confidentiality exception
+is scoped to resume surfaces only: Work/case-study pages retain their existing
+rules. Resume copy may contain the PDF's `Aegis Fraud Intelligence` bullet but
+must not link or otherwise add a connection to `/work/aegis`. The new email
+replaces `guilhermefortuna1000@gmail.com` on public portfolio contact surfaces;
+deployment notification records are not part of that migration. See
+[`BATCH-07-README.md`](BATCH-07-README.md) for the locked source hashes and
+complete boundary.
+
 ## Current State
 
 
@@ -211,12 +230,17 @@ change.
 | [WO-037](WO-037-nexo-dental-case-study.md) | `DONE` | WO-036 | Auto (WO-037 case study) | `development` @ `1e8c4b7e` | Owner authorized `DONE` on 2026-08-04, waiving the separate independent reviewer as for WO-019 through WO-036 (see Gate Log). `/work/nexo-dental` built from WO-036 verbatim copy on shared primitives unchanged. New: `src/content/case-studies/nexo-dental.ts`, `src/app/work/nexo-dental/page.tsx`, `src/app/__tests__/nexo-dental-page.test.tsx`. Homepage `projects[3].href` → `/work/nexo-dental`. Eight placed assets; reserved `orcamento.webp`, `reports.webp`. Disabled live-environment control. Implementation committed and frozen at `1e8c4b7e`. |
 | [WO-038](WO-038-nexo-dental-integration-release-review.md) | `BLOCKED` | WO-039 `DONE`, owner-approved and committed | Unassigned | None | The release review now consumes the hiring-focused bilingual successor. Blocked until the owner accepts WO-039's exact copy and a named freeze commit is recorded. Batch 06 and the four-chapter case-study series close only on this order's `GO`. |
 | [WO-039](WO-039-nexo-dental-hiring-content-revision.md) | `REVIEW` | WO-034 through WO-037 `DONE` | Codex (current implementation) | `development` (uncommitted) | Implemented the recruiter-first structure and complete English/pt-BR objects without changing shared types, components, route composition, or media. Created `docs/nexo-dental-case-study-content-v2.md`; preserved WO-036 and its contract. English prose 962 words; hero 46; decisions 82/86/86. Reverified 50 backend and 134 frontend test files. Owner authorized adding `@playwright/test` 1.62.1 and its Chromium runtime for rendered QA. Full automated and browser evidence is recorded in the Gate Log; exact copy awaits owner acceptance. |
+| [WO-040](WO-040-resume-content-publication-contract.md) | `READY` | Batch 07 owner facts; both source PDFs hash exact | Unassigned | None | Produce the exact bilingual web-copy contract, source/fact matrix, localized actions, `/resume` metadata registry entry, new public-email decision, and route-scoped disclosure boundary. Owner approval and a frozen commit are required before WO-041. |
+| [WO-041](WO-041-resume-route-foundation.md) | `BLOCKED` | WO-040 `DONE`, owner-approved and frozen | Unassigned | None | Build typed resume content, semantic localized routes, byte-identical public PDFs, actions, metadata, sitemap, static export, and the public-email migration. Blocked until exact copy is accepted. |
+| [WO-042](WO-042-resume-timeline-navigation-integration.md) | `BLOCKED` | WO-041 `DONE` and frozen | Unassigned | None | Adapt the free Aceternity Timeline with existing Motion, apply the technical-dossier presentation, and add desktop/mobile active Resume navigation without changing facts or dependencies. |
+| [WO-043](WO-043-resume-integration-release-review.md) | `BLOCKED` | WO-042 `DONE`, owner-accepted and frozen | Unassigned | None | Independent content, disclosure, PDF-integrity, browser, accessibility, metadata, static-export, performance, navigation, and provenance review. Batch 07 completes only on `GO`. |
 
 ## Gate Log
 
 
 | Date       | Gate                                       | Verdict  | Evidence                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Next action                                                                                                                                                                                                                                                           |
 | ---------- | ------------------------------------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-09-07 | Batch 07 definition and owner publication boundary | `READY` | Owner approved the two `docs/` PDFs for unredacted public use, including `BRXBET`/`RICOBET`, `+55 48 99181-4229`, and `guilhermefortuna.dev@gmail.com`. Resume surfaces may reproduce the PDF's Aegis bullet but add no link or cross-reference to `/work/aegis`; existing Work/case-study confidentiality rules remain. The public portfolio email must migrate from `guilhermefortuna1000@gmail.com`, while infrastructure notification records stay untouched. Source inspection confirmed two unencrypted, script-free, one-page Letter PDFs; hashes and sizes are locked in `BATCH-07-README.md`. Four sequential Work Orders were created. | Dispatch WO-040. Preserve the unrelated current package-file changes and do not dispatch WO-041 until the exact bilingual content contract is owner-approved and frozen. |
 | 2026-08-05 | WO-039 hiring-focused bilingual content revision | `REVIEW` | Owner authorized the plan: senior product-engineering audience, narrative restructure, full English/pt-BR parity, real product-opportunity framing, and general contact CTA. Implementation created the v2 contract and revised typed content around origin, three role-based tours, architecture, three decisions, ownership, implementation evidence, technology badges, and concise disclosure. Eight placed media paths remain unchanged; WO-036 preserved. `@playwright/test` 1.62.1 and matching Chromium installed on owner authorization. Automated: 24 files / 198 tests pass; lint 0 errors (4 pre-existing homepage warnings); typecheck, build, and `git diff --check` pass. Playwright at 1440×900 and 375×780: correct EN/pt-BR titles and headings, language-switch URL preserved, zero English fallback, 8/8 images loaded at 2560px, disabled live control, zero overflow, zero console warnings/errors/page exceptions, empty 0×0 Next dev portal and no visible framework error. | Owner reviews the exact bilingual copy. Acceptance moves WO-039 to `DONE`, then a named freeze commit unblocks WO-038. |
 | 2026-08-04 | WO-037 commit freeze for WO-038 | `READY` | WO-037 implementation is committed and frozen at `development` @ `1e8c4b7e` (`feat(nexo-dental): implement Nexo Dental case study page and update project links`). Working tree clean; branch ahead of `origin/development` by that commit. | WO-038 moves to `READY` and may be dispatched against frozen commit `1e8c4b7e`. |
 | 2026-08-04 | WO-037 review and dispatch of WO-038 | `DONE` | Owner authorized moving WO-037 to `DONE` on 2026-08-04, waiving the separate independent reviewer as for WO-019 through WO-036. Acceptance checklist accepted against the WO-037 REVIEW handoff: route follows the WO-036 contract verbatim; shared primitives reused unchanged; live-environment control is Aegis's disabled object; homepage links all four projects; tests/coverage/lint/typecheck/build/`git diff --check` pass; static HTML scan clean of draft markers. Working tree remains uncommitted at authorization time. | Superseded by the WO-037 commit freeze row above. |
