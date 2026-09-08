@@ -19,7 +19,6 @@ export type ResumeChapterId =
   | "identity"
   | "capabilities"
   | "experience"
-  | "projects"
   | "credentials"
   | "contact";
 

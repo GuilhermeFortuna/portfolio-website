@@ -34,15 +34,14 @@ describe("resume routes", () => {
       resume.identity.focus,
       resume.labels.skills,
       resume.labels.experience,
-      resume.labels.projects,
       resume.labels.education,
       resume.labels.contact,
     ];
     const chapterNavigation = screen.getByRole("navigation", {
       name: chapterLabels.join(" · "),
     });
-    expect(within(chapterNavigation).getAllByRole("link")).toHaveLength(6);
-    expect(document.querySelectorAll("[data-resume-chapter]")).toHaveLength(6);
+    expect(within(chapterNavigation).getAllByRole("link")).toHaveLength(5);
+    expect(document.querySelectorAll("[data-resume-chapter]")).toHaveLength(5);
     expect(document.querySelector(".resume-reading-trace")).toHaveAttribute(
       "aria-hidden",
       "true",
@@ -53,7 +52,6 @@ describe("resume routes", () => {
     ).toEqual([
       resume.labels.skills,
       resume.labels.experience,
-      resume.labels.projects,
       resume.labels.education,
       resume.labels.languages,
     ]);
@@ -71,12 +69,15 @@ describe("resume routes", () => {
       resume.identity.summary,
       ...resume.skills.flatMap((group) => [group.label, ...group.items]),
       ...resume.experience.flatMap((entry) => [entry.organization, ...entry.highlights]),
-      ...resume.projects.flatMap((project) => [project.name, ...project.highlights]),
       ...resume.education.flatMap((entry) => [entry.institution, entry.program]),
       ...resume.languages,
     ]) {
       expect(document.body.textContent).toContain(text);
     }
+
+    expect(screen.queryByRole("heading", { name: "Selected Software Projects" })).not.toBeInTheDocument();
+    expect(document.body).not.toHaveTextContent("Quantitative Research & Execution Platform");
+    expect(document.body).not.toHaveTextContent("Multi-Tenant Clinic Management SaaS");
 
     const main = screen.getByRole("main");
     expect(within(main).getByRole("link", { name: resume.labels.viewPdf })).toHaveAttribute(

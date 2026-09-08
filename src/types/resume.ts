@@ -19,13 +19,6 @@ export type ResumeExperience = {
   highlights: readonly string[];
 };
 
-export type ResumeProject = {
-  name: string;
-  role: string;
-  period: string;
-  highlights: readonly string[];
-};
-
 export type ResumeEducation = {
   institution: string;
   program: string;
@@ -35,7 +28,6 @@ export type ResumeEducation = {
 export type ResumeLabels = {
   skills: string;
   experience: string;
-  projects: string;
   education: string;
   languages: string;
   viewPdf: string;
@@ -58,7 +50,6 @@ export type ResumeContent = {
   links: readonly ResumeLink[];
   skills: readonly ResumeSkillGroup[];
   experience: readonly ResumeExperience[];
-  projects: readonly ResumeProject[];
   education: readonly ResumeEducation[];
   languages: readonly string[];
   labels: ResumeLabels;

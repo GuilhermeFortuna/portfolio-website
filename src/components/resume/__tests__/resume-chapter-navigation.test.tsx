@@ -9,7 +9,6 @@ const chapters: readonly ResumeChapter[] = [
   { id: "identity", label: "Identidade" },
   { id: "capabilities", label: "Competências" },
   { id: "experience", label: "Experiência" },
-  { id: "projects", label: "Projetos" },
   { id: "credentials", label: "Credenciais" },
   { id: "contact", label: "Contato" },
 ];
@@ -37,7 +36,7 @@ describe("ResumeChapterNavigation", () => {
     );
     expect(links.filter((link) => link.hasAttribute("aria-current"))).toHaveLength(1);
     expect(navigation).toHaveAccessibleName(
-      "Identidade · Competências · Experiência · Projetos · Credenciais · Contato",
+      "Identidade · Competências · Experiência · Credenciais · Contato",
     );
   });
 

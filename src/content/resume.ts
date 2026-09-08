@@ -16,7 +16,6 @@ const sharedLinks = (labels: ResumeLabels) => [
 const englishLabels: ResumeLabels = {
   skills: "Technical Skills",
   experience: "Work Experience",
-  projects: "Selected Software Projects",
   education: "Education and International Experience",
   languages: "Languages",
   viewPdf: "View PDF",
@@ -33,7 +32,6 @@ const englishLabels: ResumeLabels = {
 const portugueseLabels: ResumeLabels = {
   skills: "Competências Técnicas",
   experience: "Experiência Profissional",
-  projects: "Projetos de Software Selecionados",
   education: "Educação e Experiência Internacional",
   languages: "Idiomas",
   viewPdf: "Ver PDF",
@@ -97,25 +95,6 @@ const english: ResumeContent = {
       ],
     },
   ],
-  projects: [
-    {
-      name: "Q",
-      role: "Quantitative Research & Execution Platform · Independent",
-      period: "Mar 2020 – Present",
-      highlights: [
-        "Developed a desktop quantitative research and backtesting platform using Python/FastAPI, React/TypeScript/Tauri, PostgreSQL, and Parquet for market-data ingestion, interactive charting, and paper execution.",
-        "Built distributed parameter discovery pipelines using Optuna and evolutionary algorithms over Redis/Dramatiq worker pools, enforcing strict zero-lookahead causality safeguards across backtests.",
-      ],
-    },
-    {
-      name: "Nexo Dental",
-      role: "Multi-Tenant Clinic Management SaaS · Independent",
-      period: "2026 – Present",
-      highlights: [
-        "Architected an AI-assisted, multi-tenant dental clinic management platform (React, TypeScript, FastAPI, PostgreSQL) with role-based tenant data isolation, appointment scheduling, and automated clinical workflows.",
-      ],
-    },
-  ],
   education: [
     { institution: "Savonia University of Applied Sciences (Kuopio, Finland) & SATC (Brazil)", program: "Mechanical Engineering & Academic Exchange", period: "2014 – 2018" },
     { institution: "SATC (Brazil)", program: "Software Engineering (In Progress)", period: "2024 – Present" },
@@ -174,25 +153,6 @@ const portuguese: ResumeContent = {
         "Pipelines de dados automatizados: Criei pipelines de ingestão em Python para converter saídas não estruturadas de OCR de certificados de seguro em dados estruturados e validados, usados em auditorias de conformidade.",
         "Ferramentas de verificação de LLMs: Desenvolvi ferramentas em Python e Node.js para testes de prompts, avaliação, comparação estrutural de JSON, processamento concorrente em lote e geração automática de relatórios.",
         "Automação de testes e entrega: Automatizei suítes de testes com Pytest e integrei fluxos com AWS S3 e pipelines de CI no Jenkins para garantir a integridade dos dados e a verificação contínua.",
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: "Q",
-      role: "Plataforma de Pesquisa e Execução Quantitativa · Independente",
-      period: "Mar 2020 – Atual",
-      highlights: [
-        "Desenvolvi uma plataforma desktop de pesquisa quantitativa e backtesting com Python/FastAPI, React/TypeScript/Tauri, PostgreSQL e Parquet para ingestão de dados de mercado, gráficos interativos e execução simulada.",
-        "Criei pipelines distribuídos de busca de parâmetros com Optuna e algoritmos evolutivos em pools de workers Redis/Dramatiq, com controles rigorosos de causalidade para impedir o uso de dados futuros nos backtests.",
-      ],
-    },
-    {
-      name: "Nexo Dental",
-      role: "SaaS Multi-Tenant de Gestão de Clínicas · Independente",
-      period: "2026 – Atual",
-      highlights: [
-        "Projetei uma plataforma multi-tenant de gestão de clínicas odontológicas assistida por IA (React, TypeScript, FastAPI, PostgreSQL), com isolamento de dados por clínica e perfil de acesso, agendamento e automação de fluxos clínicos.",
       ],
     },
   ],

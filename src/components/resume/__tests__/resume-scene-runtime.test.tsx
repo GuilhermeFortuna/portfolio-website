@@ -50,12 +50,11 @@ describe("ResumeSceneRuntime", () => {
     vi.stubGlobal("IntersectionObserver", IntersectionObserverFake);
   });
 
-  it("publishes six stable chapters in semantic order and registers each anchor once", async () => {
+  it("publishes five stable chapters in semantic order and registers each anchor once", async () => {
     const chapters = [
       { id: "identity", label: "Identity" },
       { id: "capabilities", label: "Capabilities" },
       { id: "experience", label: "Experience" },
-      { id: "projects", label: "Projects" },
       { id: "credentials", label: "Credentials" },
       { id: "contact", label: "Contact" },
     ] as const;
@@ -133,7 +132,6 @@ describe("ResumeSceneRuntime", () => {
       { id: "identity", label: "Identity" },
       { id: "capabilities", label: "Capabilities" },
       { id: "experience", label: "Experience" },
-      { id: "projects", label: "Projects" },
       { id: "credentials", label: "Credentials" },
       { id: "contact", label: "Contact" },
     ] as const;

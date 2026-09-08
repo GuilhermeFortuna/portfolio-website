@@ -49,29 +49,6 @@ function ResumeDocument({ resume }: { resume: ResumeContent }) {
         />
       </ResumeChapter>
 
-      <ResumeChapter id="projects" label={resume.labels.projects}>
-        <section aria-labelledby="resume-projects-heading" className="border-b border-[var(--color-line)] py-12 lg:py-16">
-        <div className="grid gap-8 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-10">
-          <h2 id="resume-projects-heading" className="text-2xl font-semibold tracking-[-0.03em] text-[var(--color-text)] sm:text-3xl">
-            {resume.labels.projects}
-          </h2>
-          <ol className="min-w-0 divide-y divide-[var(--color-line)]">
-            {resume.projects.map((project) => (
-              <li key={project.name} className="grid gap-4 py-7 first:pt-0 last:pb-0 sm:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] sm:gap-8">
-                <div>
-                  <h3 className="text-xl font-semibold tracking-[-0.025em] text-[var(--color-text)]">{project.name}</h3>
-                  <p className="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">{project.role} · {project.period}</p>
-                </div>
-                <ul className="list-disc space-y-3 pl-5 text-sm leading-7 text-[var(--color-text-muted)]">
-                  {project.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
-                </ul>
-              </li>
-            ))}
-          </ol>
-        </div>
-        </section>
-      </ResumeChapter>
-
       <ResumeChapter id="credentials" label={resume.labels.education}>
         <section aria-labelledby="resume-education-heading" className="border-b border-[var(--color-line)] py-12 lg:py-16">
         <div className="grid gap-8 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-10">
@@ -116,7 +93,6 @@ export function ResumePage({ locale }: { locale: Locale }): ReactNode {
     { id: "identity" as const, label: resume.identity.focus },
     { id: "capabilities" as const, label: resume.labels.skills },
     { id: "experience" as const, label: resume.labels.experience },
-    { id: "projects" as const, label: resume.labels.projects },
     { id: "credentials" as const, label: resume.labels.education },
     { id: "contact" as const, label: resume.labels.contact },
   ];

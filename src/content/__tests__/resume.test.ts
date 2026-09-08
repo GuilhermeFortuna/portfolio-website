@@ -14,7 +14,8 @@ describe("resume content contract", () => {
       expect(resume.links).toHaveLength(5);
       expect(resume.skills).toHaveLength(6);
       expect(resume.experience).toHaveLength(2);
-      expect(resume.projects).toHaveLength(2);
+      expect(resume).not.toHaveProperty("projects");
+      expect(resume.labels).not.toHaveProperty("projects");
       expect(resume.education).toHaveLength(3);
       expect(resume.languages).toHaveLength(2);
       expect(resume.pdf.href).toMatch(/^\/[^/]+\/guilherme-fortuna-resume/);
@@ -28,12 +29,6 @@ describe("resume content contract", () => {
           entry.period,
           entry.location,
           ...entry.highlights,
-        ]),
-        resume.projects.flatMap((project) => [
-          project.name,
-          project.role,
-          project.period,
-          ...project.highlights,
         ]),
         resume.education.flatMap((entry) => [
           entry.institution,
@@ -55,10 +50,6 @@ describe("resume content contract", () => {
       expect(resume.experience.map((entry) => entry.organization)).toEqual([
         "BRXBET & RICOBET",
         "Jones Software",
-      ]);
-      expect(resume.projects.map((project) => project.name)).toEqual([
-        "Q",
-        "Nexo Dental",
       ]);
       expect(resume.links).toEqual(
         expect.arrayContaining([
