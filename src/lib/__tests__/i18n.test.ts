@@ -59,6 +59,9 @@ describe("i18n infrastructure & Brazilian Portuguese content", () => {
     expect(localizePathname("/", "pt-BR")).toBe("/pt-BR");
     expect(localizePathname("/work/aegis", "pt-BR")).toBe("/pt-BR/work/aegis");
     expect(localizePathname("/en/work/aegis", "pt-BR")).toBe("/pt-BR/work/aegis");
+    expect(localizePathname("/resume", "en")).toBe("/resume");
+    expect(localizePathname("/resume", "pt-BR")).toBe("/pt-BR/resume");
+    expect(localizePathname("/pt-BR/resume", "en")).toBe("/resume");
   });
 
   it("provides complete Portuguese (pt-BR) site content", () => {

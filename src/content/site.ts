@@ -107,7 +107,7 @@ const siteContentMap: Record<Locale, SiteContent> = {
     contactActions: [
       {
         label: "Email me",
-        href: "mailto:guilhermefortuna1000@gmail.com",
+        href: "mailto:guilhermefortuna.dev@gmail.com",
       },
       {
         label: "LinkedIn",
@@ -163,7 +163,7 @@ const siteContentMap: Record<Locale, SiteContent> = {
     contactActions: [
       {
         label: "Enviar e-mail",
-        href: "mailto:guilhermefortuna1000@gmail.com",
+        href: "mailto:guilhermefortuna.dev@gmail.com",
       },
       {
         label: "LinkedIn",

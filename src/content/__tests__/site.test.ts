@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { projects } from "@/content/projects";
-import { siteContent, siteNavigation } from "@/content/site";
+import { getSiteContent, siteContent, siteNavigation } from "@/content/site";
 
 // Root-relative so the shared header resolves to the homepage from any route.
 const expectedDesktopNavigation = [
@@ -64,7 +64,7 @@ describe("site content contract", () => {
     expect(siteContent.contactActions).toEqual([
       {
         label: "Email me",
-        href: "mailto:guilhermefortuna1000@gmail.com",
+        href: "mailto:guilhermefortuna.dev@gmail.com",
       },
       { label: "LinkedIn", href: expectedProfileLinks.linkedin },
       { label: "GitHub", href: expectedProfileLinks.github },
@@ -78,6 +78,20 @@ describe("site content contract", () => {
     expect(
       siteContent.contactActions.some(({ label }) =>
         label.toLowerCase().includes("résumé"),
+      ),
+    ).toBe(false);
+  });
+
+  it("uses the approved public email in both homepage locales", () => {
+    expect(getSiteContent("en").contactActions[0].href).toBe(
+      "mailto:guilhermefortuna.dev@gmail.com",
+    );
+    expect(getSiteContent("pt-BR").contactActions[0].href).toBe(
+      "mailto:guilhermefortuna.dev@gmail.com",
+    );
+    expect(
+      [...getSiteContent("en").contactActions, ...getSiteContent("pt-BR").contactActions].some(
+        ({ href }) => href === "tel:+5548991814229",
       ),
     ).toBe(false);
   });
