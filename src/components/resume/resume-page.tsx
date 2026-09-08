@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ResumeCapabilityOrbit } from "@/components/resume/resume-capability-orbit";
+import { ResumeExperienceScene } from "@/components/resume/resume-career-reveal";
 import {
   ResumeChapter,
   ResumeReadingTrace,
@@ -10,7 +11,6 @@ import {
 } from "@/components/resume/resume-scene-runtime";
 import { ResumeChapterNavigationConnected } from "@/components/resume/resume-chapter-navigation";
 import { ResumeIdentityScene } from "@/components/resume/resume-identity-scene";
-import { ResumeTimeline } from "@/components/resume/resume-timeline";
 import { getResumeContent } from "@/content/resume";
 import type { Locale } from "@/lib/i18n";
 import type { ResumeContent } from "@/types/resume";
@@ -42,7 +42,7 @@ function ResumeDocument({ resume }: { resume: ResumeContent }) {
       </ResumeChapter>
 
       <ResumeChapter id="experience" label={resume.labels.experience}>
-        <ResumeTimeline
+        <ResumeExperienceScene
           entries={resume.experience}
           sectionLabel={resume.labels.experience}
           sectionTitle={resume.labels.experience}

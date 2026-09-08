@@ -765,6 +765,102 @@ canvas {
   }
 }
 
+.resume-career-reveal {
+  overflow: clip;
+}
+
+.resume-career-reveal__heading {
+  border-bottom: 1px solid var(--color-line);
+  padding-bottom: 1.5rem;
+}
+
+.resume-career-reveal__viewport {
+  position: relative;
+  margin-top: 2.5rem;
+  overflow: hidden;
+}
+
+.resume-career-reveal__progress {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+  color: var(--color-text-dim);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.resume-career-reveal__progress i {
+  display: block;
+  width: 4rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-accent-a), var(--color-accent-b));
+}
+
+.resume-career-reveal__track {
+  display: flex;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  will-change: transform;
+}
+
+.resume-career-reveal__card {
+  width: min(72rem, calc(100vw - 3rem));
+  min-width: min(72rem, calc(100vw - 3rem));
+  padding-right: clamp(2rem, 8vw, 10rem);
+}
+
+.resume-career-reveal__card article {
+  min-height: min(31rem, calc(100svh - 12rem));
+  border: 1px solid var(--color-line);
+  background: color-mix(in srgb, var(--color-surface) 70%, transparent);
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.resume-career-reveal__period {
+  margin: 0;
+  color: var(--color-accent-b);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.resume-career-reveal__card h3 {
+  margin: 1.25rem 0 0;
+  color: var(--color-text);
+  font-size: clamp(2rem, 4vw, 4.5rem);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+}
+
+.resume-career-reveal__role {
+  margin: 1.5rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.resume-career-reveal__card ul {
+  max-width: 62rem;
+  margin: 2rem 0 0;
+  padding-left: 1.25rem;
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+
+.resume-career-reveal__card li + li {
+  margin-top: 0.85rem;
+}
+
 .resume-dynamic-island-nav {
   position: fixed;
   z-index: 40;
