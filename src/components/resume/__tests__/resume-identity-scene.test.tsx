@@ -44,7 +44,7 @@ describe("ResumeIdentityScene", () => {
 
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(screen.getByRole("heading", { level: 1, name: "Guilherme Fortuna dos Santos" })).toBeInTheDocument();
-    const content = within(container.querySelector(".resume-identity__content")!);
+    const content = within(container.querySelector(".resume-scroll-choreography__content")!);
     expect(content.getByText("Python, TypeScript & Platform Systems")).toBeInTheDocument();
     expect(content.getByText(/5\+ years building software systems/)).toBeInTheDocument();
     expect(content.getByText(/Criciúma, Brazil/)).toBeInTheDocument();
@@ -81,8 +81,8 @@ describe("ResumeIdentityScene", () => {
       "data-motion-mode",
       "reduced",
     );
-    expect(container.querySelector(".resume-identity__field")).toHaveAttribute("aria-hidden", "true");
-    expect(container.querySelectorAll("[data-resume-identity-plate]")).toHaveLength(5);
+    expect(container.querySelector(".resume-scroll-choreography__images")).toHaveAttribute("aria-hidden", "true");
+    expect(container.querySelectorAll(".resume-scroll-choreography__image")).toHaveLength(4);
     expect(screen.getByRole("link", { name: "View PDF" })).toBeVisible();
   });
 });
