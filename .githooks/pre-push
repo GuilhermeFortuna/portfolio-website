@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Git pre-push hook: runs the unified CI script before pushing to remote.
+# To bypass in emergencies: git push --no-verify
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+cd "$REPO_ROOT"
+
+# Check if all pushed refs are branch deletions
+# Stdin format: <local_ref> <local_sha> <remote_ref> <remote_sha>
+is_all_deletes=true
+has_refs=false
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  has_refs=true
+  # If local ref is deleted or SHA is all zeros, it is a delete
+  if [[ "$local_sha" != "0000000000000000000000000000000000000000" && "$local_sha" != "(delete)" ]]; then
+    is_all_deletes=false
+    break
+  fi
+done
+
+if [[ "$has_refs" == true && "$is_all_deletes" == true ]]; then
+  echo "Deleting remote ref(s); skipping pre-push CI verification."
+  exit 0
+fi
+
+# Color formatting if terminal supports it and NO_COLOR is not set
+if [[ -t 1 && -z "${NO_COLOR:-}" ]]; then
+  BOLD="\033[1m"
+  GREEN="\033[32m"
+  RED="\033[31m"
+  CYAN="\033[36m"
+  RESET="\033[0m"
+else
+  BOLD=""
+  GREEN=""
+  RED=""
+  CYAN=""
+  RESET=""
+fi
+
+printf "${BOLD}${CYAN}🚀 Running pre-push CI validation (./ci.sh)...${RESET}\n"
+
+if ! "$REPO_ROOT/ci.sh"; then
+  printf "\n${RED}${BOLD}❌ Pre-push CI verification failed. Push aborted.${RESET}\n" >&2
+  printf "${RED}Fix the issues above or use 'git push --no-verify' to bypass if strictly necessary.${RESET}\n" >&2
+  exit 1
+fi
+
+printf "\n${GREEN}${BOLD}✓ Pre-push CI validation passed! Proceeding with push.${RESET}\n"
+exit 0
