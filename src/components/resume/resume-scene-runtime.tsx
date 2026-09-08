@@ -194,22 +194,54 @@ export function ResumeChapter({ id, label, children }: ResumeChapterProps): Reac
 
 export function ResumeReadingTrace(): ReactNode {
   const { progress, mode } = useResumeSceneRuntime();
-  const dashOffset = 1 - progress;
+  const clampedProgress = Math.min(1, Math.max(0, progress));
+  const dashOffset = 1 - clampedProgress;
 
   return (
-    <svg
+    <div
       aria-hidden="true"
       className={`resume-reading-trace resume-reading-trace--${mode}`}
-      viewBox="0 0 2 100"
-      preserveAspectRatio="none"
     >
-      <path className="resume-reading-trace__base" d="M1 0v100" pathLength="1" />
-      <path
-        className="resume-reading-trace__progress"
-        d="M1 0v100"
-        pathLength="1"
-        style={{ strokeDashoffset: dashOffset }}
-      />
-    </svg>
+      <div className="resume-reading-trace__indicator">
+        <div
+          className="resume-reading-trace__indicator-core"
+          data-active={clampedProgress > 0}
+        />
+      </div>
+      <svg
+        className="resume-reading-trace__svg"
+        viewBox="0 0 20 100"
+        preserveAspectRatio="none"
+        fill="none"
+      >
+        <defs>
+          <linearGradient
+            id="resume-beam-gradient"
+            x1="0"
+            y1="0"
+            x2="0"
+            y2="100%"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="var(--color-accent-b)" stopOpacity="0.2" />
+            <stop offset="0.3" stopColor="var(--color-accent-b)" />
+            <stop offset="0.7" stopColor="var(--color-accent-a)" />
+            <stop offset="1" stopColor="var(--color-accent-a)" stopOpacity="0.2" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M 1 0 V 4 l 18 6 V 90 l -18 6 V 100"
+          className="resume-reading-trace__base"
+          vectorEffect="non-scaling-stroke"
+        />
+        <path
+          d="M 1 0 V 4 l 18 6 V 90 l -18 6 V 100"
+          className="resume-reading-trace__progress"
+          pathLength="1"
+          vectorEffect="non-scaling-stroke"
+          style={{ strokeDashoffset: dashOffset }}
+        />
+      </svg>
+    </div>
   );
 }
