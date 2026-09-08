@@ -1,9 +1,10 @@
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { usePathname } from "next/navigation";
 
 import { SiteHeader } from "@/components/layout/site-header";
 import { siteContent, siteNavigation } from "@/content/site";
-import { render, screen, within, act } from "@/test/render";
+import { render, renderWithLocale, screen, within, act } from "@/test/render";
 
 type ObserverCallback = IntersectionObserverCallback;
 
@@ -129,7 +130,7 @@ describe("SiteHeader", () => {
     });
     for (const item of siteNavigation.mobile) {
       expect(
-        within(mobileNav).getByRole("link", { name: item.label }),
+        within(mobileNav).getByRole("link", { name: item.ariaLabel ?? item.label }),
       ).toHaveAttribute("href", item.href);
     }
   });
@@ -194,5 +195,30 @@ describe("SiteHeader", () => {
     });
 
     expect(workLink).toHaveAttribute("aria-current", "true");
+  });
+
+  it("marks only the localized resume route as the current route", () => {
+    vi.mocked(usePathname).mockReturnValue("/resume");
+    createIntersectionObserverDouble();
+    render(<SiteHeader />);
+
+    const desktopNav = screen.getByRole("navigation", { name: "Primary" });
+    expect(within(desktopNav).getByRole("link", { name: "Resume" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(within(desktopNav).getAllByRole("link", { name: /^(?!Resume$).+/ }).filter((link) => link.hasAttribute("aria-current"))).toHaveLength(0);
+  });
+
+  it("exposes the compact mobile CV label with the localized accessible name", () => {
+    vi.mocked(usePathname).mockReturnValue("/pt-BR/resume");
+    createIntersectionObserverDouble();
+    renderWithLocale(<SiteHeader />, "pt-BR");
+
+    const mobileNav = screen.getByRole("navigation", { name: "Primary mobile" });
+    const resumeLink = within(mobileNav).getByRole("link", { name: "Currículo" });
+    expect(resumeLink).toHaveAttribute("href", "/pt-BR/resume");
+    expect(resumeLink).toHaveTextContent("CV");
+    expect(resumeLink).toHaveAttribute("aria-current", "page");
   });
 });

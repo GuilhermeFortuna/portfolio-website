@@ -1,6 +1,7 @@
 "use client";
 
 import { LayoutGroup } from "motion/react";
+import { usePathname } from "next/navigation";
 
 import { useLocale } from "@/components/i18n/language-context";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
@@ -21,12 +22,14 @@ const linkClassName =
 function NavLinkList({
   items,
   activeSection,
+  pathname,
   layoutId,
   ariaLabel,
   className,
 }: {
   items: NavItem[];
   activeSection: string | null;
+  pathname: string;
   layoutId: string;
   ariaLabel: string;
   className?: string;
@@ -35,14 +38,17 @@ function NavLinkList({
     <nav aria-label={ariaLabel} className={className}>
       {items.map((item) => {
         const sectionId = sectionIdFromHref(item.href);
-        const isActive =
+        const isRouteActive = !sectionId && pathname === item.href;
+        const isSectionActive =
           sectionId != null && activeSection != null && sectionId === activeSection;
+        const isActive = isRouteActive || isSectionActive;
 
         return (
           <a
             key={item.href}
             href={item.href}
-            aria-current={isActive ? "true" : undefined}
+            aria-label={item.ariaLabel}
+            aria-current={isRouteActive ? "page" : isSectionActive ? "true" : undefined}
             className={cn(
               linkClassName,
               isActive
@@ -63,6 +69,7 @@ function NavLinkList({
 
 export function SiteHeader() {
   const locale = useLocale();
+  const pathname = usePathname() || "/";
   const siteContent = getSiteContent(locale);
   const siteNavigation = getSiteNavigation(locale);
   const scrolled = useScrolledPast();
@@ -103,6 +110,7 @@ export function SiteHeader() {
               <NavLinkList
                 items={siteNavigation.desktop}
                 activeSection={activeSection}
+                pathname={pathname}
                 layoutId="nav-active-desktop"
                 ariaLabel="Primary"
                 className="hidden items-center gap-1 lg:flex"
@@ -110,6 +118,7 @@ export function SiteHeader() {
               <NavLinkList
                 items={siteNavigation.mobile}
                 activeSection={activeSection}
+                pathname={pathname}
                 layoutId="nav-active-mobile"
                 ariaLabel="Primary mobile"
                 className="flex items-center gap-1 lg:hidden"

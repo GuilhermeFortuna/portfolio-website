@@ -99,6 +99,11 @@ describe("i18n infrastructure & Brazilian Portuguese content", () => {
       "Processo",
       "Sobre",
       "Contato",
+      "Currículo",
+    ]);
+    expect(ptNav.mobile).toEqual([
+      { label: "Trabalho", href: "/pt-BR/#work" },
+      { label: "CV", href: "/pt-BR/resume", ariaLabel: "Currículo" },
     ]);
 
     const ptFooter = getFooterContent("pt-BR");

@@ -9,6 +9,7 @@ const expectedDesktopNavigation = [
   { label: "Process", href: "/#process" },
   { label: "About", href: "/#about" },
   { label: "Contact", href: "/#contact" },
+  { label: "Resume", href: "/resume" },
 ] as const;
 
 const expectedProfileLinks = {
@@ -26,7 +27,7 @@ describe("site content contract", () => {
   it("keeps mobile navigation as the approved page-order subset", () => {
     expect(siteNavigation.mobile).toEqual([
       expectedDesktopNavigation[0],
-      expectedDesktopNavigation[3],
+      { label: "CV", href: "/resume", ariaLabel: "Resume" },
     ]);
   });
 
@@ -41,6 +42,7 @@ describe("site content contract", () => {
       "/#process",
       "/#about",
       "/#contact",
+      "/resume",
     ]);
   });
 
@@ -52,7 +54,7 @@ describe("site content contract", () => {
     ];
 
     for (const href of destinations) {
-      expect(href.startsWith("/#")).toBe(true);
+      expect(href.startsWith("/#") || href === "/resume").toBe(true);
     }
   });
 

@@ -20,6 +20,24 @@ describe("resume routes", () => {
     expect(screen.getByRole("contentinfo")).toBeInTheDocument();
     expect(screen.getAllByRole("list").length).toBeGreaterThanOrEqual(6);
 
+    expect(
+      within(screen.getByRole("main")).getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent),
+    ).toEqual([
+      resume.labels.skills,
+      resume.labels.experience,
+      resume.labels.projects,
+      resume.labels.education,
+      resume.labels.languages,
+    ]);
+
+    const experienceRegion = screen.getByRole("region", {
+      name: resume.labels.experience,
+    });
+    expect(
+      within(experienceRegion).getByRole("list", { name: resume.labels.experience }),
+    ).toBeInTheDocument();
+    expect(within(screen.getByRole("main")).queryAllByRole("button")).toHaveLength(0);
+
     for (const text of [
       resume.identity.role,
       resume.identity.summary,
@@ -70,6 +88,11 @@ describe("resume routes", () => {
       "href",
       "tel:+5548991814229",
     );
+    expect(
+      within(screen.getByRole("region", { name: resume.labels.experience })).getByRole("list", {
+        name: resume.labels.experience,
+      }),
+    ).toBeInTheDocument();
     expect(screen.getAllByRole("link", { name: resume.labels.contact }).at(-1)).toHaveAttribute(
       "href",
       "mailto:guilhermefortuna.dev@gmail.com",

@@ -43,6 +43,7 @@ export interface SiteContent {
 export interface NavItem {
   label: string;
   href: string;
+  ariaLabel?: string;
 }
 
 export interface SiteNavigation {
@@ -193,10 +194,15 @@ export function getSiteNavigation(locale: Locale = "en"): SiteNavigation {
       { label: isPt ? "Processo" : "Process", href: `${prefix}/#process` },
       { label: isPt ? "Sobre" : "About", href: `${prefix}/#about` },
       { label: isPt ? "Contato" : "Contact", href: `${prefix}/#contact` },
+      { label: isPt ? "Currículo" : "Resume", href: `${prefix}/resume` },
     ],
     mobile: [
       { label: isPt ? "Trabalho" : "Work", href: `${prefix}/#work` },
-      { label: isPt ? "Contato" : "Contact", href: `${prefix}/#contact` },
+      {
+        label: "CV",
+        ariaLabel: isPt ? "Currículo" : "Resume",
+        href: `${prefix}/resume`,
+      },
     ],
   };
 }
