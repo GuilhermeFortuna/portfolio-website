@@ -4,6 +4,7 @@ const isExport = process.env.NEXT_OUTPUT === "export";
 
 const nextConfig: NextConfig = {
   ...(isExport ? { output: "export" as const, trailingSlash: true } : {}),
+  allowedDevOrigins: ["127.0.0.1"],
   experimental: {
     // Required for a document-level 404 when using multiple root layouts.
     globalNotFound: true,

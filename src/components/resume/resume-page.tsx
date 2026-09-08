@@ -20,7 +20,7 @@ function ResumeDocument({ resume }: { resume: ResumeContent }) {
     <main
       id="main-content"
       tabIndex={-1}
-      className="mx-auto w-full max-w-[var(--content-wide)] overflow-hidden px-[var(--page-gutter)] pb-16 pt-28 lg:pt-36"
+      className="resume-document"
     >
       <ResumeChapter id="identity" label={resume.identity.focus}>
         <ResumeIdentityScene

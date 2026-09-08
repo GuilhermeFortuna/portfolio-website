@@ -127,9 +127,6 @@ export function ResumeChapterNavigation({
         layout={!prefersReducedMotion}
         className="resume-dynamic-island"
         data-expanded={isExpanded}
-        animate={{
-          width: isExpanded ? 340 : 280,
-        }}
         transition={islandTransition}
       >
         {/* Closed Pill Trigger */}

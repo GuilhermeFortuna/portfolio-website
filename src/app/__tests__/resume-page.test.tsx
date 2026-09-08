@@ -25,6 +25,8 @@ describe("resume routes", () => {
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(screen.getByRole("heading", { level: 1, name: resume.identity.name })).toBeInTheDocument();
     expect(screen.getByRole("main")).toHaveAttribute("id", "main-content");
+    expect(screen.getByRole("main")).toHaveClass("resume-document");
+    expect(screen.getByRole("main")).not.toHaveClass("overflow-hidden");
     expect(screen.getByRole("contentinfo")).toBeInTheDocument();
     expect(screen.getAllByRole("list").length).toBeGreaterThanOrEqual(6);
 
