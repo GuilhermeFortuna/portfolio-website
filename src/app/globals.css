@@ -954,12 +954,13 @@ canvas {
 }
 
 .resume-credential-stack__card {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
   border: 1px solid var(--color-line);
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--color-surface-strong) 48%, transparent),
-    color-mix(in srgb, var(--color-surface) 78%, transparent)
-  );
+  background: var(--color-surface-strong);
   padding: clamp(1.5rem, 4vw, 3rem);
 }
 
@@ -981,7 +982,7 @@ canvas {
 }
 
 .resume-credential-stack__program {
-  margin-top: 1.25rem;
+  margin-top: auto;
 }
 
 .resume-credential-stack__period {
@@ -997,7 +998,7 @@ canvas {
 @media (min-width: 1200px) and (min-height: 720px) and (pointer: fine) {
   .resume-credential-stack__list--enhanced {
     display: block;
-    min-height: 124rem;
+    min-height: 58rem;
     margin-top: 2rem;
   }
 
@@ -1005,13 +1006,14 @@ canvas {
     position: sticky;
     top: calc(7.5rem + (var(--resume-credential-index) * 1.5rem));
     z-index: calc(10 + var(--resume-credential-index));
-    min-height: min(34rem, calc(100svh - 12rem));
-    padding-bottom: 2rem;
+    min-height: min(20rem, calc(100svh - 14rem));
+    padding-bottom: 1.25rem;
     transform-origin: center top;
   }
 
   .resume-credential-stack__list--enhanced .resume-credential-stack__card {
-    min-height: min(25rem, calc(100svh - 16rem));
+    min-height: min(17rem, calc(100svh - 18rem));
+    border-color: var(--color-line-strong);
   }
 }
 
@@ -1025,6 +1027,7 @@ canvas {
   position: relative;
   z-index: 1;
   display: grid;
+  min-height: 18rem;
   gap: 4rem;
 }
 
@@ -1070,7 +1073,7 @@ canvas {
 .resume-convergence__paths {
   position: absolute;
   z-index: 0;
-  inset: 0;
+  inset: 1rem 0 0;
   pointer-events: none;
   opacity: 0.72;
 }
