@@ -58,11 +58,21 @@ describe("ResumeCareerReveal", () => {
         expect(item).toHaveTextContent(entry.period);
         expect(item).toHaveTextContent(entry.location);
         for (const highlight of entry.highlights) expect(item).toHaveTextContent(highlight);
+        expect(item!.querySelectorAll("[data-resume-highlight-label]")).toHaveLength(
+          entry.highlights.length,
+        );
       }
 
       expect(container.querySelector("[data-resume-career-progress]")).toHaveAttribute(
         "aria-hidden",
         "true",
+      );
+      expect(container.querySelector("[data-resume-career-viewport]")).toHaveAttribute(
+        "data-career-stage",
+        "single-card",
+      );
+      expect(container.querySelectorAll("[data-resume-career-card]")).toHaveLength(
+        resume.experience.length,
       );
       expect(container.innerHTML).not.toContain("/work/aegis");
     },

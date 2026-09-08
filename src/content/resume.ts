@@ -55,7 +55,7 @@ const english: ResumeContent = {
       "Full-stack developer with 5+ years building production web applications, distributed systems, data platforms, and cloud infrastructure.",
   },
   identity: {
-    name: "Guilherme Fortuna dos Santos",
+    name: "Guilherme Fortuna",
     role: "Full-stack Developer",
     focus: "Python, TypeScript & Platform Systems",
     summary:
@@ -135,7 +135,7 @@ const portuguese: ResumeContent = {
       "Desenvolvedor full-stack com mais de 5 anos criando aplicações web em produção, sistemas distribuídos, plataformas de dados e infraestrutura em nuvem.",
   },
   identity: {
-    name: "Guilherme Fortuna dos Santos",
+    name: "Guilherme Fortuna",
     role: "Desenvolvedor Full-stack",
     focus: "Python, TypeScript e Sistemas de Plataforma",
     summary:

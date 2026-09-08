@@ -10,7 +10,7 @@ describe("resume content contract", () => {
     for (const resume of resumes) {
       expect(resume.metadata.title).toBeTruthy();
       expect(resume.metadata.description).toBeTruthy();
-      expect(resume.identity.name).toBe("Guilherme Fortuna dos Santos");
+      expect(resume.identity.name).toBe("Guilherme Fortuna");
       expect(resume.links).toHaveLength(5);
       expect(resume.skills).toHaveLength(6);
       expect(resume.experience).toHaveLength(2);

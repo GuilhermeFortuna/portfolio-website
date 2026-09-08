@@ -43,7 +43,7 @@ describe("ResumeIdentityScene", () => {
     const { container } = renderScene();
 
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
-    expect(screen.getByRole("heading", { level: 1, name: "Guilherme Fortuna dos Santos" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: "Guilherme Fortuna" })).toBeInTheDocument();
     const content = within(container.querySelector(".resume-identity__content")!);
     expect(content.getByText("Python, TypeScript & Platform Systems")).toBeInTheDocument();
     expect(content.getByText(/5\+ years building software systems/)).toBeInTheDocument();

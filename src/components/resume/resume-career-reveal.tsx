@@ -16,6 +16,18 @@ export type ResumeCareerRevealProps = {
 const CAREER_ENHANCEMENT_QUERY =
   "(min-width: 1200px) and (min-height: 720px) and (pointer: fine)";
 
+function splitHighlight(highlight: string): { label: string; detail: string } {
+  const separator = highlight.indexOf(":");
+  if (separator < 0) {
+    return { label: highlight, detail: "" };
+  }
+
+  return {
+    label: highlight.slice(0, separator).trim(),
+    detail: highlight.slice(separator + 1).trim(),
+  };
+}
+
 /**
  * The only client-side choice between the server-safe chronology and the
  * desktop treatment. Keeping the fallback as the initial render prevents a
@@ -109,7 +121,11 @@ export function ResumeCareerReveal({
         </h2>
       </div>
 
-      <div className="resume-career-reveal__viewport">
+      <div
+        className="resume-career-reveal__viewport"
+        data-resume-career-viewport
+        data-career-stage="single-card"
+      >
         <div aria-hidden="true" className="resume-career-reveal__progress" data-resume-career-progress>
           <span>01</span>
           <i />
@@ -117,15 +133,33 @@ export function ResumeCareerReveal({
         </div>
         <ol aria-label={sectionLabel} className="resume-career-reveal__track" data-resume-career-track>
           {entries.map((entry, index) => (
-            <li key={`${entry.organization}-${entry.period}`} className="resume-career-reveal__card">
+            <li
+              key={`${entry.organization}-${entry.period}`}
+              className="resume-career-reveal__card"
+              data-resume-career-card
+            >
               <article aria-labelledby={`resume-career-${index}-heading`}>
                 <p className="resume-career-reveal__period">{entry.period}</p>
                 <h3 id={`resume-career-${index}-heading`}>{entry.organization}</h3>
                 <p className="resume-career-reveal__role">{entry.role} · {entry.location}</p>
                 <ul>
-                  {entry.highlights.map((highlight) => (
-                    <li key={highlight}>{highlight}</li>
-                  ))}
+                  {entry.highlights.map((highlight, highlightIndex) => {
+                    const { label, detail } = splitHighlight(highlight);
+
+                    return (
+                      <li key={highlight} className="resume-career-reveal__highlight">
+                        <span aria-hidden="true" className="resume-career-reveal__highlight-index">
+                          {String(highlightIndex + 1).padStart(2, "0")}
+                        </span>
+                        <span className="resume-career-reveal__highlight-copy">
+                          <span data-resume-highlight-label className="resume-career-reveal__highlight-label">
+                            {label}{detail ? ":" : ""}
+                          </span>
+                          {detail ? <span className="resume-career-reveal__highlight-detail"> {detail}</span> : null}
+                        </span>
+                      </li>
+                    );
+                  })}
                 </ul>
               </article>
             </li>
