@@ -99,6 +99,14 @@ describe("ResumeConvergence", () => {
     const svg = container.querySelector("[data-resume-convergence-paths]");
     expect(svg).toHaveAttribute("aria-hidden", "true");
     expect(svg?.querySelectorAll("[data-resume-convergence-path]")).toHaveLength(5);
+    expect(svg?.querySelector("[data-resume-convergence-path]")).toHaveAttribute(
+      "d",
+      expect.stringContaining("M0 663C145.5 663"),
+    );
+    expect(svg?.querySelectorAll("[data-resume-convergence-blur-path]")).toHaveLength(5);
+    expect(svg?.querySelector("#resume-convergence-blur")).toBeInTheDocument();
+    expect(section?.querySelector(".resume-convergence__content + [data-resume-convergence-paths]"))
+      .toBeInTheDocument();
   });
 
   it("omits progress-linked paths under reduced motion without removing content or actions", async () => {
