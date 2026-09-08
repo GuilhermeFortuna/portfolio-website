@@ -29,25 +29,15 @@ export function ResumeCapabilityOrbit({
   const { prefersReducedMotion } = useResumeSceneRuntime();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
   const [hydrated, setHydrated] = useState(false);
-  const [enhancementEligible, setEnhancementEligible] = useState(false);
 
   useEffect(() => {
     const refresh = window.setTimeout(() => {
       setHydrated(true);
-      setEnhancementEligible(
-        window.matchMedia?.(
-          "(min-width: 1200px) and (min-height: 720px) and (pointer: fine)",
-        ).matches ?? false,
-      );
     }, 0);
     return () => window.clearTimeout(refresh);
   }, []);
 
-  const mode = prefersReducedMotion
-    ? "reduced"
-    : enhancementEligible && runtimeMode === "enhanced"
-      ? "enhanced"
-      : "static";
+  const mode = runtimeMode;
 
   function handleBlur(event: FocusEvent<HTMLElement>) {
     if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {

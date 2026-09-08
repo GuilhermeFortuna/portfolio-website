@@ -12,6 +12,7 @@ import {
   type RefCallback,
 } from "react";
 import { useMotionValueEvent } from "motion/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { useMotionRuntime } from "@/components/motion/motion-runtime";
 
@@ -23,6 +24,12 @@ export type ResumeChapterId =
   | "contact";
 
 export type ResumeMotionMode = "enhanced" | "reduced" | "static";
+
+export type ResumeMotionEnvironment = {
+  prefersReducedMotion: boolean;
+  matchesEnhancedViewport: boolean;
+  saveData: boolean;
+};
 
 export type ResumeChapter = {
   id: ResumeChapterId;
@@ -49,15 +56,32 @@ function clampProgress(value: number): number {
   return Math.min(1, Math.max(0, value));
 }
 
+const RESUME_ENHANCEMENT_QUERY =
+  "(min-width: 1200px) and (min-height: 720px) and (pointer: fine)";
+
+export function resolveResumeMotionMode({
+  prefersReducedMotion,
+  matchesEnhancedViewport,
+  saveData,
+}: ResumeMotionEnvironment): ResumeMotionMode {
+  if (prefersReducedMotion) {
+    return "reduced";
+  }
+  return matchesEnhancedViewport && !saveData ? "enhanced" : "static";
+}
+
 function getMotionMode(prefersReducedMotion: boolean): ResumeMotionMode {
   return prefersReducedMotion ? "reduced" : "static";
 }
 
-function getClientMotionMode(prefersReducedMotion: boolean): ResumeMotionMode {
-  if (prefersReducedMotion || typeof window === "undefined") {
-    return prefersReducedMotion ? "reduced" : "static";
+function getSaveDataPreference(): boolean {
+  if (typeof navigator === "undefined") {
+    return false;
   }
-  return "enhanced";
+  const connection = (navigator as Navigator & {
+    connection?: { saveData?: boolean };
+  }).connection;
+  return connection?.saveData === true;
 }
 
 export function ResumeSceneRuntime({
@@ -77,10 +101,59 @@ export function ResumeSceneRuntime({
   );
 
   useEffect(() => {
-    const refreshMode = window.setTimeout(() => {
-      setMode(getClientMotionMode(prefersReducedMotion));
-    }, 0);
-    return () => window.clearTimeout(refreshMode);
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const media = window.matchMedia?.(RESUME_ENHANCEMENT_QUERY);
+    const refreshTimers = new Set<number>();
+    let disposed = false;
+    const scheduleGeometryRefresh = () => {
+      const timer = window.setTimeout(() => {
+        refreshTimers.delete(timer);
+        if (!disposed) {
+          ScrollTrigger.refresh();
+        }
+      }, 0);
+      refreshTimers.add(timer);
+    };
+    const refresh = () => {
+      setMode(
+        resolveResumeMotionMode({
+          prefersReducedMotion,
+          matchesEnhancedViewport: media?.matches ?? false,
+          saveData: getSaveDataPreference(),
+        }),
+      );
+      scheduleGeometryRefresh();
+    };
+    const refreshOnResize = () => refresh();
+    const initialRefresh = window.setTimeout(refresh, 0);
+    media?.addEventListener("change", refresh);
+    window.addEventListener("resize", refreshOnResize, { passive: true });
+
+    let cancelFontRefresh = () => {};
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(() => {
+        if (!disposed) {
+          scheduleGeometryRefresh();
+        }
+      });
+      cancelFontRefresh = () => {
+        disposed = true;
+      };
+    }
+
+    scheduleGeometryRefresh();
+    return () => {
+      disposed = true;
+      window.clearTimeout(initialRefresh);
+      media?.removeEventListener("change", refresh);
+      window.removeEventListener("resize", refreshOnResize);
+      refreshTimers.forEach((timer) => window.clearTimeout(timer));
+      refreshTimers.clear();
+      cancelFontRefresh();
+    };
   }, [prefersReducedMotion]);
 
   useMotionValueEvent(scrollProgress, "change", (value) => {
@@ -156,17 +229,7 @@ export function useResumeSceneRuntime(): ResumeSceneContextValue {
 }
 
 export function useResumeSceneMode(): ResumeMotionMode {
-  const { mode, prefersReducedMotion } = useResumeSceneRuntime();
-  const [clientMode, setClientMode] = useState<ResumeMotionMode>(mode);
-
-  useEffect(() => {
-    const refreshMode = window.setTimeout(() => {
-      setClientMode(getClientMotionMode(prefersReducedMotion));
-    }, 0);
-    return () => window.clearTimeout(refreshMode);
-  }, [mode, prefersReducedMotion]);
-
-  return clientMode;
+  return useResumeSceneRuntime().mode;
 }
 
 export type ResumeChapterProps = ResumeChapter & { children: ReactNode };

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
 
-import { useResumeSceneRuntime } from "@/components/resume/resume-scene-runtime";
+import { useResumeSceneMode } from "@/components/resume/resume-scene-runtime";
 import type { ResumeContent, ResumeLabels } from "@/types/resume";
 
 export type ResumeConvergenceProps = {
@@ -15,8 +15,6 @@ export type ResumeConvergenceProps = {
   workHref: string;
 };
 
-const CONVERGENCE_ENHANCEMENT_QUERY =
-  "(min-width: 1200px) and (min-height: 720px) and (pointer: fine)";
 const PATH_RANGES: Array<[number, number]> = [
   [0.12, 0.64],
   [0.18, 0.7],
@@ -87,29 +85,7 @@ export function ResumeConvergence({
   contactHref,
   workHref,
 }: ResumeConvergenceProps): ReactNode {
-  const { prefersReducedMotion } = useResumeSceneRuntime();
-  const [enhancementEligible, setEnhancementEligible] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia?.(CONVERGENCE_ENHANCEMENT_QUERY);
-    if (!media) {
-      return;
-    }
-
-    const refresh = () => setEnhancementEligible(media.matches);
-    const timer = window.setTimeout(refresh, 0);
-    media.addEventListener("change", refresh);
-    return () => {
-      window.clearTimeout(timer);
-      media.removeEventListener("change", refresh);
-    };
-  }, []);
-
-  const mode = prefersReducedMotion
-    ? "reduced"
-    : enhancementEligible
-      ? "enhanced"
-      : "static";
+  const mode = useResumeSceneMode();
 
   return (
     <section

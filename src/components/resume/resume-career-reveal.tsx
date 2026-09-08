@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 
 import { useSceneTimeline } from "@/components/motion/motion-runtime";
-import { useResumeSceneRuntime } from "@/components/resume/resume-scene-runtime";
+import { useResumeSceneMode } from "@/components/resume/resume-scene-runtime";
 import { ResumeTimeline } from "@/components/resume/resume-timeline";
 import type { ResumeExperience } from "@/types/resume";
 
@@ -12,9 +12,6 @@ export type ResumeCareerRevealProps = {
   sectionLabel: string;
   sectionTitle: string;
 };
-
-const CAREER_ENHANCEMENT_QUERY =
-  "(min-width: 1200px) and (min-height: 720px) and (pointer: fine)";
 
 function splitHighlight(highlight: string): { label: string; detail: string } {
   const separator = highlight.indexOf(":");
@@ -34,21 +31,9 @@ function splitHighlight(highlight: string): { label: string; detail: string } {
  * hydration or media-query failure from removing Resume facts.
  */
 export function ResumeExperienceScene(props: ResumeCareerRevealProps): ReactNode {
-  const { prefersReducedMotion } = useResumeSceneRuntime();
-  const [enhanced, setEnhanced] = useState(false);
+  const mode = useResumeSceneMode();
 
-  useEffect(() => {
-    const media = window.matchMedia?.(CAREER_ENHANCEMENT_QUERY);
-    if (!media) {
-      return;
-    }
-    const refresh = () => setEnhanced(media.matches);
-    refresh();
-    media.addEventListener("change", refresh);
-    return () => media.removeEventListener("change", refresh);
-  }, []);
-
-  if (prefersReducedMotion || !enhanced) {
+  if (mode !== "enhanced") {
     return <ResumeTimeline {...props} />;
   }
 

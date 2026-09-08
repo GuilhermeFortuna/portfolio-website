@@ -48,25 +48,15 @@ export function ResumeIdentityScene({
   const { prefersReducedMotion, progress } = useResumeSceneRuntime();
   const runtimeMode = useResumeSceneMode();
   const [hydrated, setHydrated] = useState(false);
-  const [enhancementEligible, setEnhancementEligible] = useState(false);
 
   useEffect(() => {
     const refresh = window.setTimeout(() => {
       setHydrated(true);
-      setEnhancementEligible(
-        window.matchMedia?.(
-          "(min-width: 1200px) and (min-height: 720px) and (pointer: fine)",
-        ).matches ?? false,
-      );
     }, 0);
     return () => window.clearTimeout(refresh);
   }, []);
 
-  const mode = prefersReducedMotion
-    ? "reduced"
-    : enhancementEligible && runtimeMode === "enhanced"
-      ? "enhanced"
-      : "static";
+  const mode = runtimeMode;
   const sceneProgress = Math.min(1, Math.max(0, progress / 0.18));
   const assemblyProgress = Math.min(1, sceneProgress / 0.7);
   const settleProgress = Math.min(1, Math.max(0, (sceneProgress - 0.7) / 0.3));

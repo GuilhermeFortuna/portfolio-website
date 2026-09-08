@@ -1,9 +1,7 @@
 "use client";
 
 import {
-  useEffect,
   useRef,
-  useState,
   type ReactNode,
 } from "react";
 import {
@@ -14,7 +12,7 @@ import {
   type MotionValue,
 } from "motion/react";
 
-import { useResumeSceneRuntime } from "@/components/resume/resume-scene-runtime";
+import { useResumeSceneMode } from "@/components/resume/resume-scene-runtime";
 import type { ResumeEducation } from "@/types/resume";
 
 export type ResumeCredentialStackProps = {
@@ -22,8 +20,6 @@ export type ResumeCredentialStackProps = {
   sectionLabel: string;
 };
 
-const CREDENTIAL_ENHANCEMENT_QUERY =
-  "(min-width: 1200px) and (min-height: 720px) and (pointer: fine)";
 const STACK_SCALES = [0.93, 0.965, 1] as const;
 
 function CredentialCopy({
@@ -135,29 +131,7 @@ export function ResumeCredentialStack({
   entries,
   sectionLabel,
 }: ResumeCredentialStackProps): ReactNode {
-  const { prefersReducedMotion } = useResumeSceneRuntime();
-  const [enhancementEligible, setEnhancementEligible] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia?.(CREDENTIAL_ENHANCEMENT_QUERY);
-    if (!media) {
-      return;
-    }
-
-    const refresh = () => setEnhancementEligible(media.matches);
-    const timer = window.setTimeout(refresh, 0);
-    media.addEventListener("change", refresh);
-    return () => {
-      window.clearTimeout(timer);
-      media.removeEventListener("change", refresh);
-    };
-  }, []);
-
-  const mode = prefersReducedMotion
-    ? "reduced"
-    : enhancementEligible
-      ? "enhanced"
-      : "static";
+  const mode = useResumeSceneMode();
 
   return (
     <section

@@ -8,6 +8,7 @@ import {
   ResumeChapter,
   ResumeReadingTrace,
   ResumeSceneRuntime,
+  resolveResumeMotionMode,
   useResumeSceneRuntime,
 } from "@/components/resume/resume-scene-runtime";
 
@@ -15,6 +16,8 @@ const sharedProgress = motionValue(0);
 const observe = vi.fn();
 const disconnect = vi.fn();
 let observerCallback: IntersectionObserverCallback | undefined;
+let enhancementMediaMatches = true;
+const enhancementMediaChange = vi.fn();
 
 vi.mock("@/components/motion/motion-runtime", () => ({
   useMotionRuntime: () => ({
@@ -47,7 +50,27 @@ describe("ResumeSceneRuntime", () => {
     vi.clearAllMocks();
     observerCallback = undefined;
     sharedProgress.set(0);
+    enhancementMediaMatches = true;
+    enhancementMediaChange.mockReset();
     vi.stubGlobal("IntersectionObserver", IntersectionObserverFake);
+    vi.stubGlobal("matchMedia", () => ({
+      get matches() {
+        return enhancementMediaMatches;
+      },
+      addEventListener: (_event: string, callback: () => void) => {
+        enhancementMediaChange.mockImplementation(callback);
+      },
+      removeEventListener: vi.fn(),
+    }));
+  });
+
+  it.each([
+    [{ prefersReducedMotion: true, matchesEnhancedViewport: true, saveData: false }, "reduced"],
+    [{ prefersReducedMotion: false, matchesEnhancedViewport: false, saveData: false }, "static"],
+    [{ prefersReducedMotion: false, matchesEnhancedViewport: true, saveData: true }, "static"],
+    [{ prefersReducedMotion: false, matchesEnhancedViewport: true, saveData: false }, "enhanced"],
+  ] as const)("resolves %s to %s without scene-local policy", (environment, expected) => {
+    expect(resolveResumeMotionMode(environment)).toBe(expected);
   });
 
   it("publishes five stable chapters in semantic order and registers each anchor once", async () => {
@@ -178,5 +201,26 @@ describe("ResumeSceneRuntime", () => {
 
     unmount();
     expect(disconnect).toHaveBeenCalledTimes(1);
+  });
+
+  it("updates every scene mode from one media lifecycle and removes it on unmount", async () => {
+    const removeResize = vi.spyOn(window, "removeEventListener");
+    const { unmount } = render(
+      <ResumeSceneRuntime chapters={[{ id: "identity", label: "Identity" }]}>
+        <RuntimeProbe />
+      </ResumeSceneRuntime>,
+    );
+
+    await act(async () => {
+      await new Promise((resolve) => window.setTimeout(resolve, 0));
+    });
+    expect(screen.getByTestId("runtime-probe")).toHaveTextContent("identity:0.00:enhanced");
+
+    enhancementMediaMatches = false;
+    act(() => enhancementMediaChange());
+    expect(screen.getByTestId("runtime-probe")).toHaveTextContent("identity:0.00:static");
+
+    unmount();
+    expect(removeResize).toHaveBeenCalledWith("resize", expect.any(Function));
   });
 });

@@ -10,17 +10,19 @@ import { getResumeContent } from "@/content/resume";
 import { render, screen, within } from "@/test/render";
 
 const createTimeline = vi.fn();
+let prefersReducedMotion = false;
 
 vi.mock("@/components/motion/motion-runtime", () => ({
   useSceneTimeline: (...args: unknown[]) => createTimeline(...args),
   useMotionRuntime: () => ({
     scrollProgress: motionValue(0),
-    prefersReducedMotion: false,
+    prefersReducedMotion,
   }),
 }));
 
 afterEach(() => {
   createTimeline.mockReset();
+  prefersReducedMotion = false;
 });
 
 describe("ResumeCareerReveal", () => {
@@ -98,6 +100,7 @@ describe("ResumeCareerReveal", () => {
 
   it("keeps the existing timeline as the reduced-motion fallback instead of rendering two chronologies", () => {
     const resume = getResumeContent("en");
+    prefersReducedMotion = true;
     vi.stubGlobal("matchMedia", () => ({
       matches: true,
       addEventListener: vi.fn(),
@@ -114,8 +117,8 @@ describe("ResumeCareerReveal", () => {
       </ResumeSceneRuntime>,
     );
 
-    expect(container.querySelectorAll("[data-resume-career-reveal]")).toHaveLength(1);
-    expect(container.querySelectorAll(".resume-timeline")).toHaveLength(0);
+    expect(container.querySelectorAll("[data-resume-career-reveal]")).toHaveLength(0);
+    expect(container.querySelectorAll('section[aria-labelledby="resume-experience-heading"]')).toHaveLength(1);
     expect(screen.getAllByRole("list", { name: resume.labels.experience })).toHaveLength(1);
   });
 });
