@@ -51,16 +51,7 @@ function clampProgress(value: number): number {
 }
 
 function getMotionMode(prefersReducedMotion: boolean): ResumeMotionMode {
-  if (prefersReducedMotion) {
-    return "reduced";
-  }
-  if (typeof window === "undefined") {
-    return "static";
-  }
-
-  const coarsePointer = window.matchMedia?.("(pointer: coarse)").matches;
-  const narrowViewport = window.innerWidth < 768 || window.innerHeight < 600;
-  return coarsePointer || narrowViewport ? "static" : "enhanced";
+  return prefersReducedMotion ? "reduced" : "static";
 }
 
 function getClientMotionMode(prefersReducedMotion: boolean): ResumeMotionMode {

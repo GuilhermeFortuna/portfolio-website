@@ -1,9 +1,12 @@
 import { act, render, screen } from "@/test/render";
 import { motionValue } from "motion/react";
+import { hydrateRoot, type Root } from "react-dom/client";
+import { renderToString } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   ResumeChapter,
+  ResumeReadingTrace,
   ResumeSceneRuntime,
   useResumeSceneRuntime,
 } from "@/components/resume/resume-scene-runtime";
@@ -47,7 +50,7 @@ describe("ResumeSceneRuntime", () => {
     vi.stubGlobal("IntersectionObserver", IntersectionObserverFake);
   });
 
-  it("publishes six stable chapters in semantic order and registers each anchor once", () => {
+  it("publishes six stable chapters in semantic order and registers each anchor once", async () => {
     const chapters = [
       { id: "identity", label: "Identity" },
       { id: "capabilities", label: "Capabilities" },
@@ -68,6 +71,10 @@ describe("ResumeSceneRuntime", () => {
       </ResumeSceneRuntime>,
     );
 
+    await act(async () => {
+      await new Promise((resolve) => window.setTimeout(resolve, 0));
+    });
+
     expect(screen.getByTestId("runtime-probe")).toHaveTextContent(
       "identity:0.00:enhanced",
     );
@@ -80,7 +87,48 @@ describe("ResumeSceneRuntime", () => {
     expect(observe).toHaveBeenCalledTimes(chapters.length);
   });
 
-  it("maps shared progress and intersection state without owning scroll events", () => {
+  it("keeps the server and first client render in the same static mode", async () => {
+    const browserWindow = window;
+    const chapters = [{ id: "identity", label: "Identity" }] as const;
+    vi.stubGlobal("window", undefined);
+    const markup = renderToString(
+      <ResumeSceneRuntime chapters={chapters}>
+        <RuntimeProbe />
+        <ResumeReadingTrace />
+      </ResumeSceneRuntime>,
+    );
+    vi.stubGlobal("window", browserWindow);
+
+    expect(markup.replaceAll("<!-- -->", "")).toContain("identity:0.00:static");
+    expect(markup).toContain("resume-reading-trace--static");
+
+    const host = document.createElement("div");
+    host.innerHTML = markup;
+    document.body.append(host);
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    let root: Root | undefined;
+
+    await act(async () => {
+      root = hydrateRoot(
+        host,
+        <ResumeSceneRuntime chapters={chapters}>
+          <RuntimeProbe />
+          <ResumeReadingTrace />
+        </ResumeSceneRuntime>,
+      );
+      await new Promise((resolve) => window.setTimeout(resolve, 10));
+    });
+
+    const reportedHydrationMismatch = consoleError.mock.calls.some((call) =>
+      call.some((value) => String(value).includes("hydrated")),
+    );
+    await act(async () => root?.unmount());
+    host.remove();
+    consoleError.mockRestore();
+    expect(reportedHydrationMismatch).toBe(false);
+  });
+
+  it("maps shared progress and intersection state without owning scroll events", async () => {
     const chapters = [
       { id: "identity", label: "Identity" },
       { id: "capabilities", label: "Capabilities" },
@@ -100,6 +148,10 @@ describe("ResumeSceneRuntime", () => {
         ))}
       </ResumeSceneRuntime>,
     );
+
+    await act(async () => {
+      await new Promise((resolve) => window.setTimeout(resolve, 0));
+    });
 
     const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-resume-chapter]"));
     act(() => {

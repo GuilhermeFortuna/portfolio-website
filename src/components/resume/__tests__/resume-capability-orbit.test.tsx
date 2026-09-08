@@ -63,9 +63,19 @@ describe("ResumeCapabilityOrbit", () => {
     const first = screen.getByRole("button", { name: "Languages" });
     const second = screen.getByRole("button", { name: "Frontend and UI" });
 
+    expect(first).toHaveAttribute("aria-pressed", "true");
+    expect(first).toHaveAttribute("aria-expanded", "true");
+    expect(first).toHaveAttribute("aria-controls", "resume-capability-skills-0");
+    expect(document.querySelector("#resume-capability-skills-0")).toHaveAttribute(
+      "data-active",
+      "true",
+    );
+
     fireEvent.click(second);
     expect(second).toHaveAttribute("aria-pressed", "true");
+    expect(second).toHaveAttribute("aria-expanded", "true");
     expect(first).toHaveAttribute("aria-pressed", "false");
+    expect(first).toHaveAttribute("aria-expanded", "false");
 
     fireEvent.keyDown(second, { key: "Escape" });
     expect(second).toHaveAttribute("aria-pressed", "false");
