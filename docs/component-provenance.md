@@ -41,6 +41,25 @@ and attribution terms before relying on them.
 | Dotted Surface | https://21st.dev/@sshahaider/components/dotted-surface | `src/components/effects/dotted-surface.tsx` | `three` | Reframed from a full-viewport surface into a shallow, wide `20rem` horizon with a low camera pitch; denser, wider-than-deep grid; lowered wave frequencies to avoid banding; accent-token point colors; top mask and bottom fade into negative space; wrapped in `ManagedWebGLEffect` with a static dot-pattern fallback; stops rendering while offscreen. | Not independently verified; confirm terms at the canonical source page (21st.dev / @sshahaider). |
 | Resume Timeline | https://ui.aceternity.com/components/timeline | `src/components/resume/resume-timeline.tsx` | Existing `motion` only | Retrieved 2026-09-08 from the free Content component page and reduced to the resume contract: semantic ordered experience entries, token-based styling, one decorative chronology beam, desktop-only sticky periods, and static reduced-motion output. No Aceternity installer or package was used. | The canonical page identifies Timeline under free Content components. The linked Aceternity License permits modification and use in commercial/personal end products while prohibiting redistribution of source files; this repository distributes the adapted end product, not the upstream source. |
 
+## Batch 08 — Career Operating System (WO-044 planned sources)
+
+These entries are contract selections, not shipped components. WO-044 inspected
+the public registry/component pages on 2026-09-08 without installing packages.
+The full source/dependency/adaptation matrix and fallback contract are in
+[`docs/resume-career-operating-system.md`](./resume-career-operating-system.md).
+Implementation orders must re-verify public availability and license terms
+before adapting or redistributing source.
+
+| Component | Canonical URL | Local owner | Dependency | Planned adaptation | License / attribution status |
+| --- | --- | --- | --- | --- | --- |
+| Identity Scroll Choreography (planned) | https://21st.dev/@componentry/components/scroll-choreography | WO-046 Resume identity scene | Existing Motion only; no source package | Replace four image quadrants with factual typographic/data plates; preserve semantic hero and existing actions | Public code/usage inspected 2026-09-08; author componentry; published 2026-07-10; license and immutable revision not exposed; verify before implementation |
+| Capability Radial Orbital Timeline (planned) | https://21st.dev/@jatin-yadav05/components/radial-orbital-timeline | WO-046 Resume capability scene | Existing Motion only; no `lucide-react` dependency | Map exactly six existing skill groups; remove status, energy, date, relation, and icon claims; retain semantic list fallback | Public code/usage inspected 2026-09-08; author Jatin Yadav; MIT License declared; immutable revision not exposed |
+| Career Horizontal Feature Reveal (planned) | https://21st.dev/@hyperiux/components/horizontal-feature-reveal | WO-047 Resume career scene | Existing GSAP/ScrollTrigger bridge; no SplitText dependency | Adapt vertical-to-horizontal editorial track for two employers; preserve complete semantic chronology and natural fallback | Public code/usage inspected 2026-09-08; author Hyperiux Vault; MIT License declared; immutable revision not exposed |
+| Project Stacking Cards (planned) | https://21st.dev/@danielpetho/components/stacking-cards | WO-048 Resume project scene | Existing Motion only; no image dependency | Adapt sticky/scale presentation to text-only Quant and Nexo Dental proof cards; no new media or claims | Public code/usage inspected 2026-09-08; author Daniel Petho (example credits Khoa Phan); license and immutable revision not exposed; verify before implementation |
+| Dynamic Island TOC (planned) | https://21st.dev/@digitalzone0707/components/dynamic-island-toc | WO-045 Resume chapter navigation | Existing Motion and native anchors; no `lucide-react` dependency | Replace auto-discovered headings and smooth-scroll ownership with explicit six chapter links and existing Lenis behavior | Public code/usage inspected 2026-09-08; author Digital Zone; license and immutable revision not exposed; verify before implementation |
+| Tracing Beam (planned) | https://ui.aceternity.com/components/tracing-beam | WO-045 Resume reading trace | Existing Motion/scene progress; no new runtime | Decorative SVG trace along chapter rail; static or omitted in fallback; never semantic chronology | Free component page and props inspected 2026-09-08; Aceternity UI; license and immutable revision not exposed on page; verify before implementation |
+| Google Gemini Effect (planned) | https://ui.aceternity.com/components/google-gemini-effect | WO-048 Resume convergence | Existing Motion; no WebGL | Restrained token-based SVG paths converging on existing PDF/contact actions; remove demo copy | Free component page and props inspected 2026-09-08; Aceternity UI; license and immutable revision not exposed on page; verify before implementation |
+
 ## Aegis case study (Batch 03)
 
 Nothing on `/work/aegis` is externally sourced, and the batch added no runtime
