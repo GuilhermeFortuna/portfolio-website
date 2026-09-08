@@ -11,6 +11,8 @@ import {
 } from "@/components/resume/resume-scene-runtime";
 import { ResumeChapterNavigationConnected } from "@/components/resume/resume-chapter-navigation";
 import { ResumeIdentityScene } from "@/components/resume/resume-identity-scene";
+import { ResumeCredentialStack } from "@/components/resume/resume-credential-stack";
+import { ResumeConvergence } from "@/components/resume/resume-convergence";
 import { getResumeContent } from "@/content/resume";
 import type { Locale } from "@/lib/i18n";
 import type { ResumeContent } from "@/types/resume";
@@ -50,38 +52,21 @@ function ResumeDocument({ resume }: { resume: ResumeContent }) {
       </ResumeChapter>
 
       <ResumeChapter id="credentials" label={resume.labels.education}>
-        <section aria-labelledby="resume-education-heading" className="border-b border-[var(--color-line)] py-12 lg:py-16">
-        <div className="grid gap-8 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-10">
-          <h2 id="resume-education-heading" className="text-2xl font-semibold tracking-[-0.03em] text-[var(--color-text)] sm:text-3xl">
-            {resume.labels.education}
-          </h2>
-          <ol className="list-decimal space-y-5 pl-5 text-sm leading-7 text-[var(--color-text-muted)]">
-            {resume.education.map((entry) => (
-              <li key={`${entry.institution}-${entry.period}`}>
-                <span className="font-semibold text-[var(--color-text)]">{entry.institution}</span> — {entry.program} · {entry.period}
-              </li>
-            ))}
-          </ol>
-        </div>
-        </section>
+        <ResumeCredentialStack
+          entries={resume.education}
+          sectionLabel={resume.labels.education}
+        />
+      </ResumeChapter>
 
-        <section aria-labelledby="resume-languages-heading" className="py-12 lg:py-16">
-        <div className="grid gap-8 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-10">
-          <h2 id="resume-languages-heading" className="text-2xl font-semibold tracking-[-0.03em] text-[var(--color-text)] sm:text-3xl">
-            {resume.labels.languages}
-          </h2>
-          <div>
-            <ul className="space-y-2 text-sm leading-7 text-[var(--color-text-muted)]">
-              {resume.languages.map((language) => <li key={language}>{language}</li>)}
-            </ul>
-            <ResumeChapter id="contact" label={resume.labels.contact}>
-              <a href={resume.locale === "en" ? "/#work" : "/pt-BR/#work"} className="mt-8 inline-flex min-h-11 items-center text-sm font-semibold text-[var(--color-text)] underline underline-offset-4">
-                {resume.labels.returnToWork}
-              </a>
-            </ResumeChapter>
-          </div>
-        </div>
-        </section>
+      <ResumeChapter id="contact" label={resume.labels.contact}>
+        <ResumeConvergence
+          languageLabel={resume.labels.languages}
+          languages={resume.languages}
+          labels={resume.labels}
+          pdf={resume.pdf}
+          contactHref={resume.links.find((link) => link.kind === "email")!.href}
+          workHref={resume.locale === "en" ? "/#work" : "/pt-BR/#work"}
+        />
       </ResumeChapter>
     </main>
   );

@@ -54,6 +54,7 @@ describe("resume routes", () => {
       resume.labels.experience,
       resume.labels.education,
       resume.labels.languages,
+      resume.labels.contact,
     ]);
 
     const experienceRegion = screen.getByRole("region", {
@@ -80,22 +81,19 @@ describe("resume routes", () => {
     expect(document.body).not.toHaveTextContent("Multi-Tenant Clinic Management SaaS");
 
     const main = screen.getByRole("main");
-    expect(within(main).getByRole("link", { name: resume.labels.viewPdf })).toHaveAttribute(
-      "href",
-      resume.pdf.href,
-    );
-    expect(within(main).getByRole("link", { name: resume.labels.downloadPdf })).toHaveAttribute(
-      "download",
-      resume.pdf.downloadName,
-    );
-    expect(within(main).getByRole("link", { name: resume.labels.viewPdf })).toHaveAttribute(
-      "target",
-      "_blank",
-    );
-    expect(within(main).getByRole("link", { name: resume.labels.viewPdf })).toHaveAttribute(
-      "rel",
-      "noreferrer",
-    );
+    const viewLinks = within(main).getAllByRole("link", { name: resume.labels.viewPdf });
+    expect(viewLinks).toHaveLength(2);
+    for (const viewLink of viewLinks) {
+      expect(viewLink).toHaveAttribute("href", resume.pdf.href);
+      expect(viewLink).toHaveAttribute("target", "_blank");
+      expect(viewLink).toHaveAttribute("rel", "noreferrer");
+    }
+    const downloadLinks = within(main).getAllByRole("link", { name: resume.labels.downloadPdf });
+    expect(downloadLinks).toHaveLength(2);
+    for (const downloadLink of downloadLinks) {
+      expect(downloadLink).toHaveAttribute("href", resume.pdf.href);
+      expect(downloadLink).toHaveAttribute("download", resume.pdf.downloadName);
+    }
     expect(document.body.innerHTML).not.toContain("/work/aegis");
     expect(document.body.innerHTML).not.toContain("[REQUIRED:");
   });
@@ -111,10 +109,7 @@ describe("resume routes", () => {
     expect(document.querySelector(".resume-identity__role")).toHaveTextContent(
       resume.identity.role,
     );
-    expect(screen.getByRole("link", { name: resume.labels.viewPdf })).toHaveAttribute(
-      "href",
-      resume.pdf.href,
-    );
+    expect(screen.getAllByRole("link", { name: resume.labels.viewPdf })).toHaveLength(2);
     expect(screen.getByRole("link", { name: resume.labels.phone })).toHaveAttribute(
       "href",
       "tel:+5548991814229",
