@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { useInsertionEffect, useRef, type ReactNode } from "react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { useSceneTimeline } from "@/components/motion/motion-runtime";
 import { useResumeSceneMode } from "@/components/resume/resume-scene-runtime";
@@ -32,12 +33,29 @@ function splitHighlight(highlight: string): { label: string; detail: string } {
  */
 export function ResumeExperienceScene(props: ResumeCareerRevealProps): ReactNode {
   const mode = useResumeSceneMode();
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const previousMode = useRef(mode);
 
-  if (mode !== "enhanced") {
-    return <ResumeTimeline {...props} />;
-  }
+  useInsertionEffect(() => {
+    if (previousMode.current === "enhanced" && mode !== "enhanced") {
+      const scene = sceneRef.current;
+      if (scene) {
+        for (const trigger of ScrollTrigger.getAll()) {
+          const triggerElement = trigger.trigger;
+          if (triggerElement instanceof Element && scene.contains(triggerElement)) {
+            trigger.kill(true);
+          }
+        }
+      }
+    }
+    previousMode.current = mode;
+  }, [mode]);
 
-  return <ResumeCareerReveal {...props} />;
+  return (
+    <div ref={sceneRef} data-resume-experience-scene data-motion-mode={mode}>
+      {mode !== "enhanced" ? <ResumeTimeline {...props} /> : <ResumeCareerReveal {...props} />}
+    </div>
+  );
 }
 
 /**
@@ -67,7 +85,7 @@ export function ResumeCareerReveal({
           trigger: scope,
           start: "top top+=96",
           end: () => `+=${Math.max(scope.clientWidth, track.scrollWidth)}`,
-          pin: true,
+          pin: false,
           scrub: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,

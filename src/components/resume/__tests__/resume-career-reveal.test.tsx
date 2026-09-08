@@ -98,6 +98,29 @@ describe("ResumeCareerReveal", () => {
     ]);
   });
 
+  it("keeps the enhanced track non-pinning so breakpoint fallback swaps preserve React ownership", () => {
+    const resume = getResumeContent("en");
+    render(
+      <ResumeCareerReveal
+        entries={resume.experience}
+        sectionLabel={resume.labels.experience}
+        sectionTitle={resume.labels.experience}
+      />,
+    );
+
+    const fakeTo = vi.fn(() => ({ kill: vi.fn() }));
+    const call = (createTimeline.mock.calls as unknown as Array<[unknown, unknown]>)[0];
+    const factory = call[1] as ((context: { gsap: { to: typeof fakeTo } }) => unknown);
+    factory({ gsap: { to: fakeTo } });
+
+    const timelineCall = (fakeTo.mock.calls as unknown as Array<[unknown, unknown]>)[0];
+    expect(timelineCall?.[1]).toEqual(
+      expect.objectContaining({
+        scrollTrigger: expect.objectContaining({ pin: false }),
+      }),
+    );
+  });
+
   it("keeps the existing timeline as the reduced-motion fallback instead of rendering two chronologies", () => {
     const resume = getResumeContent("en");
     prefersReducedMotion = true;

@@ -124,4 +124,17 @@ describe("ResumeChapterNavigation", () => {
     expect(progressSvg).toHaveAttribute("aria-hidden", "true");
     expect(navigation.querySelector("[data-scroll-handler]")).not.toBeInTheDocument();
   });
+
+  it("marks static navigation for document-flow placement", () => {
+    render(
+      <ResumeChapterNavigation
+        chapters={chapters}
+        activeChapter="identity"
+        progress={0}
+        motionMode="static"
+      />,
+    );
+
+    expect(screen.getByRole("navigation")).toHaveAttribute("data-motion-mode", "static");
+  });
 });

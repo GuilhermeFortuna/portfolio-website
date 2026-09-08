@@ -13,6 +13,7 @@ import {
   useResumeSceneRuntime,
   type ResumeChapter,
   type ResumeChapterId,
+  type ResumeMotionMode,
 } from "@/components/resume/resume-scene-runtime";
 
 export type ResumeChapterNavigationProps = {
@@ -20,6 +21,7 @@ export type ResumeChapterNavigationProps = {
   activeChapter: ResumeChapterId;
   progress: number;
   prefersReducedMotion?: boolean;
+  motionMode?: ResumeMotionMode;
 };
 
 function CircleProgress({ progress }: { progress: number }) {
@@ -72,6 +74,7 @@ export function ResumeChapterNavigation({
   activeChapter,
   progress,
   prefersReducedMotion = false,
+  motionMode,
 }: ResumeChapterNavigationProps): ReactNode {
   const [isExpanded, setIsExpanded] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -107,6 +110,7 @@ export function ResumeChapterNavigation({
     <nav
       aria-label={accessibleName}
       className="resume-dynamic-island-nav"
+      data-motion-mode={motionMode}
     >
       <AnimatePresence>
         {isExpanded && (
@@ -224,7 +228,7 @@ export function ResumeChapterNavigation({
 }
 
 export function ResumeChapterNavigationConnected(): ReactNode {
-  const { chapters, activeChapter, progress, prefersReducedMotion } =
+  const { chapters, activeChapter, progress, mode, prefersReducedMotion } =
     useResumeSceneRuntime();
   return (
     <ResumeChapterNavigation
@@ -232,6 +236,7 @@ export function ResumeChapterNavigationConnected(): ReactNode {
       activeChapter={activeChapter}
       progress={progress}
       prefersReducedMotion={prefersReducedMotion}
+      motionMode={mode}
     />
   );
 }
