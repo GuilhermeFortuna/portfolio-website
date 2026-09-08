@@ -34,15 +34,17 @@ authorization, a dedicated correction commit, and a complete re-run.
 
 ### 1. Content, privacy, and actions
 
-- Compare every rendered block in both locales to the accepted WO-040 contract;
-  report exact block and mismatch counts.
+- Compare every retained rendered block in both locales to the accepted WO-040
+  facts plus the owner-approved WO-048 project-omission amendment; report exact
+  block and mismatch counts.
 - Confirm no facts, metrics, labels, relationships, or hidden accessible copies
   were invented for animation.
 - Re-run Batch 07's email/phone/PDF/hash/localization/privacy contract, including
   zero Resume connection to `/work/aegis` and zero confidentiality regression on
   Work surfaces.
-- Verify View PDF, Download PDF, contact, project, locale, chapter, header, and
-  footer links before hydration and after every enhanced scene state.
+- Verify View PDF, Download PDF, contact, Return to Work, locale, chapter,
+  header, and footer links before hydration and after every enhanced scene
+  state.
 
 ### 2. Source and runtime integrity
 

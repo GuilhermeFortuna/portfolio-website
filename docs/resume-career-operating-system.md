@@ -2,9 +2,12 @@
 
 **Work Order:** WO-044
 
-**Contract status:** Owner review required
+**Contract status:** Owner-approved; amended for WO-048
 
 **Prepared:** 2026-09-08
+
+**Amended:** 2026-09-08 — owner removed the redundant web Resume project
+chapter and retargeted Stacking Cards to Education and International Experience.
 
 **Repository:** `portfolio-website`
 
@@ -50,8 +53,8 @@ contract acceptance, or the freeze-commit requirement.
 - The English route is `/resume`; Portuguese is `/pt-BR/resume`. Both routes
   use the same scene model and their own localized `ResumeContent` object.
 - The web Resume remains the accessible primary document. PDF view/download,
-  email, phone, website, GitHub, LinkedIn, project, language, and Work actions
-  remain ordinary links available before hydration.
+  email, phone, website, GitHub, LinkedIn, and Work actions remain ordinary
+  links available before hydration.
 - Employer names, phone, public email, and the approved Aegis bullet remain
   confined to the existing Resume publication boundary. Nothing in this batch
   links that wording to `/work/aegis`, and no Work confidentiality rule is
@@ -73,14 +76,14 @@ The page is one authored progression, not a catalog of unrelated demos:
    localized full-stack organizing label.
 3. **Career chapters** — the two existing experience entries move through an
    editorial track in their existing reverse-chronological order.
-4. **Proof stack** — the two existing project entries become evidence cards,
-   retaining their names, roles, periods, highlights, and approved links.
-5. **Education/languages decompression** — all education entries and both
-   language entries return to calm document flow.
-6. **Convergence/actions** — decorative paths resolve toward the existing PDF
-   and contact actions without adding claims or destinations.
+4. **Credential stack** — the three existing Education and International
+   Experience entries become restrained editorial cards in source order; both
+   language entries remain the calm bridge after them.
+5. **Convergence/actions** — decorative paths resolve from credentials and
+   languages toward the existing PDF, contact, and Return to Work actions
+   without adding claims or destinations.
 
-### Complete `ResumeContent` mapping
+### Retained `ResumeContent` mapping
 
 The following is a structural map, not a second content source. Implementers
 must iterate the typed values from `getResumeContent(locale)` and must not copy
@@ -91,7 +94,6 @@ or re-author the strings into scene files.
 | Identity | `identity.focus`, `identity.name`, `identity.role`, `identity.summary`, `location`, `availability`, `links`, `pdf`, localized action labels | 1 identity object per locale; 5 links; 1 PDF object; all action labels from `labels` |
 | Capabilities | `skills` and `labels.skills` | 6 groups in source order; each group emits its complete `items` list |
 | Career | `experience` and `labels.experience` | 2 entries in source order: `BRXBET & RICOBET`, then `Jones Software`; each emits organization, role, period, location, and every highlight |
-| Projects | `projects` and `labels.projects` | 2 entries in source order: `Q`, then `Nexo Dental`; each emits name, role, period, every highlight, and only its existing approved destination when present |
 | Credentials | `education`, `languages`, `labels.education`, `labels.languages` | 3 education entries in source order and 2 language entries in source order |
 | Contact/convergence | `links`, `pdf`, `labels.viewPdf`, `labels.downloadPdf`, `labels.contact`, `labels.returnToWork` | Existing localized links/actions only; no new CTA wording or route |
 
@@ -99,11 +101,11 @@ Locale parity rules:
 
 - English and Portuguese must render the same field paths, cardinalities, and
   ordering. Text differs only where the approved localized values differ.
-- English has localized labels for Technical Skills, Work Experience, Selected
-  Software Projects, Education and International Experience, Languages, View
-  PDF, Download PDF, Email, Phone, Website, GitHub, LinkedIn, Contact, and
-  Return to Work. Portuguese uses the corresponding existing `labels` values;
-  scene code must never hard-code either set.
+- English has localized labels for Technical Skills, Work Experience,
+  Education and International Experience, Languages, View PDF, Download PDF,
+  Email, Phone, Website, GitHub, LinkedIn, Contact, and Return to Work.
+  Portuguese uses the corresponding existing `labels` values; scene code must
+  never hard-code either set.
 - The six capability groups are exactly the existing groups: Languages,
   Frontend and UI, Backend and APIs, Cloud and DevOps, Data and AI, and
   Security and QA in English; their Portuguese values come from the same
@@ -124,10 +126,10 @@ and no generated project or remote asset is copied into this repository.
 | Identity — [Scroll Choreography](https://21st.dev/@componentry/components/scroll-choreography) | Author: componentry; source/registry page above; retrieved 2026-09-08; published 2026-07-10; immutable commit not exposed | Component and usage code visible on the public page; no account or purchase observed; page did not expose a license declaration, so license confirmation remains required before source redistribution | React client component; page lists `framer-motion`; four image quadrants and a full-screen expansion assume viewport-sized media and client animation | Retain staged multi-plate convergence. Replace all images with CSS/data plates; use existing Motion; keep identity facts in semantic flow; no portrait, remote media, or image claim; static hero is primary fallback |
 | Capabilities — [Radial Orbital Timeline](https://21st.dev/@jatin-yadav05/components/radial-orbital-timeline) | Author: Jatin Yadav; source/registry page above; retrieved 2026-09-08; published 2025-04-29; immutable commit not exposed | Component and usage code visible publicly; page declares MIT License; no account or purchase observed | Client component; page lists `lucide-react`; data model includes node ids, title, date, content, category, icon, related ids, status, and energy; circular geometry assumes a sufficiently wide viewport | Retain radial nodes around a center. Remove status/energy/date/relationship claims and icon dependency; use six existing skill groups; semantic list remains primary; pointer/keyboard emphasis is optional visual enhancement |
 | Career — [Horizontal Feature Reveal](https://21st.dev/@hyperiux/components/horizontal-feature-reveal) | Author: Hyperiux Vault; source/registry page above; retrieved 2026-09-08; published 2026-09-03; immutable commit not exposed | Component and usage code visible publicly; page declares MIT License; no account or purchase observed | Client component; page lists GSAP; vertical scroll drives a horizontal track, SplitText line masks, and image parallax; theme and fixed card-gap assumptions require replacement | Retain vertical-to-horizontal editorial progression. Use existing GSAP/ScrollTrigger through `useSceneTimeline`; remove SplitText/image requirements; retain full bullets in semantic order; natural timeline fallback below the contract threshold |
-| Projects — [Stacking Cards](https://21st.dev/@danielpetho/components/stacking-cards) | Author shown as Daniel Petho; example comment credits Khoa Phan; source/registry page above; retrieved 2026-09-08; published date not exposed; immutable commit not exposed | Component and usage code visible publicly; license declaration not exposed on the inspected page, so license confirmation remains required | Client component; Motion-based sticky cards; demo assumes a scroll container, fixed card height, image slots, and visual overlap | Retain presentational sticky/scale stack only. Use existing project text and existing links; no images or new claims; ordinary semantic articles stay in document order; static spaced list for mobile, zoom, reduced motion, and failure |
-| Navigation — [Dynamic Island TOC](https://21st.dev/@digitalzone0707/components/dynamic-island-toc) | Author: Digital Zone; source/registry page above; retrieved 2026-09-08; published 2026-05-07; immutable commit not exposed | Component and usage code visible publicly; license declaration not exposed on the inspected page, so license confirmation remains required | Client component; page lists Motion and `lucide-react`; discovers headings/data attributes, uses scroll spy, reading progress, expansion, and smooth scrolling; default selectors could duplicate or capture unrelated headings | Retain compact expanding chapter rail and active-section indication. Supply an explicit six-item model; use native anchors and existing Lenis behavior; no heading auto-discovery, nested scroller, or second smooth-scroll owner |
+| Credentials — [Stacking Cards](https://21st.dev/@danielpetho/components/stacking-cards) | Author shown as Daniel Petho; example comment credits Khoa Phan; source/registry page above; retrieved 2026-09-08; published date not exposed; immutable commit not exposed | Component and usage code visible publicly; license declaration not exposed on the inspected page, so license confirmation remains required | Client component; Motion-based sticky cards; demo assumes a scroll container, fixed card height, image slots, and visual overlap | Retain presentational sticky/scale stack only. Use the three existing education entries; no images or new claims; one semantic ordered list stays in document order; Languages remains a separate calm list; static spaced flow for mobile, zoom, reduced motion, and failure |
+| Navigation — [Dynamic Island TOC](https://21st.dev/@digitalzone0707/components/dynamic-island-toc) | Author: Digital Zone; source/registry page above; retrieved 2026-09-08; published 2026-05-07; immutable commit not exposed | Component and usage code visible publicly; license declaration not exposed on the inspected page, so license confirmation remains required | Client component; page lists Motion and `lucide-react`; discovers headings/data attributes, uses scroll spy, reading progress, expansion, and smooth scrolling; default selectors could duplicate or capture unrelated headings | Retain compact expanding chapter rail and active-section indication. Supply an explicit five-item model; use native anchors and existing Lenis behavior; no heading auto-discovery, nested scroller, or second smooth-scroll owner |
 | Reading trace — [Tracing Beam](https://ui.aceternity.com/components/tracing-beam) | Aceternity UI; source page above; retrieved 2026-09-08; page describes an SVG-following beam; component revision not exposed | Free component page and props (`className`, `children`) publicly inspectable; no account or purchase required for the component page; license text was not exposed in the inspected page and must be confirmed before redistribution | SVG path/scroll-linked visual; implementation must remain decorative and must not become the semantic chronology or add a second scroll observer | Retain a single visual reading trace along the chapter rail. Adapt to existing tokens and shared scene progress; use `aria-hidden`; static line or no line in fallback |
-| Convergence — [Google Gemini Effect](https://ui.aceternity.com/components/google-gemini-effect) | Aceternity UI; source page above; retrieved 2026-09-08; page exposes `pathLengths: MotionValue[]`, optional title/description/className; component revision not exposed | Free component page and usage contract publicly inspectable; no account or purchase required for the component page; license text was not exposed in the inspected page and must be confirmed before redistribution | SVG paths driven by MotionValues; demo includes default marketing copy that is prohibited locally; no WebGL | Retain restrained SVG path convergence. Replace all demo copy with existing localized action labels; decorative paths are optional and `aria-hidden`; links remain ordinary, early, and usable |
+| Convergence — [Google Gemini Effect](https://ui.aceternity.com/components/google-gemini-effect) | Aceternity UI; source page above; retrieved 2026-09-08; page exposes `pathLengths: MotionValue[]`, optional title/description/className; component revision not exposed | Free component page and usage contract publicly inspectable; no account or purchase required for the component page; license text was not exposed in the inspected page and must be confirmed before redistribution | SVG paths driven by MotionValues; demo includes default marketing copy that is prohibited locally; no WebGL | Retain restrained SVG path convergence from credentials/languages toward the existing PDF, contact, and Return to Work actions. Replace all demo copy with existing localized action labels; decorative paths are optional and `aria-hidden`; links remain ordinary, early, and usable |
 
 ### Rejected sources and substitutions
 
@@ -151,7 +153,6 @@ type ResumeChapterId =
   | "identity"
   | "capabilities"
   | "experience"
-  | "projects"
   | "credentials"
   | "contact";
 
@@ -203,7 +204,7 @@ spec. Every frame contains the complete semantic document in DOM order.
 | --- | --- | --- |
 | Start | Header; compact chapter rail at the edge; identity plates and the single name `h1` dominate; primary PDF/contact actions are visible | Identity progress 0.00–0.18; plates enter with transform/opacity only; links are immediately usable |
 | Mid | Identity has resolved into the name/role/summary; capability section occupies the viewport with six restrained nodes around the center; rail marks capabilities | Identity exits before orbit dominates; orbit may respond to scroll/pointer/keyboard without hiding skills; one dominant effect |
-| End | Career track is readable with one employer chapter emphasized; subsequent proof, credentials, and convergence remain reachable below | Horizontal career enhancement may pin only here; the semantic timeline remains the underlying content source; no blank spacer or scroll trap |
+| End | Career track is readable with one employer chapter emphasized; the subsequent credential stack, Languages bridge, and convergence remain reachable below | Horizontal career enhancement may pin only here; the semantic timeline remains the underlying content source; no blank spacer or scroll trap |
 
 ### 1024×768 tablet boundary
 
@@ -211,7 +212,7 @@ spec. Every frame contains the complete semantic document in DOM order.
 | --- | --- | --- |
 | Start | Identity remains a two-column editorial hero only if content fits; otherwise collapses to one column | No pin or orbit compression that causes clipping; actions wrap normally |
 | Mid | Skills are a wrapping two-column/list presentation; chapter rail is compact or inline | Enhanced effects may be disabled at the measured boundary; semantic order wins |
-| End | Experience, projects, credentials, and actions are natural-flow sections | No horizontal reading requirement; no fixed-height card stack |
+| End | Experience, credentials, Languages, and actions are natural-flow sections | No horizontal reading requirement; no fixed-height card stack |
 
 ### 375×780 mobile
 
@@ -219,7 +220,7 @@ spec. Every frame contains the complete semantic document in DOM order.
 | --- | --- | --- |
 | Start | Header, identity `h1`, summary, contact/PDF links, and compact labels in one column | No pin, orbit, horizontal track, sticky stack, or pointer interaction |
 | Mid | All six skill groups and both experience entries appear as ordinary lists/sections | Existing semantic timeline is the visual and accessibility representation |
-| End | Both projects, all education/languages, and PDF/contact actions remain visible in document flow | Decorative trace/path may be omitted; no content waits for hydration |
+| End | All education/languages and PDF/contact/Work actions remain visible in document flow | Decorative trace/path may be omitted; no content waits for hydration |
 
 ### 200% zoom and short viewport
 
@@ -240,8 +241,8 @@ spec. Every frame contains the complete semantic document in DOM order.
   begins.
 - Career: desktop horizontal translation occupies 0.12–0.88 of its track; the
   remaining range is breathing room for entry/exit.
-- Projects: card stacking may occupy 0.15–0.82; cards never cover the focused
-  link or create a nested vertical scroller.
+- Credentials: card stacking may occupy 0.15–0.82; cards never cover their
+  heading or create a nested vertical scroller. Languages remains in calm flow.
 - Convergence: paths draw only after credentials have entered flow; endpoint
   actions are visible before drawing begins.
 - Use existing motion/easing tokens and the existing `MotionConfig`; any new
@@ -260,7 +261,7 @@ spec. Every frame contains the complete semantic document in DOM order.
 | Condition | Required result |
 | --- | --- |
 | Normal motion, wide/tall viewport | Enhanced scene may run through the shared runtime with deterministic geometry and cleanup |
-| `prefers-reduced-motion: reduce` | Static identity, list-based capabilities, semantic timeline, ordinary project/credential flow, static/omitted trace and paths |
+| `prefers-reduced-motion: reduce` | Static identity, list-based capabilities, semantic timeline, ordinary credential/language flow, static/omitted trace and paths |
 | Coarse pointer | Disable pointer-driven emphasis and hover-only behavior; retain keyboard/native links and static composition |
 | Narrow viewport | Disable orbital, horizontal, sticky, and stacked choreography; use one-column semantic document |
 | Short viewport | Disable pins/sticky positioning; retain natural flow and visible fixed-header offsets |
@@ -273,13 +274,13 @@ spec. Every frame contains the complete semantic document in DOM order.
 
 - One page `h1`, then ordered `h2`/`h3` headings. Do not duplicate headings
   solely for visual animation.
-- Use semantic `main`, sections, ordered experience/project/education lists,
-  unordered skills/language lists, `address` for contact links, and ordinary
-  anchors for PDF, email, phone, project, locale, and Work actions.
-- The document order is identity → capabilities → experience → projects →
-  credentials → contact. CSS transforms and horizontal translations never
+- Use semantic `main`, sections, ordered experience/education lists, unordered
+  skills/language lists, `address` for contact links, and ordinary anchors for
+  PDF, email, phone, locale, and Work actions.
+- The document order is identity → capabilities → experience → credentials →
+  contact. CSS transforms and horizontal translations never
   reorder accessible content.
-- The chapter rail has six native destinations matching the fixed
+- The chapter rail has five native destinations matching the fixed
   `ResumeChapterId` values. Exactly one destination may expose the current
   state; inactive destinations remain keyboard reachable.
 - Use visible `:focus-visible` styling with the existing tokens. No focused
@@ -291,7 +292,7 @@ spec. Every frame contains the complete semantic document in DOM order.
 - Decorative beams, SVG paths, orbital lines, plate echoes, progress meters,
   and repeated counters use `aria-hidden="true"`; they never carry facts.
 - Do not add live regions for scroll progress or active chapter changes.
-- No content, project relationship, action, or factual field depends on hover,
+- No content, action, or factual field depends on hover,
   pointer position, scroll completion, animation completion, canvas, CSS, or
   hydration.
 - Motion controls must respect OS reduced-motion preference. Any explicit
@@ -331,10 +332,10 @@ Measure both locales from a production build and server, not development mode:
 
 | Order | Input frozen by WO-044 | Sole output and non-goal |
 | --- | --- | --- |
-| WO-045 | Scene ids, shell props, progress/motion modes, six chapter rail destinations, tracing-beam role, runtime ownership | Resume scene shell, shared progress, trace, and TOC; no identity/orbit/career/project visual implementation |
-| WO-046 | Identity and capability source/adaptation rows, content field map, responsive thresholds | Identity choreography and six-group capability orbit; no career/project/credential changes |
-| WO-047 | Career source row, two-entry experience map, semantic timeline fallback, progress ranges | Desktop career reveal and its fallback; no changes to facts, projects, or actions |
-| WO-048 | Project source row, two-project map, credential flow, convergence role/action contract | Project stack and closing convergence; no new media, claims, links, or dependencies |
+| WO-045 | Scene ids, shell props, progress/motion modes, chapter rail destinations, tracing-beam role, runtime ownership | Resume scene shell, shared progress, trace, and TOC; no identity/orbit/career/credential visual implementation |
+| WO-046 | Identity and capability source/adaptation rows, content field map, responsive thresholds | Identity choreography and six-group capability orbit; no career/credential changes |
+| WO-047 | Career source row, two-entry experience map, semantic timeline fallback, progress ranges | Desktop career reveal and its fallback; no changes to facts, credentials, or actions |
+| WO-048 | Credential source row, three-entry education map, language flow, project-omission decision, and convergence role/action contract | Credential stack and closing convergence; remove the web Resume project chapter without changing PDFs or Work surfaces; no new media, claims, links, or dependencies |
 | WO-049 | All prior scene interfaces and fallback rules | Integrated responsive/accessibility/performance polish and named freeze commit; no new concept/source/dependency |
 | WO-050 | WO-049 freeze commit and this accepted contract | Independent GO/NO-GO release review; no silent product repair |
 
@@ -342,10 +343,11 @@ Measure both locales from a production build and server, not development mode:
 
 ### Static/component tests
 
-- Assert all six chapter ids are present once and all scene labels come from
+- Assert all five chapter ids are present once and all scene labels come from
   localized content.
-- Assert one semantic copy of every Resume field, one `h1`, ordered headings,
-  complete lists, existing action URLs, and zero new factual strings.
+- Assert one semantic copy of every retained web Resume field, one `h1`, ordered
+  headings, complete lists, existing action URLs, no rendered project chapter,
+  and zero new factual strings.
 - Assert English/Portuguese field-path parity, cardinalities, ordering,
   localized labels, PDF names, and no `/work/aegis` link.
 - Assert reduced/static mode renders the complete semantic timeline and all
@@ -380,8 +382,9 @@ second route visit. Record unavailable engines as environmental gaps.
 
 - [ ] Seven source records are complete and publicly inspectable, with license
       status and immutable-revision gaps stated honestly.
-- [ ] Every bilingual `ResumeContent` field is mapped without invention or
-      omission.
+- [ ] Every retained bilingual `ResumeContent` field is mapped without
+      invention or omission; web-only project fields are removed by the
+      owner-approved WO-048 amendment.
 - [ ] Interfaces, runtime ownership, responsive storyboard, motion grammar,
       fallbacks, accessibility, and budgets are implementation-testable.
 - [ ] Later Work Orders have unambiguous boundaries.

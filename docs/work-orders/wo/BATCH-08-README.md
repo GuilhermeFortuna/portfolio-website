@@ -5,8 +5,8 @@
 Transform the already-published bilingual Resume from a polished document into
 the approved **Career Operating System**: a cinematic, scroll-directed story in
 which identity resolves, capabilities orbit a technical core, career chapters
-move through an editorial track, selected projects stack into evidence, and the
-closing paths converge on the existing contact and PDF actions.
+move through an editorial track, education credentials stack into evidence, and
+the closing paths converge on the existing contact, PDF, and Work actions.
 
 This is an adaptation batch, not a component-invention exercise. Every dominant
 interaction starts from an inspectable, free/public source and is reduced to the
@@ -36,12 +36,14 @@ The owner approved this composition on **2026-09-08**:
    existing capability groups around a restrained full-stack core.
 3. **Career chapters** — adapt 21st.dev's public Horizontal Feature Reveal so
    vertical reading drives a horizontal desktop story for the two employers.
-4. **Proof stack** — adapt 21st.dev's public Stacking Cards for the existing
-   Quant and Nexo Dental project evidence already present in the Resume copy.
+4. **Credential stack** — adapt 21st.dev's public Stacking Cards for the three
+   existing Education and International Experience entries; keep Languages as
+   the quiet bridge into the closing actions.
 5. **Connective navigation** — adapt Aceternity's free Tracing Beam and
    21st.dev's public Dynamic Island TOC into one Resume chapter rail.
 6. **Convergence** — adapt Aceternity's free Google Gemini Effect so the visual
-   paths resolve into the existing PDF and contact actions.
+   paths resolve from credentials/languages into the existing PDF, contact, and
+   Return to Work actions.
 7. **Fallback document** — retain the current Aceternity-derived semantic
    timeline as the mobile, reduced-motion, no-JavaScript, and failure fallback.
 
@@ -59,7 +61,7 @@ enter the product. The canonical candidates are:
 | Identity choreography | `https://21st.dev/@componentry/components/scroll-choreography` |
 | Capability system map | `https://21st.dev/@jatin-yadav05/components/radial-orbital-timeline` |
 | Career chapters | `https://21st.dev/@hyperiux/components/horizontal-feature-reveal` |
-| Proof stack | `https://21st.dev/@danielpetho/components/stacking-cards` |
+| Credential stack | `https://21st.dev/@danielpetho/components/stacking-cards` |
 | Chapter navigation | `https://21st.dev/@digitalzone0707/components/dynamic-island-toc` |
 | Reading trace | `https://ui.aceternity.com/components/tracing-beam` |
 | Closing convergence | `https://ui.aceternity.com/components/google-gemini-effect` |
@@ -74,8 +76,9 @@ must record a free replacement and obtain owner acceptance before implementation
   motion preference hook, and managed effect lifecycle already in the site.
 - Do not initialize another Lenis instance, global scroll listener system,
   animation library, or WebGL canvas.
-- Render the complete Resume content in semantic document order before
-  hydration. Animation may transform presentation, never gate information.
+- Render all retained web Resume content in semantic document order before
+  hydration. The owner-approved WO-048 amendment removes the duplicated project
+  chapter; animation may transform presentation, never gate information.
 - Both locales use the same scene model but retain their exact approved copy.
 - Desktop may pin, orbit, reveal, and stack. Mobile and 200% zoom must remain a
   natural single-column document with no horizontal reading requirement.
@@ -106,7 +109,7 @@ WO-043 Batch 07 Resume Release GO
        └─ WO-045 Resume Scene Runtime and Chapter Navigation
             └─ WO-046 Identity Resolution and Capability Orbit
                  └─ WO-047 Career Chapter Reveal
-                      └─ WO-048 Project Proof Stack and Convergence
+                      └─ WO-048 Credential Stack and Convergence
                            └─ WO-049 Responsive, Accessible Integration Polish
                                 └─ WO-050 Career OS Integration and Release Review
 ```
@@ -123,7 +126,7 @@ and does not silently repair implementation defects.
 | WO-045 | [Resume Scene Runtime and Chapter Navigation](./WO-045-resume-scene-runtime-navigation.md) | Shared Resume scene shell, chapter progress, tracing beam, and dynamic TOC |
 | WO-046 | [Identity Resolution and Capability Orbit](./WO-046-resume-identity-capability-orbit.md) | Scroll-resolved hero and accessible orbital capability system |
 | WO-047 | [Career Chapter Reveal](./WO-047-resume-career-chapter-reveal.md) | Desktop horizontal career narrative with complete semantic fallback |
-| WO-048 | [Project Proof Stack and Convergence](./WO-048-resume-proof-stack-convergence.md) | Stacked project evidence and Gemini-inspired closing payoff |
+| WO-048 | [Credential Stack and Convergence](./WO-048-resume-proof-stack-convergence.md) | Stacked education credentials, calm languages, project-section removal, and Gemini-inspired closing payoff |
 | WO-049 | [Responsive, Accessible Integration Polish](./WO-049-resume-integration-polish.md) | Unified pacing, responsive fallbacks, performance controls, and browser evidence |
 | WO-050 | [Career OS Integration and Release Review](./WO-050-resume-career-os-release-review.md) | Independent content, accessibility, motion, browser, performance, and provenance gate |
 
