@@ -77,15 +77,16 @@ export function ResumeCareerReveal({
       if (!scope || !track) {
         return;
       }
+      const pinTarget = scope.closest<HTMLElement>("[data-resume-experience-scene]") ?? scope;
 
       const tween = gsap.to(track, {
         x: () => Math.min(0, scope.clientWidth - track.scrollWidth),
         ease: "none",
         scrollTrigger: {
-          trigger: scope,
+          trigger: pinTarget,
           start: "top top+=96",
           end: () => `+=${Math.max(scope.clientWidth, track.scrollWidth)}`,
-          pin: false,
+          pin: true,
           scrub: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,

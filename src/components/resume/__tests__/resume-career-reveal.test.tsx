@@ -98,7 +98,7 @@ describe("ResumeCareerReveal", () => {
     ]);
   });
 
-  it("keeps the enhanced track non-pinning so breakpoint fallback swaps preserve React ownership", () => {
+  it("pins the stable scene wrapper while the enhanced track owns horizontal progress", () => {
     const resume = getResumeContent("en");
     render(
       <ResumeCareerReveal
@@ -116,7 +116,7 @@ describe("ResumeCareerReveal", () => {
     const timelineCall = (fakeTo.mock.calls as unknown as Array<[unknown, unknown]>)[0];
     expect(timelineCall?.[1]).toEqual(
       expect.objectContaining({
-        scrollTrigger: expect.objectContaining({ pin: false }),
+        scrollTrigger: expect.objectContaining({ pin: true }),
       }),
     );
   });
