@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { motionValue } from "motion/react";
+import { describe, expect, it, vi } from "vitest";
 
 import EnglishResumePage, {
   metadata as englishMetadata,
@@ -8,6 +9,13 @@ import PortugueseResumePage, {
 } from "@/app/[lang]/resume/page";
 import { getResumeContent } from "@/content/resume";
 import { renderWithLocale, screen, within } from "@/test/render";
+
+vi.mock("@/components/motion/motion-runtime", () => ({
+  useMotionRuntime: () => ({
+    scrollProgress: motionValue(0),
+    prefersReducedMotion: false,
+  }),
+}));
 
 describe("resume routes", () => {
   it("renders the complete English semantic document", () => {
@@ -19,6 +27,24 @@ describe("resume routes", () => {
     expect(screen.getByRole("main")).toHaveAttribute("id", "main-content");
     expect(screen.getByRole("contentinfo")).toBeInTheDocument();
     expect(screen.getAllByRole("list").length).toBeGreaterThanOrEqual(6);
+
+    const chapterLabels = [
+      resume.identity.focus,
+      resume.labels.skills,
+      resume.labels.experience,
+      resume.labels.projects,
+      resume.labels.education,
+      resume.labels.contact,
+    ];
+    const chapterNavigation = screen.getByRole("navigation", {
+      name: chapterLabels.join(" · "),
+    });
+    expect(within(chapterNavigation).getAllByRole("link")).toHaveLength(6);
+    expect(document.querySelectorAll("[data-resume-chapter]")).toHaveLength(6);
+    expect(document.querySelector(".resume-reading-trace")).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
 
     expect(
       within(screen.getByRole("main")).getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent),

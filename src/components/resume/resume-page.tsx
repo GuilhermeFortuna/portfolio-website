@@ -2,6 +2,12 @@ import type { ReactNode } from "react";
 
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import {
+  ResumeChapter,
+  ResumeReadingTrace,
+  ResumeSceneRuntime,
+} from "@/components/resume/resume-scene-runtime";
+import { ResumeChapterNavigationConnected } from "@/components/resume/resume-chapter-navigation";
 import { ResumeTimeline } from "@/components/resume/resume-timeline";
 import { getResumeContent } from "@/content/resume";
 import type { Locale } from "@/lib/i18n";
@@ -27,7 +33,8 @@ function ResumeDocument({ resume }: { resume: ResumeContent }) {
       tabIndex={-1}
       className="mx-auto w-full max-w-[var(--content-wide)] overflow-hidden px-[var(--page-gutter)] pb-16 pt-28 lg:pt-36"
     >
-      <header className="grid gap-10 border-b border-[var(--color-line)] pb-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16 lg:pb-16">
+      <ResumeChapter id="identity" label={resume.identity.focus}>
+        <header className="grid gap-10 border-b border-[var(--color-line)] pb-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16 lg:pb-16">
         <div className="min-w-0">
           <p className="[font-family:var(--font-geist-mono)] text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
             {resume.identity.focus}
@@ -78,9 +85,11 @@ function ResumeDocument({ resume }: { resume: ResumeContent }) {
             </a>
           </div>
         </div>
-      </header>
+        </header>
+      </ResumeChapter>
 
-      <section aria-labelledby="resume-skills-heading" className="border-b border-[var(--color-line)] py-12 lg:py-16">
+      <ResumeChapter id="capabilities" label={resume.labels.skills}>
+        <section aria-labelledby="resume-skills-heading" className="border-b border-[var(--color-line)] py-12 lg:py-16">
         <div className="grid gap-8 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-10">
           <h2 id="resume-skills-heading" className="text-2xl font-semibold tracking-[-0.03em] text-[var(--color-text)] sm:text-3xl">
             {resume.labels.skills}
@@ -100,15 +109,19 @@ function ResumeDocument({ resume }: { resume: ResumeContent }) {
             ))}
           </div>
         </div>
-      </section>
+        </section>
+      </ResumeChapter>
 
-      <ResumeTimeline
-        entries={resume.experience}
-        sectionLabel={resume.labels.experience}
-        sectionTitle={resume.labels.experience}
-      />
+      <ResumeChapter id="experience" label={resume.labels.experience}>
+        <ResumeTimeline
+          entries={resume.experience}
+          sectionLabel={resume.labels.experience}
+          sectionTitle={resume.labels.experience}
+        />
+      </ResumeChapter>
 
-      <section aria-labelledby="resume-projects-heading" className="border-b border-[var(--color-line)] py-12 lg:py-16">
+      <ResumeChapter id="projects" label={resume.labels.projects}>
+        <section aria-labelledby="resume-projects-heading" className="border-b border-[var(--color-line)] py-12 lg:py-16">
         <div className="grid gap-8 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-10">
           <h2 id="resume-projects-heading" className="text-2xl font-semibold tracking-[-0.03em] text-[var(--color-text)] sm:text-3xl">
             {resume.labels.projects}
@@ -127,9 +140,11 @@ function ResumeDocument({ resume }: { resume: ResumeContent }) {
             ))}
           </ol>
         </div>
-      </section>
+        </section>
+      </ResumeChapter>
 
-      <section aria-labelledby="resume-education-heading" className="border-b border-[var(--color-line)] py-12 lg:py-16">
+      <ResumeChapter id="credentials" label={resume.labels.education}>
+        <section aria-labelledby="resume-education-heading" className="border-b border-[var(--color-line)] py-12 lg:py-16">
         <div className="grid gap-8 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-10">
           <h2 id="resume-education-heading" className="text-2xl font-semibold tracking-[-0.03em] text-[var(--color-text)] sm:text-3xl">
             {resume.labels.education}
@@ -142,9 +157,9 @@ function ResumeDocument({ resume }: { resume: ResumeContent }) {
             ))}
           </ol>
         </div>
-      </section>
+        </section>
 
-      <section aria-labelledby="resume-languages-heading" className="py-12 lg:py-16">
+        <section aria-labelledby="resume-languages-heading" className="py-12 lg:py-16">
         <div className="grid gap-8 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-10">
           <h2 id="resume-languages-heading" className="text-2xl font-semibold tracking-[-0.03em] text-[var(--color-text)] sm:text-3xl">
             {resume.labels.languages}
@@ -153,16 +168,39 @@ function ResumeDocument({ resume }: { resume: ResumeContent }) {
             <ul className="space-y-2 text-sm leading-7 text-[var(--color-text-muted)]">
               {resume.languages.map((language) => <li key={language}>{language}</li>)}
             </ul>
-            <a href={resume.locale === "en" ? "/#work" : "/pt-BR/#work"} className="mt-8 inline-flex min-h-11 items-center text-sm font-semibold text-[var(--color-text)] underline underline-offset-4">
-              {resume.labels.returnToWork}
-            </a>
+            <ResumeChapter id="contact" label={resume.labels.contact}>
+              <a href={resume.locale === "en" ? "/#work" : "/pt-BR/#work"} className="mt-8 inline-flex min-h-11 items-center text-sm font-semibold text-[var(--color-text)] underline underline-offset-4">
+                {resume.labels.returnToWork}
+              </a>
+            </ResumeChapter>
           </div>
         </div>
-      </section>
+        </section>
+      </ResumeChapter>
     </main>
   );
 }
 
 export function ResumePage({ locale }: { locale: Locale }): ReactNode {
-  return <><SiteHeader /><ResumeDocument resume={getResumeContent(locale)} /><SiteFooter /></>;
+  const resume = getResumeContent(locale);
+  const chapters = [
+    { id: "identity" as const, label: resume.identity.focus },
+    { id: "capabilities" as const, label: resume.labels.skills },
+    { id: "experience" as const, label: resume.labels.experience },
+    { id: "projects" as const, label: resume.labels.projects },
+    { id: "credentials" as const, label: resume.labels.education },
+    { id: "contact" as const, label: resume.labels.contact },
+  ];
+
+  return (
+    <>
+      <SiteHeader />
+      <ResumeSceneRuntime chapters={chapters}>
+        <ResumeChapterNavigationConnected />
+        <ResumeReadingTrace />
+        <ResumeDocument resume={resume} />
+      </ResumeSceneRuntime>
+      <SiteFooter />
+    </>
+  );
 }
