@@ -40,6 +40,7 @@ export type ResumeSceneContextValue = {
   activeChapter: ResumeChapterId;
   progress: number;
   mode: ResumeMotionMode;
+  prefersReducedMotion: boolean;
   registerChapter: (id: ResumeChapterId, element: HTMLElement | null) => void;
 };
 
@@ -62,6 +63,13 @@ function getMotionMode(prefersReducedMotion: boolean): ResumeMotionMode {
   return coarsePointer || narrowViewport ? "static" : "enhanced";
 }
 
+function getClientMotionMode(prefersReducedMotion: boolean): ResumeMotionMode {
+  if (prefersReducedMotion || typeof window === "undefined") {
+    return prefersReducedMotion ? "reduced" : "static";
+  }
+  return "enhanced";
+}
+
 export function ResumeSceneRuntime({
   chapters,
   children,
@@ -74,7 +82,16 @@ export function ResumeSceneRuntime({
   const [progress, setProgress] = useState(() =>
     clampProgress(scrollProgress.get()),
   );
-  const mode = getMotionMode(prefersReducedMotion);
+  const [mode, setMode] = useState<ResumeMotionMode>(() =>
+    getMotionMode(prefersReducedMotion),
+  );
+
+  useEffect(() => {
+    const refreshMode = window.setTimeout(() => {
+      setMode(getClientMotionMode(prefersReducedMotion));
+    }, 0);
+    return () => window.clearTimeout(refreshMode);
+  }, [prefersReducedMotion]);
 
   useMotionValueEvent(scrollProgress, "change", (value) => {
     setProgress(clampProgress(value));
@@ -125,9 +142,10 @@ export function ResumeSceneRuntime({
       activeChapter,
       progress,
       mode,
+      prefersReducedMotion,
       registerChapter,
     }),
-    [activeChapter, chapters, mode, progress, registerChapter],
+    [activeChapter, chapters, mode, prefersReducedMotion, progress, registerChapter],
   );
 
   return (
@@ -145,6 +163,20 @@ export function useResumeSceneRuntime(): ResumeSceneContextValue {
     );
   }
   return runtime;
+}
+
+export function useResumeSceneMode(): ResumeMotionMode {
+  const { mode, prefersReducedMotion } = useResumeSceneRuntime();
+  const [clientMode, setClientMode] = useState<ResumeMotionMode>(mode);
+
+  useEffect(() => {
+    const refreshMode = window.setTimeout(() => {
+      setClientMode(getClientMotionMode(prefersReducedMotion));
+    }, 0);
+    return () => window.clearTimeout(refreshMode);
+  }, [mode, prefersReducedMotion]);
+
+  return clientMode;
 }
 
 export type ResumeChapterProps = ResumeChapter & { children: ReactNode };

@@ -2,29 +2,18 @@ import type { ReactNode } from "react";
 
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { ResumeCapabilityOrbit } from "@/components/resume/resume-capability-orbit";
 import {
   ResumeChapter,
   ResumeReadingTrace,
   ResumeSceneRuntime,
 } from "@/components/resume/resume-scene-runtime";
 import { ResumeChapterNavigationConnected } from "@/components/resume/resume-chapter-navigation";
+import { ResumeIdentityScene } from "@/components/resume/resume-identity-scene";
 import { ResumeTimeline } from "@/components/resume/resume-timeline";
 import { getResumeContent } from "@/content/resume";
 import type { Locale } from "@/lib/i18n";
 import type { ResumeContent } from "@/types/resume";
-
-function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="underline decoration-[var(--color-line-strong)] underline-offset-4 transition-colors hover:text-[var(--color-text)]"
-    >
-      {children}
-    </a>
-  );
-}
 
 function ResumeDocument({ resume }: { resume: ResumeContent }) {
   return (
@@ -34,82 +23,22 @@ function ResumeDocument({ resume }: { resume: ResumeContent }) {
       className="mx-auto w-full max-w-[var(--content-wide)] overflow-hidden px-[var(--page-gutter)] pb-16 pt-28 lg:pt-36"
     >
       <ResumeChapter id="identity" label={resume.identity.focus}>
-        <header className="grid gap-10 border-b border-[var(--color-line)] pb-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:gap-16 lg:pb-16">
-        <div className="min-w-0">
-          <p className="[font-family:var(--font-geist-mono)] text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
-            {resume.identity.focus}
-          </p>
-          <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-[-0.055em] text-[var(--color-text)] sm:text-6xl lg:text-7xl">
-            {resume.identity.name}
-          </h1>
-          <p className="mt-5 text-xl tracking-[-0.02em] text-[var(--color-text-muted)] sm:text-2xl">
-            {resume.identity.role}
-          </p>
-          <p className="mt-6 max-w-3xl text-base leading-8 text-[var(--color-text-muted)]">
-            {resume.identity.summary}
-          </p>
-          <p className="mt-5 text-sm leading-6 text-[var(--color-text-muted)]">
-            {resume.location} · {resume.availability}
-          </p>
-        </div>
-
-        <div className="flex flex-col justify-between gap-8 border-t border-[var(--color-line)] pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-          <address className="flex flex-wrap gap-x-5 gap-y-3 not-italic [font-family:var(--font-geist-mono)] text-xs uppercase tracking-[0.1em] text-[var(--color-text-muted)]">
-            {resume.links.map((link) => (
-              <ExternalLink key={link.kind} href={link.href}>
-                {link.label}
-              </ExternalLink>
-            ))}
-          </address>
-          <div className="flex flex-wrap gap-3">
-            <a
-              href={resume.pdf.href}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex min-h-11 items-center rounded-full border border-[var(--color-line-strong)] px-5 text-sm font-semibold text-[var(--color-text)] transition-colors hover:border-[var(--color-text-muted)]"
-            >
-              {resume.labels.viewPdf}
-            </a>
-            <a
-              href={resume.pdf.href}
-              download={resume.pdf.downloadName}
-              className="inline-flex min-h-11 items-center rounded-full border border-[var(--color-line)] px-5 text-sm text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-line-strong)] hover:text-[var(--color-text)]"
-            >
-              {resume.labels.downloadPdf}
-            </a>
-            <a
-              href={resume.links[0].href}
-              className="inline-flex min-h-11 items-center text-sm text-[var(--color-text-muted)] underline underline-offset-4 transition-colors hover:text-[var(--color-text)]"
-            >
-              {resume.labels.contact}
-            </a>
-          </div>
-        </div>
-        </header>
+        <ResumeIdentityScene
+          identity={resume.identity}
+          location={resume.location}
+          availability={resume.availability}
+          links={resume.links}
+          pdf={resume.pdf}
+          labels={resume.labels}
+        />
       </ResumeChapter>
 
       <ResumeChapter id="capabilities" label={resume.labels.skills}>
-        <section aria-labelledby="resume-skills-heading" className="border-b border-[var(--color-line)] py-12 lg:py-16">
-        <div className="grid gap-8 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-10">
-          <h2 id="resume-skills-heading" className="text-2xl font-semibold tracking-[-0.03em] text-[var(--color-text)] sm:text-3xl">
-            {resume.labels.skills}
-          </h2>
-          <div className="grid min-w-0 gap-8 sm:grid-cols-2">
-            {resume.skills.map((group) => (
-              <div key={group.label} className="min-w-0">
-                <h3 className="text-sm font-semibold text-[var(--color-text)]">{group.label}</h3>
-                <ul className="mt-3 flex flex-wrap gap-2" aria-label={group.label}>
-                  {group.items.map((item) => (
-                    <li key={item} className="rounded-full border border-[var(--color-line)] px-3 py-1.5 text-xs leading-4 text-[var(--color-text-muted)]">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-        </section>
+        <ResumeCapabilityOrbit
+          title={resume.labels.skills}
+          centerLabel={resume.identity.role}
+          groups={resume.skills}
+        />
       </ResumeChapter>
 
       <ResumeChapter id="experience" label={resume.labels.experience}>

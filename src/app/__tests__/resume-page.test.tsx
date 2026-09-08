@@ -62,7 +62,7 @@ describe("resume routes", () => {
     expect(
       within(experienceRegion).getByRole("list", { name: resume.labels.experience }),
     ).toBeInTheDocument();
-    expect(within(screen.getByRole("main")).queryAllByRole("button")).toHaveLength(0);
+    expect(within(screen.getByRole("main")).getAllByRole("button")).toHaveLength(6);
 
     for (const text of [
       resume.identity.role,
@@ -105,7 +105,9 @@ describe("resume routes", () => {
     renderWithLocale(page, "pt-BR");
 
     expect(screen.getByRole("heading", { level: 1, name: resume.identity.name })).toBeInTheDocument();
-    expect(screen.getByText(resume.identity.role)).toBeInTheDocument();
+    expect(document.querySelector(".resume-identity__role")).toHaveTextContent(
+      resume.identity.role,
+    );
     expect(screen.getByRole("link", { name: resume.labels.viewPdf })).toHaveAttribute(
       "href",
       resume.pdf.href,
