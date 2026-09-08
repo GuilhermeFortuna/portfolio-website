@@ -47,9 +47,6 @@ export function ResumeTimeline({
             {sectionTitle}
           </h2>
         </div>
-        <p className="max-w-xs text-right text-sm leading-6 text-[var(--color-text-dim)]">
-          {entries.length > 0 ? `${entries.length} positions · reverse chronology` : "No positions listed"}
-        </p>
       </div>
 
       <div className="relative mt-10">
