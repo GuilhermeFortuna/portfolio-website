@@ -58,21 +58,10 @@ export function ResumeIdentityScene({
 
   const mode = runtimeMode;
   const sceneProgress = Math.min(1, Math.max(0, progress / 0.18));
-  const assemblyProgress = Math.min(1, sceneProgress / 0.7);
-  const settleProgress = Math.min(1, Math.max(0, (sceneProgress - 0.7) / 0.3));
   const contactLink = links.find((link) => link.kind === "email") ?? links[0];
   const style = {
     "--resume-identity-progress": sceneProgress,
-    "--resume-identity-assembly": assemblyProgress,
-    "--resume-identity-settle": settleProgress,
   } as CSSProperties;
-  const plates = [
-    identity.focus,
-    identity.role,
-    location,
-    availability,
-    labels.skills,
-  ];
 
   return (
     <section
@@ -83,18 +72,6 @@ export function ResumeIdentityScene({
       data-resume-hydrated={hydrated ? "true" : "false"}
       style={style}
     >
-      <div className="resume-identity__field" aria-hidden="true">
-        {plates.map((plate, index) => (
-          <span
-            key={`${plate}-${index}`}
-            className={`resume-identity__plate resume-identity__plate--${index + 1}`}
-            data-resume-identity-plate
-          >
-            <span className="resume-identity__plate-index">0{index + 1}</span>
-            {plate}
-          </span>
-        ))}
-      </div>
 
       <header className="resume-identity__content">
         <div className="resume-identity__copy">

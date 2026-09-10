@@ -1,4 +1,5 @@
 import { motionValue } from "motion/react";
+import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import EnglishResumePage, {
@@ -17,7 +18,24 @@ vi.mock("@/components/motion/motion-runtime", () => ({
   }),
 }));
 
+vi.mock("@/components/webgl/managed-webgl-effect", () => ({
+  ManagedWebGLEffect: ({ fallback }: { fallback: ReactNode }) => (
+    <div data-testid="webgl-fallback">{fallback}</div>
+  ),
+}));
+
 describe("resume routes", () => {
+  it("renders the decorative backdrop inside the isolated stage, beneath the document", () => {
+    renderWithLocale(<EnglishResumePage />, "en");
+
+    const backdrop = document.querySelector("[data-resume-backdrop]");
+    expect(backdrop).toHaveAttribute("aria-hidden", "true");
+    expect(backdrop?.closest(".resume-stage")).not.toBeNull();
+    expect(screen.getByRole("main").closest(".resume-stage")).toBe(
+      backdrop?.closest(".resume-stage"),
+    );
+  });
+
   it("renders the complete English semantic document", () => {
     const resume = getResumeContent("en");
     renderWithLocale(<EnglishResumePage />, "en");

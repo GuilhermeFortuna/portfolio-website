@@ -251,6 +251,35 @@ canvas {
   padding: 7rem var(--page-gutter) 4rem;
 }
 
+/* Isolated so the backdrop's negative layer paints above the body canvas. */
+.resume-stage {
+  position: relative;
+  isolation: isolate;
+}
+
+.resume-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.resume-backdrop__hero {
+  position: absolute;
+  inset: 0 0 auto;
+  height: max(52rem, 115svh);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent);
+  mask-image: linear-gradient(to bottom, #000 45%, transparent);
+}
+
+.resume-backdrop__ambient {
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 600ms var(--ease-standard);
+}
+
 .resume-identity {
   position: relative;
   isolation: isolate;
@@ -258,13 +287,6 @@ canvas {
   margin-inline: calc(50% - 50vw);
   overflow: clip;
   border-bottom: 1px solid var(--color-line);
-  background:
-    radial-gradient(circle at 16% 30%, color-mix(in srgb, var(--color-accent-b) 5%, transparent), transparent 28rem),
-    radial-gradient(circle at 84% 70%, color-mix(in srgb, var(--color-accent-c) 4%, transparent), transparent 25rem);
-}
-
-.resume-identity__field {
-  display: none;
 }
 
 .resume-identity__content {
@@ -532,73 +554,12 @@ canvas {
     min-height: 138svh;
   }
 
-  .resume-identity[data-resume-hydrated="true"][data-motion-preference="false"] .resume-identity__field {
-    position: absolute;
-    z-index: 0;
-    inset: 0;
-    display: block;
-    overflow: hidden;
-    pointer-events: none;
-  }
-
-  .resume-identity[data-resume-hydrated="true"][data-motion-preference="false"] .resume-identity__field::before {
-    position: absolute;
-    inset: 9% 3% 12%;
-    border: 1px solid color-mix(in srgb, var(--color-line) 72%, transparent);
-    background-image:
-      linear-gradient(to right, color-mix(in srgb, var(--color-line) 35%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in srgb, var(--color-line) 35%, transparent) 1px, transparent 1px);
-    background-size: 7rem 7rem;
-    content: "";
-    mask-image: radial-gradient(ellipse at center, black 15%, transparent 72%);
-    opacity: 0.55;
-  }
-
   .resume-identity[data-resume-hydrated="true"][data-motion-preference="false"] .resume-identity__content {
     position: sticky;
     top: 6rem;
     min-height: calc(100svh - 8rem);
     align-items: center;
   }
-
-  .resume-identity__plate {
-    position: absolute;
-    display: flex;
-    max-width: min(26rem, 34vw);
-    align-items: center;
-    gap: 0.65rem;
-    border: 1px solid var(--color-line-strong);
-    border-radius: var(--radius-pill);
-    padding: 0.55rem 0.85rem;
-    background: color-mix(in srgb, var(--color-surface-strong) 88%, transparent);
-    backdrop-filter: blur(8px);
-    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.2);
-    color: var(--color-text);
-    font-family: var(--font-geist-mono), monospace;
-    font-size: 0.625rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    line-height: 1.35;
-    text-transform: uppercase;
-    opacity: calc(0.72 + (var(--resume-identity-assembly) * 0.28) - (var(--resume-identity-settle) * 0.15));
-    transform: translate3d(
-      calc((1 - var(--resume-identity-assembly)) * var(--plate-x)),
-      calc((1 - var(--resume-identity-assembly)) * var(--plate-y)),
-      0
-    ) rotate(calc((1 - var(--resume-identity-assembly)) * var(--plate-r)));
-    transition: opacity var(--duration-medium) var(--ease-standard), transform var(--duration-slow) var(--ease-standard);
-  }
-
-  .resume-identity__plate-index {
-    color: var(--color-accent-b);
-    font-size: 0.55rem;
-  }
-
-  .resume-identity__plate--1 { --plate-x: -3rem; --plate-y: 2rem; --plate-r: 5deg; top: 15%; right: 3%; }
-  .resume-identity__plate--2 { --plate-x: -4rem; --plate-y: -1rem; --plate-r: -4deg; top: 54%; right: 1%; }
-  .resume-identity__plate--3 { --plate-x: 1rem; --plate-y: -3rem; --plate-r: 3deg; right: 30%; bottom: 5%; }
-  .resume-identity__plate--4 { --plate-x: 4rem; --plate-y: 1rem; --plate-r: 5deg; top: 39%; left: 1%; }
-  .resume-identity__plate--5 { --plate-x: 3rem; --plate-y: -3rem; --plate-r: -5deg; bottom: 8%; left: 4%; }
 
   .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] {
     min-height: 48rem;
@@ -765,7 +726,6 @@ canvas {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .resume-identity__plate,
   .resume-capability-orbit__skills {
     transition: none;
     transform: none;

@@ -73,17 +73,10 @@ describe("ResumeIdentityScene", () => {
     expect(scene).toHaveStyle("--resume-identity-progress: 1");
   });
 
-  it("uses factual data plates instead of unrelated project media", () => {
+  it("renders no decorative field, floating text, or media behind the identity", () => {
     const { container } = renderScene();
 
-    const field = container.querySelector(".resume-identity__field");
-    expect(field).toHaveAttribute("aria-hidden", "true");
-    expect(container.querySelectorAll("[data-resume-identity-plate]")).toHaveLength(5);
-    expect(field).toHaveTextContent("Python, TypeScript & Platform Systems");
-    expect(field).toHaveTextContent("Full-stack Developer");
-    expect(field).toHaveTextContent("Criciúma, Brazil");
-    expect(field).toHaveTextContent("Available and actively looking");
-    expect(field).toHaveTextContent("Technical Skills");
+    expect(container.querySelector(".resume-identity__field")).toBeNull();
     expect(container.querySelectorAll("img")).toHaveLength(0);
   });
 
@@ -95,7 +88,6 @@ describe("ResumeIdentityScene", () => {
       "data-motion-mode",
       "reduced",
     );
-    expect(container.querySelector(".resume-identity__field")).toHaveAttribute("aria-hidden", "true");
     expect(screen.getByRole("link", { name: "View PDF" })).toBeVisible();
   });
 });

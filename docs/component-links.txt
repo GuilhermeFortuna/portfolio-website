@@ -1,5 +1,9 @@
 Background: https://reactbits.dev/backgrounds/line-waves
 
+Resume background:
+    - https://reactbits.dev/backgrounds/light-rays (identity hero)
+    - https://magicui.design/docs/components/light-rays (ambient page layer)
+
 Animations:
     - https://reactbits.dev/animations/shape-blur
     - https://reactbits.dev/animations/logo-loop

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { ResumeBackdrop } from "@/components/resume/resume-backdrop";
 import { ResumeCapabilityOrbit } from "@/components/resume/resume-capability-orbit";
 import { ResumeExperienceScene } from "@/components/resume/resume-career-reveal";
 import {
@@ -85,12 +86,15 @@ export function ResumePage({ locale }: { locale: Locale }): ReactNode {
   return (
     <>
       <SiteHeader />
-      <ResumeSceneRuntime chapters={chapters}>
-        <ResumeChapterNavigationConnected />
-        <ResumeReadingTrace />
-        <ResumeDocument resume={resume} />
-      </ResumeSceneRuntime>
-      <SiteFooter />
+      <div className="resume-stage">
+        <ResumeSceneRuntime chapters={chapters}>
+          <ResumeBackdrop />
+          <ResumeChapterNavigationConnected />
+          <ResumeReadingTrace />
+          <ResumeDocument resume={resume} />
+        </ResumeSceneRuntime>
+        <SiteFooter />
+      </div>
     </>
   );
 }
