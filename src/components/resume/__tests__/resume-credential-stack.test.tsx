@@ -42,42 +42,106 @@ describe("ResumeCredentialStack", () => {
   });
 
   it.each(["en", "pt-BR"] as const)(
-    "renders every %s credential once in source order without invented media or claims",
+    "renders every %s credential with header-strip anatomy and one article per credential",
     (locale) => {
       const resume = getResumeContent(locale);
       const { container } = renderStack(locale);
       const region = screen.getByRole("region", { name: resume.labels.education });
       const list = within(region).getByRole("list", { name: resume.labels.education });
       const items = within(list).getAllByRole("listitem");
+      const articles = within(list).getAllByRole("article");
 
-      expect(items).toHaveLength(3);
-      expect(items.map((item) => item.textContent)).toEqual(
-        resume.education.map(
-          (entry) => `${entry.institution}${entry.program}${entry.period}`,
-        ),
-      );
+      expect(items).toHaveLength(resume.education.length);
+      expect(articles).toHaveLength(resume.education.length);
+
+      resume.education.forEach((entry, index) => {
+        const item = items[index];
+        const article = articles[index];
+        const strip = item.querySelector("[data-resume-credential-header-strip]");
+
+        expect(strip).toBeInTheDocument();
+        expect(strip).toHaveTextContent(entry.institution);
+        expect(strip).toHaveTextContent(entry.period);
+        expect(within(article).getByRole("heading", { level: 3, name: entry.program })).toBeInTheDocument();
+
+        const indexIndicator = strip?.querySelector("[data-resume-credential-index]");
+        expect(indexIndicator).toHaveAttribute("aria-hidden", "true");
+        expect(indexIndicator).toHaveTextContent(String(index + 1).padStart(2, "0"));
+      });
+
       expect(container.querySelectorAll("img, picture, canvas")).toHaveLength(0);
       expect(container).not.toHaveTextContent(/credential status|proficiency|verified/i);
     },
   );
 
-  it("starts as a spaced static list and exposes the approved stack geometry only after eligibility is known", async () => {
+  it("renders identical fields in both static and enhanced modes", async () => {
+    const resume = getResumeContent("en");
+
+    // 1. Static render
+    enhancementEligible = false;
+    const { container: staticContainer, unmount } = renderStack("en");
+    const staticArticles = staticContainer.querySelectorAll("article");
+    expect(staticArticles).toHaveLength(resume.education.length);
+
+    const staticData = Array.from(staticArticles, (art) => ({
+      institution: art.querySelector("[data-resume-credential-institution]")?.textContent?.trim(),
+      program: art.querySelector("[data-resume-credential-program]")?.textContent?.trim(),
+      period: art.querySelector("[data-resume-credential-period]")?.textContent?.trim(),
+    }));
+
+    unmount();
+
+    // 2. Enhanced render
+    enhancementEligible = true;
+    const { container: enhancedContainer } = renderStack("en");
+    await act(async () => {
+      await new Promise((resolve) => window.setTimeout(resolve, 0));
+    });
+
+    const enhancedArticles = enhancedContainer.querySelectorAll("article");
+    expect(enhancedArticles).toHaveLength(resume.education.length);
+
+    const enhancedData = Array.from(enhancedArticles, (art) => ({
+      institution: art.querySelector("[data-resume-credential-institution]")?.textContent?.trim(),
+      program: art.querySelector("[data-resume-credential-program]")?.textContent?.trim(),
+      period: art.querySelector("[data-resume-credential-period]")?.textContent?.trim(),
+    }));
+
+    expect(enhancedData).toEqual(staticData);
+    expect(staticData).toEqual(
+      resume.education.map((entry) => ({
+        institution: entry.institution,
+        program: entry.program,
+        period: entry.period,
+      })),
+    );
+  });
+
+  it("ensures rest-state scale is 1 in both static and enhanced modes", async () => {
     enhancementEligible = true;
     const { container } = renderStack();
     const section = container.querySelector("[data-resume-credential-stack]");
 
     expect(section).toHaveAttribute("data-motion-mode", "static");
+    // In static mode before hydration, every card has scale 1
+    expect(
+      Array.from(container.querySelectorAll("[data-resume-credential-card]"), (card) =>
+        card.getAttribute("data-stack-scale"),
+      ),
+    ).toEqual(["1", "1", "1"]);
 
     await act(async () => {
       await new Promise((resolve) => window.setTimeout(resolve, 0));
     });
 
     expect(section).toHaveAttribute("data-motion-mode", "enhanced");
+    // At rest in enhanced mode (scroll progress = 0), rest-state scale is 1
     expect(
       Array.from(container.querySelectorAll("[data-resume-credential-card]"), (card) =>
         card.getAttribute("data-stack-scale"),
       ),
-    ).toEqual(["0.93", "0.965", "1"]);
+    ).toEqual(["1", "1", "1"]);
+
     expect(container.querySelector("[data-resume-credential-list]")).not.toHaveClass(
       "overflow-auto",
     );
@@ -96,5 +160,10 @@ describe("ResumeCredentialStack", () => {
       "data-motion-mode",
       "reduced",
     );
+    expect(
+      Array.from(container.querySelectorAll("[data-resume-credential-card]"), (card) =>
+        card.getAttribute("data-stack-scale"),
+      ),
+    ).toEqual(["1", "1", "1"]);
   });
 });

@@ -1025,7 +1025,7 @@ canvas {
 
 .resume-credential-stack__list {
   display: grid;
-  gap: 1rem;
+  gap: 1.25rem;
   margin: 2.5rem 0 0;
   padding: 0;
   list-style: none;
@@ -1039,63 +1039,122 @@ canvas {
   display: flex;
   min-height: 0;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 2rem;
   border: 1px solid var(--color-line);
   background: var(--color-surface-strong);
-  padding: clamp(1.5rem, 4vw, 3rem);
+  overflow: hidden;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.resume-credential-stack__card h3 {
-  max-width: 32ch;
-  color: var(--color-text);
-  font-size: clamp(1.35rem, 3vw, 2.5rem);
+.resume-credential-stack__strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1.25rem;
+  padding: clamp(1rem, 1.6vw, 1.25rem) clamp(1.25rem, 2.5vw, 2.25rem);
+  border-bottom: 1px solid var(--color-line);
+  background: color-mix(in srgb, var(--color-surface) 60%, var(--color-surface-strong));
+}
+
+.resume-credential-stack__strip-main {
+  display: flex;
+  align-items: baseline;
+  gap: 0.875rem;
+  min-width: 0;
+}
+
+.resume-credential-stack__index {
+  padding-top: 0.1rem;
+  color: var(--color-accent-b);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: -0.035em;
-  line-height: 1.05;
+  letter-spacing: 0.1em;
+  flex-shrink: 0;
+}
+
+.resume-credential-stack__institution {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(0.875rem, 1.1vw, 0.9375rem);
+  font-weight: 600;
+  line-height: 1.4;
   text-wrap: balance;
 }
 
-.resume-credential-stack__program,
 .resume-credential-stack__period {
-  color: var(--color-text-muted);
-  font-size: 0.9375rem;
-  line-height: 1.7;
+  margin: 0;
+  color: var(--color-accent-b);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: clamp(0.6875rem, 0.9vw, 0.75rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.resume-credential-stack__body {
+  padding: clamp(1.5rem, 2.5vw, 2.25rem) clamp(1.25rem, 2.5vw, 2.25rem);
 }
 
 .resume-credential-stack__program {
-  margin-top: auto;
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  text-wrap: balance;
 }
 
-.resume-credential-stack__period {
-  margin-top: 0.35rem;
-  color: var(--color-accent-b);
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+@media (max-width: 767px) {
+  .resume-credential-stack__strip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 1rem 1.25rem;
+  }
+
+  .resume-credential-stack__period {
+    white-space: normal;
+    text-align: left;
+  }
+
+  .resume-credential-stack__body {
+    padding: 1.25rem 1.25rem 1.5rem;
+  }
+
+  .resume-credential-stack__program {
+    font-size: clamp(1.125rem, 4.5vw, 1.35rem);
+  }
 }
 
 @media (min-width: 1200px) and (min-height: 720px) and (pointer: fine) {
   .resume-credential-stack__list--enhanced {
     display: block;
-    min-height: 58rem;
-    margin-top: 2rem;
+    min-height: 48rem;
+    margin-top: 2.5rem;
   }
 
   .resume-credential-stack__list--enhanced .resume-credential-stack__slot {
     position: sticky;
-    top: calc(7.5rem + (var(--resume-credential-index) * 1.5rem));
+    top: calc(7rem + (var(--resume-credential-index) * 4.25rem));
     z-index: calc(10 + var(--resume-credential-index));
-    min-height: min(20rem, calc(100svh - 14rem));
-    padding-bottom: 1.25rem;
+    margin-bottom: 8rem;
     transform-origin: center top;
   }
 
+  .resume-credential-stack__list--enhanced .resume-credential-stack__slot:last-child {
+    margin-bottom: 0;
+  }
+
   .resume-credential-stack__list--enhanced .resume-credential-stack__card {
-    min-height: min(17rem, calc(100svh - 18rem));
+    min-height: 10.5rem;
     border-color: var(--color-line-strong);
+    box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -1201,6 +1260,7 @@ canvas {
     position: relative;
     top: auto;
     transform: none !important;
+    margin-bottom: 0;
   }
 
   .resume-convergence__paths {

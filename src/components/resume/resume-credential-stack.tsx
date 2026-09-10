@@ -20,20 +20,54 @@ export type ResumeCredentialStackProps = {
   sectionLabel: string;
 };
 
-const STACK_SCALES = [0.93, 0.965, 1] as const;
 
 function CredentialCopy({
   entry,
   headingId,
+  index,
 }: {
   entry: ResumeEducation;
   headingId: string;
+  index: number;
 }): ReactNode {
   return (
     <article aria-labelledby={headingId} className="resume-credential-stack__card">
-      <h3 id={headingId}>{entry.institution}</h3>
-      <p className="resume-credential-stack__program">{entry.program}</p>
-      <p className="resume-credential-stack__period">{entry.period}</p>
+      <div
+        className="resume-credential-stack__strip"
+        data-resume-credential-header-strip
+      >
+        <div className="resume-credential-stack__strip-main">
+          <span
+            aria-hidden="true"
+            className="resume-credential-stack__index"
+            data-resume-credential-index
+          >
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <p
+            className="resume-credential-stack__institution"
+            data-resume-credential-institution
+          >
+            {entry.institution}
+          </p>
+        </div>
+        <span
+          className="resume-credential-stack__period"
+          data-resume-credential-period
+        >
+          {entry.period}
+        </span>
+      </div>
+
+      <div className="resume-credential-stack__body">
+        <h3
+          id={headingId}
+          className="resume-credential-stack__program"
+          data-resume-credential-program
+        >
+          {entry.program}
+        </h3>
+      </div>
     </article>
   );
 }
@@ -53,16 +87,31 @@ function StaticCredentialList({
           key={`${entry.institution}-${entry.period}`}
           className="resume-credential-stack__slot"
           data-resume-credential-card
-          data-stack-scale={String(STACK_SCALES[index] ?? 1)}
+          data-stack-scale="1"
         >
           <CredentialCopy
             entry={entry}
             headingId={`resume-credential-${index}-heading`}
+            index={index}
           />
         </li>
       ))}
     </ol>
   );
+}
+
+/**
+ * Mid-motion scale ranges: scale is 1 at initial rest (progress=0),
+ * dips slightly during the mid-motion stacking transition as depth cue,
+ * and returns to 1 when the card / stack settles.
+ */
+function useCardStackScale(index: number, progress: MotionValue<number>): MotionValue<number> {
+  const start = 0.12 + index * 0.28;
+  const peak = start + 0.14;
+  const end = Math.min(0.95, start + 0.28);
+  const dip = index === 2 ? 0.985 : 0.97;
+
+  return useTransform(progress, [0, start, peak, end, 1], [1, 1, dip, 1, 1]);
 }
 
 function EnhancedCredentialCard({
@@ -74,10 +123,7 @@ function EnhancedCredentialCard({
   index: number;
   progress: MotionValue<number>;
 }): ReactNode {
-  const scaleTarget = STACK_SCALES[index] ?? 1;
-  const start = 0.15 + index * 0.22;
-  const end = Math.min(0.82, start + 0.29);
-  const scale = useTransform(progress, [start, end], [1, scaleTarget]);
+  const scale = useCardStackScale(index, progress);
   const style = {
     "--resume-credential-index": index,
     scale,
@@ -87,12 +133,13 @@ function EnhancedCredentialCard({
     <motion.li
       className="resume-credential-stack__slot"
       data-resume-credential-card
-      data-stack-scale={String(scaleTarget)}
+      data-stack-scale="1"
       style={style}
     >
       <CredentialCopy
         entry={entry}
         headingId={`resume-credential-${index}-heading`}
+        index={index}
       />
     </motion.li>
   );
