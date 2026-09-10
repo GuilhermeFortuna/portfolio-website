@@ -46,13 +46,13 @@ function renderConvergence(locale: "en" | "pt-BR" = "en", customLanguages?: read
 describe("parseLanguage", () => {
   it("parses the exact English resume language strings", () => {
     const toefl = parseLanguage(
-      "English: Bilingual / Full Professional Proficiency (TOEFL iBT 105)",
+      "English: Native (TOEFL iBT 105)",
     );
     expect(toefl).toEqual({
       name: "English",
-      level: "Bilingual / Full Professional Proficiency",
+      level: "Native",
       credential: "TOEFL iBT 105",
-      raw: "English: Bilingual / Full Professional Proficiency (TOEFL iBT 105)",
+      raw: "English: Native (TOEFL iBT 105)",
     });
 
     const native = parseLanguage("Portuguese: Native");
@@ -66,13 +66,13 @@ describe("parseLanguage", () => {
 
   it("parses the exact Portuguese resume language strings", () => {
     const toeflPt = parseLanguage(
-      "Inglês: Bilíngue / Plena proficiência profissional (TOEFL iBT 105)",
+      "Inglês: Nativo (TOEFL iBT 105)",
     );
     expect(toeflPt).toEqual({
       name: "Inglês",
-      level: "Bilíngue / Plena proficiência profissional",
+      level: "Nativo",
       credential: "TOEFL iBT 105",
-      raw: "Inglês: Bilíngue / Plena proficiência profissional (TOEFL iBT 105)",
+      raw: "Inglês: Nativo (TOEFL iBT 105)",
     });
 
     const nativePt = parseLanguage("Português: Nativo");
@@ -190,7 +190,7 @@ describe("ResumeConvergence", () => {
     const englishName = within(items[0]).getByText("English");
     expect(englishName).toHaveClass("resume-convergence__languages-name");
 
-    const englishLevel = within(items[0]).getByText("Bilingual / Full Professional Proficiency");
+    const englishLevel = within(items[0]).getByText("Native");
     expect(englishLevel).toHaveClass("resume-convergence__languages-level");
 
     const credentialBadge = within(items[0]).getByText("TOEFL iBT 105");
@@ -219,7 +219,7 @@ describe("ResumeConvergence", () => {
     const englishName = within(items[0]).getByText("Inglês");
     expect(englishName).toHaveClass("resume-convergence__languages-name");
 
-    const englishLevel = within(items[0]).getByText("Bilíngue / Plena proficiência profissional");
+    const englishLevel = within(items[0]).getByText("Nativo");
     expect(englishLevel).toHaveClass("resume-convergence__languages-level");
 
     const credentialBadge = within(items[0]).getByText("TOEFL iBT 105");
