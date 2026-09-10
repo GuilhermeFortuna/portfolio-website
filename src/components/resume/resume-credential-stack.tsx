@@ -105,11 +105,16 @@ function StaticCredentialList({
  * dips slightly during the mid-motion stacking transition as depth cue,
  * and returns to 1 when the card / stack settles.
  */
-function useCardStackScale(index: number, progress: MotionValue<number>): MotionValue<number> {
-  const start = 0.12 + index * 0.28;
-  const peak = start + 0.14;
-  const end = Math.min(0.95, start + 0.28);
-  const dip = index === 2 ? 0.985 : 0.97;
+function useCardStackScale(
+  index: number,
+  progress: MotionValue<number>,
+  total: number,
+): MotionValue<number> {
+  const step = 0.6 / Math.max(1, total);
+  const start = 0.12 + index * step;
+  const peak = start + step * 0.5;
+  const end = Math.min(0.95, start + step);
+  const dip = index === total - 1 ? 0.985 : 0.97;
 
   return useTransform(progress, [0, start, peak, end, 1], [1, 1, dip, 1, 1]);
 }
@@ -117,13 +122,15 @@ function useCardStackScale(index: number, progress: MotionValue<number>): Motion
 function EnhancedCredentialCard({
   entry,
   index,
+  total,
   progress,
 }: {
   entry: ResumeEducation;
   index: number;
+  total: number;
   progress: MotionValue<number>;
 }): ReactNode {
-  const scale = useCardStackScale(index, progress);
+  const scale = useCardStackScale(index, progress, total);
   const style = {
     "--resume-credential-index": index,
     scale,
@@ -167,6 +174,7 @@ function EnhancedCredentialList({
           key={`${entry.institution}-${entry.period}`}
           entry={entry}
           index={index}
+          total={entries.length}
           progress={scrollYProgress}
         />
       ))}

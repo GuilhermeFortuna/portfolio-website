@@ -122,13 +122,16 @@ describe("ResumeCredentialStack", () => {
     const { container } = renderStack();
     const section = container.querySelector("[data-resume-credential-stack]");
 
+    const resume = getResumeContent("en");
+    const expectedScales = resume.education.map(() => "1");
+
     expect(section).toHaveAttribute("data-motion-mode", "static");
     // In static mode before hydration, every card has scale 1
     expect(
       Array.from(container.querySelectorAll("[data-resume-credential-card]"), (card) =>
         card.getAttribute("data-stack-scale"),
       ),
-    ).toEqual(["1", "1", "1"]);
+    ).toEqual(expectedScales);
 
     await act(async () => {
       await new Promise((resolve) => window.setTimeout(resolve, 0));
@@ -140,7 +143,7 @@ describe("ResumeCredentialStack", () => {
       Array.from(container.querySelectorAll("[data-resume-credential-card]"), (card) =>
         card.getAttribute("data-stack-scale"),
       ),
-    ).toEqual(["1", "1", "1"]);
+    ).toEqual(expectedScales);
 
     expect(container.querySelector("[data-resume-credential-list]")).not.toHaveClass(
       "overflow-auto",
@@ -151,6 +154,8 @@ describe("ResumeCredentialStack", () => {
     prefersReducedMotion = true;
     enhancementEligible = true;
     const { container } = renderStack();
+    const resume = getResumeContent("en");
+    const expectedScales = resume.education.map(() => "1");
 
     await act(async () => {
       await new Promise((resolve) => window.setTimeout(resolve, 0));
@@ -164,6 +169,6 @@ describe("ResumeCredentialStack", () => {
       Array.from(container.querySelectorAll("[data-resume-credential-card]"), (card) =>
         card.getAttribute("data-stack-scale"),
       ),
-    ).toEqual(["1", "1", "1"]);
+    ).toEqual(expectedScales);
   });
 });
