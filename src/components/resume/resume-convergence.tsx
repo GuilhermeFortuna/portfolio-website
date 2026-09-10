@@ -4,6 +4,7 @@ import { useRef, type ReactNode } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
 
 import { useResumeSceneMode } from "@/components/resume/resume-scene-runtime";
+import { ResumeSectionHeader } from "@/components/resume/resume-section-header";
 import type { ResumeContent, ResumeLabels } from "@/types/resume";
 
 export type ResumeConvergenceProps = {
@@ -158,7 +159,11 @@ export function ResumeConvergence({
     >
       <div className="resume-convergence__content">
         <div className="resume-convergence__languages">
-          <h2 id="resume-languages-heading">{languageLabel}</h2>
+          <ResumeSectionHeader
+            eyebrow={languageLabel}
+            title={languageLabel}
+            headingId="resume-languages-heading"
+          />
           <ul aria-label={languageLabel} className="resume-convergence__languages-list">
             {languages.map((language) => {
               const parsed = parseLanguage(language);
@@ -209,7 +214,11 @@ export function ResumeConvergence({
         </div>
 
         <div className="resume-convergence__actions">
-          <h2 id="resume-contact-heading">{labels.contact}</h2>
+          <ResumeSectionHeader
+            eyebrow={labels.contact}
+            title={labels.contact}
+            headingId="resume-contact-heading"
+          />
           <div className="resume-convergence__action-list">
             <a
               href={pdf.href}
@@ -227,7 +236,12 @@ export function ResumeConvergence({
             >
               {labels.downloadPdf}
             </a>
-            <a href={contactHref} className="resume-convergence__action">
+            <a
+              href={contactHref}
+              className="resume-convergence__action resume-convergence__action--contact"
+              aria-label={labels.contact}
+            >
+              <span aria-hidden="true" className="resume-convergence__action-dot" />
               {labels.contact}
             </a>
             <a href={workHref} className="resume-convergence__action">

@@ -292,12 +292,12 @@ export function ResumeReadingTrace(): ReactNode {
           </linearGradient>
         </defs>
         <path
-          d="M 1 0 V 4 l 18 6 V 90 l -18 6 V 100"
+          d="M 10 0 V 100"
           className="resume-reading-trace__base"
           vectorEffect="non-scaling-stroke"
         />
         <path
-          d="M 1 0 V 4 l 18 6 V 90 l -18 6 V 100"
+          d="M 10 0 V 100"
           className="resume-reading-trace__progress"
           pathLength="1"
           vectorEffect="non-scaling-stroke"

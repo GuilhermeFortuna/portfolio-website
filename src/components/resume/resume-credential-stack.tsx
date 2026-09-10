@@ -13,6 +13,7 @@ import {
 } from "motion/react";
 
 import { useResumeSceneMode } from "@/components/resume/resume-scene-runtime";
+import { ResumeSectionHeader } from "@/components/resume/resume-section-header";
 import type { ResumeEducation } from "@/types/resume";
 
 export type ResumeCredentialStackProps = {
@@ -195,9 +196,11 @@ export function ResumeCredentialStack({
       data-motion-mode={mode}
       data-resume-credential-stack
     >
-      <header className="resume-credential-stack__heading">
-        <h2 id="resume-education-heading">{sectionLabel}</h2>
-      </header>
+      <ResumeSectionHeader
+        eyebrow={sectionLabel}
+        title={sectionLabel}
+        headingId="resume-education-heading"
+      />
 
       {mode === "enhanced" ? (
         <EnhancedCredentialList entries={entries} sectionLabel={sectionLabel} />

@@ -12,6 +12,7 @@ import {
   useResumeSceneMode,
   useResumeSceneRuntime,
 } from "@/components/resume/resume-scene-runtime";
+import { ResumeSectionHeader } from "@/components/resume/resume-section-header";
 import type { ResumeSkillGroup } from "@/types/resume";
 
 export type ResumeCapabilityOrbitProps = {
@@ -54,6 +55,7 @@ export function ResumeCapabilityOrbit({
 
   return (
     <section
+      aria-labelledby="resume-skills-heading"
       className={`resume-capability-orbit resume-capability-orbit--${mode}`}
       data-resume-capability-orbit
       data-motion-mode={mode}
@@ -61,10 +63,12 @@ export function ResumeCapabilityOrbit({
       data-resume-hydrated={hydrated ? "true" : "false"}
       onBlur={handleBlur}
     >
-      <div className="resume-capability-orbit__heading">
-        <p aria-hidden="true">01 — 06</p>
-        <h2>{title}</h2>
-      </div>
+      <ResumeSectionHeader
+        eyebrow={title}
+        title={title}
+        headingId="resume-skills-heading"
+        className="resume-capability-orbit__heading"
+      />
       <div className="resume-capability-orbit__stage">
         <div className="resume-capability-orbit__rings" aria-hidden="true" />
         <div className="resume-capability-orbit__center" aria-hidden="true">

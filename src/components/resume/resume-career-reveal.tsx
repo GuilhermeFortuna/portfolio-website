@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { useSceneTimeline } from "@/components/motion/motion-runtime";
 import { useResumeSceneMode } from "@/components/resume/resume-scene-runtime";
+import { ResumeSectionHeader } from "@/components/resume/resume-section-header";
 import { ResumeTimeline } from "@/components/resume/resume-timeline";
 import type { ResumeExperience } from "@/types/resume";
 
@@ -135,21 +136,15 @@ export function ResumeCareerReveal({
     <section
       ref={scopeRef}
       aria-labelledby="resume-experience-heading"
-      className="resume-career-reveal border-b border-[var(--color-line)] py-12 lg:py-16"
+      className="resume-career-reveal border-b border-[var(--color-line)]"
       data-resume-career-reveal
       data-active-career-index="0"
     >
-      <div className="resume-career-reveal__heading">
-        <p className="[font-family:var(--font-geist-mono)] text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
-          {sectionLabel}
-        </p>
-        <h2
-          id="resume-experience-heading"
-          className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-[var(--color-text)] sm:text-3xl"
-        >
-          {sectionTitle}
-        </h2>
-      </div>
+      <ResumeSectionHeader
+        eyebrow={sectionLabel}
+        title={sectionTitle}
+        headingId="resume-experience-heading"
+      />
 
       <div
         className="resume-career-reveal__viewport"

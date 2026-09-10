@@ -124,6 +124,84 @@ describe("resume routes", () => {
       "mailto:guilhermefortuna.dev@gmail.com",
     );
   });
+
+  it("enforces strict heading order and hierarchy across all resume chapters", () => {
+    const resume = getResumeContent("en");
+    renderWithLocale(<EnglishResumePage />, "en");
+
+    const main = screen.getByRole("main");
+    const headings = within(main).getAllByRole("heading");
+
+    // Must start with exactly one h1
+    expect(headings[0].tagName).toBe("H1");
+    expect(headings[0]).toHaveTextContent(resume.identity.name);
+
+    // All h2 headings must be properly ordered
+    const h2Headings = headings.filter((h) => h.tagName === "H2");
+    expect(h2Headings.map((h) => h.textContent)).toEqual([
+      resume.labels.skills,
+      resume.labels.experience,
+      resume.labels.education,
+      resume.labels.languages,
+      resume.labels.contact,
+    ]);
+
+    // Check heading level progression (no skipped levels)
+    let previousLevel = 1;
+    for (const heading of headings) {
+      const currentLevel = parseInt(heading.tagName.replace("H", ""), 10);
+      expect(currentLevel).toBeLessThanOrEqual(previousLevel + 1);
+      previousLevel = currentLevel;
+    }
+  });
+
+  it("exposes the shared header pattern (eyebrow, title, rule) across all non-identity chapters", () => {
+    renderWithLocale(<EnglishResumePage />, "en");
+
+    const headers = document.querySelectorAll("[data-resume-section-header]");
+    // 5 non-identity section headers: Skills, Experience, Education, Languages, Contact
+    expect(headers).toHaveLength(5);
+
+    headers.forEach((header) => {
+      const eyebrow = header.querySelector("[data-resume-header-eyebrow]");
+      const title = header.querySelector("[data-resume-header-title]");
+      expect(eyebrow).toBeInTheDocument();
+      expect(eyebrow?.textContent?.trim().length).toBeGreaterThan(0);
+      expect(title).toBeInTheDocument();
+      expect(title?.tagName).toBe("H2");
+      expect(header).toHaveClass("resume-section-header");
+    });
+  });
+
+  it("preserves chapter IDs and TOC labels unchanged", () => {
+    const resume = getResumeContent("en");
+    renderWithLocale(<EnglishResumePage />, "en");
+
+    const chapterLabels = [
+      resume.identity.focus,
+      resume.labels.skills,
+      resume.labels.experience,
+      resume.labels.education,
+      resume.labels.contact,
+    ];
+    const chapterIds = ["identity", "capabilities", "experience", "credentials", "contact"];
+
+    chapterIds.forEach((id) => {
+      const chapterEl = document.querySelector(`[data-resume-chapter="${id}"]`);
+      expect(chapterEl).toBeInTheDocument();
+      expect(chapterEl).toHaveAttribute("id", `resume-chapter-${id}`);
+    });
+
+    const chapterNavigation = screen.getByRole("navigation", {
+      name: chapterLabels.join(" · "),
+    });
+    const links = within(chapterNavigation).getAllByRole("link");
+    expect(links).toHaveLength(5);
+    links.forEach((link, idx) => {
+      expect(link).toHaveTextContent(chapterLabels[idx]);
+      expect(link).toHaveAttribute("href", `#resume-chapter-${chapterIds[idx]}`);
+    });
+  });
 });
 
 describe("resume metadata", () => {
