@@ -1,0 +1,413 @@
+{
+  "matrix": [
+    {
+      "locale": "en",
+      "viewport": "1730x900",
+      "mode": "enhanced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "en",
+      "viewport": "1730x900",
+      "mode": "reduced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "en",
+      "viewport": "1440x900",
+      "mode": "enhanced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "en",
+      "viewport": "1440x900",
+      "mode": "reduced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "en",
+      "viewport": "1024x768",
+      "mode": "enhanced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "en",
+      "viewport": "1024x768",
+      "mode": "reduced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "en",
+      "viewport": "375x780",
+      "mode": "enhanced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "en",
+      "viewport": "375x780",
+      "mode": "reduced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "en",
+      "viewport": "320x700",
+      "mode": "enhanced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "en",
+      "viewport": "320x700",
+      "mode": "reduced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "en",
+      "viewport": "1024x600",
+      "mode": "enhanced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "en",
+      "viewport": "1024x600",
+      "mode": "reduced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "en",
+      "viewport": "375x480",
+      "mode": "enhanced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "en",
+      "viewport": "375x480",
+      "mode": "reduced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "pt-BR",
+      "viewport": "1730x900",
+      "mode": "enhanced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "pt-BR",
+      "viewport": "1730x900",
+      "mode": "reduced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "pt-BR",
+      "viewport": "1440x900",
+      "mode": "enhanced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "pt-BR",
+      "viewport": "1440x900",
+      "mode": "reduced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "pt-BR",
+      "viewport": "1024x768",
+      "mode": "enhanced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "pt-BR",
+      "viewport": "1024x768",
+      "mode": "reduced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "pt-BR",
+      "viewport": "375x780",
+      "mode": "enhanced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "pt-BR",
+      "viewport": "375x780",
+      "mode": "reduced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "pt-BR",
+      "viewport": "320x700",
+      "mode": "enhanced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "pt-BR",
+      "viewport": "320x700",
+      "mode": "reduced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "pt-BR",
+      "viewport": "1024x600",
+      "mode": "enhanced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "pt-BR",
+      "viewport": "1024x600",
+      "mode": "reduced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "pt-BR",
+      "viewport": "375x480",
+      "mode": "enhanced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    },
+    {
+      "locale": "pt-BR",
+      "viewport": "375x480",
+      "mode": "reduced",
+      "overflow": "PASS (0px overflow)",
+      "h1Count": 1,
+      "pageErrors": 0,
+      "consoleErrors": 0,
+      "tocLinks": 0
+    }
+  ],
+  "performance": {
+    "en": {
+      "locale": "en",
+      "lcpMs": 108,
+      "cls": 0.0003,
+      "requests": 15,
+      "totalTransferredBytes": 356351,
+      "totalJsTransferredBytes": 287444,
+      "totalLongTasks": 1,
+      "longTasksOver50ms": 1,
+      "longTasksOver200ms": 0,
+      "droppedFramesCount": 1
+    },
+    "pt-BR": {
+      "locale": "pt-BR",
+      "lcpMs": 72,
+      "cls": 0,
+      "requests": 15,
+      "totalTransferredBytes": 356351,
+      "totalJsTransferredBytes": 287444,
+      "totalLongTasks": 1,
+      "longTasksOver50ms": 1,
+      "longTasksOver200ms": 0,
+      "droppedFramesCount": 0
+    }
+  },
+  "accessibility": [
+    {
+      "test": "skip-link",
+      "focused": {
+        "tagName": "A",
+        "text": "Skip to content",
+        "href": "#main-content",
+        "id": "",
+        "className": "fixed top-4 left-[var(--page-gutter)] z-50 -translate-y-[200%] rounded-full bg-[var(--color-surface-strong)] px-4 py-2.5 text-xs font-semibold tracking-wider uppercase text-[var(--color-text)] shadow-lg transition-transform focus:translate-y-0"
+      }
+    },
+    {
+      "test": "focus-chain",
+      "chain": [
+        "a[href=\"/#top\"]",
+        "a[href=\"/#work\"]",
+        "a[href=\"/#process\"]",
+        "a[href=\"/#about\"]",
+        "a[href=\"/#contact\"]",
+        "a[href=\"/resume\"]",
+        "button",
+        "button",
+        "button",
+        "a[href=\"mailto:guilhermefortuna.dev@gmail.com\"]",
+        "a[href=\"tel:+5548991814229\"]",
+        "a[href=\"https://guilhermefortuna.dev\"]",
+        "a[href=\"https://github.com/GuilhermeFortuna\"]",
+        "a[href=\"https://www.linkedin.com/in/guilherme-fortuna-dos-santos/\"]",
+        "a[href=\"/resume/guilherme-fortuna-resume-en.pdf\"]",
+        "a[href=\"/resume/guilherme-fortuna-resume-en.pdf\"]",
+        "button",
+        "button",
+        "button",
+        "button"
+      ]
+    }
+  ],
+  "resilience": [
+    {
+      "type": "no-js",
+      "locale": "en",
+      "viewport": "1440x900",
+      "h1": "Guilherme Fortuna",
+      "hasOverflow": false,
+      "experienceItems": 4,
+      "pdfLinks": [
+        "/resume/guilherme-fortuna-resume-en.pdf",
+        "/resume/guilherme-fortuna-resume-en.pdf",
+        "/resume/guilherme-fortuna-resume-en.pdf",
+        "/resume/guilherme-fortuna-resume-en.pdf"
+      ]
+    },
+    {
+      "type": "no-js",
+      "locale": "en",
+      "viewport": "375x780",
+      "h1": "Guilherme Fortuna",
+      "hasOverflow": false,
+      "experienceItems": 4,
+      "pdfLinks": [
+        "/resume/guilherme-fortuna-resume-en.pdf",
+        "/resume/guilherme-fortuna-resume-en.pdf",
+        "/resume/guilherme-fortuna-resume-en.pdf",
+        "/resume/guilherme-fortuna-resume-en.pdf"
+      ]
+    },
+    {
+      "type": "no-js",
+      "locale": "pt-BR",
+      "viewport": "1440x900",
+      "h1": "Guilherme Fortuna",
+      "hasOverflow": false,
+      "experienceItems": 4,
+      "pdfLinks": [
+        "/resume/guilherme-fortuna-resume-pt-BR.pdf",
+        "/resume/guilherme-fortuna-resume-pt-BR.pdf",
+        "/resume/guilherme-fortuna-resume-pt-BR.pdf",
+        "/resume/guilherme-fortuna-resume-pt-BR.pdf"
+      ]
+    },
+    {
+      "type": "no-js",
+      "locale": "pt-BR",
+      "viewport": "375x780",
+      "h1": "Guilherme Fortuna",
+      "hasOverflow": false,
+      "experienceItems": 4,
+      "pdfLinks": [
+        "/resume/guilherme-fortuna-resume-pt-BR.pdf",
+        "/resume/guilherme-fortuna-resume-pt-BR.pdf",
+        "/resume/guilherme-fortuna-resume-pt-BR.pdf",
+        "/resume/guilherme-fortuna-resume-pt-BR.pdf"
+      ]
+    },
+    {
+      "test": "lifecycle-unmount",
+      "initialHomeDom": 274,
+      "resumeDom": 432,
+      "finalHomeDom": 274,
+      "diff": 0
+    }
+  ],
+  "defects": []
+}

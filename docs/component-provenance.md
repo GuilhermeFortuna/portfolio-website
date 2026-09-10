@@ -41,14 +41,15 @@ and attribution terms before relying on them.
 | Dotted Surface | https://21st.dev/@sshahaider/components/dotted-surface | `src/components/effects/dotted-surface.tsx` | `three` | Reframed from a full-viewport surface into a shallow, wide `20rem` horizon with a low camera pitch; denser, wider-than-deep grid; lowered wave frequencies to avoid banding; accent-token point colors; top mask and bottom fade into negative space; wrapped in `ManagedWebGLEffect` with a static dot-pattern fallback; stops rendering while offscreen. | Not independently verified; confirm terms at the canonical source page (21st.dev / @sshahaider). |
 | Resume Timeline | https://ui.aceternity.com/components/timeline | `src/components/resume/resume-timeline.tsx` | Existing `motion` only | Retrieved 2026-09-08 from the free Content component page and reduced to the resume contract: semantic ordered experience entries, token-based styling, one decorative chronology beam, desktop-only sticky periods, and static reduced-motion output. No Aceternity installer or package was used. | The canonical page identifies Timeline under free Content components. The linked Aceternity License permits modification and use in commercial/personal end products while prohibiting redistribution of source files; this repository distributes the adapted end product, not the upstream source. |
 
-## Batch 08 — Career Operating System (WO-044 planned sources)
+## Batch 08 & 09 — Career Operating System & Refinements (WO-044 – WO-058)
 
-These entries are contract selections, not shipped components. WO-044 inspected
-the public registry/component pages on 2026-09-08 without installing packages.
-The full source/dependency/adaptation matrix and fallback contract are in
-[`docs/resume-career-operating-system.md`](./resume-career-operating-system.md).
-Implementation orders must re-verify public availability and license terms
-before adapting or redistributing source.
+These components form the Career Operating System Resume shipped in Batch 08
+and refined across Batch 09 (WO-051 through WO-058), integrated and frozen under
+WO-057. Each external component is adapted without installing third-party UI packages,
+using existing project dependencies (`motion`, scoped `gsap`, and shared tokens).
+The source/dependency/adaptation matrix and fallback contract are detailed in
+[`docs/resume-career-operating-system.md`](./resume-career-operating-system.md) and
+[`docs/design/resume-refinement-decisions.md`](./design/resume-refinement-decisions.md).
 
 | Component | Canonical URL | Local owner | Dependency | Planned adaptation | License / attribution status |
 | --- | --- | --- | --- | --- | --- |
@@ -74,10 +75,10 @@ point sits at the vertical center, where the focal action card is placed.
 
 ## Resume background
 
-| Component | Canonical URL | Local file | Dependency | Main adaptations |
-| --- | --- | --- | --- | --- |
-| Light Rays (hero) | https://reactbits.dev/backgrounds/light-rays | `src/components/effects/light-rays.tsx`, mounted by `src/components/resume/resume-backdrop.tsx` | `ogl` | Own IntersectionObserver and re-init-on-prop-change removed in favour of `ManagedWebGLEffect` (`light-rays`, hero/high) with `active`/`dpr` from the manager; props flow through a ref instead of re-creating the context; `originX` added to anchor the fan above the name; pointer read from the window because the layer sits beneath content; `pulsating`/`lightMode` dropped; lavender `#c9b8ff` tint echoing the homepage Line Waves violet; bottom mask into the canvas; static conic-gradient fallback. |
-| Light Rays (ambient) | https://magicui.design/docs/components/light-rays | `src/components/effects/ambient-rays.tsx`, mounted by `src/components/resume/resume-backdrop.tsx` | Existing `motion` only | `Math.random` replaced with a seeded PRNG for SSR parity; inline styles instead of Tailwind arbitrary values; accent-token color; static rays under reduced motion; fixed full-viewport layer whose opacity follows Resume scroll progress so it takes over only after the hero rays scroll away. |
+| Component | Canonical URL | Local file | Dependency | Main adaptations | License / attribution note |
+| --- | --- | --- | --- | --- | --- |
+| Light Rays (hero) | https://reactbits.dev/backgrounds/light-rays | `src/components/effects/light-rays.tsx`, mounted by `src/components/resume/resume-backdrop.tsx` | `ogl` | Own IntersectionObserver and re-init-on-prop-change removed in favour of `ManagedWebGLEffect` (`light-rays`, hero/high) with `active`/`dpr` from the manager; props flow through a ref instead of re-creating the context; `originX` added to anchor the fan above the name; pointer read from the window because the layer sits beneath content; `pulsating`/`lightMode` dropped; lavender `#c9b8ff` tint echoing the homepage Line Waves violet; bottom mask into the canvas; static conic-gradient fallback. | Not independently verified; confirm terms at the canonical source page (React Bits). |
+| Light Rays (ambient) | https://magicui.design/docs/components/light-rays | `src/components/effects/ambient-rays.tsx`, mounted by `src/components/resume/resume-backdrop.tsx` | Existing `motion` only | `Math.random` replaced with a seeded PRNG for SSR parity; inline styles instead of Tailwind arbitrary values; accent-token color; static rays under reduced motion; fixed full-viewport layer whose opacity follows Resume scroll progress so it takes over only after the hero rays scroll away. | Repository `magicuidesign/magicui` declares MIT (GitHub license API, inspected 2026-09-10). |
 
 ## Aegis case study (Batch 03)
 

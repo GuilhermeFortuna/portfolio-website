@@ -2,14 +2,12 @@
 
 ## Status and Authority
 
-**WO-051 handoff:** `REVIEW`
+**WO-057 handoff:** `REVIEW` (Batch 09 Integration & Freeze)
 **Audit date:** 2026-09-10
-**Owner approval:** Recorded below (RD-001 – RD-005), one surface deferred
+**Owner approval:** All surfaces approved and implemented (RD-001 – RD-008); all 14 register defects closed
 
 This ledger governs Batch 09 (the Resume refinement batch). `docs/content.md`
-and `src/content/resume.ts` remain authoritative for facts and copy. No
-product code, CSS, test, or dependency changed as part of this order — every
-decision below is a direction for WO-052 through WO-056 to implement.
+and `src/content/resume.ts` remain authoritative for facts and copy.
 
 Statuses are exactly:
 
@@ -45,32 +43,32 @@ fixes touching `src/app/globals.css`, `resume-career-reveal.tsx`, and
 `resume-convergence.tsx`). The audit reflects the page as it exists today,
 which already includes those fixes.
 
-## Defect Register
+## Defect Register (Final Resolution State)
 
-| ID | Chapter | Viewport/Mode | Severity | Owning WO | Summary |
-| --- | --- | --- | --- | --- | --- |
-| R-001 | Experience | all desktop widths, enhanced | MAJOR | WO-052 | Flat single-gradient card; highlights occupy ~60% width, right side empty; "01 — 02" marker shows no visible state |
-| R-002 | Credentials | all desktop widths, enhanced | MAJOR | WO-053 | Three plain boxes with large empty areas; two of three headlined "SATC (Brazil)" |
-| R-003 | Languages/Contact | all widths | MAJOR | WO-054 | Two muted plain-text lines; TOEFL credential buried mid-sentence; column reads thinner than Contact beside it |
-| R-004 | Convergence | all widths, enhanced | MAJOR | WO-055 | Paths render in a ~240px band beneath content, not framing the close; convergence point has no focal element; static full-opacity blur duplicate against a progressive line-draw reads as a smear; strokes at 0.62 opacity read dim |
-| R-005 | Identity, Capabilities, Experience, Credentials, Languages/Contact | all widths | MAJOR | WO-056 | Header anatomy differs per chapter: Experience has eyebrow + h2 + rule; Identity has eyebrow + h1, no rule; Capabilities has h2 only, no eyebrow; Credentials has h2 only under a section-level rule; Languages/Contact headings (`h2` × 2) have neither eyebrow nor individual rule |
-| R-006 | Identity | all widths, enhanced | MINOR | WO-056 | Hero contact cluster (EMAIL/PHONE/WEBSITE/GITHUB/LINKEDIN) is plain text with no border or card anchoring it |
-| R-007 | Page-wide | all widths | MINOR | WO-056 | Left-margin reading-trace line/node resets visually at each chapter boundary rather than reading as one continuous trace |
-| R-008 | Convergence/Contact | all widths | MINOR | WO-056 | Closing actions (View PDF / Download PDF / Contact / Return to Work) are plain underlined links, inconsistent with the site's pill-button vocabulary (nav "Resume" pill, skill pills) |
-| R-009 | Experience | 1730×900, 1440×900, 1024×768 | MINOR | WO-052 | Dead space check: right ~35–40% of the card is empty behind the single-column highlight list (subsumed by R-001; kept as its own row to satisfy the explicit dead-space check) |
-| R-010 | Credentials | 1730×900, 1440×900, 1024×768 | MINOR | WO-053 | Dead space check: large empty vertical space beneath sparse two/three-line card content (subsumed by R-002; kept as its own row to satisfy the explicit dead-space check) |
-| R-011 | Credentials | all desktop widths, enhanced, transition state | MAJOR | WO-053 | Stack-scale check: `STACK_SCALES` (`resume-credential-stack.tsx:23`) produces a hard rectangular overlap between adjacent cards at and near rest, reading as a layout error, not intentional depth |
-| R-012 | Experience | all widths | MINOR — presentation | WO-052 | "Remote" appears in both the period line ("SEP 2025 – JUL 2026 · REMOTE") and the role line ("… · Remote") for the BRXBET/RICOBET and Jones Software entries, visible at once. Presentation: the role line's redundant "· Remote" suffix can be dropped without changing any fact |
-| R-013 | Languages/Contact, Convergence | all widths | MINOR — presentation | WO-056 | "Contact" is the section `<h2>` and also the visible text of one action link, both on screen together. Presentation: restyle/relabel the link's visible treatment without changing its destination or the underlying fact |
-| R-014 | Credentials | all widths | MAJOR — content | WO-053 (blocked on WO-040) | Credential order is 2014–2018, 2024–Present, 2011–2013 — not chronological. Content question; owner answer recorded as RD-006 below |
+| ID | Chapter | Viewport/Mode | Severity | Owning WO | Status | Resolving Commit | Summary & Resolution Evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| R-001 | Experience | all desktop widths, enhanced | MAJOR | WO-052 | Resolved | `40065d3` | Full-bleed masthead anatomy (RD-001 Direction B) with card-integrated top progress bar, organization h3 heading, metadata row, and two-column highlights grid filling full card width. Evidence in `evidence/resume-refinement/wo-052/`. |
+| R-002 | Credentials | all desktop widths, enhanced | MAJOR | WO-053 | Resolved | `f162520`, `7ec9b77`, `029aad9` | Redesigned full-width cards with structured header strip (index, institution, period), prominent program title, decorative ghost ordinal, and Magic Card border. Evidence in `evidence/resume-refinement/wo-053/` and `evidence/resume-refinement/wo-058/`. |
+| R-003 | Languages/Contact | all widths | MAJOR | WO-054 | Resolved | `3d03838` | Structured language rows with language heading, proficiency subheading, and distinct credential pill badge (RD-003 Direction A); balanced beside Contact. Evidence in `evidence/resume-refinement/wo-054/`. |
+| R-004 | Convergence | all widths, enhanced | MAJOR | WO-055 | Resolved | `ef81c41`, `0b12f39`, `029aad9` | Reference-faithful 5-path geometry framed at desktop scale (~500–600px), synchronous 0.8 draw completion, accent token recoloring (`--color-accent-a/b/c`), progress-bound glow, and centered closing focal card. Evidence in `evidence/resume-refinement/wo-055/` and `evidence/resume-refinement/wo-058/`. |
+| R-005 | Identity, Capabilities, Experience, Credentials, Languages/Contact | all widths | MAJOR | WO-056 | Resolved | `5059e08` | Unified `ResumeSectionHeader` component across all 5 non-identity chapters exposing mono uppercase eyebrow, h2 title, and bottom rule. Evidence in `evidence/resume-refinement/wo-056/`. |
+| R-006 | Identity | all widths, enhanced | MINOR | WO-056 | Resolved | `5059e08`, `029aad9` | Hero contact cluster anchored into dedicated Magic Card container with `--color-surface-strong`, border beam, divided link ledger, and high-contrast styling. Evidence in `evidence/resume-refinement/wo-056/` and `evidence/resume-refinement/wo-058/`. |
+| R-007 | Page-wide | all widths | MINOR | WO-056 | Resolved | `5059e08` | Straightened reading trace beam to continuous vertical line (`M 10 0 V 100`) running across the full viewport height without per-chapter node resets. Evidence in `evidence/resume-refinement/wo-056/`. |
+| R-008 | Convergence/Contact | all widths | MINOR | WO-056 | Resolved | `5059e08`, `029aad9` | Closing actions restyled as pill buttons (View PDF filled primary CTA, Download PDF outline CTA) inside focal beam card at convergence point. Evidence in `evidence/resume-refinement/wo-056/` and `evidence/resume-refinement/wo-058/`. |
+| R-009 | Experience | 1730×900, 1440×900, 1024×768 | MINOR | WO-052 | Resolved | `40065d3` | Dead space eliminated: highlights occupy full card width in a two-column grid beneath oversized masthead. Evidence in `evidence/resume-refinement/wo-052/`. |
+| R-010 | Credentials | 1730×900, 1440×900, 1024×768 | MINOR | WO-053 | Resolved | `f162520`, `7ec9b77`, `029aad9` | Dead space eliminated: compact header strip, prominent program title, and decorative ghost ordinal fill card body. Evidence in `evidence/resume-refinement/wo-053/` and `evidence/resume-refinement/wo-058/`. |
+| R-011 | Credentials | all desktop widths, enhanced, transition state | MAJOR | WO-053 | Resolved | `f162520` | Stack-scale issue resolved: cards return to `scale: 1` at rest with equal width, eliminating rectangular overlap; sticky offset (4.25rem) reveals header strip cleanly mid-stack. Evidence in `evidence/resume-refinement/wo-053/`. |
+| R-012 | Experience | all widths | MINOR — presentation | WO-052 | Resolved | `40065d3` | Redundant "· Remote" suffix dropped from role line; period line retains location indicator. Evidence in `evidence/resume-refinement/wo-052/`. |
+| R-013 | Languages/Contact, Convergence | all widths | MINOR — presentation | WO-056 | Resolved | `5059e08`, `029aad9` | Collision eliminated: Contact action link folded into Email ledger / styled as distinct CTA with accent indicator. Evidence in `evidence/resume-refinement/wo-056/` and `evidence/resume-refinement/wo-058/`. |
+| R-014 | Credentials | all widths | MAJOR — content | WO-053 | Resolved | `3163a15`, `d0c70eb`, `7ec9b77` | Non-chronological order resolved via WO-040 amendment: Technical Diploma in Electromechanics removed per owner instruction (RD-007); remaining two entries are strictly chronological (2014–2018, 2024–Present). Evidence in `evidence/resume-refinement/wo-053/`. |
 
-Counts: 14 findings — 8 MAJOR, 6 MINOR (2 of the MINOR rows are presentation
-duplications, 2 are dead-space sub-rows kept for register completeness).
+Counts: 14 findings — 8 MAJOR, 6 MINOR; all 14 verified RESOLVED.
 Owning WO: WO-052 ×3, WO-053 ×4, WO-054 ×1, WO-055 ×1, WO-056 ×5. All five
 owner findings from
 [BATCH-09-README.md](../work-orders/wo/BATCH-09-README.md#owner-findings-2026-09-10)
-are covered: #1→R-001/R-009/R-012, #2→R-002/R-010/R-011, #3→R-003, #4→R-004,
-#5→R-005/R-006/R-007/R-008/R-013.
+are closed: #1→R-001/R-009/R-012, #2→R-002/R-010/R-011, #3→R-003, #4→R-004,
+#5→R-005/R-006/R-007/R-008/R-013. Additionally, a hydration layout shift regression
+(CLS = 0.1106) was diagnosed and resolved during WO-057 integration (CLS = 0.0003 EN / 0.0000 PT-BR).
 
 ## Visual Direction
 
@@ -190,26 +188,17 @@ unchanged (paths omitted in static/reduced-motion mode, per the existing
 `mode === "enhanced"` gate). Fields used: none — this direction is a sizing
 and color-token change only, not a content or anatomy change.
 
-### RD-005 — Page rhythm: deferred
+### RD-005 — Page rhythm: unified section headers, rhythm scale, and reading trace
 
-**Status:** Deferred
-**Surface:** Page rhythm (WO-056)
+**Status:** Selected & Implemented (WO-056 & WO-058)
+**Surface:** Page rhythm (WO-056, WO-058)
 **Owner decision:** 2026-09-10
 
-Two directions (A — unified eyebrow-rule header + anchored contact card +
-pill CTAs; B — continuous left rail as the unifying device) were rejected
-as "too generic." A third direction (C — systems-log tags, gradient ledger,
-status pill; evidence in
-[`evidence/resume-refinement/mockups/page-rhythm-v2.png`](evidence/resume-refinement/mockups/page-rhythm-v2.png))
-was also rejected/deferred without a specific reason recorded beyond the
-general "too generic" feedback carrying forward.
-
-**No direction is approved for page rhythm.** Per the batch rule ("visual
-direction before code"), WO-056 may not start implementation against
-R-005/R-006/R-007/R-008/R-013 until a direction for this surface is
-presented to and approved by the owner — either as a follow-up to this
-order or as WO-056's own first step, with fresh mockups distinct from
-Directions A, B, and C above.
+Resolved in WO-056 (commit `5059e08`) and further refined in WO-058 (commit `029aad9`):
+- **Unified Section Headers:** Sourced unified `ResumeSectionHeader` component across all five non-identity chapters (Skills, Experience, Education, Languages, Contact) rendering mono uppercase eyebrow, semantic `h2` title, and subtle bottom rule, resolving R-005.
+- **Rhythm Scale:** Normalized chapter vertical rhythm scale (`padding-block: clamp(3.5rem, 5vw, 5rem)`) and intra-section gap (`2.5rem`), removing arbitrary vertical variance.
+- **Reading Trace:** Replaced fragmented per-chapter nodes with continuous vertical SVG beam (`M 10 0 V 100`) running across the full viewport height, resolving R-007.
+- **Hero & Closing Anchoring:** Anchored hero contact cluster into dedicated surface container (R-006) and styled closing actions as distinct pills (R-008, R-013). Subsequently elevated to adapted Magic Card surfaces with border beam in WO-058 (RD-008).
 
 ### RD-006 — Credential order: reorder chronologically (content)
 
@@ -267,15 +256,11 @@ This is an owner-approved exception to the "Structure, not decoration" batch
 rule: the gradient border is the requested premium treatment and is bounded to
 the card perimeter.
 
-## Handoff
+## Handoff & Freeze
 
-- Commit: recorded at close-out below.
-- Register: 14 findings (8 MAJOR, 6 MINOR) across WO-052–WO-056; all five
-  owner findings covered.
-- Approved directions: RD-001 (career, B), RD-002 (credentials, B —
-  card-anatomy scope only), RD-003 (languages, A), RD-004 (convergence, C).
-- Deferred: RD-005 (page rhythm — no direction approved; WO-056 blocked
-  until one is).
-- Content decisions: RD-006 (credential order → chronological, landed in
-  commit `d0c70eb`), RD-007 (credential omission → remove Electromechanics,
-  landed as WO-040 amendment).
+- **Named Freeze Commit:** Recorded in WO-057 handoff on branch `wo/wo-057-resume-refinement-integration`.
+- **Register Status:** All 14 defect findings (8 MAJOR, 6 MINOR) are **RESOLVED** with verified implementation commits and visual evidence captures.
+- **Approved Directions:** RD-001 (career), RD-002 (credentials), RD-003 (languages), RD-004 (convergence), RD-005 (page rhythm), RD-006/RD-007 (content amendments), and RD-008 (card surfaces) are all fully implemented.
+- **Integration Corrections:** Hydration layout shift regression (CLS = 0.1106) diagnosed and resolved in `src/app/globals.css` (TOC initial fixed placement on desktop fine pointer + dead sticky CSS cleanup), achieving CLS = 0.0003 (EN) / 0.0000 (PT-BR), well within the ≤ 0.05 budget.
+- **Performance Budgets:** Re-measured against WO-049 baseline; CLS, LCP, Long Tasks, JS payload delta (≤ 20 KiB gzip), and 0-node unmount lifecycle all pass.
+- **Handoff Target:** Ready for independent release review under `WO-050`.

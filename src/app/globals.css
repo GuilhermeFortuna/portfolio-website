@@ -732,16 +732,6 @@ canvas {
 }
 
 @media (min-width: 1200px) and (min-height: 720px) and (pointer: fine) {
-  .resume-identity[data-resume-hydrated="true"][data-motion-mode="enhanced"] {
-    min-height: 138svh;
-  }
-
-  .resume-identity[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-identity__content {
-    position: sticky;
-    top: 6rem;
-    min-height: calc(100svh - 8rem);
-    align-items: center;
-  }
 
   .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] {
     min-height: 48rem;
@@ -1917,6 +1907,18 @@ canvas {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+}
+
+@media (min-width: 1200px) and (min-height: 720px) and (pointer: fine) {
+  .resume-dynamic-island-nav:not([data-motion-mode="reduced"]) {
+    position: fixed;
+    top: 50%;
+    right: max(1.25rem, env(safe-area-inset-right, 1.25rem));
+    bottom: auto;
+    left: auto;
+    margin: 0;
+    transform: translateY(-50%);
   }
 }
 
