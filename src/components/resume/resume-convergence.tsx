@@ -15,6 +15,39 @@ export type ResumeConvergenceProps = {
   workHref: string;
 };
 
+export type ParsedLanguage = {
+  name: string;
+  level?: string;
+  credential?: string;
+  raw: string;
+};
+
+export function parseLanguage(raw: string): ParsedLanguage {
+  const separator = raw.indexOf(":");
+  if (separator < 0) {
+    return { name: raw, raw };
+  }
+
+  const name = raw.slice(0, separator).trim();
+  const rest = raw.slice(separator + 1).trim();
+
+  if (!name || !rest) {
+    return { name: raw, raw };
+  }
+
+  const credMatch = rest.match(/^(.*?)\s*\(([^)]+)\)\s*$/);
+  if (credMatch) {
+    const level = credMatch[1].trim();
+    const credential = credMatch[2].trim();
+    if (level && credential) {
+      return { name, level, credential, raw };
+    }
+  }
+
+  return { name, level: rest, raw };
+}
+
+
 const PATH_RANGES: Array<[number, number]> = [
   [0.2, 1.2],
   [0.15, 1.2],
@@ -116,8 +149,52 @@ export function ResumeConvergence({
       <div className="resume-convergence__content">
         <div className="resume-convergence__languages">
           <h2 id="resume-languages-heading">{languageLabel}</h2>
-          <ul aria-label={languageLabel}>
-            {languages.map((language) => <li key={language}>{language}</li>)}
+          <ul aria-label={languageLabel} className="resume-convergence__languages-list">
+            {languages.map((language) => {
+              const parsed = parseLanguage(language);
+              return (
+                <li key={language} className="resume-convergence__languages-item">
+                  {parsed.level ? (
+                    <div className="resume-convergence__languages-row">
+                      <div className="resume-convergence__languages-info">
+                        <span className="resume-convergence__languages-name">
+                          {parsed.name}
+                        </span>
+                        <span
+                          aria-hidden="true"
+                          className="resume-convergence__languages-sr-only"
+                        >
+                          :{" "}
+                        </span>
+                        <span className="resume-convergence__languages-level">
+                          {parsed.level}
+                        </span>
+                      </div>
+                      {parsed.credential ? (
+                        <span className="resume-convergence__languages-badge">
+                          <span
+                            aria-hidden="true"
+                            className="resume-convergence__languages-sr-only"
+                          >
+                            {" "}
+                            (
+                          </span>
+                          {parsed.credential}
+                          <span
+                            aria-hidden="true"
+                            className="resume-convergence__languages-sr-only"
+                          >
+                            )
+                          </span>
+                        </span>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <span className="resume-convergence__languages-fallback">{language}</span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </div>
 
