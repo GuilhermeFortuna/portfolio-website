@@ -1,0 +1,24 @@
+{
+  "en-1440x900": {
+    "cls": 0.11064938271604938,
+    "longTasks": [
+      {
+        "duration": 84,
+        "startTime": 103.59999999776483,
+        "name": "self"
+      }
+    ],
+    "maxLongTask": 84
+  },
+  "pt-BR-1440x900": {
+    "cls": 0.11064938271604938,
+    "longTasks": [
+      {
+        "duration": 85,
+        "startTime": 155.30000000074506,
+        "name": "self"
+      }
+    ],
+    "maxLongTask": 85
+  }
+}

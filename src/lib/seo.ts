@@ -119,4 +119,4 @@ export function deploymentRobotsMetadata(): Pick<Metadata, "robots"> | undefined
 }
 
 /** Indexable routes shared by the sitemap (unprefixed paths). */
-export const sitemapPaths = ["/", "/work/aegis", "/work/q"] as const;
+export const sitemapPaths = ["/", "/work/aegis", "/work/q", "/resume"] as const;

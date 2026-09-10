@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Git pre-commit hook: runs linting, typechecking, and tests before committing.
+# To bypass in emergencies: git commit --no-verify (-n)
+# To skip tests during quick commits: SKIP_TESTS=1 git commit
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+cd "$REPO_ROOT"
+
+# Color formatting if terminal supports it and NO_COLOR is not set
+if [[ -t 1 && -z "${NO_COLOR:-}" ]]; then
+  BOLD="\033[1m"
+  GREEN="\033[32m"
+  RED="\033[31m"
+  BLUE="\033[34m"
+  CYAN="\033[36m"
+  RESET="\033[0m"
+else
+  BOLD=""
+  GREEN=""
+  RED=""
+  BLUE=""
+  CYAN=""
+  RESET=""
+fi
+
+TOTAL_START=$SECONDS
+
+printf "${BOLD}${CYAN}🔍 Running pre-commit quality checks...${RESET}\n"
+
+# Step 1: Linting / formatting checks
+printf "\n${BOLD}${BLUE}==> [1/3] Linting (pnpm lint)${RESET}\n"
+LINT_START=$SECONDS
+if ! pnpm lint; then
+  printf "\n${RED}${BOLD}❌ Lint failed. Please fix lint errors before committing.${RESET}\n" >&2
+  exit 1
+fi
+printf "${GREEN}✓ Lint passed in %ds${RESET}\n" "$(( SECONDS - LINT_START ))"
+
+# Step 2: Typecheck
+printf "\n${BOLD}${BLUE}==> [2/3] Typecheck (pnpm typecheck)${RESET}\n"
+TYPECHECK_START=$SECONDS
+if ! pnpm typecheck; then
+  printf "\n${RED}${BOLD}❌ Typecheck failed. Please fix TypeScript errors before committing.${RESET}\n" >&2
+  exit 1
+fi
+printf "${GREEN}✓ Typecheck passed in %ds${RESET}\n" "$(( SECONDS - TYPECHECK_START ))"
+
+# Step 3: Fast test suite
+if [[ "${SKIP_TESTS:-}" == "1" || "${SKIP_TESTS:-}" == "true" ]]; then
+  printf "\n${CYAN}==> [3/3] Tests skipped (SKIP_TESTS set)${RESET}\n"
+else
+  printf "\n${BOLD}${BLUE}==> [3/3] Tests (pnpm test)${RESET}\n"
+  TEST_START=$SECONDS
+  if ! pnpm test; then
+    printf "\n${RED}${BOLD}❌ Tests failed. Please fix failing tests before committing.${RESET}\n" >&2
+    exit 1
+  fi
+  printf "${GREEN}✓ Tests passed in %ds${RESET}\n" "$(( SECONDS - TEST_START ))"
+fi
+
+TOTAL_ELAPSED=$(( SECONDS - TOTAL_START ))
+printf "\n${GREEN}${BOLD}✓ All pre-commit checks passed in %ds! Proceeding with commit.${RESET}\n" "$TOTAL_ELAPSED"
+exit 0
