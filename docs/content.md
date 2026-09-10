@@ -23,8 +23,8 @@ Confident, precise, concise, technically literate, and evidence-led. Use first p
 - Disciplines: `AI · Product Engineering · Data · Infrastructure`
 - Support: `Full-stack developer creating intelligent products, complex systems, and high-impact digital experiences.`
 - Actions:
-  - **DECISION:** `Explore my work` → `/work/aegis` (first project in fixed chapter order)
-  - **FACT:** `View GitHub` → `https://github.com/GuilhermeFortuna` (public profile; project repositories remain private)
+  - **DECISION:** `Explore my work` → `#work` (scroll to selected work section)
+  - **DECISION:** `View Resume` → `/resume` (internal resume page)
 
 ### Process
 

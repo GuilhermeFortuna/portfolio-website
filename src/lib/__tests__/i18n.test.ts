@@ -69,8 +69,8 @@ describe("i18n infrastructure & Brazilian Portuguese content", () => {
     expect(ptSite.heroTitle).toBe("Desenvolvo sistemas de software ambiciosos.");
     expect(ptSite.processLabel).toBe("PROCESSO");
     expect(ptSite.aboutLabel).toBe("SOBRE");
-    expect(ptSite.contactLabel).toBe("CONTATO");
-    expect(ptSite.heroCtaHref).toBe("/pt-BR/work/aegis");
+    expect(ptSite.heroCtaHref).toBe("#work");
+    expect(ptSite.heroResumeHref).toBe("/pt-BR/resume");
   });
 
   // .process-title uses max-width: 12ch; a longer unbreakable word overflows

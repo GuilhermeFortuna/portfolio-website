@@ -8,8 +8,8 @@ export interface SiteContent {
   heroBody: string;
   heroCta: string;
   heroCtaHref: string;
-  heroGithubLabel: string;
-  heroGithubHref: string;
+  heroResumeLabel: string;
+  heroResumeHref: string;
 
   processLabel: string;
   processTitle: string;
@@ -72,9 +72,9 @@ const siteContentMap: Record<Locale, SiteContent> = {
     heroBody:
       "Full-stack developer creating intelligent products, complex systems, and high-impact digital experiences.",
     heroCta: "Explore my work",
-    heroCtaHref: "/work/aegis",
-    heroGithubLabel: "View GitHub",
-    heroGithubHref: "https://github.com/GuilhermeFortuna",
+    heroCtaHref: "#work",
+    heroResumeLabel: "View Resume",
+    heroResumeHref: "/resume",
 
     processLabel: "PROCESS",
     processTitle: "From difficult idea to working system.",
@@ -128,9 +128,9 @@ const siteContentMap: Record<Locale, SiteContent> = {
     heroBody:
       "Desenvolvedor full-stack criando produtos inteligentes, sistemas complexos e experiências digitais de alto impacto.",
     heroCta: "Explore meu trabalho",
-    heroCtaHref: "/pt-BR/work/aegis",
-    heroGithubLabel: "Ver GitHub",
-    heroGithubHref: "https://github.com/GuilhermeFortuna",
+    heroCtaHref: "#work",
+    heroResumeLabel: "Ver Currículo",
+    heroResumeHref: "/pt-BR/resume",
 
     processLabel: "PROCESSO",
     processTitle: "De uma ideia complexa a um sistema que funciona.",
