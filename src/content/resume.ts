@@ -96,7 +96,6 @@ const english: ResumeContent = {
     },
   ],
   education: [
-    { institution: "SATC (Brazil)", program: "Technical Diploma in Electromechanics", period: "2011 – 2013" },
     { institution: "Savonia University of Applied Sciences (Kuopio, Finland) & SATC (Brazil)", program: "Mechanical Engineering & Academic Exchange", period: "2014 – 2018" },
     { institution: "SATC (Brazil)", program: "Software Engineering (In Progress)", period: "2024 – Present" },
   ],
@@ -157,7 +156,6 @@ const portuguese: ResumeContent = {
     },
   ],
   education: [
-    { institution: "SATC (Brasil)", program: "Técnico em Eletromecânica", period: "2011 – 2013" },
     { institution: "Savonia University of Applied Sciences (Kuopio, Finlândia) e SATC (Brasil)", program: "Engenharia Mecânica e Intercâmbio Acadêmico", period: "2014 – 2018" },
     { institution: "SATC (Brasil)", program: "Engenharia de Software (Em andamento)", period: "2024 – Atual" },
   ],

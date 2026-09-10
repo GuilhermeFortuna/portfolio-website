@@ -16,7 +16,7 @@ describe("resume content contract", () => {
       expect(resume.experience).toHaveLength(2);
       expect(resume).not.toHaveProperty("projects");
       expect(resume.labels).not.toHaveProperty("projects");
-      expect(resume.education).toHaveLength(3);
+      expect(resume.education).toHaveLength(2);
       expect(resume.languages).toHaveLength(2);
       expect(resume.pdf.href).toMatch(/^\/[^/]+\/guilherme-fortuna-resume/);
 

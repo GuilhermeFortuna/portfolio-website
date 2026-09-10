@@ -224,6 +224,16 @@ WO-040 content amendment to `src/content/resume.ts` (both locales) before
 WO-053 implements the reordered card anatomy from RD-002; WO-053 should not
 reorder the data itself without that amendment.
 
+### RD-007 — Credential omission: remove Technical Diploma in Electromechanics (content)
+
+**Status:** Content
+**Surface:** Credentials chapter (WO-040 amendment)
+**Owner decision:** 2026-09-10
+
+Owner instruction: remove "Technical Diploma in Electromechanics" (`Técnico em Eletromecânica`) from Education and International Experience across both locales as irrelevant for programming positions. The section now contains 2 chronological entries:
+1. `Savonia University of Applied Sciences (Kuopio, Finland) & SATC (Brazil) — Mechanical Engineering & Academic Exchange · 2014 – 2018`
+2. `SATC (Brazil) — Software Engineering (In Progress) · 2024 – Present`
+
 ## Handoff
 
 - Commit: recorded at close-out below.
@@ -233,5 +243,6 @@ reorder the data itself without that amendment.
   card-anatomy scope only), RD-003 (languages, A), RD-004 (convergence, C).
 - Deferred: RD-005 (page rhythm — no direction approved; WO-056 blocked
   until one is).
-- Content decision: RD-006 (credential order → chronological, needs
-  WO-040).
+- Content decisions: RD-006 (credential order → chronological, landed in
+  commit `d0c70eb`), RD-007 (credential omission → remove Electromechanics,
+  landed as WO-040 amendment).
