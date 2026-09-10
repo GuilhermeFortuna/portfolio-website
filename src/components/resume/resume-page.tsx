@@ -90,7 +90,7 @@ export function ResumePage({ locale }: { locale: Locale }): ReactNode {
       <div className="resume-stage">
         <ResumeSceneRuntime chapters={chapters}>
           <ResumeBackdrop />
-          <ResumeChapterNavigationConnected />
+          <ResumeChapterNavigationConnected labels={resume.labels} />
           <ResumeReadingTrace />
           <ResumeDocument resume={resume} />
         </ResumeSceneRuntime>

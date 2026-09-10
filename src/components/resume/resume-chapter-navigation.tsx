@@ -16,12 +16,23 @@ import {
   type ResumeMotionMode,
 } from "@/components/resume/resume-scene-runtime";
 
+export type ResumeChapterNavigationLabels = {
+  tableOfContents: string;
+  closeTableOfContents: string;
+};
+
+export const DEFAULT_CHAPTER_LABELS: ResumeChapterNavigationLabels = {
+  tableOfContents: "Table of contents",
+  closeTableOfContents: "Close table of contents",
+};
+
 export type ResumeChapterNavigationProps = {
   chapters: readonly ResumeChapter[];
   activeChapter: ResumeChapterId;
   progress: number;
   prefersReducedMotion?: boolean;
   motionMode?: ResumeMotionMode;
+  labels?: ResumeChapterNavigationLabels;
 };
 
 function CircleProgress({ progress }: { progress: number }) {
@@ -75,6 +86,7 @@ export function ResumeChapterNavigation({
   progress,
   prefersReducedMotion = false,
   motionMode,
+  labels = DEFAULT_CHAPTER_LABELS,
 }: ResumeChapterNavigationProps): ReactNode {
   const [isExpanded, setIsExpanded] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -141,7 +153,7 @@ export function ResumeChapterNavigation({
           aria-expanded={isExpanded}
           aria-controls="resume-dynamic-island-menu"
           aria-haspopup="dialog"
-          aria-label={`Table of contents: ${activeChapterData?.label ?? "Chapters"}`}
+          aria-label={`${labels.tableOfContents}: ${activeChapterData?.label ?? labels.tableOfContents}`}
           className="resume-dynamic-island__trigger"
           tabIndex={isExpanded ? -1 : 0}
         >
@@ -167,17 +179,17 @@ export function ResumeChapterNavigation({
         <div
           id="resume-dynamic-island-menu"
           role="region"
-          aria-label="Table of contents"
+          aria-label={labels.tableOfContents}
           className="resume-dynamic-island__menu"
         >
           <div className="resume-dynamic-island__menu-header">
             <span className="resume-dynamic-island__menu-title">
-              TABLE OF CONTENTS
+              {labels.tableOfContents}
             </span>
             <button
               type="button"
               onClick={handleClose}
-              aria-label="Close table of contents"
+              aria-label={labels.closeTableOfContents}
               className="resume-dynamic-island__close-button"
             >
               <svg
@@ -227,7 +239,11 @@ export function ResumeChapterNavigation({
   );
 }
 
-export function ResumeChapterNavigationConnected(): ReactNode {
+export function ResumeChapterNavigationConnected({
+  labels,
+}: {
+  labels?: ResumeChapterNavigationLabels;
+} = {}): ReactNode {
   const { chapters, activeChapter, progress, mode, prefersReducedMotion } =
     useResumeSceneRuntime();
   return (
@@ -237,6 +253,7 @@ export function ResumeChapterNavigationConnected(): ReactNode {
       progress={progress}
       prefersReducedMotion={prefersReducedMotion}
       motionMode={mode}
+      labels={labels}
     />
   );
 }

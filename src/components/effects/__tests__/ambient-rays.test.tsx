@@ -42,4 +42,38 @@ describe("AmbientRays", () => {
       expect(Number(ray.style.opacity)).toBeGreaterThan(0);
     }
   });
+
+  it("renders a static field when mode is static or reduced", () => {
+    const { container: staticContainer } = render(
+      <AmbientRays count={3} mode="static" />,
+    );
+    expect(staticContainer.querySelector("[data-ambient-rays]")).toHaveAttribute(
+      "data-motion",
+      "static",
+    );
+
+    const { container: reducedContainer } = render(
+      <AmbientRays count={3} mode="reduced" />,
+    );
+    expect(reducedContainer.querySelector("[data-ambient-rays]")).toHaveAttribute(
+      "data-motion",
+      "static",
+    );
+  });
+
+  it("renders animated field when mode is enhanced", () => {
+    const { container } = render(<AmbientRays count={3} mode="enhanced" />);
+    expect(container.querySelector("[data-ambient-rays]")).toHaveAttribute(
+      "data-motion",
+      "animated",
+    );
+  });
+
+  it("renders a static field when animate is false", () => {
+    const { container } = render(<AmbientRays count={3} animate={false} />);
+    expect(container.querySelector("[data-ambient-rays]")).toHaveAttribute(
+      "data-motion",
+      "static",
+    );
+  });
 });

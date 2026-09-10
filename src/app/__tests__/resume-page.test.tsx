@@ -1,3 +1,4 @@
+import userEvent from "@testing-library/user-event";
 import { motionValue } from "motion/react";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
@@ -142,6 +143,24 @@ describe("resume routes", () => {
       "href",
       "mailto:guilhermefortuna.dev@gmail.com",
     );
+
+    const user = userEvent.setup();
+    const tocTrigger = screen.getByRole("button", {
+      name: `${resume.labels.tableOfContents}: ${resume.identity.focus}`,
+    });
+    expect(tocTrigger).toBeInTheDocument();
+
+    await user.click(tocTrigger);
+    const region = screen.getByRole("region", {
+      name: resume.labels.tableOfContents,
+    });
+    expect(region).toBeInTheDocument();
+    expect(
+      within(region).getByText(resume.labels.tableOfContents),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: resume.labels.closeTableOfContents }),
+    ).toBeInTheDocument();
   });
 
   it("enforces strict heading order and hierarchy across all resume chapters", () => {

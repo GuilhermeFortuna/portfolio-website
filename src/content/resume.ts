@@ -27,6 +27,8 @@ const englishLabels: ResumeLabels = {
   linkedin: "LinkedIn",
   contact: "Contact",
   returnToWork: "Return to Work",
+  tableOfContents: "Table of contents",
+  closeTableOfContents: "Close table of contents",
 };
 
 const portugueseLabels: ResumeLabels = {
@@ -43,6 +45,8 @@ const portugueseLabels: ResumeLabels = {
   linkedin: "LinkedIn",
   contact: "Contato",
   returnToWork: "Voltar ao Trabalho",
+  tableOfContents: "Sumário",
+  closeTableOfContents: "Fechar sumário",
 };
 
 const english: ResumeContent = {

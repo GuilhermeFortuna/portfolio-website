@@ -18,6 +18,15 @@ export type AmbientRaysProps = {
   length?: string;
   /** Seed for the ray layout, so server and client render the same field. */
   seed?: number;
+  /**
+   * Resolved runtime motion mode. When provided, rays are animated only if mode === "enhanced".
+   */
+  mode?: "enhanced" | "reduced" | "static";
+  /**
+   * Explicitly enable or disable ray animation. Defaults to true (subject to
+   * reduced-motion preference and mode === "enhanced").
+   */
+  animate?: boolean;
 };
 
 type Ray = {
@@ -64,15 +73,21 @@ export function AmbientRays({
   speed = 14,
   length = "70vh",
   seed = 7,
+  mode,
+  animate = true,
 }: AmbientRaysProps) {
   const reduceMotion = useReducedMotion() ?? false;
+  const isStatic =
+    reduceMotion ||
+    !animate ||
+    (mode !== undefined && mode !== "enhanced");
   const rays = createAmbientRays(count, Math.max(speed, 0.1), seed);
 
   return (
     <div
       aria-hidden="true"
       data-ambient-rays
-      data-motion={reduceMotion ? "static" : "animated"}
+      data-motion={isStatic ? "static" : "animated"}
       className={cn("pointer-events-none absolute inset-0 isolate overflow-hidden", className)}
       style={
         {
@@ -111,12 +126,12 @@ export function AmbientRays({
             filter: "blur(var(--ambient-rays-blur))",
           }}
           initial={
-            reduceMotion
+            isStatic
               ? { rotate: ray.rotate, opacity: ray.intensity * 0.6 }
               : { rotate: ray.rotate, opacity: 0 }
           }
           animate={
-            reduceMotion
+            isStatic
               ? undefined
               : {
                   opacity: [0, ray.intensity, 0],
@@ -124,7 +139,7 @@ export function AmbientRays({
                 }
           }
           transition={
-            reduceMotion
+            isStatic
               ? undefined
               : {
                   duration: ray.duration,

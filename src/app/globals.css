@@ -4,6 +4,7 @@
   --color-canvas: #06070a;
   --color-surface: #0c0f14;
   --color-surface-strong: #111620;
+  --color-background: var(--color-canvas);
   --color-text: #f3f6fb;
   --color-text-muted: #9ba6b5;
   /* 4.80:1 against canvas, surface, and surface-strong. The previous #667083
@@ -731,26 +732,26 @@ canvas {
 }
 
 @media (min-width: 1200px) and (min-height: 720px) and (pointer: fine) {
-  .resume-identity[data-resume-hydrated="true"][data-motion-preference="false"] {
+  .resume-identity[data-resume-hydrated="true"][data-motion-mode="enhanced"] {
     min-height: 138svh;
   }
 
-  .resume-identity[data-resume-hydrated="true"][data-motion-preference="false"] .resume-identity__content {
+  .resume-identity[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-identity__content {
     position: sticky;
     top: 6rem;
     min-height: calc(100svh - 8rem);
     align-items: center;
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] {
     min-height: 48rem;
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__stage {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__stage {
     min-height: 39rem;
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__rings {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__rings {
     position: absolute;
     top: 50%;
     left: 35%;
@@ -765,26 +766,26 @@ canvas {
     transform: translate(-50%, -50%);
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__rings::before,
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__rings::after {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__rings::before,
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__rings::after {
     position: absolute;
     border-radius: 50%;
     content: "";
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__rings::before {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__rings::before {
     inset: 18%;
     border: 1px dashed color-mix(in srgb, var(--color-accent-b) 22%, transparent);
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__rings::after {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__rings::after {
     inset: -0.3rem;
     border-top: 2px solid var(--color-accent-b);
     opacity: 0.55;
     animation: resume-orbit-trace 18s linear infinite;
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__center {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__center {
     position: absolute;
     top: 50%;
     left: 35%;
@@ -795,7 +796,7 @@ canvas {
     border: 1px solid var(--color-line-strong);
     border-radius: 50%;
     padding: 1.5rem;
-    background: radial-gradient(circle, color-mix(in srgb, var(--color-accent-b) 9%, var(--color-background)) 0%, var(--color-background) 72%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--color-accent-b) 9%, var(--color-surface)) 0%, var(--color-surface) 72%);
     color: var(--color-text);
     font-family: var(--font-geist-mono), monospace;
     font-size: 0.75rem;
@@ -805,7 +806,7 @@ canvas {
     transform: translate(-50%, -50%);
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__center span {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__center span {
     position: absolute;
     top: 1.2rem;
     width: 0.45rem;
@@ -815,18 +816,18 @@ canvas {
     box-shadow: 0 0 1rem var(--color-accent-b);
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__list {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__list {
     position: absolute;
     inset: 0;
     display: block;
     min-height: 39rem;
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__group {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__group {
     position: static;
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__button {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__button {
     position: absolute;
     z-index: 2;
     width: 11rem;
@@ -834,28 +835,28 @@ canvas {
     border: 1px solid var(--color-line);
     border-radius: var(--radius-pill);
     padding: 0.55rem 0.8rem;
-    background: color-mix(in srgb, var(--color-background) 92%, transparent);
+    background: color-mix(in srgb, var(--color-surface) 92%, transparent);
     color: var(--color-text-muted);
     backdrop-filter: blur(0.75rem);
     transform: translate(-50%, -50%);
     transition: border-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__group[data-active="true"] .resume-capability-orbit__button {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__group[data-active="true"] .resume-capability-orbit__button {
     border-color: color-mix(in srgb, var(--color-accent-b) 62%, var(--color-line));
-    background: color-mix(in srgb, var(--color-accent-b) 8%, var(--color-background));
+    background: color-mix(in srgb, var(--color-accent-b) 8%, var(--color-surface));
     color: var(--color-text);
     transform: translate(-50%, -50%) scale(1.04);
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__group--1 .resume-capability-orbit__button { top: 10%; left: 35%; }
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__group--2 .resume-capability-orbit__button { top: 29%; left: 51%; }
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__group--3 .resume-capability-orbit__button { top: 71%; left: 51%; }
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__group--4 .resume-capability-orbit__button { top: 90%; left: 35%; }
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__group--5 .resume-capability-orbit__button { top: 71%; left: 19%; }
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__group--6 .resume-capability-orbit__button { top: 29%; left: 19%; }
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__group--1 .resume-capability-orbit__button { top: 10%; left: 35%; }
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__group--2 .resume-capability-orbit__button { top: 29%; left: 51%; }
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__group--3 .resume-capability-orbit__button { top: 71%; left: 51%; }
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__group--4 .resume-capability-orbit__button { top: 90%; left: 35%; }
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__group--5 .resume-capability-orbit__button { top: 71%; left: 19%; }
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__group--6 .resume-capability-orbit__button { top: 29%; left: 19%; }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__skills {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__skills {
     position: absolute;
     top: 50%;
     right: 0;
@@ -872,14 +873,14 @@ canvas {
     transition: none;
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__skills[data-active="true"] {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__skills[data-active="true"] {
     opacity: 1;
     pointer-events: auto;
     transform: translateY(-50%) translateX(0);
     transition: opacity var(--duration-medium) var(--ease-standard), transform var(--duration-medium) var(--ease-standard);
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__skills li {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__skills li {
     position: relative;
     border: 0;
     border-radius: 0;
@@ -889,7 +890,7 @@ canvas {
     line-height: 1.5;
   }
 
-  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-preference="false"] .resume-capability-orbit__skills li::before {
+  .resume-capability-orbit[data-resume-hydrated="true"][data-motion-mode="enhanced"] .resume-capability-orbit__skills li::before {
     position: absolute;
     top: 0.5rem;
     left: 0;
@@ -1808,6 +1809,7 @@ canvas {
   font-weight: 600;
   letter-spacing: 0.08em;
   color: var(--color-text-muted);
+  text-transform: uppercase;
 }
 
 .resume-dynamic-island__close-button {

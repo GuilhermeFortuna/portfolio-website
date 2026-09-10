@@ -51,6 +51,26 @@ describe("ResumeBackdrop", () => {
     );
     expect(container.querySelector("[data-light-rays-fallback]")).not.toBeNull();
     expect(container.querySelector("[data-ambient-rays]")).not.toBeNull();
+    expect(container.querySelector("[data-ambient-rays]")).toHaveAttribute(
+      "data-motion",
+      "static",
+    );
+  });
+
+  it("renders animated ambient rays when in enhanced mode", async () => {
+    vi.stubGlobal("matchMedia", () => ({
+      matches: true,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    }));
+    const { container } = renderBackdrop();
+    await act(async () => {
+      await new Promise((resolve) => window.setTimeout(resolve, 0));
+    });
+    expect(container.querySelector("[data-ambient-rays]")).toHaveAttribute(
+      "data-motion",
+      "animated",
+    );
   });
 
   it("hands off from the hero rays to the ambient field as the page scrolls", () => {

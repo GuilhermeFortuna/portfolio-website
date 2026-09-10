@@ -32,7 +32,7 @@ export function resolveAmbientOpacity(progress: number): number {
  * as the first child of `.resume-stage`, beneath every chapter.
  */
 export function ResumeBackdrop(): ReactNode {
-  const { progress } = useResumeSceneRuntime();
+  const { progress, mode } = useResumeSceneRuntime();
 
   return (
     <div aria-hidden="true" className="resume-backdrop" data-resume-backdrop>
@@ -75,6 +75,7 @@ export function ResumeBackdrop(): ReactNode {
           blur={48}
           speed={18}
           length="90vh"
+          mode={mode}
         />
       </div>
     </div>

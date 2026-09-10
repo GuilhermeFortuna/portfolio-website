@@ -39,6 +39,8 @@ export type ResumeLabels = {
   linkedin: string;
   contact: string;
   returnToWork: string;
+  tableOfContents: string;
+  closeTableOfContents: string;
 };
 
 export type ResumeContent = {

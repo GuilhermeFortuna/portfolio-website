@@ -137,4 +137,38 @@ describe("ResumeChapterNavigation", () => {
 
     expect(screen.getByRole("navigation")).toHaveAttribute("data-motion-mode", "static");
   });
+
+  it("supports custom localized labels for trigger, region, header, and close button", async () => {
+    const user = userEvent.setup();
+    render(
+      <ResumeChapterNavigation
+        chapters={chapters}
+        activeChapter="capabilities"
+        progress={0.2}
+        labels={{
+          tableOfContents: "Sumário",
+          closeTableOfContents: "Fechar sumário",
+        }}
+      />,
+    );
+
+    const trigger = screen.getByRole("button", {
+      name: "Sumário: Competências",
+    });
+    expect(trigger).toBeInTheDocument();
+
+    await user.click(trigger);
+
+    const region = screen.getByRole("region", { name: "Sumário" });
+    expect(region).toBeInTheDocument();
+    expect(region.querySelector(".resume-dynamic-island__menu-title")).toHaveTextContent("Sumário");
+
+    const closeButton = screen.getByRole("button", {
+      name: "Fechar sumário",
+    });
+    expect(closeButton).toBeInTheDocument();
+
+    await user.click(closeButton);
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+  });
 });
