@@ -66,8 +66,9 @@ WO-049 Batch 08 Integration Polish (owner-accepted, frozen)
                  └─ WO-054 Languages Panel
                       └─ WO-055 Gemini Convergence Refinement
                            └─ WO-056 Page Rhythm and Residual Findings
-                                └─ WO-057 Refinement Integration and Freeze
-                                     └─ WO-050 Career OS Release Review (re-pointed)
+                                └─ WO-058 Premium Card Surfaces and Closing Focal Point
+                                     └─ WO-057 Refinement Integration and Freeze
+                                          └─ WO-050 Career OS Release Review (re-pointed)
 ```
 
 The orders are sequential because each one edits the shared Resume stylesheet
@@ -85,6 +86,7 @@ runs once, on the refined product.
 | WO-054 | [Languages Panel](./WO-054-resume-languages-panel.md) | Structured language rows with visible proficiency and credential hierarchy |
 | WO-055 | [Gemini Convergence Refinement](./WO-055-resume-gemini-convergence.md) | Full-bleed converging paths that resolve on the closing actions |
 | WO-056 | [Page Rhythm and Residual Findings](./WO-056-resume-page-rhythm.md) | One section-header system, spacing rhythm, and every remaining register item |
+| WO-058 | [Premium Card Surfaces and Closing Focal Point](./WO-058-resume-premium-card-surfaces.md) | One adapted Magic Card surface for the hero, credential, and closing cards; closing actions at the convergence point |
 | WO-057 | [Refinement Integration and Freeze](./WO-057-resume-refinement-integration.md) | Re-verified matrix, budgets, and the named freeze commit for WO-050 |
 
 ## Batch-Specific Rules
@@ -108,5 +110,5 @@ runs once, on the refined product.
 ## Batch Completion Rule
 
 Batch 09 is complete when WO-051's direction is owner-approved, WO-052 through
-WO-056 are `DONE`, WO-057 records a named freeze commit, and WO-050 records `GO`
+WO-056 and WO-058 are `DONE`, WO-057 records a named freeze commit, and WO-050 records `GO`
 against that freeze.

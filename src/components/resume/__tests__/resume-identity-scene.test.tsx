@@ -50,7 +50,7 @@ describe("ResumeIdentityScene", () => {
     expect(content.getByText(/Criciúma, Brazil/)).toBeInTheDocument();
     expect(content.getByText(/Available and actively looking/)).toBeInTheDocument();
 
-    expect(content.getAllByRole("link")).toHaveLength(8);
+    expect(content.getAllByRole("link")).toHaveLength(7);
     expect(content.getByRole("link", { name: "View PDF" })).toHaveAttribute(
       "href",
       "/resume/guilherme-fortuna-resume-en.pdf",
@@ -59,6 +59,41 @@ describe("ResumeIdentityScene", () => {
       "download",
       "guilherme-fortuna-resume-en.pdf",
     );
+  });
+
+  it("anchors the contact cluster in one sourced card with a ledger of links", () => {
+    const resume = getResumeContent("en");
+    const { container } = renderScene();
+
+    const card = container.querySelector("[data-resume-identity-card]");
+    expect(card).toHaveAttribute("data-magic-card");
+    expect(card).toHaveTextContent(resume.labels.contact);
+
+    const ledger = within(card as HTMLElement).getByRole("list");
+    const rows = within(ledger).getAllByRole("listitem");
+    expect(rows).toHaveLength(resume.links.length);
+    resume.links.forEach((link, index) => {
+      const anchor = within(rows[index]).getByRole("link", { name: link.label });
+      expect(anchor).toHaveAttribute("href", link.href);
+      expect(anchor).toHaveAttribute("target", "_blank");
+      expect(rows[index].querySelector("[aria-hidden='true']")).toBeInTheDocument();
+    });
+
+    // The Email row is the contact destination; no duplicate "Contact" link.
+    expect(
+      within(card as HTMLElement).queryByRole("link", { name: resume.labels.contact }),
+    ).toBeNull();
+    expect(
+      within(card as HTMLElement).getByRole("link", { name: resume.labels.viewPdf }),
+    ).toHaveAttribute("data-primary", "true");
+  });
+
+  it("keeps the card static without a beam outside the enhanced mode", () => {
+    const { container } = renderScene();
+    const card = container.querySelector("[data-resume-identity-card]");
+
+    expect(card).toHaveAttribute("data-magic-card-animated", "false");
+    expect(card?.querySelector("[data-magic-card-beam]")).toBeNull();
   });
 
   it("clamps shared progress at the identity scene boundaries", () => {

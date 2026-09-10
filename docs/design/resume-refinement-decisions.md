@@ -234,6 +234,39 @@ Owner instruction: remove "Technical Diploma in Electromechanics" (`Técnico em 
 1. `Savonia University of Applied Sciences (Kuopio, Finland) & SATC (Brazil) — Mechanical Engineering & Academic Exchange · 2014 – 2018`
 2. `SATC (Brazil) — Software Engineering (In Progress) · 2024 – Present`
 
+### RD-008 — Card surfaces: one adapted Magic Card vocabulary (WO-058)
+
+**Status:** Selected
+**Surface:** Identity contact card, Credentials cards, closing actions (WO-058)
+**Owner decision:** 2026-09-10 (post-WO-056 review, in conversation)
+
+After WO-056 the owner judged the hero contact card and the credential cards
+"way too generic" and asked for a polished, premium treatment sourced from a
+public component library, plus refinement of the close. Direction approved:
+
+- **Surface.** Every card on the page becomes one adapted
+  [Magic UI Magic Card](https://magicui.design/docs/components/magic-card)
+  (MIT): pointer-tracked gradient border in `--color-accent-a` →
+  `--color-accent-c` over `--color-line`, soft inner spotlight, static fixed
+  hairline gradient without a fine pointer or under reduced motion.
+  [Magic UI Border Beam](https://magicui.design/docs/components/border-beam)
+  (MIT) runs on the two primary cards only (hero contact, closing actions),
+  never under reduced motion. Existing `motion` only; no new package.
+- **Hero.** Links become a ledger of divided rows; View PDF filled, Download
+  PDF outline; the redundant "Contact" text link is folded into the Email row
+  and `labels.contact` becomes the card eyebrow.
+- **Credentials.** WO-053 header-strip anatomy kept; an oversized decorative
+  ordinal fills the empty body on the right; the topmost stacked card gets a
+  faint accent top edge.
+- **Close.** Contact column shows the section header and the contact-link
+  ledger; the action cluster moves into a beam card at the Gemini convergence
+  point (the source's own centered-control layout); the band shrinks to fit.
+  In static and reduced modes the card sits in normal flow below the grid.
+
+This is an owner-approved exception to the "Structure, not decoration" batch
+rule: the gradient border is the requested premium treatment and is bounded to
+the card perimeter.
+
 ## Handoff
 
 - Commit: recorded at close-out below.

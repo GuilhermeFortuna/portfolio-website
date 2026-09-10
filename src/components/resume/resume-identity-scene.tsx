@@ -6,6 +6,7 @@ import {
   useResumeSceneMode,
   useResumeSceneRuntime,
 } from "@/components/resume/resume-scene-runtime";
+import { MagicCard } from "@/components/ui/magic-card";
 import type { ResumeLabels, ResumeLink } from "@/types/resume";
 
 type ResumeIdentity = {
@@ -58,7 +59,6 @@ export function ResumeIdentityScene({
 
   const mode = runtimeMode;
   const sceneProgress = Math.min(1, Math.max(0, progress / 0.18));
-  const contactLink = links.find((link) => link.kind === "email") ?? links[0];
   const style = {
     "--resume-identity-progress": sceneProgress,
   } as CSSProperties;
@@ -84,13 +84,26 @@ export function ResumeIdentityScene({
           </p>
         </div>
 
-        <div className="resume-identity__actions">
+        <MagicCard
+          animated={mode === "enhanced"}
+          beam
+          className="resume-identity__actions"
+          data-resume-identity-card
+        >
+          <p className="resume-identity__actions-eyebrow">{labels.contact}</p>
           <address>
-            {links.map((link) => (
-              <ExternalLink key={link.kind} href={link.href}>
-                {link.label}
-              </ExternalLink>
-            ))}
+            <ul className="resume-identity__ledger">
+              {links.map((link) => (
+                <li key={link.kind} className="resume-identity__ledger-row">
+                  <ExternalLink href={link.href}>
+                    <span className="resume-identity__ledger-label">{link.label}</span>
+                    <span aria-hidden="true" className="resume-identity__ledger-arrow">
+                      ↗
+                    </span>
+                  </ExternalLink>
+                </li>
+              ))}
+            </ul>
           </address>
           <div className="resume-identity__buttons">
             <a
@@ -98,6 +111,7 @@ export function ResumeIdentityScene({
               target="_blank"
               rel="noreferrer"
               className="resume-identity__button resume-identity__button--primary"
+              data-primary="true"
             >
               {labels.viewPdf}
             </a>
@@ -108,13 +122,8 @@ export function ResumeIdentityScene({
             >
               {labels.downloadPdf}
             </a>
-            {contactLink ? (
-              <a href={contactLink.href} className="resume-identity__contact">
-                {labels.contact}
-              </a>
-            ) : null}
           </div>
-        </div>
+        </MagicCard>
       </header>
     </section>
   );

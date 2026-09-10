@@ -67,6 +67,17 @@ describe("ResumeCredentialStack", () => {
         const indexIndicator = strip?.querySelector("[data-resume-credential-index]");
         expect(indexIndicator).toHaveAttribute("aria-hidden", "true");
         expect(indexIndicator).toHaveTextContent(String(index + 1).padStart(2, "0"));
+
+        const surface = item.querySelector("[data-resume-credential-surface]");
+        expect(surface).toHaveAttribute("data-magic-card");
+        expect(surface).toContainElement(article);
+
+        const ghost = article.querySelector("[data-resume-credential-ghost]");
+        expect(ghost).toHaveAttribute("aria-hidden", "true");
+        expect(ghost).toHaveTextContent(String(index + 1).padStart(2, "0"));
+        expect(within(article).getByRole("heading", { level: 3 })).not.toContainElement(
+          ghost as HTMLElement,
+        );
       });
 
       expect(container.querySelectorAll("img, picture, canvas")).toHaveLength(0);
@@ -148,6 +159,12 @@ describe("ResumeCredentialStack", () => {
     expect(container.querySelector("[data-resume-credential-list]")).not.toHaveClass(
       "overflow-auto",
     );
+    expect(
+      Array.from(container.querySelectorAll("[data-resume-credential-surface]"), (card) =>
+        card.getAttribute("data-magic-card-animated"),
+      ),
+    ).toEqual(resume.education.map(() => "true"));
+    expect(container.querySelector("[data-magic-card-beam]")).toBeNull();
   });
 
   it("keeps reduced motion static even on a wide fine-pointer viewport", async () => {
@@ -170,5 +187,10 @@ describe("ResumeCredentialStack", () => {
         card.getAttribute("data-stack-scale"),
       ),
     ).toEqual(expectedScales);
+    expect(
+      Array.from(container.querySelectorAll("[data-resume-credential-surface]"), (card) =>
+        card.getAttribute("data-magic-card-animated"),
+      ),
+    ).toEqual(resume.education.map(() => "false"));
   });
 });

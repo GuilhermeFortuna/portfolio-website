@@ -63,6 +63,7 @@ function ResumeDocument({ resume }: { resume: ResumeContent }) {
         <ResumeConvergence
           languageLabel={resume.labels.languages}
           languages={resume.languages}
+          links={resume.links}
           labels={resume.labels}
           pdf={resume.pdf}
           contactHref={resume.links.find((link) => link.kind === "email")!.href}

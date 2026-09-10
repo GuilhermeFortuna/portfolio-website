@@ -128,10 +128,11 @@ describe("resume routes", () => {
       resume.identity.role,
     );
     expect(screen.getAllByRole("link", { name: resume.labels.viewPdf })).toHaveLength(2);
-    expect(screen.getByRole("link", { name: resume.labels.phone })).toHaveAttribute(
-      "href",
-      "tel:+5548991814229",
-    );
+    const phoneLinks = screen.getAllByRole("link", { name: resume.labels.phone });
+    expect(phoneLinks).toHaveLength(2);
+    for (const phoneLink of phoneLinks) {
+      expect(phoneLink).toHaveAttribute("href", "tel:+5548991814229");
+    }
     expect(
       within(screen.getByRole("region", { name: resume.labels.experience })).getByRole("list", {
         name: resume.labels.experience,

@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   CONVERGENCE_SCROLL_OFFSET,
+  CONVERGENCE_VIEWBOX,
   parseLanguage,
   PATH_RANGES,
   ResumeConvergence,
@@ -32,6 +33,7 @@ function renderConvergence(locale: "en" | "pt-BR" = "en", customLanguages?: read
       <ResumeConvergence
         languageLabel={resume.labels.languages}
         languages={customLanguages ?? resume.languages}
+        links={resume.links}
         labels={resume.labels}
         pdf={resume.pdf}
         contactHref={contactHref}
@@ -296,9 +298,11 @@ describe("ResumeConvergence", () => {
       renderConvergence(locale);
 
       const region = screen.getByRole("region", { name: resume.labels.contact });
-      const actions = within(region).getAllByRole("link");
+      const focal = region.querySelector<HTMLElement>("[data-resume-convergence-actions]")!;
+      expect(focal).toHaveAttribute("data-magic-card");
+      const actions = within(focal).getAllByRole("link");
 
-      // Exactly four action links
+      // Exactly four action links inside the focal card
       expect(actions).toHaveLength(4);
 
       // All links have the resume-convergence__action class
@@ -339,6 +343,9 @@ describe("ResumeConvergence", () => {
     expect(section).toHaveAttribute("data-motion-mode", "enhanced");
     const svg = container.querySelector("[data-resume-convergence-paths]");
     expect(svg).toHaveAttribute("aria-hidden", "true");
+    // Source geometry is untouched; only the framing crops to the path band.
+    expect(svg?.querySelector("svg")).toHaveAttribute("viewBox", CONVERGENCE_VIEWBOX);
+    expect(CONVERGENCE_VIEWBOX).toBe("0 340 1440 350");
     const sharpPaths = svg?.querySelectorAll("[data-resume-convergence-path]");
     expect(sharpPaths).toHaveLength(5);
     expect(sharpPaths?.[0]).toHaveAttribute(
@@ -359,8 +366,43 @@ describe("ResumeConvergence", () => {
       expect(blur).toHaveAttribute("filter", "url(#resume-convergence-blur)");
     }
 
-    expect(section?.querySelector(".resume-convergence__content + [data-resume-convergence-paths]"))
-      .toBeInTheDocument();
+    const close = section?.querySelector(".resume-convergence__content + [data-resume-convergence-close]");
+    expect(close).toBeInTheDocument();
+    expect(close?.querySelector("[data-resume-convergence-paths]")).toBeInTheDocument();
+    expect(close?.querySelector("[data-resume-convergence-actions]")).toBeInTheDocument();
+    expect(close?.querySelector("[data-resume-convergence-actions]")).toHaveAttribute(
+      "data-magic-card-animated",
+      "true",
+    );
+    expect(close?.querySelector("[data-magic-card-beam]")).toBeInTheDocument();
+  });
+
+  it.each(["en", "pt-BR"] as const)(
+    "lists every %s contact link once in the Contact column as a ledger",
+    (locale) => {
+      const resume = getResumeContent(locale);
+      renderConvergence(locale);
+
+      const region = screen.getByRole("region", { name: resume.labels.contact });
+      const ledger = within(region).getByRole("list", { name: resume.labels.contact });
+      const rows = within(ledger).getAllByRole("listitem");
+      expect(rows).toHaveLength(resume.links.length);
+      resume.links.forEach((link, index) => {
+        const anchor = within(rows[index]).getByRole("link", { name: link.label });
+        expect(anchor).toHaveAttribute("href", link.href);
+      });
+    },
+  );
+
+  it("keeps the focal card static in flow without a beam outside enhanced mode", () => {
+    const { container } = renderConvergence();
+    const focal = container.querySelector("[data-resume-convergence-actions]");
+
+    expect(focal).toHaveAttribute("data-magic-card-animated", "false");
+    expect(container.querySelector("[data-magic-card-beam]")).toBeNull();
+    expect(container.querySelector("[data-resume-convergence-close]")).toContainElement(
+      focal as HTMLElement,
+    );
   });
 
   it("omits progress-linked paths under reduced motion without removing content or actions", async () => {

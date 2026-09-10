@@ -60,6 +60,18 @@ before adapting or redistributing source.
 | Tracing Beam | https://ui.aceternity.com/components/tracing-beam | `src/components/resume/resume-scene-runtime.tsx` (`ResumeReadingTrace`) | Existing Motion runtime progress; no new runtime | Reduced to a token-based decorative SVG rail with shared progress, `aria-hidden`, pointer-inert behavior, and omitted mobile/static presentation; never semantic chronology | Free component page and props re-inspected 2026-09-08; Aceternity UI; license and immutable revision not exposed on page; source remains attributed and license limitation is retained |
 | Google Gemini Effect | https://ui.aceternity.com/components/google-gemini-effect | `src/components/resume/resume-convergence.tsx` | Existing Motion; no WebGL | Retain the source component's five 1440×890 irregular SVG paths, staggered MotionValue path-length ranges ending together at 0.8 in view, zero-duration linear draw, and Gaussian-blurred duplicate layer bound to draw progress; adapted container height to near-full scale (clamp 15rem–37.5rem / ~500–600px on desktop), per-path token colors (`--color-accent-a/b/c`), primary/secondary CTA controls for closing actions, and static fallback. Refinement updated 2026-09-10 (WO-055, RD-004). | Public component and registry source re-inspected 2026-09-08; author Manu Arora / Aceternity UI; license and immutable revision not exposed on page; source remains attributed and license limitation is retained |
 
+## Resume card surfaces (WO-058)
+
+| Component | Canonical URL | Local file | Dependency | Main adaptations | License / attribution note |
+| --- | --- | --- | --- | --- | --- |
+| Magic Card | https://magicui.design/docs/components/magic-card | `src/components/ui/magic-card.tsx` (`MagicCard`), applied by `resume-identity-scene.tsx` (hero contact card), `resume-credential-stack.tsx` (credential cards), and `resume-convergence.tsx` (closing focal card) | None beyond React; the source's `motion` motion-values and `next-themes` are dropped | Pointer position written to `--magic-card-x/y` custom properties instead of motion values; gradient-border and inner spotlight moved to `.magic-card*` selectors in `globals.css` using `--color-accent-a/c` over `--color-line-strong`; an `animated` prop gates the pointer handlers and spotlight so static, mobile, and reduced-motion modes render a fixed gradient hairline with no listeners; "orb" mode omitted; surface is opaque with a faint top-lit gradient; content, spotlight, and beam layered by explicit z-index. | Repository `magicuidesign/magicui` declares MIT (GitHub license API, inspected 2026-09-10). |
+| Border Beam | https://magicui.design/docs/components/border-beam | `src/components/ui/magic-card.tsx` (`BorderBeam`, mounted only when `MagicCard` receives `beam` and `animated`) | Existing `motion` (`offsetDistance` keyframes) | Ring mask rebuilt with the content-box/`mask-composite: exclude` technique instead of Tailwind mask utilities; accent-b → accent-a gradient light; slower lap (9 s) and shorter light (120 px); mounted only on the two primary cards (hero contact, closing actions) and never under reduced motion, which also hides it in CSS. | Repository `magicuidesign/magicui` declares MIT (GitHub license API, inspected 2026-09-10). |
+
+The closing Gemini paths (WO-055 row above) keep their source geometry and
+draw ranges; WO-058 crops the SVG `viewBox` to the band the paths occupy
+(`0 340 1440 350`) so the drawing fills the close and the geometric convergence
+point sits at the vertical center, where the focal action card is placed.
+
 ## Resume background
 
 | Component | Canonical URL | Local file | Dependency | Main adaptations |

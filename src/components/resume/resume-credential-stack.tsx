@@ -14,6 +14,7 @@ import {
 
 import { useResumeSceneMode } from "@/components/resume/resume-scene-runtime";
 import { ResumeSectionHeader } from "@/components/resume/resume-section-header";
+import { MagicCard } from "@/components/ui/magic-card";
 import type { ResumeEducation } from "@/types/resume";
 
 export type ResumeCredentialStackProps = {
@@ -26,50 +27,67 @@ function CredentialCopy({
   entry,
   headingId,
   index,
+  animated,
 }: {
   entry: ResumeEducation;
   headingId: string;
   index: number;
+  animated: boolean;
 }): ReactNode {
+  const ordinal = String(index + 1).padStart(2, "0");
+
   return (
-    <article aria-labelledby={headingId} className="resume-credential-stack__card">
-      <div
-        className="resume-credential-stack__strip"
-        data-resume-credential-header-strip
-      >
-        <div className="resume-credential-stack__strip-main">
+    <MagicCard
+      animated={animated}
+      className="resume-credential-stack__card"
+      data-resume-credential-surface
+    >
+      <article aria-labelledby={headingId} className="resume-credential-stack__article">
+        <div
+          className="resume-credential-stack__strip"
+          data-resume-credential-header-strip
+        >
+          <div className="resume-credential-stack__strip-main">
+            <span
+              aria-hidden="true"
+              className="resume-credential-stack__index"
+              data-resume-credential-index
+            >
+              {ordinal}
+            </span>
+            <p
+              className="resume-credential-stack__institution"
+              data-resume-credential-institution
+            >
+              {entry.institution}
+            </p>
+          </div>
+          <span
+            className="resume-credential-stack__period"
+            data-resume-credential-period
+          >
+            {entry.period}
+          </span>
+        </div>
+
+        <div className="resume-credential-stack__body">
+          <h3
+            id={headingId}
+            className="resume-credential-stack__program"
+            data-resume-credential-program
+          >
+            {entry.program}
+          </h3>
           <span
             aria-hidden="true"
-            className="resume-credential-stack__index"
-            data-resume-credential-index
+            className="resume-credential-stack__ghost"
+            data-resume-credential-ghost
           >
-            {String(index + 1).padStart(2, "0")}
+            {ordinal}
           </span>
-          <p
-            className="resume-credential-stack__institution"
-            data-resume-credential-institution
-          >
-            {entry.institution}
-          </p>
         </div>
-        <span
-          className="resume-credential-stack__period"
-          data-resume-credential-period
-        >
-          {entry.period}
-        </span>
-      </div>
-
-      <div className="resume-credential-stack__body">
-        <h3
-          id={headingId}
-          className="resume-credential-stack__program"
-          data-resume-credential-program
-        >
-          {entry.program}
-        </h3>
-      </div>
-    </article>
+      </article>
+    </MagicCard>
   );
 }
 
@@ -94,6 +112,7 @@ function StaticCredentialList({
             entry={entry}
             headingId={`resume-credential-${index}-heading`}
             index={index}
+            animated={false}
           />
         </li>
       ))}
@@ -148,6 +167,7 @@ function EnhancedCredentialCard({
         entry={entry}
         headingId={`resume-credential-${index}-heading`}
         index={index}
+        animated
       />
     </motion.li>
   );

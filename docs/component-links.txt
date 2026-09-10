@@ -12,3 +12,7 @@ Animations:
 
 Buttons:
     - https://21st.dev/@johuniq/components/liquid-metal-button
+
+Resume cards:
+    - https://magicui.design/docs/components/magic-card (hero contact card, credential cards, closing focal card)
+    - https://magicui.design/docs/components/border-beam (hero contact card and closing focal card only)

@@ -5,11 +5,13 @@ import { motion, useScroll, useTransform, type MotionValue } from "motion/react"
 
 import { useResumeSceneMode } from "@/components/resume/resume-scene-runtime";
 import { ResumeSectionHeader } from "@/components/resume/resume-section-header";
-import type { ResumeContent, ResumeLabels } from "@/types/resume";
+import { MagicCard } from "@/components/ui/magic-card";
+import type { ResumeContent, ResumeLabels, ResumeLink } from "@/types/resume";
 
 export type ResumeConvergenceProps = {
   languageLabel: string;
   languages: readonly string[];
+  links: readonly ResumeLink[];
   labels: Pick<ResumeLabels, "viewPdf" | "downloadPdf" | "contact" | "returnToWork">;
   pdf: ResumeContent["pdf"];
   contactHref: string;
@@ -98,6 +100,14 @@ function ConvergencePath({
   );
 }
 
+/**
+ * The source paths live in a 1440×890 box but only occupy y ≈ 360–665. The
+ * viewBox is cropped to that band so the drawing fills the close instead of
+ * carrying empty space above and below; the geometric convergence point
+ * (y ≈ 515) then sits at the vertical center where the focal card is placed.
+ */
+export const CONVERGENCE_VIEWBOX = "0 340 1440 350";
+
 export const CONVERGENCE_SCROLL_OFFSET: ["start end", "end end"] = [
   "start end",
   "end end",
@@ -117,7 +127,7 @@ function EnhancedConvergencePaths(): ReactNode {
       className="resume-convergence__paths"
       data-resume-convergence-paths
     >
-      <svg viewBox="0 0 1440 890" preserveAspectRatio="none" fill="none">
+      <svg viewBox={CONVERGENCE_VIEWBOX} preserveAspectRatio="none" fill="none">
         {GEMINI_PATHS.map((path, index) => (
           <ConvergencePath key={path} path={path} index={index} progress={scrollYProgress} />
         ))}
@@ -143,6 +153,7 @@ function EnhancedConvergencePaths(): ReactNode {
 export function ResumeConvergence({
   languageLabel,
   languages,
+  links,
   labels,
   pdf,
   contactHref,
@@ -213,12 +224,42 @@ export function ResumeConvergence({
           </ul>
         </div>
 
-        <div className="resume-convergence__actions">
+        <div className="resume-convergence__contact">
           <ResumeSectionHeader
             eyebrow={labels.contact}
             title={labels.contact}
             headingId="resume-contact-heading"
           />
+          <address>
+            <ul aria-label={labels.contact} className="resume-convergence__ledger">
+              {links.map((link) => (
+                <li key={link.kind} className="resume-convergence__ledger-row">
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="resume-convergence__ledger-link"
+                  >
+                    <span className="resume-convergence__ledger-label">{link.label}</span>
+                    <span aria-hidden="true" className="resume-convergence__ledger-arrow">
+                      ↗
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </address>
+        </div>
+      </div>
+
+      <div className="resume-convergence__close" data-resume-convergence-close>
+        {mode === "enhanced" ? <EnhancedConvergencePaths /> : null}
+        <MagicCard
+          animated={mode === "enhanced"}
+          beam
+          className="resume-convergence__focal"
+          data-resume-convergence-actions
+        >
           <div className="resume-convergence__action-list">
             <a
               href={pdf.href}
@@ -248,9 +289,8 @@ export function ResumeConvergence({
               {labels.returnToWork}
             </a>
           </div>
-        </div>
+        </MagicCard>
       </div>
-      {mode === "enhanced" ? <EnhancedConvergencePaths /> : null}
     </section>
   );
 }
