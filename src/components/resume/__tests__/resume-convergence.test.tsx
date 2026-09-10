@@ -3,6 +3,7 @@ import { motionValue } from "motion/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
+  CONVERGENCE_SCROLL_OFFSET,
   parseLanguage,
   PATH_RANGES,
   ResumeConvergence,
@@ -283,6 +284,9 @@ describe("ResumeConvergence", () => {
     for (const [, end] of PATH_RANGES) {
       expect(end).toBe(0.8);
     }
+
+    // Scroll offset binds from element entry to complete element in-view across all screen dimensions
+    expect(CONVERGENCE_SCROLL_OFFSET).toEqual(["start end", "end end"]);
   });
 
   it.each(["en", "pt-BR"] as const)(

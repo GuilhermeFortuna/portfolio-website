@@ -97,11 +97,16 @@ function ConvergencePath({
   );
 }
 
+export const CONVERGENCE_SCROLL_OFFSET: ["start end", "end end"] = [
+  "start end",
+  "end end",
+];
+
 function EnhancedConvergencePaths(): ReactNode {
   const targetRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: targetRef,
-    offset: ["start 85%", "end 30%"],
+    offset: CONVERGENCE_SCROLL_OFFSET,
   });
 
   return (
