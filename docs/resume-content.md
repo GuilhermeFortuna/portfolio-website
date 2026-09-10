@@ -195,11 +195,9 @@ the source sentence or source line that authorizes it.
 
 ### Education and international experience
 
-| Order | EN | PT-BR | Source |
-|---:|---|---|---|
-| 1 | `Savonia University of Applied Sciences (Kuopio, Finland) & SATC (Brazil) — Mechanical Engineering & Academic Exchange · 2014 – 2018` | `Savonia University of Applied Sciences (Kuopio, Finlândia) e SATC (Brasil) — Engenharia Mecânica e Intercâmbio Acadêmico · 2014 – 2018` | First education line |
-| 2 | `SATC (Brazil) — Software Engineering (In Progress) · 2024 – Present` | `SATC (Brasil) — Engenharia de Software (Em andamento) · 2024 – Atual` | Second education line |
-| 3 | `SATC (Brazil) — Technical Diploma in Electromechanics · 2011 – 2013` | `SATC (Brasil) — Técnico em Eletromecânica · 2011 – 2013` | Third education line |
+| 1 | `SATC (Brazil) — Technical Diploma in Electromechanics · 2011 – 2013` | `SATC (Brasil) — Técnico em Eletromecânica · 2011 – 2013` | First education line |
+| 2 | `Savonia University of Applied Sciences (Kuopio, Finland) & SATC (Brazil) — Mechanical Engineering & Academic Exchange · 2014 – 2018` | `Savonia University of Applied Sciences (Kuopio, Finlândia) e SATC (Brasil) — Engenharia Mecânica e Intercâmbio Acadêmico · 2014 – 2018` | Second education line |
+| 3 | `SATC (Brazil) — Software Engineering (In Progress) · 2024 – Present` | `SATC (Brasil) — Engenharia de Software (Em andamento) · 2024 – Atual` | Third education line |
 
 ### Languages
 
