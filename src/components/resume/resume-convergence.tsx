@@ -48,12 +48,12 @@ export function parseLanguage(raw: string): ParsedLanguage {
 }
 
 
-const PATH_RANGES: Array<[number, number]> = [
-  [0.2, 1.2],
-  [0.15, 1.2],
-  [0.1, 1.2],
-  [0.05, 1.2],
-  [0, 1.2],
+export const PATH_RANGES: Array<[number, number]> = [
+  [0.2, 0.8],
+  [0.15, 0.8],
+  [0.1, 0.8],
+  [0.05, 0.8],
+  [0, 0.8],
 ] as const;
 
 // The source geometry is retained from Aceternity's Google Gemini Effect. Only
@@ -70,10 +70,12 @@ function ConvergencePath({
   path,
   index,
   progress,
+  isBlur = false,
 }: {
   path: string;
   index: number;
   progress: MotionValue<number>;
+  isBlur?: boolean;
 }): ReactNode {
   const pathLength = useTransform(
     progress,
@@ -87,7 +89,10 @@ function ConvergencePath({
       initial={{ pathLength: 0 }}
       style={{ pathLength }}
       transition={{ duration: 0, ease: "linear" }}
-      data-resume-convergence-path
+      filter={isBlur ? "url(#resume-convergence-blur)" : undefined}
+      data-path-index={index}
+      data-resume-convergence-path={!isBlur ? "" : undefined}
+      data-resume-convergence-blur-path={isBlur ? "" : undefined}
     />
   );
 }
@@ -110,13 +115,13 @@ function EnhancedConvergencePaths(): ReactNode {
         {GEMINI_PATHS.map((path, index) => (
           <ConvergencePath key={path} path={path} index={index} progress={scrollYProgress} />
         ))}
-        {GEMINI_PATHS.map((path) => (
-          <path
+        {GEMINI_PATHS.map((path, index) => (
+          <ConvergencePath
             key={`blur-${path}`}
-            d={path}
-            pathLength={1}
-            filter="url(#resume-convergence-blur)"
-            data-resume-convergence-blur-path
+            path={path}
+            index={index}
+            progress={scrollYProgress}
+            isBlur
           />
         ))}
         <defs>
@@ -201,14 +206,28 @@ export function ResumeConvergence({
         <div className="resume-convergence__actions">
           <h2 id="resume-contact-heading">{labels.contact}</h2>
           <div className="resume-convergence__action-list">
-            <a href={pdf.href} target="_blank" rel="noreferrer">
+            <a
+              href={pdf.href}
+              target="_blank"
+              rel="noreferrer"
+              className="resume-convergence__action resume-convergence__action--primary"
+              data-primary="true"
+            >
               {labels.viewPdf}
             </a>
-            <a href={pdf.href} download={pdf.downloadName}>
+            <a
+              href={pdf.href}
+              download={pdf.downloadName}
+              className="resume-convergence__action"
+            >
               {labels.downloadPdf}
             </a>
-            <a href={contactHref}>{labels.contact}</a>
-            <a href={workHref}>{labels.returnToWork}</a>
+            <a href={contactHref} className="resume-convergence__action">
+              {labels.contact}
+            </a>
+            <a href={workHref} className="resume-convergence__action">
+              {labels.returnToWork}
+            </a>
           </div>
         </div>
       </div>

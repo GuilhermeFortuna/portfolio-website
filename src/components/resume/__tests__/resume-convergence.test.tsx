@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   parseLanguage,
+  PATH_RANGES,
   ResumeConvergence,
 } from "@/components/resume/resume-convergence";
 import { ResumeSceneRuntime } from "@/components/resume/resume-scene-runtime";
@@ -269,6 +270,56 @@ describe("ResumeConvergence", () => {
     expect(container.textContent).not.toMatch(/\d+%/);
   });
 
+  it("exports PATH_RANGES completing all five strokes together at 0.8 while in view", () => {
+    expect(PATH_RANGES).toHaveLength(5);
+    // Staggered start points from reference
+    expect(PATH_RANGES[0][0]).toBe(0.2);
+    expect(PATH_RANGES[1][0]).toBe(0.15);
+    expect(PATH_RANGES[2][0]).toBe(0.1);
+    expect(PATH_RANGES[3][0]).toBe(0.05);
+    expect(PATH_RANGES[4][0]).toBe(0);
+
+    // All strokes complete together at 0.8 in view
+    for (const [, end] of PATH_RANGES) {
+      expect(end).toBe(0.8);
+    }
+  });
+
+  it.each(["en", "pt-BR"] as const)(
+    "structures closing actions with one primary control and secondary controls from CTA vocabulary for %s",
+    (locale) => {
+      const resume = getResumeContent(locale);
+      renderConvergence(locale);
+
+      const region = screen.getByRole("region", { name: resume.labels.contact });
+      const actions = within(region).getAllByRole("link");
+
+      // Exactly four action links
+      expect(actions).toHaveLength(4);
+
+      // All links have the resume-convergence__action class
+      for (const action of actions) {
+        expect(action).toHaveClass("resume-convergence__action");
+      }
+
+      // Exactly one primary action: View PDF
+      const primaryAction = within(region).getByRole("link", { name: resume.labels.viewPdf });
+      expect(primaryAction).toHaveClass("resume-convergence__action--primary");
+      expect(primaryAction).toHaveAttribute("data-primary", "true");
+
+      // Secondary controls do not have the primary modifier
+      const downloadAction = within(region).getByRole("link", { name: resume.labels.downloadPdf });
+      expect(downloadAction).not.toHaveClass("resume-convergence__action--primary");
+      expect(downloadAction).not.toHaveAttribute("data-primary");
+
+      const contactAction = within(region).getByRole("link", { name: resume.labels.contact });
+      expect(contactAction).not.toHaveClass("resume-convergence__action--primary");
+
+      const workAction = within(region).getByRole("link", { name: resume.labels.returnToWork });
+      expect(workAction).not.toHaveClass("resume-convergence__action--primary");
+    },
+  );
+
   it("keeps paths absent from static output and adds five decorative paths only in enhanced mode", async () => {
     enhancementEligible = true;
     const { container } = renderConvergence();
@@ -284,13 +335,26 @@ describe("ResumeConvergence", () => {
     expect(section).toHaveAttribute("data-motion-mode", "enhanced");
     const svg = container.querySelector("[data-resume-convergence-paths]");
     expect(svg).toHaveAttribute("aria-hidden", "true");
-    expect(svg?.querySelectorAll("[data-resume-convergence-path]")).toHaveLength(5);
-    expect(svg?.querySelector("[data-resume-convergence-path]")).toHaveAttribute(
+    const sharpPaths = svg?.querySelectorAll("[data-resume-convergence-path]");
+    expect(sharpPaths).toHaveLength(5);
+    expect(sharpPaths?.[0]).toHaveAttribute(
       "d",
       expect.stringContaining("M0 663C145.5 663"),
     );
-    expect(svg?.querySelectorAll("[data-resume-convergence-blur-path]")).toHaveLength(5);
+
+    const blurPaths = svg?.querySelectorAll("[data-resume-convergence-blur-path]");
+    expect(blurPaths).toHaveLength(5);
     expect(svg?.querySelector("#resume-convergence-blur")).toBeInTheDocument();
+
+    // Check data-path-index on each sharp and blur path
+    for (let i = 0; i < 5; i++) {
+      const sharp = svg?.querySelector(`[data-resume-convergence-path][data-path-index="${i}"]`);
+      const blur = svg?.querySelector(`[data-resume-convergence-blur-path][data-path-index="${i}"]`);
+      expect(sharp).toBeInTheDocument();
+      expect(blur).toBeInTheDocument();
+      expect(blur).toHaveAttribute("filter", "url(#resume-convergence-blur)");
+    }
+
     expect(section?.querySelector(".resume-convergence__content + [data-resume-convergence-paths]"))
       .toBeInTheDocument();
   });
