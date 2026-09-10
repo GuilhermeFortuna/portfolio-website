@@ -258,7 +258,7 @@ the card perimeter.
 
 ## Handoff & Freeze
 
-- **Named Freeze Commit:** Recorded in WO-057 handoff on branch `wo/wo-057-resume-refinement-integration`.
+- **Named Freeze Commit:** `f7083c5` (branch `wo/wo-057-resume-refinement-integration`).
 - **Register Status:** All 14 defect findings (8 MAJOR, 6 MINOR) are **RESOLVED** with verified implementation commits and visual evidence captures.
 - **Approved Directions:** RD-001 (career), RD-002 (credentials), RD-003 (languages), RD-004 (convergence), RD-005 (page rhythm), RD-006/RD-007 (content amendments), and RD-008 (card surfaces) are all fully implemented.
 - **Integration Corrections:** Hydration layout shift regression (CLS = 0.1106) diagnosed and resolved in `src/app/globals.css` (TOC initial fixed placement on desktop fine pointer + dead sticky CSS cleanup), achieving CLS = 0.0003 (EN) / 0.0000 (PT-BR), well within the ≤ 0.05 budget.
