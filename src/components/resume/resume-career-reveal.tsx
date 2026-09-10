@@ -14,7 +14,7 @@ export type ResumeCareerRevealProps = {
   sectionTitle: string;
 };
 
-function splitHighlight(highlight: string): { label: string; detail: string } {
+export function splitHighlight(highlight: string): { label: string; detail: string } {
   const separator = highlight.indexOf(":");
   if (separator < 0) {
     return { label: highlight, detail: "" };
@@ -24,6 +24,15 @@ function splitHighlight(highlight: string): { label: string; detail: string } {
     label: highlight.slice(0, separator).trim(),
     detail: highlight.slice(separator + 1).trim(),
   };
+}
+
+export function formatRoleText(role: string, location: string, period: string): string {
+  const normalizedPeriod = period.toLowerCase();
+  const normalizedLocation = location.toLowerCase();
+  if (normalizedPeriod.includes(normalizedLocation)) {
+    return role;
+  }
+  return `${role} · ${location}`;
 }
 
 /**
@@ -79,6 +88,23 @@ export function ResumeCareerReveal({
       }
       const pinTarget = scope.closest<HTMLElement>("[data-resume-experience-scene]") ?? scope;
 
+      const updateActiveCard = (activeIndex: number) => {
+        scope.dataset.activeCareerIndex = String(activeIndex);
+        const cards = scope.querySelectorAll<HTMLElement>("[data-resume-career-card]");
+        cards.forEach((card, i) => {
+          const isActive = i === activeIndex;
+          const isPast = i < activeIndex;
+          card.dataset.active = String(isActive);
+          if (isActive) {
+            card.setAttribute("data-career-status", "active");
+          } else if (isPast) {
+            card.setAttribute("data-career-status", "completed");
+          } else {
+            card.setAttribute("data-career-status", "upcoming");
+          }
+        });
+      };
+
       const tween = gsap.to(track, {
         x: () => Math.min(0, scope.clientWidth - track.scrollWidth),
         ease: "none",
@@ -91,9 +117,8 @@ export function ResumeCareerReveal({
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: (trigger) => {
-            scope.dataset.activeCareerIndex = String(
-              Math.min(entries.length - 1, Math.floor(trigger.progress * entries.length)),
-            );
+            const nextIndex = Math.min(entries.length - 1, Math.floor(trigger.progress * entries.length));
+            updateActiveCard(nextIndex);
           },
         },
       });
@@ -112,6 +137,7 @@ export function ResumeCareerReveal({
       aria-labelledby="resume-experience-heading"
       className="resume-career-reveal border-b border-[var(--color-line)] py-12 lg:py-16"
       data-resume-career-reveal
+      data-active-career-index="0"
     >
       <div className="resume-career-reveal__heading">
         <p className="[font-family:var(--font-geist-mono)] text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
@@ -130,44 +156,74 @@ export function ResumeCareerReveal({
         data-resume-career-viewport
         data-career-stage="single-card"
       >
-        <div aria-hidden="true" className="resume-career-reveal__progress" data-resume-career-progress>
-          <span>01</span>
-          <i />
-          <span>02</span>
-        </div>
         <ol aria-label={sectionLabel} className="resume-career-reveal__track" data-resume-career-track>
-          {entries.map((entry, index) => (
-            <li
-              key={`${entry.organization}-${entry.period}`}
-              className="resume-career-reveal__card"
-              data-resume-career-card
-            >
-              <article aria-labelledby={`resume-career-${index}-heading`}>
-                <p className="resume-career-reveal__period">{entry.period}</p>
-                <h3 id={`resume-career-${index}-heading`}>{entry.organization}</h3>
-                <p className="resume-career-reveal__role">{entry.role} · {entry.location}</p>
-                <ul>
-                  {entry.highlights.map((highlight, highlightIndex) => {
-                    const { label, detail } = splitHighlight(highlight);
+          {entries.map((entry, index) => {
+            const roleText = formatRoleText(entry.role, entry.location, entry.period);
+            const isActive = index === 0;
 
-                    return (
-                      <li key={highlight} className="resume-career-reveal__highlight">
-                        <span aria-hidden="true" className="resume-career-reveal__highlight-index">
-                          {String(highlightIndex + 1).padStart(2, "0")}
-                        </span>
-                        <span className="resume-career-reveal__highlight-copy">
-                          <span data-resume-highlight-label className="resume-career-reveal__highlight-label">
-                            {label}{detail ? ":" : ""}
+            return (
+              <li
+                key={`${entry.organization}-${entry.period}`}
+                className="resume-career-reveal__card"
+                data-resume-career-card
+                data-active={String(isActive)}
+                data-career-status={isActive ? "active" : "upcoming"}
+                data-card-index={index}
+              >
+                <article
+                  aria-labelledby={`resume-career-${index}-heading`}
+                  className="resume-career-card"
+                >
+                  <div
+                    aria-hidden="true"
+                    className="resume-career-card__progress-track"
+                    data-resume-career-progress
+                  >
+                    <div className="resume-career-card__progress-fill" />
+                  </div>
+                  <div className="resume-career-card__masthead">
+                    <h3
+                      id={`resume-career-${index}-heading`}
+                      className="resume-career-card__org"
+                    >
+                      {entry.organization}
+                    </h3>
+                    <div className="resume-career-card__meta">
+                      <p className="resume-career-card__role">{roleText}</p>
+                      <p className="resume-career-card__period">{entry.period}</p>
+                    </div>
+                  </div>
+                  <ul className="resume-career-card__highlights">
+                    {entry.highlights.map((highlight, highlightIndex) => {
+                      const { label, detail } = splitHighlight(highlight);
+
+                      return (
+                        <li key={highlight} className="resume-career-card__highlight">
+                          <span aria-hidden="true" className="resume-career-card__highlight-index">
+                            {String(highlightIndex + 1).padStart(2, "0")}
                           </span>
-                          {detail ? <span className="resume-career-reveal__highlight-detail"> {detail}</span> : null}
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </article>
-            </li>
-          ))}
+                          <span className="resume-career-card__highlight-copy">
+                            <span
+                              data-resume-highlight-label
+                              className="resume-career-card__highlight-label resume-career-reveal__highlight-label"
+                            >
+                              {label}{detail ? ":" : ""}
+                            </span>
+                            {detail ? (
+                              <span className="resume-career-card__highlight-detail resume-career-reveal__highlight-detail">
+                                {" "}
+                                {detail}
+                              </span>
+                            ) : null}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </article>
+              </li>
+            );
+          })}
         </ol>
       </div>
     </section>

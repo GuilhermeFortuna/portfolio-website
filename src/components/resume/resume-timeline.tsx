@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { motion, useScroll, useSpring, useTransform } from "motion/react";
 
 import { useMotionPreference } from "@/hooks/use-motion-preference";
+import { formatRoleText, splitHighlight } from "@/components/resume/resume-career-reveal";
 import type { ResumeExperience } from "@/types/resume";
 
 export type ResumeTimelineProps = {
@@ -33,9 +34,10 @@ export function ResumeTimeline({
     <section
       ref={sectionRef}
       aria-labelledby="resume-experience-heading"
-      className="border-b border-[var(--color-line)] py-12 lg:py-16"
+      className="resume-timeline border-b border-[var(--color-line)] py-12 lg:py-16"
+      data-resume-timeline
     >
-      <div className="flex flex-wrap items-end justify-between gap-4 border-b border-[var(--color-line)] pb-6">
+      <div className="resume-timeline__heading flex flex-wrap items-end justify-between gap-4 border-b border-[var(--color-line)] pb-6">
         <div>
           <p className="[font-family:var(--font-geist-mono)] text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)]">
             {sectionLabel}
@@ -52,7 +54,7 @@ export function ResumeTimeline({
       <div className="relative mt-10">
         <div
           aria-hidden="true"
-          className="absolute bottom-0 left-[0.3rem] top-0 w-px bg-[var(--color-line-strong)] lg:left-[12rem]"
+          className="absolute bottom-0 left-[0.3rem] top-0 w-px bg-[var(--color-line-strong)]"
         >
           <motion.div
             aria-hidden="true"
@@ -62,35 +64,73 @@ export function ResumeTimeline({
         </div>
 
         <ol aria-label={sectionLabel} className="space-y-12">
-          {entries.map((entry) => (
-            <li
-              key={`${entry.organization}-${entry.period}`}
-              className="relative grid gap-6 pl-8 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-10 lg:pl-0"
-            >
-              <span
-                aria-hidden="true"
-                className="absolute left-0 top-1.5 h-2.5 w-2.5 rounded-full border border-[var(--color-accent-b)] bg-[var(--color-canvas)] lg:left-[11.68rem]"
-              />
-              <div className="lg:sticky lg:top-28 lg:self-start">
-                <p className="[font-family:var(--font-geist-mono)] text-xs font-semibold uppercase leading-5 tracking-[0.08em] text-[var(--color-text-dim)]">
-                  {entry.period}
-                </p>
-              </div>
-              <div className="min-w-0">
-                <h3 className="text-xl font-semibold tracking-[-0.025em] text-[var(--color-text)] sm:text-2xl">
-                  {entry.organization}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-[var(--color-text-muted)]">
-                  {entry.role} · {entry.location}
-                </p>
-                <ul className="mt-5 list-disc space-y-3 pl-5 text-sm leading-7 text-[var(--color-text-muted)]">
-                  {entry.highlights.map((highlight) => (
-                    <li key={highlight}>{highlight}</li>
-                  ))}
-                </ul>
-              </div>
-            </li>
-          ))}
+          {entries.map((entry, index) => {
+            const roleText = formatRoleText(entry.role, entry.location, entry.period);
+
+            return (
+              <li
+                key={`${entry.organization}-${entry.period}`}
+                className="resume-timeline__item relative pl-8 sm:pl-10"
+                data-resume-timeline-item
+              >
+                <span
+                  aria-hidden="true"
+                  className="resume-timeline__node absolute left-0 top-6 h-2.5 w-2.5 rounded-full border border-[var(--color-accent-b)] bg-[var(--color-canvas)]"
+                />
+                <article
+                  aria-labelledby={`resume-timeline-${index}-heading`}
+                  className="resume-career-card resume-career-card--fallback"
+                >
+                  <div
+                    aria-hidden="true"
+                    className="resume-career-card__progress-track"
+                    data-resume-career-progress
+                  >
+                    <div className="resume-career-card__progress-fill resume-career-card__progress-fill--fallback" />
+                  </div>
+                  <div className="resume-career-card__masthead">
+                    <h3
+                      id={`resume-timeline-${index}-heading`}
+                      className="resume-career-card__org"
+                    >
+                      {entry.organization}
+                    </h3>
+                    <div className="resume-career-card__meta">
+                      <p className="resume-career-card__role">{roleText}</p>
+                      <p className="resume-career-card__period">{entry.period}</p>
+                    </div>
+                  </div>
+                  <ul className="resume-career-card__highlights">
+                    {entry.highlights.map((highlight, highlightIndex) => {
+                      const { label, detail } = splitHighlight(highlight);
+
+                      return (
+                        <li key={highlight} className="resume-career-card__highlight">
+                          <span aria-hidden="true" className="resume-career-card__highlight-index">
+                            {String(highlightIndex + 1).padStart(2, "0")}
+                          </span>
+                          <span className="resume-career-card__highlight-copy">
+                            <span
+                              data-resume-highlight-label
+                              className="resume-career-card__highlight-label resume-career-reveal__highlight-label"
+                            >
+                              {label}{detail ? ":" : ""}
+                            </span>
+                            {detail ? (
+                              <span className="resume-career-card__highlight-detail resume-career-reveal__highlight-detail">
+                                {" "}
+                                {detail}
+                              </span>
+                            ) : null}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </article>
+              </li>
+            );
+          })}
         </ol>
       </div>
     </section>

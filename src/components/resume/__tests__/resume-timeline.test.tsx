@@ -39,13 +39,43 @@ describe("ResumeTimeline", () => {
     expect(items).toHaveLength(entries.length);
     expect(within(items[0]).getByText(entries[0].period)).toBeInTheDocument();
     expect(within(items[0]).getByText(entries[0].organization)).toBeInTheDocument();
-    expect(
-      within(items[0]).getByText(`${entries[0].role} · ${entries[0].location}`),
-    ).toBeInTheDocument();
+    expect(within(items[0]).getByText(entries[0].role)).toBeInTheDocument();
     expect(within(items[0]).getByText(entries[0].highlights[0])).toBeInTheDocument();
     expect(within(items[1]).getByText(entries[1].organization)).toBeInTheDocument();
     expect(screen.getAllByText(entries[0].organization)).toHaveLength(1);
     expect(screen.getAllByText(entries[0].highlights[0])).toHaveLength(1);
+  });
+
+  it("renders one article per employer with the approved card anatomy and no duplicated location text", () => {
+    render(
+      <ResumeTimeline
+        entries={entries}
+        sectionLabel="Experience"
+        sectionTitle="Work Experience"
+      />,
+    );
+
+    const section = screen.getByRole("region", { name: "Work Experience" });
+    const articles = section.querySelectorAll("article");
+    expect(articles).toHaveLength(entries.length);
+
+    articles.forEach((article, index) => {
+      const entry = entries[index];
+      expect(article).toHaveAttribute("aria-labelledby", `resume-timeline-${index}-heading`);
+      expect(within(article).getByRole("heading", { level: 3 })).toHaveTextContent(
+        entry.organization,
+      );
+      expect(within(article).getByText(entry.period)).toBeInTheDocument();
+      expect(within(article).getByText(entry.role)).toBeInTheDocument();
+
+      // No duplicated "Remote"
+      const remoteMatches = (article.textContent ?? "").match(/Remote/g);
+      expect(remoteMatches).toHaveLength(1);
+
+      // Highlights rendered exactly once with label attributes
+      const highlightLabels = article.querySelectorAll("[data-resume-highlight-label]");
+      expect(highlightLabels).toHaveLength(entry.highlights.length);
+    });
   });
 
   it("keeps the chronology beam decorative and renders an empty semantic section", () => {
