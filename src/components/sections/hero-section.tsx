@@ -87,11 +87,9 @@ export function HeroSection() {
 
           <a
             className="hero-cta-secondary"
-            href={siteContent.heroGithubHref}
-            rel="noreferrer"
-            target="_blank"
+            href={siteContent.heroResumeHref}
           >
-            {siteContent.heroGithubLabel}
+            {siteContent.heroResumeLabel}
           </a>
         </div>
       </div>

@@ -23,8 +23,8 @@ Confident, precise, concise, technically literate, and evidence-led. Use first p
 - Disciplines: `AI · Product Engineering · Data · Infrastructure`
 - Support: `Full-stack developer creating intelligent products, complex systems, and high-impact digital experiences.`
 - Actions:
-  - **DECISION:** `Explore my work` → `/work/aegis` (first project in fixed chapter order)
-  - **FACT:** `View GitHub` → `https://github.com/GuilhermeFortuna` (public profile; project repositories remain private)
+  - **DECISION:** `Explore my work` → `#work` (scroll to selected work section)
+  - **DECISION:** `View Resume` → `/resume` (internal resume page)
 
 ### Process
 
@@ -50,9 +50,10 @@ Confident, precise, concise, technically literate, and evidence-led. Use first p
 - Profile actions:
   - **FACT:** `GitHub` → `https://github.com/GuilhermeFortuna`
   - **FACT:** `WakaTime` → `https://wakatime.com/@GuilhermeFortuna`
-- Résumé status: **FACT:** not yet available; currently being prepared.
-- Résumé behavior for WO-006: omit the résumé action. Do not render a disabled
-  control, fake URL, or public placeholder.
+- Résumé status: **FACT:** available through the bilingual `/resume` and
+  `/pt-BR/resume` routes after WO-041 publishes the accepted contract and PDFs.
+- Résumé behavior for WO-006: this historical omission is superseded by the
+  approved bilingual resume contract in [`resume-content.md`](./resume-content.md).
 - Location was not provided for About. Do not infer a city, state, country of
   residence, or nationality from the approved time-zone wording. Country-level
   location for Contact is approved separately below.
@@ -67,14 +68,13 @@ Confident, precise, concise, technically literate, and evidence-led. Use first p
 - Availability: `Available and actively looking for a remote position.`
   (**DECISION:** reuse the approved About availability wording)
 - Contact actions:
-  - **FACT:** `Email me` → `mailto:guilhermefortuna1000@gmail.com`
+  - **FACT:** `Email me` → `mailto:guilhermefortuna.dev@gmail.com`
   - **FACT:** `LinkedIn` → `https://www.linkedin.com/in/guilherme-fortuna-dos-santos/`
   - **FACT:** `GitHub` → `https://github.com/GuilhermeFortuna`
-- Résumé status: **FACT:** not yet available; currently being prepared.
-- Résumé behavior for WO-011: **DECISION (2026-07-28, owner-approved):** omit the
-  résumé action until a verified file/URL exists. Do not render a disabled
-  control, fake URL, or public placeholder. Résumé remains a release
-  requirement, not a WO-011 scene blocker.
+- Résumé status: **FACT:** available through the bilingual `/resume` and
+  `/pt-BR/resume` routes after WO-041 publishes the accepted contract and PDFs.
+- Résumé behavior for WO-011: this historical omission is superseded by the
+  approved bilingual resume contract in [`resume-content.md`](./resume-content.md).
 
 ## Chapter structure
 
@@ -84,7 +84,7 @@ Positioning → problem → goal → why difficult → system → 2–4 decision
 |---|---|
 | Navigation | Work / Process / About / Contact |
 | Project | View live environment / Read architecture (no public source link) |
-| Final | Email me / LinkedIn / GitHub (Résumé when verified) |
+| Final | Email me / LinkedIn / GitHub / Résumé |
 | State | Live / Private source / Case study / Backend system |
 
 **DECISION (2026-07-28):** Project repositories are private and will not be linked publicly. Staging/live environment links are planned for Aegis and Nexo Dental when those environments exist; gosigapp has no UI (CLI/backend only) and will not receive a live-environment action. Quant is a native desktop application and omits the control entirely (see Quant chapter). Until staging URLs are verified for routes that use them, keep `[REQUIRED: live environment URL]` markers in documentation only.
@@ -479,12 +479,34 @@ The validated route metadata registry is shared by the client router and the sta
 | `/work/gosigapp` | `gosigapp — Regulated Submission Infrastructure in Go` | `How I designed and deployed a Go pipeline that validates, signs, retries, audits, and submits six regulated datasets to Brazil's SIGAP.` |
 | `/work/nexo-dental` | `Nexo Dental — Founder-Built Clinic Operations` | `How I designed and built a multi-tenant dental-clinic product across role-native workflows, data isolation, clinical modelling, and reviewable AI assistance.` |
 | `/contact` | `Contact Guilherme — Build Something Difficult` | `Contact Guilherme about remote software engineering, ambitious product development, and difficult systems.` |
+| `/resume` | `Guilherme Fortuna — Full-stack Developer \| Python, TypeScript & Platform Systems` | `Full-stack developer with 5+ years building production web applications, distributed systems, data platforms, and cloud infrastructure.` |
 
 - Global OG default title: `Guilherme builds ambitious software systems.`
 - Global OG image: `[REQUIRED: 1200×630 approved social image]`
 - Canonical base URL: `[REQUIRED: production URL]`
 - JSON-LD MUST contain only verified Person/profile data.
 - Route-specific generated HTML MUST be validated without executing JavaScript.
+
+## Resume publication contract
+
+The bilingual resume contract is authoritative in
+[`resume-content.md`](./resume-content.md). WO-041 publishes the approved
+English and Brazilian Portuguese PDFs byte-for-byte at `/resume` and
+`/pt-BR/resume`, with ordinary view and download actions and no embedded PDF
+viewer.
+
+- Resume surfaces may name `BRXBET`, `RICOBET`, and reproduce the literal
+  `Aegis Fraud Intelligence` resume bullet under the owner's 2026-09-07
+  decision.
+- This exception is route-scoped. It does not change the existing Work or
+  case-study disclosure rules, and the resume entry must not be connected to
+  the Aegis Work chapter by link, prose, metadata, breadcrumb, or implication.
+- The public portfolio contact email is now
+  `guilhermefortuna.dev@gmail.com`. The former public portfolio address is
+  superseded and is not an alternate action; deployment notification addresses
+  are outside this migration.
+- The phone `+55 48 99181-4229` is resume-only and is not a homepage Contact
+  action. Its web target is `tel:+5548991814229`.
 
 ## Truth and placeholders
 
@@ -496,14 +518,16 @@ Never invent metrics, users, revenue, employers, clients, dates, production usag
 
 ## Input required from Guilherme
 
-- Résumé file/URL when complete. **FACT (received):** professional title, short
-  bio, time-zone wording, availability, current résumé status (in preparation),
-  Contact location `Brazil`, manifesto/CTA, email, LinkedIn, and GitHub.
+- Résumé file/URL when complete. **FACT (received):** the approved bilingual
+  content contract is in [`resume-content.md`](./resume-content.md); WO-041 will
+  publish the two byte-identical PDFs at the localized resume routes.
 - Canonical domain. **FACT (received):** GitHub profile
   `https://github.com/GuilhermeFortuna`, WakaTime profile
   `https://wakatime.com/@GuilhermeFortuna`, LinkedIn profile
-  `https://www.linkedin.com/in/guilherme-fortuna-dos-santos/`, and email
-  `guilhermefortuna1000@gmail.com`.
+  `https://www.linkedin.com/in/guilherme-fortuna-dos-santos/`, and public
+  portfolio email `guilhermefortuna.dev@gmail.com`. The former public portfolio
+  address is superseded and is not an alternate action; deployment notification
+  addresses are outside this migration.
 - Per project: dates, role, contribution, verified stack/architecture, challenges, evidence/results, source/live status, confidentiality, approved media.
 - Staging/live URLs for Aegis and Nexo Dental (gosigapp: no live UI; Quant: native desktop app, live-environment control omitted). **DECISION:** private source; Aegis/Nexo staging links planned, not ready yet.
 - Social image, analytics consent choice, license, and portfolio-source visibility.

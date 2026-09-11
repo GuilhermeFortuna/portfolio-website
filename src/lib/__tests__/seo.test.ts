@@ -101,7 +101,12 @@ describe("SEO helpers", () => {
     expect(defaultOpenGraphTitle).toBe(
       "Guilherme builds ambitious software systems.",
     );
-    expect(sitemapPaths).toEqual(["/", "/work/aegis", "/work/q"]);
+    expect(sitemapPaths).toEqual([
+      "/",
+      "/work/aegis",
+      "/work/q",
+      "/resume",
+    ]);
   });
 
   it("resolves the site URL from NEXT_PUBLIC_SITE_URL", () => {

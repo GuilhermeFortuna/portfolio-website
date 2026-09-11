@@ -20,7 +20,8 @@ export type WebGLEffectId =
   | "line-waves"
   | "liquid-metal"
   | "liquid-metal-github"
-  | "dotted-surface";
+  | "dotted-surface"
+  | "light-rays";
 
 export type WebGLEffectConfig = {
   id: WebGLEffectId;

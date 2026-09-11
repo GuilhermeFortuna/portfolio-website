@@ -8,8 +8,8 @@ export interface SiteContent {
   heroBody: string;
   heroCta: string;
   heroCtaHref: string;
-  heroGithubLabel: string;
-  heroGithubHref: string;
+  heroResumeLabel: string;
+  heroResumeHref: string;
 
   processLabel: string;
   processTitle: string;
@@ -43,6 +43,7 @@ export interface SiteContent {
 export interface NavItem {
   label: string;
   href: string;
+  ariaLabel?: string;
 }
 
 export interface SiteNavigation {
@@ -71,9 +72,9 @@ const siteContentMap: Record<Locale, SiteContent> = {
     heroBody:
       "Full-stack developer creating intelligent products, complex systems, and high-impact digital experiences.",
     heroCta: "Explore my work",
-    heroCtaHref: "/work/aegis",
-    heroGithubLabel: "View GitHub",
-    heroGithubHref: "https://github.com/GuilhermeFortuna",
+    heroCtaHref: "#work",
+    heroResumeLabel: "View Resume",
+    heroResumeHref: "/resume",
 
     processLabel: "PROCESS",
     processTitle: "From difficult idea to working system.",
@@ -107,7 +108,7 @@ const siteContentMap: Record<Locale, SiteContent> = {
     contactActions: [
       {
         label: "Email me",
-        href: "mailto:guilhermefortuna1000@gmail.com",
+        href: "mailto:guilhermefortuna.dev@gmail.com",
       },
       {
         label: "LinkedIn",
@@ -127,9 +128,9 @@ const siteContentMap: Record<Locale, SiteContent> = {
     heroBody:
       "Desenvolvedor full-stack criando produtos inteligentes, sistemas complexos e experiências digitais de alto impacto.",
     heroCta: "Explore meu trabalho",
-    heroCtaHref: "/pt-BR/work/aegis",
-    heroGithubLabel: "Ver GitHub",
-    heroGithubHref: "https://github.com/GuilhermeFortuna",
+    heroCtaHref: "#work",
+    heroResumeLabel: "Ver Currículo",
+    heroResumeHref: "/pt-BR/resume",
 
     processLabel: "PROCESSO",
     processTitle: "De uma ideia complexa a um sistema que funciona.",
@@ -163,7 +164,7 @@ const siteContentMap: Record<Locale, SiteContent> = {
     contactActions: [
       {
         label: "Enviar e-mail",
-        href: "mailto:guilhermefortuna1000@gmail.com",
+        href: "mailto:guilhermefortuna.dev@gmail.com",
       },
       {
         label: "LinkedIn",
@@ -193,10 +194,15 @@ export function getSiteNavigation(locale: Locale = "en"): SiteNavigation {
       { label: isPt ? "Processo" : "Process", href: `${prefix}/#process` },
       { label: isPt ? "Sobre" : "About", href: `${prefix}/#about` },
       { label: isPt ? "Contato" : "Contact", href: `${prefix}/#contact` },
+      { label: isPt ? "Currículo" : "Resume", href: `${prefix}/resume` },
     ],
     mobile: [
       { label: isPt ? "Trabalho" : "Work", href: `${prefix}/#work` },
-      { label: isPt ? "Contato" : "Contact", href: `${prefix}/#contact` },
+      {
+        label: "CV",
+        ariaLabel: isPt ? "Currículo" : "Resume",
+        href: `${prefix}/resume`,
+      },
     ],
   };
 }

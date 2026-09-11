@@ -6,7 +6,7 @@ import { afterEach, vi } from "vitest";
 // Shared header's LanguageSwitcher uses App Router hooks. Page tests render
 // SiteHeader under jsdom without a Next router tree, so stub navigation once.
 vi.mock("next/navigation", () => ({
-  usePathname: () => "/",
+  usePathname: vi.fn(() => "/"),
   useRouter: () => ({
     push: vi.fn(),
     replace: vi.fn(),
