@@ -9,6 +9,7 @@ import {
   ResumeReadingTrace,
   ResumeSceneRuntime,
   resolveResumeMotionMode,
+  useResumeSceneMode,
   useResumeSceneRuntime,
 } from "@/components/resume/resume-scene-runtime";
 
@@ -222,5 +223,38 @@ describe("ResumeSceneRuntime", () => {
 
     unmount();
     expect(removeResize).toHaveBeenCalledWith("resize", expect.any(Function));
+  });
+
+  it("does not re-render scene mode consumers when scroll progress changes", async () => {
+    let modeRenderCount = 0;
+    function ModeConsumer() {
+      const mode = useResumeSceneMode();
+      modeRenderCount++;
+      return <div data-testid="mode-consumer">{mode}</div>;
+    }
+
+    render(
+      <ResumeSceneRuntime chapters={[{ id: "identity", label: "Identity" }]}>
+        <ModeConsumer />
+      </ResumeSceneRuntime>,
+    );
+
+    await act(async () => {
+      await new Promise((resolve) => window.setTimeout(resolve, 0));
+    });
+
+    const initialRenderCount = modeRenderCount;
+
+    act(() => {
+      sharedProgress.set(0.25);
+    });
+    act(() => {
+      sharedProgress.set(0.5);
+    });
+    act(() => {
+      sharedProgress.set(0.75);
+    });
+
+    expect(modeRenderCount).toBe(initialRenderCount);
   });
 });

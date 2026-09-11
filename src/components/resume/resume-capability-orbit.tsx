@@ -9,8 +9,8 @@ import {
 } from "react";
 
 import {
+  useResumePrefersReducedMotion,
   useResumeSceneMode,
-  useResumeSceneRuntime,
 } from "@/components/resume/resume-scene-runtime";
 import { ResumeSectionHeader } from "@/components/resume/resume-section-header";
 import type { ResumeSkillGroup } from "@/types/resume";
@@ -27,7 +27,7 @@ export function ResumeCapabilityOrbit({
   groups,
 }: ResumeCapabilityOrbitProps): ReactNode {
   const runtimeMode = useResumeSceneMode();
-  const { prefersReducedMotion } = useResumeSceneRuntime();
+  const prefersReducedMotion = useResumePrefersReducedMotion();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
   const [hydrated, setHydrated] = useState(false);
 

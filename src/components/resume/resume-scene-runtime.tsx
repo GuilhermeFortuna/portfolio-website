@@ -11,7 +11,12 @@ import {
   type ReactNode,
   type RefCallback,
 } from "react";
-import { useMotionValueEvent } from "motion/react";
+import {
+  motion,
+  useMotionValueEvent,
+  useTransform,
+  type MotionValue,
+} from "motion/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { useMotionRuntime } from "@/components/motion/motion-runtime";
@@ -41,16 +46,21 @@ export type ResumeSceneRuntimeProps = {
   children: ReactNode;
 };
 
-export type ResumeSceneContextValue = {
+export type ResumeSceneBaseValue = {
   chapters: readonly ResumeChapter[];
   activeChapter: ResumeChapterId;
-  progress: number;
+  scrollProgress: MotionValue<number>;
   mode: ResumeMotionMode;
   prefersReducedMotion: boolean;
   registerChapter: (id: ResumeChapterId, element: HTMLElement | null) => void;
 };
 
-const ResumeSceneContext = createContext<ResumeSceneContextValue | null>(null);
+export type ResumeSceneContextValue = ResumeSceneBaseValue & {
+  progress: number;
+};
+
+const ResumeSceneBaseContext = createContext<ResumeSceneBaseValue | null>(null);
+const ResumeSceneProgressContext = createContext<number>(0);
 
 function clampProgress(value: number): number {
   return Math.min(1, Math.max(0, value));
@@ -156,8 +166,18 @@ export function ResumeSceneRuntime({
     };
   }, [prefersReducedMotion]);
 
+  const lastProgressRef = useRef(progress);
+
   useMotionValueEvent(scrollProgress, "change", (value) => {
-    setProgress(clampProgress(value));
+    const next = clampProgress(value);
+    if (
+      Math.abs(next - lastProgressRef.current) >= 0.01 ||
+      (next === 0 && lastProgressRef.current !== 0) ||
+      (next === 1 && lastProgressRef.current !== 1)
+    ) {
+      lastProgressRef.current = next;
+      setProgress(next);
+    }
   });
 
   const registerChapter = useCallback(
@@ -199,43 +219,61 @@ export function ResumeSceneRuntime({
     return () => observer.disconnect();
   }, [chapters]);
 
-  const value = useMemo<ResumeSceneContextValue>(
+  const baseValue = useMemo<ResumeSceneBaseValue>(
     () => ({
       chapters,
       activeChapter,
-      progress,
+      scrollProgress,
       mode,
       prefersReducedMotion,
       registerChapter,
     }),
-    [activeChapter, chapters, mode, prefersReducedMotion, progress, registerChapter],
+    [activeChapter, chapters, mode, prefersReducedMotion, registerChapter, scrollProgress],
   );
 
   return (
-    <ResumeSceneContext.Provider value={value}>
-      {children}
-    </ResumeSceneContext.Provider>
+    <ResumeSceneBaseContext.Provider value={baseValue}>
+      <ResumeSceneProgressContext.Provider value={progress}>
+        {children}
+      </ResumeSceneProgressContext.Provider>
+    </ResumeSceneBaseContext.Provider>
   );
 }
 
-export function useResumeSceneRuntime(): ResumeSceneContextValue {
-  const runtime = useContext(ResumeSceneContext);
-  if (!runtime) {
+export function useResumeSceneBase(): ResumeSceneBaseValue {
+  const base = useContext(ResumeSceneBaseContext);
+  if (!base) {
     throw new Error(
-      "useResumeSceneRuntime must be called beneath <ResumeSceneRuntime>.",
+      "useResumeSceneBase must be called beneath <ResumeSceneRuntime>.",
     );
   }
-  return runtime;
+  return base;
+}
+
+export function useResumeSceneRuntime(): ResumeSceneContextValue {
+  const base = useResumeSceneBase();
+  const progress = useContext(ResumeSceneProgressContext);
+  return useMemo(
+    () => ({
+      ...base,
+      progress,
+    }),
+    [base, progress],
+  );
 }
 
 export function useResumeSceneMode(): ResumeMotionMode {
-  return useResumeSceneRuntime().mode;
+  return useResumeSceneBase().mode;
+}
+
+export function useResumePrefersReducedMotion(): boolean {
+  return useResumeSceneBase().prefersReducedMotion;
 }
 
 export type ResumeChapterProps = ResumeChapter & { children: ReactNode };
 
 export function ResumeChapter({ id, label, children }: ResumeChapterProps): ReactNode {
-  const { registerChapter } = useResumeSceneRuntime();
+  const { registerChapter } = useResumeSceneBase();
   const ref = useMemo<RefCallback<HTMLElement>>(
     () => (element) => registerChapter(id, element),
     [id, registerChapter],
@@ -255,9 +293,17 @@ export function ResumeChapter({ id, label, children }: ResumeChapterProps): Reac
 }
 
 export function ResumeReadingTrace(): ReactNode {
-  const { progress, mode } = useResumeSceneRuntime();
-  const clampedProgress = Math.min(1, Math.max(0, progress));
-  const dashOffset = 1 - clampedProgress;
+  const { mode, scrollProgress } = useResumeSceneBase();
+  const clampedProgress = useTransform(scrollProgress, (value) =>
+    Math.min(1, Math.max(0, value)),
+  );
+  const dashOffset = useTransform(clampedProgress, (value) => 1 - value);
+  const [isActive, setIsActive] = useState(() => scrollProgress.get() > 0);
+
+  useMotionValueEvent(scrollProgress, "change", (value) => {
+    const active = value > 0;
+    setIsActive((prev) => (prev !== active ? active : prev));
+  });
 
   return (
     <div
@@ -267,7 +313,7 @@ export function ResumeReadingTrace(): ReactNode {
       <div className="resume-reading-trace__indicator">
         <div
           className="resume-reading-trace__indicator-core"
-          data-active={clampedProgress > 0}
+          data-active={isActive}
         />
       </div>
       <svg
@@ -296,7 +342,7 @@ export function ResumeReadingTrace(): ReactNode {
           className="resume-reading-trace__base"
           vectorEffect="non-scaling-stroke"
         />
-        <path
+        <motion.path
           d="M 10 0 V 100"
           className="resume-reading-trace__progress"
           pathLength="1"

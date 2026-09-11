@@ -83,11 +83,14 @@ describe("ResumeChapterNavigation", () => {
     const closeButton = screen.getByRole("button", {
       name: "Close table of contents",
     });
+    expect(closeButton).toHaveFocus();
+
     await user.click(closeButton);
     expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(trigger).toHaveFocus();
   });
 
-  it("closes menu on Escape key press", async () => {
+  it("closes menu on Escape key press and restores trigger focus", async () => {
     const user = userEvent.setup();
     render(
       <ResumeChapterNavigation
@@ -105,6 +108,7 @@ describe("ResumeChapterNavigation", () => {
 
     await user.keyboard("{Escape}");
     expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(trigger).toHaveFocus();
   });
 
   it("keeps progress decorative and does not add unmanaged scroll listeners", () => {

@@ -7,7 +7,13 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { AnimatePresence, motion, type Transition } from "motion/react";
+import {
+  AnimatePresence,
+  motion,
+  useTransform,
+  type MotionValue,
+  type Transition,
+} from "motion/react";
 
 import {
   useResumeSceneRuntime,
@@ -29,17 +35,80 @@ export const DEFAULT_CHAPTER_LABELS: ResumeChapterNavigationLabels = {
 export type ResumeChapterNavigationProps = {
   chapters: readonly ResumeChapter[];
   activeChapter: ResumeChapterId;
-  progress: number;
+  progress: number | MotionValue<number>;
   prefersReducedMotion?: boolean;
   motionMode?: ResumeMotionMode;
   labels?: ResumeChapterNavigationLabels;
 };
 
-function CircleProgress({ progress }: { progress: number }) {
-  const size = 24;
-  const strokeWidth = 2.5;
-  const radius = (size - strokeWidth) / 2;
-  const circumference = 2 * Math.PI * radius;
+function CircleProgressMotion({
+  size,
+  strokeWidth,
+  radius,
+  circumference,
+  progress,
+}: {
+  size: number;
+  strokeWidth: number;
+  radius: number;
+  circumference: number;
+  progress: MotionValue<number>;
+}) {
+  const motionOffset = useTransform(
+    progress,
+    (value) => circumference * (1 - Math.min(1, Math.max(0, value))),
+  );
+
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      className="resume-dynamic-island__progress-circle"
+      aria-hidden="true"
+    >
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        fill="none"
+        stroke="var(--color-line-strong)"
+        strokeWidth={strokeWidth}
+        opacity={0.35}
+      />
+      <motion.circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        fill="none"
+        stroke="var(--color-accent-b)"
+        strokeWidth={strokeWidth}
+        strokeDasharray={circumference}
+        strokeDashoffset={motionOffset}
+        strokeLinecap="round"
+        style={{
+          transform: "rotate(-90deg)",
+          transformOrigin: "50% 50%",
+          transition: "stroke-dashoffset 150ms ease-out",
+        }}
+      />
+    </svg>
+  );
+}
+
+function CircleProgressStatic({
+  size,
+  strokeWidth,
+  radius,
+  circumference,
+  progress,
+}: {
+  size: number;
+  strokeWidth: number;
+  radius: number;
+  circumference: number;
+  progress: number;
+}) {
   const clamped = Math.min(1, Math.max(0, progress));
   const offset = circumference * (1 - clamped);
 
@@ -80,6 +149,42 @@ function CircleProgress({ progress }: { progress: number }) {
   );
 }
 
+function CircleProgress({
+  progress,
+}: {
+  progress: number | MotionValue<number>;
+}) {
+  const size = 24;
+  const strokeWidth = 2.5;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+
+  const isMotionValue =
+    typeof progress === "object" && progress !== null && "get" in progress;
+
+  if (isMotionValue) {
+    return (
+      <CircleProgressMotion
+        size={size}
+        strokeWidth={strokeWidth}
+        radius={radius}
+        circumference={circumference}
+        progress={progress}
+      />
+    );
+  }
+
+  return (
+    <CircleProgressStatic
+      size={size}
+      strokeWidth={strokeWidth}
+      radius={radius}
+      circumference={circumference}
+      progress={progress}
+    />
+  );
+}
+
 export function ResumeChapterNavigation({
   chapters,
   activeChapter,
@@ -90,14 +195,25 @@ export function ResumeChapterNavigation({
 }: ResumeChapterNavigationProps): ReactNode {
   const [isExpanded, setIsExpanded] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const wasExpandedRef = useRef(false);
   const activeChapterData =
     chapters.find((c) => c.id === activeChapter) ?? chapters[0];
   const accessibleName = chapters.map((chapter) => chapter.label).join(" · ");
 
   const handleClose = useCallback(() => {
     setIsExpanded(false);
-    triggerRef.current?.focus();
   }, []);
+
+  useEffect(() => {
+    if (isExpanded) {
+      closeButtonRef.current?.focus();
+      wasExpandedRef.current = true;
+    } else if (wasExpandedRef.current) {
+      triggerRef.current?.focus();
+      wasExpandedRef.current = false;
+    }
+  }, [isExpanded]);
 
   useEffect(() => {
     if (!isExpanded) {
@@ -187,6 +303,7 @@ export function ResumeChapterNavigation({
               {labels.tableOfContents}
             </span>
             <button
+              ref={closeButtonRef}
               type="button"
               onClick={handleClose}
               aria-label={labels.closeTableOfContents}
@@ -244,13 +361,13 @@ export function ResumeChapterNavigationConnected({
 }: {
   labels?: ResumeChapterNavigationLabels;
 } = {}): ReactNode {
-  const { chapters, activeChapter, progress, mode, prefersReducedMotion } =
+  const { chapters, activeChapter, scrollProgress, mode, prefersReducedMotion } =
     useResumeSceneRuntime();
   return (
     <ResumeChapterNavigation
       chapters={chapters}
       activeChapter={activeChapter}
-      progress={progress}
+      progress={scrollProgress}
       prefersReducedMotion={prefersReducedMotion}
       motionMode={mode}
       labels={labels}
