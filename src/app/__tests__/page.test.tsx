@@ -114,20 +114,18 @@ describe("homepage composition", () => {
     }
   });
 
-  it("sends the hero action to the Aegis case study", async () => {
+  it("scrolls to the work section and links to the resume page from the hero", async () => {
     const { default: Home } = await import("@/app/(en)/page");
     renderWithLocale(<Home />);
 
     expect(
       screen.getByRole("link", { name: siteContent.heroCta }),
-    ).toHaveAttribute("href", "/work/aegis");
+    ).toHaveAttribute("href", "#work");
 
-    const github = screen.getByRole("link", {
-      name: siteContent.heroGithubLabel,
+    const resume = screen.getByRole("link", {
+      name: siteContent.heroResumeLabel,
     });
-    expect(github).toHaveAttribute("href", siteContent.heroGithubHref);
-    expect(github).toHaveAttribute("target", "_blank");
-    expect(github).toHaveAttribute("rel", "noreferrer");
+    expect(resume).toHaveAttribute("href", "/resume");
   });
 
   it("links all four projects to their case studies", async () => {
@@ -167,9 +165,8 @@ describe("homepage composition", () => {
       .map((anchor) => anchor.getAttribute("href") ?? "")
       .filter((href) => href.startsWith("/work/"));
 
-    // Hero CTA + four project case-study links.
+    // Four project case-study links (hero CTA scrolls to #work).
     expect(caseStudyHrefs).toEqual([
-      "/work/aegis",
       "/work/aegis",
       "/work/q",
       "/work/gosigapp",

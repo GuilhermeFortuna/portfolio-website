@@ -61,7 +61,7 @@ const english: ResumeContent = {
     role: "Full-stack Developer",
     focus: "Python, TypeScript & Platform Systems",
     summary:
-      "Full-stack developer with 5+ years building software systems, including professional experience delivering production web applications, distributed systems and APIs, data platforms, and cloud infrastructure.",
+      "Full-stack developer with 5+ years building software systems, including 2 years of professional experience delivering production web applications, distributed systems and APIs, data platforms, and cloud infrastructure.",
   },
   location: "Criciúma, Brazil",
   availability: "Available and actively looking for a remote position.",
@@ -103,7 +103,7 @@ const english: ResumeContent = {
     { institution: "Savonia University of Applied Sciences (Kuopio, Finland) & SATC (Brazil)", program: "Mechanical Engineering & Academic Exchange", period: "2014 – 2018" },
     { institution: "SATC (Brazil)", program: "Software Engineering (In Progress)", period: "2024 – Present" },
   ],
-  languages: ["English: Bilingual / Full Professional Proficiency (TOEFL iBT 105)", "Portuguese: Native"],
+  languages: ["English: Native (TOEFL iBT 105)", "Portuguese: Native"],
   labels: englishLabels,
   pdf: { href: "/resume/guilherme-fortuna-resume-en.pdf", downloadName: "guilherme-fortuna-resume-en.pdf" },
 };
@@ -121,7 +121,7 @@ const portuguese: ResumeContent = {
     role: "Desenvolvedor Full-stack",
     focus: "Python, TypeScript e Sistemas de Plataforma",
     summary:
-      "Desenvolvedor full-stack com mais de 5 anos criando sistemas de software, incluindo experiência profissional com aplicações web em produção, sistemas distribuídos e APIs, plataformas de dados e infraestrutura em nuvem.",
+      "Desenvolvedor full-stack com mais de 5 anos criando sistemas de software, incluindo 2 anos de experiência profissional com aplicações web em produção, sistemas distribuídos e APIs, plataformas de dados e infraestrutura em nuvem.",
   },
   location: "Criciúma, Brasil",
   availability: "Disponível e buscando ativamente uma posição remota.",
@@ -163,7 +163,7 @@ const portuguese: ResumeContent = {
     { institution: "Savonia University of Applied Sciences (Kuopio, Finlândia) e SATC (Brasil)", program: "Engenharia Mecânica e Intercâmbio Acadêmico", period: "2014 – 2018" },
     { institution: "SATC (Brasil)", program: "Engenharia de Software (Em andamento)", period: "2024 – Atual" },
   ],
-  languages: ["Inglês: Bilíngue / Plena proficiência profissional (TOEFL iBT 105)", "Português: Nativo"],
+  languages: ["Inglês: Nativo (TOEFL iBT 105)", "Português: Nativo"],
   labels: portugueseLabels,
   pdf: { href: "/resume/guilherme-fortuna-resume-pt-BR.pdf", downloadName: "guilherme-fortuna-resume-pt-BR.pdf" },
 };

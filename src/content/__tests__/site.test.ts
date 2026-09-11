@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-import { projects } from "@/content/projects";
 import { getSiteContent, siteContent, siteNavigation } from "@/content/site";
 
 // Root-relative so the shared header resolves to the homepage from any route.
@@ -33,10 +32,9 @@ describe("site content contract", () => {
 
   it("keeps page-level navigation references aligned with section IDs", () => {
     expect(siteNavigation.wordmarkHref).toBe("/#top");
-    // The approved hero destination is the first chapter, not the section
-    // anchor (docs/content.md, Identity).
-    expect(siteContent.heroCtaHref).toBe("/work/aegis");
-    expect(siteContent.heroCtaHref).toBe(projects[0].href);
+    // The approved hero destination is the work section anchor (docs/content.md, Identity).
+    expect(siteContent.heroCtaHref).toBe("#work");
+    expect(siteContent.heroResumeHref).toBe("/resume");
     expect(siteNavigation.desktop.map(({ href }) => href)).toEqual([
       "/#work",
       "/#process",
@@ -59,7 +57,6 @@ describe("site content contract", () => {
   });
 
   it("keeps approved profile destinations consistent across sections", () => {
-    expect(siteContent.heroGithubHref).toBe(expectedProfileLinks.github);
     expect(siteContent.aboutGithubHref).toBe(expectedProfileLinks.github);
     expect(siteContent.aboutWakatimeHref).toBe(expectedProfileLinks.wakatime);
 

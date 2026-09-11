@@ -132,7 +132,7 @@ the source sentence or source line that authorizes it.
 | Focus | `Python, TypeScript & Platform Systems` | `Python, TypeScript e Sistemas de Plataforma` | Header role |
 | Location | `Criciúma, Brazil` | `Criciúma, Brasil` | Header contact line |
 | Remote overlap | `Remote · UTC-3 / US EST & EU Overlap` | `Remoto · UTC-3 / Horários EUA e Europa` | Header contact line |
-| Summary | `Full-stack developer with 5+ years building software systems, including professional experience delivering production web applications, distributed systems and APIs, data platforms, and cloud infrastructure.` | `Desenvolvedor full-stack com mais de 5 anos criando sistemas de software, incluindo experiência profissional com aplicações web em produção, sistemas distribuídos e APIs, plataformas de dados e infraestrutura em nuvem.` | Professional Summary sentence 1 |
+| Summary | `Full-stack developer with 5+ years building software systems, including 2 years of professional experience delivering production web applications, distributed systems and APIs, data platforms, and cloud infrastructure.` | `Desenvolvedor full-stack com mais de 5 anos criando sistemas de software, incluindo 2 anos de experiência profissional com aplicações web em produção, sistemas distribuídos e APIs, plataformas de dados e infraestrutura em nuvem.` | Professional Summary sentence 1 |
 | Availability | `Available and actively looking for a remote position.` | `Disponível e buscando ativamente uma posição remota.` | PDF summary's remote positioning; localized resume action wording |
 | Email | `guilhermefortuna.dev@gmail.com` | `guilhermefortuna.dev@gmail.com` | Header contact line |
 | Phone | `+55 48 99181-4229` | `+55 48 99181-4229` | Header contact line |
@@ -202,8 +202,8 @@ the source sentence or source line that authorizes it.
 
 | Locale | Copy | Source |
 |---|---|---|
-| EN | `English: Bilingual / Full Professional Proficiency (TOEFL iBT 105) · Portuguese: Native` | Languages |
-| PT-BR | `Inglês: Bilíngue / Plena proficiência profissional (TOEFL iBT 105) · Português: Nativo` | Idiomas |
+| EN | `English: Native (TOEFL iBT 105) · Portuguese: Native` | Languages |
+| PT-BR | `Inglês: Nativo (TOEFL iBT 105) · Português: Nativo` | Idiomas |
 
 ### Localized actions
 
